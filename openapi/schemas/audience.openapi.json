@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.08.31.1452-45db4f0"
+    "version": "2026.09.01.1554-ff46632"
   },
   "servers": [
     {
@@ -5349,7 +5349,8 @@
         "openid",
         "profile",
         "email",
-        "offline_access"
+        "offline_access",
+        "api"
       ]
     }
   ]

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.08.31.1452-45db4f0"
+    "version": "2026.09.01.1554-ff46632"
   },
   "servers": [
     {
@@ -34,6 +34,10 @@
     {
       "name": "Campaign",
       "x-displayName": "Campaign"
+    },
+    {
+      "name": "Experiment",
+      "x-displayName": "Experiment"
     },
     {
       "name": "ExternalAudience",
@@ -320,7 +324,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -413,7 +418,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -497,7 +503,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -548,7 +555,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -606,7 +614,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -663,7 +672,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -730,7 +740,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -787,7 +798,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -855,7 +867,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -905,7 +918,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -961,7 +975,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1027,7 +1042,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1084,7 +1100,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1145,7 +1162,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1205,7 +1223,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1266,7 +1285,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1326,7 +1346,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1383,7 +1404,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1440,7 +1462,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1497,7 +1520,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1553,7 +1577,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1610,7 +1635,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1666,7 +1692,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1735,7 +1762,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -1785,7 +1813,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -2137,7 +2166,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -2540,7 +2570,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -2591,7 +2622,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -2630,7 +2662,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -2691,7 +2724,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -2741,7 +2775,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -2801,7 +2836,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -2862,7 +2898,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -2912,7 +2949,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -2980,7 +3018,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3048,7 +3087,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3105,7 +3145,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3306,7 +3347,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3376,7 +3418,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3422,7 +3465,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3468,7 +3512,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3519,7 +3564,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3570,7 +3616,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3628,7 +3675,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3674,7 +3722,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3720,7 +3769,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3778,7 +3828,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3837,7 +3888,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3896,7 +3948,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3964,7 +4017,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -3997,7 +4051,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -4047,7 +4102,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -4086,7 +4142,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -4480,7 +4537,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -4530,7 +4588,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -4580,7 +4639,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -4642,7 +4702,321 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/campaign/experiments/{experimentKey}/state": {
+      "post": {
+        "tags": [
+          "Experiment"
+        ],
+        "summary": "Applies a lifecycle transition to an experiment and returns the full updated document.",
+        "description": "Valid transitions: draft/paused → active, active → paused, active/paused → completed;\n anything else is 409 with code invalid_transition. Activation additionally guards\n against flag keys owned by another running experiment (flag_key_in_use), an\n already-elapsed end date\n (invalid_window), and sticky enrollment without a leavable user predicate\n (invalid_enrollment_mode).",
+        "parameters": [
+          {
+            "name": "experimentKey",
+            "in": "path",
+            "description": "The experiment's stable key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The transition to apply.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeExperimentStateEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Experiment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/campaign/experiments": {
+      "post": {
+        "tags": [
+          "Experiment"
+        ],
+        "summary": "Creates an experiment in the draft state and returns the full document.",
+        "description": "The split salt is generated server-side. Returns 409 with code\n experiment_key_exists when the key is already taken.",
+        "requestBody": {
+          "description": "The experiment to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExperimentEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Experiment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Experiment"
+        ],
+        "summary": "Returns all experiments, optionally restricted to one state.",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "description": "The state to filter by; omit to list every experiment.",
+            "schema": {
+              "$ref": "#/components/schemas/ExperimentState"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Experiment"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/campaign/experiments/{experimentKey}": {
+      "get": {
+        "tags": [
+          "Experiment"
+        ],
+        "summary": "Returns the experiment with the given key.",
+        "parameters": [
+          {
+            "name": "experimentKey",
+            "in": "path",
+            "description": "The experiment's stable key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Experiment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Experiment"
+        ],
+        "summary": "Updates the provided fields of an experiment and returns the full updated document.",
+        "description": "Omitted fields are left untouched. Key and salt are never updatable; flags are updatable\n only while the experiment is a draft — afterwards the response is 409 with code\n immutable_field.",
+        "parameters": [
+          {
+            "name": "experimentKey",
+            "in": "path",
+            "description": "The experiment's stable key.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The fields to update.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExperimentEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Experiment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -4887,7 +5261,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -4926,7 +5301,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -4984,7 +5360,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5031,7 +5408,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5081,7 +5459,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5141,7 +5520,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5199,7 +5579,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5257,7 +5638,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5325,7 +5707,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5375,7 +5758,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5430,7 +5814,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5488,7 +5873,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5691,7 +6077,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5748,7 +6135,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5805,7 +6193,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5862,7 +6251,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5923,7 +6313,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -5984,7 +6375,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -6034,7 +6426,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -6089,7 +6482,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -6173,7 +6567,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -6257,7 +6652,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -6341,7 +6737,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -6425,7 +6822,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -6619,7 +7017,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -6669,7 +7068,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -6726,7 +7126,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -6787,7 +7188,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -6855,7 +7257,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7056,7 +7459,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7113,7 +7517,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7181,7 +7586,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7249,7 +7655,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7271,7 +7678,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7344,7 +7752,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7393,7 +7802,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7442,7 +7852,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7516,7 +7927,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7575,7 +7987,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7633,7 +8046,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7693,7 +8107,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7751,7 +8166,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7808,7 +8224,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7858,7 +8275,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -7914,7 +8332,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8158,7 +8577,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8193,7 +8613,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8245,7 +8666,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8538,7 +8960,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8620,7 +9043,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8669,7 +9093,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8718,7 +9143,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8776,7 +9202,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8836,7 +9263,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8894,7 +9322,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8928,7 +9357,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -8978,7 +9408,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9028,7 +9459,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9086,7 +9518,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9144,7 +9577,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9216,7 +9650,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9274,7 +9709,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9464,7 +9900,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9515,7 +9952,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9570,7 +10008,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9630,7 +10069,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9699,7 +10139,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9754,7 +10195,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9800,7 +10242,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -9857,7 +10300,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10051,7 +10495,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10102,7 +10547,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10163,7 +10609,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10223,7 +10670,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10285,7 +10733,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10336,7 +10785,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10409,7 +10859,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10458,7 +10909,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10507,7 +10959,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10557,7 +11010,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10626,7 +11080,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10683,7 +11138,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -10751,7 +11207,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -11003,7 +11460,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -11071,7 +11529,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -11121,7 +11580,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -11176,7 +11636,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -11235,7 +11696,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -11294,7 +11756,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -11351,7 +11814,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -11960,7 +12424,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -12613,7 +13078,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -12971,7 +13437,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -13589,7 +14056,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -14109,7 +14577,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -14179,7 +14648,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -14249,7 +14719,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -14748,7 +15219,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -14807,7 +15279,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -14875,7 +15348,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -15330,7 +15804,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -15389,7 +15864,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -15449,7 +15925,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -15511,7 +15988,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -15868,7 +16346,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -16162,7 +16641,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -16783,7 +17263,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -17404,7 +17885,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -17607,7 +18089,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -17901,7 +18384,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -18814,7 +19298,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -19432,7 +19917,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -20096,7 +20582,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -20390,7 +20877,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21008,7 +21496,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21066,7 +21555,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21135,7 +21625,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21201,7 +21692,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21262,7 +21754,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21330,7 +21823,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21397,7 +21891,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21458,7 +21953,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21527,7 +22023,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21584,7 +22081,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21652,7 +22150,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21707,7 +22206,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21775,7 +22275,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21825,7 +22326,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21880,7 +22382,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -21939,7 +22442,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -22009,7 +22513,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -22079,7 +22584,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -22415,7 +22921,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -22987,7 +23494,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -23559,7 +24067,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -23911,7 +24420,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -24205,7 +24715,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -24774,7 +25285,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -25343,7 +25855,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -25678,7 +26191,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -25740,7 +26254,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -25806,7 +26321,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -25867,7 +26383,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -25928,7 +26445,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -25996,7 +26514,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26064,7 +26583,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26114,7 +26634,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26169,7 +26690,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26228,7 +26750,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26278,7 +26801,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26328,7 +26852,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26379,7 +26904,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26430,7 +26956,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26490,7 +27017,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26547,7 +27075,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26605,7 +27134,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26666,7 +27196,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26717,7 +27248,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26779,7 +27311,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26836,7 +27369,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -26904,7 +27438,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -27166,7 +27701,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -27389,7 +27925,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -27446,7 +27983,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -27796,7 +28334,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -27949,7 +28488,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28023,7 +28563,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28073,7 +28614,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28123,7 +28665,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28197,7 +28740,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28255,7 +28799,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28313,7 +28858,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28382,7 +28928,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28437,7 +28984,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28499,7 +29047,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28558,7 +29107,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28608,7 +29158,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28663,7 +29214,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28722,7 +29274,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28772,7 +29325,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28827,7 +29381,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28886,7 +29441,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -28934,7 +29490,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29001,7 +29558,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29059,7 +29617,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29153,7 +29712,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29211,7 +29771,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29272,7 +29833,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29332,7 +29894,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29390,7 +29953,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29466,7 +30030,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29572,7 +30137,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29659,7 +30225,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29726,7 +30293,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -29776,7 +30344,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -30023,7 +30592,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -30414,7 +30984,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -30666,7 +31237,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -31168,7 +31740,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -31558,7 +32131,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -31620,7 +32194,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -31670,7 +32245,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -31720,7 +32296,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -31780,7 +32357,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -31841,7 +32419,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -31900,7 +32479,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -31960,7 +32540,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32020,7 +32601,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32070,7 +32652,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32139,7 +32722,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32196,7 +32780,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32254,7 +32839,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32304,7 +32890,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32354,7 +32941,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32409,7 +32997,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32468,7 +33057,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32516,7 +33106,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32564,7 +33155,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32610,7 +33202,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32669,7 +33262,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32719,7 +33313,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -32785,7 +33380,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33032,7 +33628,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33375,7 +33972,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33425,7 +34023,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33475,7 +34074,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33534,7 +34134,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33601,7 +34202,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33659,7 +34261,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33717,7 +34320,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33786,7 +34390,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33843,7 +34448,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33894,7 +34500,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -33945,7 +34552,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -34041,7 +34649,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -34097,7 +34706,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -34203,7 +34813,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -34269,7 +34880,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -34326,7 +34938,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -34384,7 +34997,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -34487,7 +35101,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -34544,7 +35159,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -34990,7 +35606,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35099,7 +35716,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35232,7 +35850,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35319,7 +35938,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35377,7 +35997,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35435,7 +36056,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35486,7 +36108,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35545,7 +36168,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35614,7 +36238,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35676,7 +36301,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35727,7 +36353,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35789,7 +36416,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35849,7 +36477,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35900,7 +36529,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -35960,7 +36590,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36025,7 +36656,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36094,7 +36726,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36150,7 +36783,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36208,7 +36842,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36549,7 +37184,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36600,7 +37236,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36662,7 +37299,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36723,7 +37361,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36785,7 +37424,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36842,7 +37482,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36893,7 +37534,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36948,7 +37590,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -36998,7 +37641,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -37292,7 +37936,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -37342,7 +37987,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -37399,7 +38045,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -37457,7 +38104,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -37515,7 +38163,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -37539,7 +38188,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -37596,7 +38246,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -37646,7 +38297,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -37692,7 +38344,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -37749,7 +38402,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38090,7 +38744,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38350,7 +39005,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38401,7 +39057,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38462,7 +39119,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38519,7 +39177,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38563,7 +39222,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38613,7 +39273,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38672,7 +39333,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38779,7 +39441,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38830,7 +39493,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38881,7 +39545,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38938,7 +39603,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -38995,7 +39661,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -39041,7 +39708,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -39392,7 +40060,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -39453,7 +40122,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -39510,7 +40180,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -39571,7 +40242,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -39819,7 +40491,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -39876,7 +40549,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -40417,7 +41091,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -40468,7 +41143,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -40523,7 +41199,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -40582,7 +41259,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -40639,7 +41317,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -40690,7 +41369,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41042,7 +41722,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41092,7 +41773,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41150,7 +41832,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41207,7 +41890,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41264,7 +41948,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41325,7 +42010,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41382,7 +42068,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41432,7 +42119,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41487,7 +42175,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41546,7 +42235,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41580,7 +42270,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41626,7 +42317,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41707,7 +42399,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -41787,7 +42480,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -42041,7 +42735,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -42578,7 +43273,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -42613,7 +43309,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -42674,7 +43371,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -42735,7 +43433,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -42795,7 +43494,8 @@
               "openid",
               "profile",
               "email",
-              "offline_access"
+              "offline_access",
+              "api"
             ]
           }
         ]
@@ -46220,6 +46920,29 @@
           }
         }
       },
+      "ChangeExperimentStateEndpoint_Input": {
+        "required": [
+          "action"
+        ],
+        "type": "object",
+        "properties": {
+          "action": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ChangeExperimentStateEndpoint_StateAction"
+              }
+            ],
+            "description": "The lifecycle transition to apply."
+          }
+        }
+      },
+      "ChangeExperimentStateEndpoint_StateAction": {
+        "enum": [
+          "activate",
+          "pause",
+          "complete"
+        ]
+      },
       "ComparisonOperator": {
         "enum": [
           "Equal",
@@ -46229,6 +46952,86 @@
           "GreaterThan",
           "GreaterThanOrEqual"
         ]
+      },
+      "CreateExperimentEndpoint_Input": {
+        "required": [
+          "key",
+          "description",
+          "flags",
+          "split"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Stable unique identifier; becomes the analysis key exp:<key>."
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of the hypothesis."
+          },
+          "flags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "Feature flags stamped on treatment sessions only."
+          },
+          "eligibility": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentEligibility"
+              }
+            ],
+            "description": "Eligibility predicates. Omitted predicates match anything."
+          },
+          "userEnrollment": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentUserEnrollment"
+              }
+            ],
+            "description": "Defaults to perSession.",
+            "nullable": true
+          },
+          "split": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateExperimentEndpoint_Split"
+              }
+            ],
+            "description": "The traffic split; the salt is generated server-side."
+          },
+          "startAt": {
+            "type": "string",
+            "description": "Start of the experiment window.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endAt": {
+            "type": "string",
+            "description": "End of the experiment window.",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "CreateExperimentEndpoint_Split": {
+        "required": [
+          "treatmentBps"
+        ],
+        "type": "object",
+        "properties": {
+          "treatmentBps": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
       },
       "CreateOwnerTierOverrideEndpoint_Input": {
         "required": [
@@ -46324,6 +47127,304 @@
             "description": "The id of the created campaign."
           }
         }
+      },
+      "Experiment": {
+        "required": [
+          "id",
+          "key",
+          "description",
+          "state",
+          "flags",
+          "eligibility",
+          "userEnrollment",
+          "split",
+          "createdBy",
+          "createdAt",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique id of the experiment document."
+          },
+          "key": {
+            "type": "string",
+            "description": "Stable unique identifier; the analysis key is exp:<key>."
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of the hypothesis."
+          },
+          "state": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentState"
+              }
+            ],
+            "description": "The lifecycle state."
+          },
+          "flags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "Feature flags stamped on treatment sessions only."
+          },
+          "eligibility": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentEligibility"
+              }
+            ],
+            "description": "The predicates deciding which sessions are part of the population."
+          },
+          "userEnrollment": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentUserEnrollment"
+              }
+            ],
+            "description": "How users enter and leave the population."
+          },
+          "split": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentSplit"
+              }
+            ],
+            "description": "The traffic split and its server-generated salt."
+          },
+          "startAt": {
+            "type": "string",
+            "description": "Outside the [startAt, endAt) window the experiment is treated as inactive.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endAt": {
+            "type": "string",
+            "description": "End of the experiment window; the experiment auto-completes afterwards.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "The email of the admin who created the experiment."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the experiment was created.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "When the experiment was last changed.",
+            "format": "date-time"
+          }
+        },
+        "description": "A global serve-time A/B experiment. Every eligible session is stamped with\n exp:<key> = treatment|control; treatment sessions additionally\n receive the experiment's feature flags."
+      },
+      "ExperimentAssetKind": {
+        "enum": [
+          "image",
+          "video",
+          "audio",
+          "text",
+          "multi"
+        ]
+      },
+      "ExperimentCampaignType": {
+        "enum": [
+          "Routed",
+          "Program"
+        ]
+      },
+      "ExperimentContextRequirement": {
+        "enum": [
+          "required",
+          "absent",
+          null
+        ]
+      },
+      "ExperimentEligibility": {
+        "type": "object",
+        "properties": {
+          "rapidTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExperimentRapidType"
+            },
+            "nullable": true
+          },
+          "assetKinds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExperimentAssetKind"
+            },
+            "nullable": true
+          },
+          "mediaContext": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentContextRequirement"
+              }
+            ],
+            "nullable": true
+          },
+          "textContext": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentContextRequirement"
+              }
+            ],
+            "nullable": true
+          },
+          "campaignTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExperimentCampaignType"
+            },
+            "nullable": true
+          },
+          "campaignIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "excludedCampaignIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "organizationIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "excludedOrganizationIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "user": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentUserEligibility"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "ExperimentRapidType": {
+        "enum": [
+          "BoundingBox",
+          "Classify",
+          "Compare",
+          "FreeText",
+          "Line",
+          "Locate",
+          "NamedEntity",
+          "Polygon",
+          "Scrub",
+          "Transcription"
+        ]
+      },
+      "ExperimentSplit": {
+        "required": [
+          "treatmentBps",
+          "salt"
+        ],
+        "type": "object",
+        "properties": {
+          "treatmentBps": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "salt": {
+            "type": "string"
+          }
+        }
+      },
+      "ExperimentState": {
+        "enum": [
+          "draft",
+          "active",
+          "paused",
+          "completed"
+        ]
+      },
+      "ExperimentUserEligibility": {
+        "type": "object",
+        "properties": {
+          "minScore": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "maxScore": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "newUsers": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "deviceTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceType"
+            },
+            "nullable": true
+          },
+          "dspNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "globalAudienceGraduate": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "ExperimentUserEnrollment": {
+        "enum": [
+          "perSession",
+          "sticky"
+        ]
       },
       "GetBoostInsightsEndpoint_AudienceOutput": {
         "required": [
@@ -48602,6 +49703,48 @@
               }
             ],
             "description": "The feature flags for the campaign."
+          }
+        }
+      },
+      "UpdateExperimentEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of the hypothesis.",
+            "nullable": true
+          },
+          "eligibility": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentEligibility"
+              }
+            ],
+            "description": "Replaces the whole eligibility object when provided."
+          },
+          "treatmentBps": {
+            "type": "integer",
+            "description": "Treatment share in basis points (0–10000).",
+            "format": "int32",
+            "nullable": true
+          },
+          "endAt": {
+            "type": "string",
+            "description": "End of the experiment window.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "flags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Only updatable while the experiment is a draft."
           }
         }
       },
@@ -51894,6 +53037,14 @@
           }
         }
       },
+      "CostUnit": {
+        "enum": [
+          "UsdPerImage",
+          "UsdPerVideoSecond",
+          "UsdPerMillionTokens",
+          null
+        ]
+      },
       "CreateBenchmarkCustomRunsEndpoint_Input": {
         "required": [
           "name",
@@ -52044,6 +53195,22 @@
               }
             ],
             "description": "The license classification of the underlying model, if any.",
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "description": "The model's price in USD per costUnit. Required together with costUnit.",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "description": "The unit cost is quoted in. Required when cost is supplied.",
             "nullable": true
           },
           "logo": {
@@ -53093,6 +54260,20 @@
             ],
             "nullable": true
           },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "nullable": true
@@ -53225,6 +54406,20 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
               }
             ],
             "nullable": true
@@ -53450,6 +54645,20 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
               }
             ],
             "nullable": true
@@ -53801,6 +55010,22 @@
               }
             ],
             "description": "The license classification of the underlying model, or null if not classified yet.",
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "description": "The price of one costUnit of the model in USD, or null if the price is unknown.",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "description": "The unit cost is quoted in, or null if the price is unknown.",
             "nullable": true
           },
           "logo": {
@@ -55328,6 +56553,22 @@
             "description": "The license classification of the underlying model, or null if not classified yet.",
             "nullable": true
           },
+          "cost": {
+            "type": "number",
+            "description": "The price of one costUnit of the model in USD, or null if the price is unknown.",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "description": "The unit cost is quoted in, or null if the price is unknown.",
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "description": "The logo of the model, or null if unset.",
@@ -55568,6 +56809,20 @@
             ],
             "nullable": true
           },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "nullable": true
@@ -55668,6 +56923,20 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
               }
             ],
             "nullable": true
@@ -56591,6 +57860,22 @@
             "description": "The license classification of the underlying model, or null if not classified yet.",
             "nullable": true
           },
+          "cost": {
+            "type": "number",
+            "description": "The price of one costUnit of the model in USD, or null if the price is unknown.",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "description": "The unit cost is quoted in, or null if the price is unknown.",
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "description": "The logo of the model, or null if unset.",
@@ -57225,6 +58510,20 @@
             ],
             "nullable": true
           },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "nullable": true
@@ -57328,6 +58627,20 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
               }
             ],
             "nullable": true
@@ -58051,6 +59364,22 @@
               }
             ],
             "description": "The license classification of the underlying model. Pass null to clear.",
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "description": "The model's price in USD per costUnit. Pass null to clear. Set and cleared together with costUnit.",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "description": "The unit cost is quoted in. Pass null to clear.",
             "nullable": true
           },
           "logo": {
@@ -69847,6 +71176,7 @@
       "tags": [
         "Cache",
         "Campaign",
+        "Experiment",
         "ExternalAudience",
         "OwnerTierOverride"
       ]

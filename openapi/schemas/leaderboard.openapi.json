@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.08.31.1452-45db4f0"
+    "version": "2026.09.01.1554-ff46632"
   },
   "servers": [
     {
@@ -16667,6 +16667,14 @@
           }
         }
       },
+      "CostUnit": {
+        "enum": [
+          "UsdPerImage",
+          "UsdPerVideoSecond",
+          "UsdPerMillionTokens",
+          null
+        ]
+      },
       "CreateBenchmarkCustomRunsEndpoint_Input": {
         "required": [
           "name",
@@ -16817,6 +16825,22 @@
               }
             ],
             "description": "The license classification of the underlying model, if any.",
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "description": "The model's price in USD per costUnit. Required together with costUnit.",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "description": "The unit cost is quoted in. Required when cost is supplied.",
             "nullable": true
           },
           "logo": {
@@ -17913,6 +17937,20 @@
             ],
             "nullable": true
           },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "nullable": true
@@ -18045,6 +18083,20 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
               }
             ],
             "nullable": true
@@ -18270,6 +18322,20 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
               }
             ],
             "nullable": true
@@ -18621,6 +18687,22 @@
               }
             ],
             "description": "The license classification of the underlying model, or null if not classified yet.",
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "description": "The price of one costUnit of the model in USD, or null if the price is unknown.",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "description": "The unit cost is quoted in, or null if the price is unknown.",
             "nullable": true
           },
           "logo": {
@@ -20703,6 +20785,22 @@
             "description": "The license classification of the underlying model, or null if not classified yet.",
             "nullable": true
           },
+          "cost": {
+            "type": "number",
+            "description": "The price of one costUnit of the model in USD, or null if the price is unknown.",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "description": "The unit cost is quoted in, or null if the price is unknown.",
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "description": "The logo of the model, or null if unset.",
@@ -20943,6 +21041,20 @@
             ],
             "nullable": true
           },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "nullable": true
@@ -21043,6 +21155,20 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
               }
             ],
             "nullable": true
@@ -21966,6 +22092,22 @@
             "description": "The license classification of the underlying model, or null if not classified yet.",
             "nullable": true
           },
+          "cost": {
+            "type": "number",
+            "description": "The price of one costUnit of the model in USD, or null if the price is unknown.",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "description": "The unit cost is quoted in, or null if the price is unknown.",
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "description": "The logo of the model, or null if unset.",
@@ -22600,6 +22742,20 @@
             ],
             "nullable": true
           },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "nullable": true
+          },
           "logo": {
             "type": "string",
             "nullable": true
@@ -22703,6 +22859,20 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ModelLicenseType"
+              }
+            ],
+            "nullable": true
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
               }
             ],
             "nullable": true
@@ -23428,6 +23598,22 @@
             "description": "The license classification of the underlying model. Pass null to clear.",
             "nullable": true
           },
+          "cost": {
+            "type": "number",
+            "description": "The model's price in USD per costUnit. Pass null to clear. Set and cleared together with costUnit.",
+            "format": "double",
+            "nullable": true
+          },
+          "costUnit": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CostUnit"
+              }
+            ],
+            "description": "The unit cost is quoted in. Pass null to clear.",
+            "nullable": true
+          },
           "logo": {
             "type": "object",
             "oneOf": [
@@ -23583,7 +23769,8 @@
         "openid",
         "profile",
         "email",
-        "offline_access"
+        "offline_access",
+        "api"
       ]
     }
   ]

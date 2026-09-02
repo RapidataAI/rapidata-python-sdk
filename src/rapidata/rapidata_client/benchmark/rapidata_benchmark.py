@@ -963,7 +963,7 @@ class RapidataBenchmark:
 
         with tracer.start_as_current_span("RapidataBenchmark.run"):
             created = [
-                p for p in self.participants if p.status == ParticipantStatus.CREATED
+                p for p in self.participants if p.status in [ParticipantStatus.CREATED, ParticipantStatus.SUBMITTABLE]
             ]
             logger.info(f"Submitting {len(created)} participants in CREATED state")
 
