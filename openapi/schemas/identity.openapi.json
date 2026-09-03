@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.09.01.1554-ff46632"
+    "version": "2026.09.03.0112-2cb34ca"
   },
   "servers": [
     {
@@ -2016,7 +2016,7 @@
           "Organization"
         ],
         "summary": "Updates the given organization's provided fields.",
-        "description": "Only the fields present in the body are changed.",
+        "description": "Only the fields present in the body are changed, and only those the caller may change. An\n auto-join domain is rejected when it is malformed or already claimed by another organization;\n enabling auto-join without a claimed domain is rejected as well.",
         "parameters": [
           {
             "name": "organizationId",
@@ -3468,7 +3468,9 @@
         "required": [
           "id",
           "name",
-          "primaryDomain"
+          "primaryDomain",
+          "autoJoinDomain",
+          "autoJoinEnabled"
         ],
         "type": "object",
         "properties": {
@@ -3484,6 +3486,15 @@
             "type": "string",
             "description": "The primary email domain associated with the organization, if any.",
             "nullable": true
+          },
+          "autoJoinDomain": {
+            "type": "string",
+            "description": "The email domain claimed for auto-join, if any. New customers signing up with a confirmed\n email on this domain join the organization when auto-join is enabled.",
+            "nullable": true
+          },
+          "autoJoinEnabled": {
+            "type": "boolean",
+            "description": "Whether auto-join is enabled for the claimed domain."
           }
         }
       },
@@ -4412,6 +4423,15 @@
           "name": {
             "type": "string",
             "description": "The new human-readable name, if changing it."
+          },
+          "autoJoinDomain": {
+            "type": "string",
+            "description": "The email domain to claim for auto-join, or null to release the claim. New customers who\n sign up with a confirmed email on this domain join this organization instead of getting a\n personal one, once auto-join is enabled. Existing customers are never moved.",
+            "nullable": true
+          },
+          "autoJoinEnabled": {
+            "type": "boolean",
+            "description": "Whether to auto-join new customers signing up on the claimed domain."
           }
         }
       },

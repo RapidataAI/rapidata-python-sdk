@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Payment API",
     "description": "The API for the Rapidata Payment service",
-    "version": "2026.09.01.1554-ff46632"
+    "version": "2026.09.03.0112-2cb34ca"
   },
   "servers": [
     {
@@ -2087,42 +2087,31 @@
         }
       }
     },
-    "/billing-period/{billingPeriodId}/volume-discounts": {
-      "post": {
+    "/billing/organization/{organizationId}/volume-discounts": {
+      "get": {
         "tags": [
           "Billing",
           "VolumeDiscount"
         ],
-        "summary": "Creates a volume discount bracket for a billing period.",
+        "summary": "Gets an organization's current volume discount brackets.",
         "parameters": [
           {
-            "name": "billingPeriodId",
+            "name": "organizationId",
             "in": "path",
-            "description": "The billing period to add the volume discount to.",
+            "description": "The organization to get volume discounts for.",
             "required": true,
             "schema": {
               "type": "string"
             }
           }
         ],
-        "requestBody": {
-          "description": "The volume discount bracket data.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateVolumeDiscountEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateVolumeDiscountEndpoint_Output"
+                  "$ref": "#/components/schemas/GetOrganizationVolumeDiscountsEndpoint_Output"
                 }
               }
             }
@@ -2145,6 +2134,59 @@
           }
         }
       },
+      "put": {
+        "tags": [
+          "Billing",
+          "VolumeDiscount"
+        ],
+        "summary": "Replaces an organization's whole volume discount bracket set.",
+        "description": "The brackets are automatically projected onto the organization's current open billing period\n and every future period. An empty list clears the bracket set. Brackets must have unique\n minimum response counts.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization whose volume discounts to set.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new volume discount brackets.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetVolumeDiscountsEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/billing-period/{billingPeriodId}/volume-discounts": {
       "get": {
         "tags": [
           "Billing",
@@ -3996,37 +4038,6 @@
           }
         }
       },
-      "CreateVolumeDiscountEndpoint_Input": {
-        "required": [
-          "minResponses",
-          "discountRatio"
-        ],
-        "type": "object",
-        "properties": {
-          "minResponses": {
-            "type": "integer",
-            "description": "The minimum number of responses to trigger this discount bracket.",
-            "format": "int64"
-          },
-          "discountRatio": {
-            "type": "number",
-            "description": "The discount ratio for this bracket (e.g., 0.10 for 10%).",
-            "format": "double"
-          }
-        }
-      },
-      "CreateVolumeDiscountEndpoint_Output": {
-        "required": [
-          "id"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The ID of the created volume discount bracket."
-          }
-        }
-      },
       "ExternalServiceKind": {
         "enum": [
           "ContextShortening",
@@ -4802,6 +4813,46 @@
             "description": "When the invoice was paid.",
             "format": "date-time",
             "nullable": true
+          }
+        }
+      },
+      "GetOrganizationVolumeDiscountsEndpoint_Output": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetOrganizationVolumeDiscountsEndpoint_Output_VolumeDiscountItem"
+                }
+              }
+            ],
+            "description": "The volume discount brackets."
+          }
+        }
+      },
+      "GetOrganizationVolumeDiscountsEndpoint_Output_VolumeDiscountItem": {
+        "required": [
+          "id",
+          "minResponses",
+          "discountRatio"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "minResponses": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "discountRatio": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -6352,6 +6403,42 @@
             "description": "The new platform fee. null removes the platform fee; 0 is an explicit $0\n fee that is still shown; a positive value is charged once per billing period.",
             "format": "double",
             "nullable": true
+          }
+        }
+      },
+      "SetVolumeDiscountsEndpoint_Input": {
+        "required": [
+          "brackets"
+        ],
+        "type": "object",
+        "properties": {
+          "brackets": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SetVolumeDiscountsEndpoint_Input_Bracket"
+                }
+              }
+            ],
+            "description": "The organization's whole bracket set; an empty list clears it."
+          }
+        }
+      },
+      "SetVolumeDiscountsEndpoint_Input_Bracket": {
+        "required": [
+          "minResponses",
+          "discountRatio"
+        ],
+        "type": "object",
+        "properties": {
+          "minResponses": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "discountRatio": {
+            "type": "number",
+            "format": "double"
           }
         }
       },

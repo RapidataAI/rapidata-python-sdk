@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.09.01.1554-ff46632"
+    "version": "2026.09.03.0112-2cb34ca"
   },
   "servers": [
     {
@@ -2439,6 +2439,14 @@
           }
         }
       },
+      "AudienceCapacity": {
+        "enum": [
+          "None",
+          "Low",
+          "Sufficient",
+          null
+        ]
+      },
       "AudienceInactivitySyncPhase": {
         "enum": [
           "MarkingInactiveUsers",
@@ -3252,7 +3260,8 @@
       },
       "GetAudienceUserStateMetricsResult": {
         "required": [
-          "usersPerState"
+          "usersPerState",
+          "capacity"
         ],
         "type": "object",
         "properties": {
@@ -3262,6 +3271,15 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          "capacity": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AudienceCapacity"
+              }
+            ],
+            "nullable": true
           }
         }
       },
