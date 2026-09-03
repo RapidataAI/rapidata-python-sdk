@@ -108,11 +108,46 @@ class BenchmarkParticipant:
 
         After uploading media, call this method to submit the participant
         so that it enters the evaluation pipeline.
+
+        If the benchmark requires a minimum number of samples per prompt, any
+        prompt this participant filled with fewer than that many samples is
+        logged as a warning. The submission still goes through — the check is
+        advisory, not a rejection.
         """
-        self._openapi_service.leaderboard.participant_api.participants_participant_id_submit_post(
-            participant_id=self.id
+        from rapidata.api_client.models.submit_participants_endpoint_input import (
+            SubmitParticipantsEndpointInput,
         )
-        self._status = ParticipantStatus.SUBMITTED
+
+        with tracer.start_as_current_span("BenchmarkParticipant.run"):
+            # Submitted through the batch endpoint as a batch of one: only its response
+            # carries the min-assets-per-prompt warning, and for a single participant this
+            # is equivalent to the per-participant submit.
+            result = self._openapi_service.leaderboard.participant_api.participants_submit_post(
+                SubmitParticipantsEndpointInput(participantIds=[self.id])
+            )
+            self._status = ParticipantStatus.SUBMITTED
+
+            warning = result.min_assets_per_prompt_warning
+            if warning is not None:
+                shortfalls = [
+                    prompt
+                    for participant in warning.underfilled_participants
+                    for prompt in participant.underfilled_prompts
+                ]
+                if shortfalls:
+                    details = ", ".join(
+                        f"'{prompt.identifier}' ({prompt.asset_count}/{warning.min_assets_per_prompt})"
+                        for prompt in shortfalls
+                    )
+                    logger.warning(
+                        "Participant '%s' submitted with %d prompt(s) below the benchmark's "
+                        "required %d samples per prompt: %s. Add more versions or remove these "
+                        "prompts to avoid skewed comparisons.",
+                        self.name,
+                        len(shortfalls),
+                        warning.min_assets_per_prompt,
+                        details,
+                    )
 
     def disable(self) -> None:
         """Disables the participant in the benchmark.
