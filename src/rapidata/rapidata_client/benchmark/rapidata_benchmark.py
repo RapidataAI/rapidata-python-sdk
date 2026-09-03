@@ -947,6 +947,45 @@ class RapidataBenchmark:
 
             return participant
 
+    def update(self, min_assets_per_prompt: int | None = None) -> None:
+        """Updates the benchmark's configuration.
+
+        Only the arguments you pass are changed; anything omitted keeps its
+        stored value.
+
+        Args:
+            min_assets_per_prompt: The minimum number of samples a participant
+                must provide for a prompt, if it provides any at all. When set,
+                submitting a participant warns for every prompt it filled with
+                between 1 and this many samples. Must be at least 2.
+        """
+        from rapidata.api_client.models.update_benchmark_endpoint_input import (
+            UpdateBenchmarkEndpointInput,
+        )
+
+        with tracer.start_as_current_span("RapidataBenchmark.update"):
+            if min_assets_per_prompt is not None:
+                # bool is an int subclass — reject it so `True` isn't read as 1.
+                if isinstance(min_assets_per_prompt, bool) or not isinstance(
+                    min_assets_per_prompt, int
+                ):
+                    raise ValueError("min_assets_per_prompt must be an integer")
+                if min_assets_per_prompt < 2:
+                    raise ValueError("min_assets_per_prompt must be at least 2")
+
+            logger.info(
+                "Updating benchmark %s with min_assets_per_prompt %s",
+                self.id,
+                min_assets_per_prompt,
+            )
+
+            self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_patch(
+                benchmark_id=self.id,
+                update_benchmark_endpoint_input=UpdateBenchmarkEndpointInput(
+                    minAssetsPerPrompt=min_assets_per_prompt,
+                ),
+            )
+
     def run(self) -> None:
         """Submits all participants that are in `CREATED` state.
 
