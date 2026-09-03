@@ -21,6 +21,11 @@ def _make_benchmark(
 ) -> tuple[RapidataBenchmark, list[BenchmarkParticipant]]:
     svc = MagicMock()
     svc.environment = "rapidata.ai"
+    # A real submit response carries no min-assets warning unless the gate fires;
+    # default the mock to that so `run` doesn't iterate a bare MagicMock.
+    svc.leaderboard.participant_api.participants_submit_post.return_value.min_assets_per_prompt_warning = (
+        None
+    )
     benchmark = RapidataBenchmark("bm", "bm-1", svc)
 
     participants = [
@@ -39,7 +44,9 @@ def _make_benchmark(
 
 
 def _submit_calls(benchmark: RapidataBenchmark):
-    return benchmark._openapi_service.leaderboard.participant_api.participants_submit_post.call_args_list
+    return (
+        benchmark._openapi_service.leaderboard.participant_api.participants_submit_post.call_args_list
+    )
 
 
 def test_run_submits_created_participants_in_a_single_batch() -> None:
@@ -90,3 +97,45 @@ def test_run_with_no_created_participants_sends_nothing() -> None:
     benchmark.run()
 
     assert _submit_calls(benchmark) == []
+
+
+def test_run_logs_warning_for_underfilled_prompts() -> None:
+    from unittest.mock import patch
+
+    from rapidata.api_client.models.submit_participants_endpoint_batch_min_assets_per_prompt_warning import (
+        SubmitParticipantsEndpointBatchMinAssetsPerPromptWarning,
+    )
+    from rapidata.api_client.models.submit_participants_endpoint_participant_underfilled_prompts import (
+        SubmitParticipantsEndpointParticipantUnderfilledPrompts,
+    )
+    from rapidata.api_client.models.submit_participants_endpoint_underfilled_prompt import (
+        SubmitParticipantsEndpointUnderfilledPrompt,
+    )
+
+    benchmark, _ = _make_benchmark([ParticipantStatus.CREATED] * 2)
+    benchmark._openapi_service.leaderboard.participant_api.participants_submit_post.return_value.min_assets_per_prompt_warning = SubmitParticipantsEndpointBatchMinAssetsPerPromptWarning(
+        minAssetsPerPrompt=4,
+        underfilledParticipants=[
+            SubmitParticipantsEndpointParticipantUnderfilledPrompts(
+                participantId="p-0",
+                underfilledPrompts=[
+                    SubmitParticipantsEndpointUnderfilledPrompt(
+                        identifier="cat", assetCount=2
+                    )
+                ],
+            )
+        ],
+    )
+
+    with patch(
+        "rapidata.rapidata_client.benchmark.rapidata_benchmark.logger"
+    ) as mock_logger:
+        benchmark.run()
+
+    mock_logger.warning.assert_called_once()
+    # The participant's display name and the shortfall detail must reach the message.
+    formatted = (
+        mock_logger.warning.call_args.args[0] % mock_logger.warning.call_args.args[1:]
+    )
+    assert "model-0" in formatted
+    assert "'cat' (2/4)" in formatted

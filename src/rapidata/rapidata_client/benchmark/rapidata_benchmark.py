@@ -963,19 +963,55 @@ class RapidataBenchmark:
 
         with tracer.start_as_current_span("RapidataBenchmark.run"):
             created = [
-                p for p in self.participants if p.status in [ParticipantStatus.CREATED, ParticipantStatus.SUBMITTABLE]
+                p
+                for p in self.participants
+                if p.status
+                in [ParticipantStatus.CREATED, ParticipantStatus.SUBMITTABLE]
             ]
             logger.info(f"Submitting {len(created)} participants in CREATED state")
 
+            name_by_id = {p.id: p.name for p in created}
+            min_assets_per_prompt: int | None = None
+            underfilled: list[tuple[str, list]] = []
+
             for start in range(0, len(created), _SUBMIT_BATCH_SIZE):
                 batch = created[start : start + _SUBMIT_BATCH_SIZE]
-                self._openapi_service.leaderboard.participant_api.participants_submit_post(
+                result = self._openapi_service.leaderboard.participant_api.participants_submit_post(
                     submit_participants_endpoint_input=SubmitParticipantsEndpointInput(
                         participantIds=[p.id for p in batch]
                     )
                 )
                 for participant in batch:
                     participant._status = ParticipantStatus.SUBMITTED
+
+                warning = result.min_assets_per_prompt_warning
+                if warning is not None:
+                    min_assets_per_prompt = warning.min_assets_per_prompt
+                    for participant_warning in warning.underfilled_participants:
+                        underfilled.append(
+                            (
+                                participant_warning.participant_id,
+                                participant_warning.underfilled_prompts,
+                            )
+                        )
+
+            if underfilled and min_assets_per_prompt is not None:
+                lines = "; ".join(
+                    f"{name_by_id.get(participant_id, participant_id)}: "
+                    + ", ".join(
+                        f"'{prompt.identifier}' ({prompt.asset_count}/{min_assets_per_prompt})"
+                        for prompt in prompts
+                    )
+                    for participant_id, prompts in underfilled
+                )
+                logger.warning(
+                    "%d participant(s) submitted with prompts below the benchmark's required "
+                    "%d samples per prompt: %s. Add more versions or remove these prompts to "
+                    "avoid skewed comparisons.",
+                    len(underfilled),
+                    min_assets_per_prompt,
+                    lines,
+                )
 
             # Clear cache so next access re-fetches
             self.__participants = []
