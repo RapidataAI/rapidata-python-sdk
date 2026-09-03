@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.03.0112-2cb34ca"
+    "version": "2026.09.03.0935-e446992"
   },
   "servers": [
     {
@@ -53227,6 +53227,12 @@
             "format": "int32",
             "nullable": true
           },
+          "minAssetsPerPrompt": {
+            "type": "integer",
+            "description": "Optional submission quality gate. When set (at least 2), submitting a participant warns for\n any prompt it generated between 1 and N-1 samples for. Leave unset to disable.",
+            "format": "int32",
+            "nullable": true
+          },
           "scoreShift": {
             "type": "number",
             "description": "Additive offset applied to displayed scores on the benchmark's overall scoreboard; defaults to 0.",
@@ -59194,6 +59200,25 @@
           }
         }
       },
+      "SubmitParticipantsEndpoint_BatchMinAssetsPerPromptWarning": {
+        "required": [
+          "minAssetsPerPrompt",
+          "underfilledParticipants"
+        ],
+        "type": "object",
+        "properties": {
+          "minAssetsPerPrompt": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "underfilledParticipants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubmitParticipantsEndpoint_ParticipantUnderfilledPrompts"
+            }
+          }
+        }
+      },
       "SubmitParticipantsEndpoint_Input": {
         "required": [
           "participantIds"
@@ -59228,6 +59253,48 @@
           "invalidDatapoints": {
             "type": "integer",
             "description": "The number of invalid datapoints collected by the participants.",
+            "format": "int32"
+          },
+          "minAssetsPerPromptWarning": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SubmitParticipantsEndpoint_BatchMinAssetsPerPromptWarning"
+              }
+            ],
+            "description": "Set when the benchmark enforces a minimum number of samples per prompt and one or more of\n the submitted participants fall short. null when the gate is off or every\n participant satisfies it. Advisory — the submission still succeeded."
+          }
+        }
+      },
+      "SubmitParticipantsEndpoint_ParticipantUnderfilledPrompts": {
+        "required": [
+          "participantId",
+          "underfilledPrompts"
+        ],
+        "type": "object",
+        "properties": {
+          "participantId": {
+            "type": "string"
+          },
+          "underfilledPrompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubmitParticipantsEndpoint_UnderfilledPrompt"
+            }
+          }
+        }
+      },
+      "SubmitParticipantsEndpoint_UnderfilledPrompt": {
+        "required": [
+          "identifier",
+          "assetCount"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "assetCount": {
+            "type": "integer",
             "format": "int32"
           }
         }
@@ -59289,6 +59356,12 @@
           "initialBoostLevel": {
             "type": "integer",
             "description": "Initial boost level applied to the campaign of every run created from this benchmark. Pass null to clear the\n override and fall back to the benchmark default.",
+            "format": "int32",
+            "nullable": true
+          },
+          "minAssetsPerPrompt": {
+            "type": "integer",
+            "description": "Optional submission quality gate. Set to at least 2 to warn on submit for prompts with\n 1..N-1 samples; pass null to clear the gate; omit to leave it unchanged.",
             "format": "int32",
             "nullable": true
           },
