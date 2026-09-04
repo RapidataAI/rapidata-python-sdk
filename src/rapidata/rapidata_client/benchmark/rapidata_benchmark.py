@@ -47,6 +47,8 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.get_prompts_by_benchmark_endpoint_output import (
         GetPromptsByBenchmarkEndpointOutput,
     )
+    from rapidata.api_client.models.i_asset import IAsset
+    from rapidata.api_client.models.i_asset_file_asset import IAssetFileAsset
     from rapidata.rapidata_client.settings import RapidataSetting
     from rapidata.service.openapi_service import OpenAPIService
 
@@ -77,7 +79,7 @@ class RapidataBenchmark:
         self._openapi_service = openapi_service
         self.__prompts: list[str | None] = []
         self.__english_prompts: list[str | None] = []
-        self.__prompt_assets: list[str | None] = []
+        self.__prompt_assets: list[str | list[str] | None] = []
         self.__leaderboards: list["RapidataLeaderboard"] = []
         self.__identifiers: list[str] = []
         self.__tags: list[list[str]] = []
@@ -91,37 +93,67 @@ class RapidataBenchmark:
         self._prompt_uploader = BenchmarkPromptUploader(id, openapi_service)
 
     @staticmethod
-    def __extract_asset_url(prompt: GetPromptsByBenchmarkEndpointOutput) -> str | None:
-        """Reconstruct a prompt's asset reference from the server metadata.
+    def __extract_file_asset_reference(file_asset: IAssetFileAsset) -> str | None:
+        """Reconstruct a single file asset's reference from its metadata.
 
         Remote assets come back as their `sourceUrl`; locally-uploaded ones as
         the bare `originalFilename`.
         """
-        from rapidata.api_client.models.i_asset_model_file_asset_model import (
-            IAssetModelFileAssetModel,
+        from rapidata.api_client.models.i_metadata_source_url_metadata import (
+            IMetadataSourceUrlMetadata,
         )
-        from rapidata.api_client.models.i_metadata_model_source_url_metadata_model import (
-            IMetadataModelSourceUrlMetadataModel,
-        )
-        from rapidata.api_client.models.i_metadata_model_original_filename_metadata_model import (
-            IMetadataModelOriginalFilenameMetadataModel,
+        from rapidata.api_client.models.i_metadata_original_filename_metadata import (
+            IMetadataOriginalFilenameMetadata,
         )
 
-        if prompt.prompt_asset is None:
-            return None
-        file_asset = prompt.prompt_asset.actual_instance
-        assert isinstance(file_asset, IAssetModelFileAssetModel)
         source_url = file_asset.metadata.get("sourceUrl")
-        original_filename = file_asset.metadata.get("originalFilename")
         if source_url is not None:
             instance = source_url.actual_instance
-            assert isinstance(instance, IMetadataModelSourceUrlMetadataModel)
-            return instance.url
+            if isinstance(instance, IMetadataSourceUrlMetadata):
+                return instance.url
+        original_filename = file_asset.metadata.get("originalFilename")
         if original_filename is not None:
             instance = original_filename.actual_instance
-            assert isinstance(instance, IMetadataModelOriginalFilenameMetadataModel)
-            return instance.original_filename
+            if isinstance(instance, IMetadataOriginalFilenameMetadata):
+                return instance.original_filename
         return None
+
+    @classmethod
+    def __extract_asset_reference(cls, asset: IAsset) -> str | list[str] | None:
+        """Resolve any asset the read API can return into its reference(s).
+
+        A multi-asset resolves to the list of its parts, mirroring the
+        `str | list[str]` shape the SDK's asset uploader takes for a single
+        versus a multi asset. Text and null assets carry no file to point at.
+        """
+        from rapidata.api_client.models.i_asset_file_asset import IAssetFileAsset
+        from rapidata.api_client.models.i_asset_multi_asset import IAssetMultiAsset
+
+        instance = asset.actual_instance
+        if isinstance(instance, IAssetFileAsset):
+            return cls.__extract_file_asset_reference(instance)
+
+        if isinstance(instance, IAssetMultiAsset):
+            references: list[str] = []
+            for part in instance.assets:
+                reference = cls.__extract_asset_reference(part)
+                if isinstance(reference, str):
+                    references.append(reference)
+                elif reference is not None:
+                    references.extend(reference)
+            return references or None
+
+        return None
+
+    @classmethod
+    def __extract_asset_url(
+        cls, prompt: GetPromptsByBenchmarkEndpointOutput
+    ) -> str | list[str] | None:
+        """Reconstruct a prompt's asset reference from the server metadata."""
+        if prompt.prompt_asset is None:
+            return None
+
+        return cls.__extract_asset_reference(prompt.prompt_asset)
 
     @classmethod
     def __to_prompt_info(
@@ -236,9 +268,12 @@ class RapidataBenchmark:
         return self.__english_prompts
 
     @property
-    def prompt_assets(self) -> list[str | None]:
+    def prompt_assets(self) -> list[str | list[str] | None]:
         """
         Returns the prompt assets that are registered for the benchmark.
+
+        A prompt registered with several assets at once comes back as the list
+        of its parts.
         """
         if not self.__prompt_assets:
             self.__instantiate_prompts()
