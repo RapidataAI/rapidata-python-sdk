@@ -33,7 +33,7 @@ class BenchmarkPromptInfo:
     identifier: str
     prompt: str | None
     english_prompt: str | None
-    prompt_asset: str | None
+    prompt_asset: str | list[str] | None
     tags: list[Tag]
     origin: Origin | None
 
