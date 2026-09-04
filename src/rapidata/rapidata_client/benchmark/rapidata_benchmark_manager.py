@@ -28,7 +28,7 @@ class RapidataBenchmarkManager:
         name: str,
         identifiers: Optional[list[str]] = None,
         prompts: Optional[list[str | None] | list[str]] = None,
-        prompt_assets: Optional[list[str | None] | list[str]] = None,
+        prompt_assets: Optional[list[list[str] | None] | list[list[str]]] = None,
         tags: Optional[Sequence[Sequence[str | Tag] | None]] = None,
         origins: Optional[Sequence[Origin | str | None]] = None,
     ) -> RapidataBenchmark:
@@ -42,7 +42,7 @@ class RapidataBenchmarkManager:
             name: The name of the benchmark.
             identifiers: The identifiers of the prompts/assets/tags that will be used to match up the media. If not provided, it will use the prompts as the identifiers.
             prompts: The prompts that will be registered for the benchmark.
-            prompt_assets: The prompt assets that will be registered for the benchmark.
+            prompt_assets: The assets per prompt, matching the `media_contexts` shape of the job definitions. Each entry is a list of image / video / audio URLs or file paths shown alongside that prompt (several entries are registered as one multi-asset), or None for no asset.
             tags: The tags per prompt, used to filter and organize the leaderboard results. They are NOT shown to the users. Each entry is a list of plain strings, a list of :class:`Tag` (a `value` plus an optional `category`), or a mix of both — strings are converted to `Tag(value, category=None)` internally. None means no tags for that prompt.
             origins: The origin of each prompt (e.g. a source dataset). Each entry is a plain string (converted to `Origin(source)`), an :class:`Origin`, or None.
 
@@ -51,7 +51,7 @@ class RapidataBenchmarkManager:
             name = "Example Benchmark"
             identifiers = ["id1", "id2", "id3"]
             prompts = ["prompt 1", "prompt 2", "prompt 3"]
-            prompt_assets = ["https://assets.rapidata.ai/prompt_1.jpg", "https://assets.rapidata.ai/prompt_2.jpg", "https://assets.rapidata.ai/prompt_3.jpg"]
+            prompt_assets = [["https://assets.rapidata.ai/prompt_1.jpg"], ["https://assets.rapidata.ai/prompt_2.jpg"], ["https://assets.rapidata.ai/prompt_3.jpg"]]
             tags = [["tag1", "tag2"], ["tag2"], ["tag2", "tag3"]]
 
             benchmark = create_new_benchmark(name=name, identifiers=identifiers, prompts=prompts, prompt_assets=prompt_assets, tags=tags)

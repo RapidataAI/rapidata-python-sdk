@@ -26,7 +26,7 @@ class BenchmarkPrompt:
 
     identifier: str
     prompt: str | None = None
-    prompt_asset: str | None = None
+    prompt_asset: list[str] | None = None
     tags: list[Tag] = field(default_factory=list)
     origin: Origin | None = None
 
@@ -48,10 +48,6 @@ class BenchmarkPromptUploader:
         from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_input import (
             CreatePromptForBenchmarkEndpointInput,
         )
-        from rapidata.api_client.models.i_asset_input_existing_asset_input import (
-            IAssetInputExistingAssetInput,
-        )
-        from rapidata.api_client.models.i_asset_input import IAssetInput
 
         # Aliased: the generated wire models share their names with the
         # user-facing Tag/Origin imported at module scope.
@@ -64,12 +60,7 @@ class BenchmarkPromptUploader:
                 identifier=prompt.identifier,
                 prompt=prompt.prompt,
                 promptAsset=(
-                    IAssetInput(
-                        actual_instance=IAssetInputExistingAssetInput(
-                            _t="ExistingAssetInput",
-                            name=self._asset_uploader.upload_asset(prompt.prompt_asset),
-                        )
-                    )
+                    self._asset_uploader.upload_and_map_asset(prompt.prompt_asset)
                     if prompt.prompt_asset is not None
                     else None
                 ),

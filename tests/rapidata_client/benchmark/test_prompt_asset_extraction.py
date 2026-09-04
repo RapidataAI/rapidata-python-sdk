@@ -115,9 +115,10 @@ def _make_benchmark(prompts: list[dict]) -> RapidataBenchmark:
 @pytest.mark.parametrize(
     "asset,expected",
     [
-        (_FILE_ASSET, "8.jpg"),
+        # A single asset is a one-element list: the same shape `add_prompts` takes.
+        (_FILE_ASSET, ["8.jpg"]),
         # A remote asset keeps its URL; the filename is only the fallback.
-        (_REMOTE_FILE_ASSET, "https://assets.rapidata.ai/prompt_1.jpg"),
+        (_REMOTE_FILE_ASSET, ["https://assets.rapidata.ai/prompt_1.jpg"]),
         (_MULTI_ASSET, ["camera-moves-forward.gif", "interior-2685521.jpg"]),
         (_NULL_ASSET, None),
         (_TEXT_ASSET, None),

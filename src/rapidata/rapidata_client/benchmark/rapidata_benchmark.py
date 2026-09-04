@@ -26,6 +26,7 @@ from rapidata.rapidata_client.benchmark.prompt_metadata import (
     Origin,
     Tag,
     coerce_origin,
+    coerce_prompt_asset,
     coerce_tags,
     is_tag_list,
 )
@@ -79,7 +80,7 @@ class RapidataBenchmark:
         self._openapi_service = openapi_service
         self.__prompts: list[str | None] = []
         self.__english_prompts: list[str | None] = []
-        self.__prompt_assets: list[str | list[str] | None] = []
+        self.__prompt_assets: list[list[str] | None] = []
         self.__leaderboards: list["RapidataLeaderboard"] = []
         self.__identifiers: list[str] = []
         self.__tags: list[list[str]] = []
@@ -119,28 +120,28 @@ class RapidataBenchmark:
         return None
 
     @classmethod
-    def __extract_asset_reference(cls, asset: IAsset) -> str | list[str] | None:
-        """Resolve any asset the read API can return into its reference(s).
+    def __extract_asset_reference(cls, asset: IAsset) -> list[str] | None:
+        """Resolve any asset the read API can return into its list of references.
 
-        A multi-asset resolves to the list of its parts, mirroring the
-        `str | list[str]` shape the SDK's asset uploader takes for a single
-        versus a multi asset. Text and null assets carry no file to point at.
+        A single file asset is a one-element list and a multi-asset the list of
+        its parts: the same list-per-prompt shape `add_prompts` accepts, so what
+        is read back can be fed straight into it. Text and null assets carry no
+        file to point at.
         """
         from rapidata.api_client.models.i_asset_file_asset import IAssetFileAsset
         from rapidata.api_client.models.i_asset_multi_asset import IAssetMultiAsset
 
         instance = asset.actual_instance
         if isinstance(instance, IAssetFileAsset):
-            return cls.__extract_file_asset_reference(instance)
+            reference = cls.__extract_file_asset_reference(instance)
+            return [reference] if reference is not None else None
 
         if isinstance(instance, IAssetMultiAsset):
-            references: list[str] = []
-            for part in instance.assets:
-                reference = cls.__extract_asset_reference(part)
-                if isinstance(reference, str):
-                    references.append(reference)
-                elif reference is not None:
-                    references.extend(reference)
+            references = [
+                reference
+                for part in instance.assets
+                for reference in (cls.__extract_asset_reference(part) or [])
+            ]
             return references or None
 
         return None
@@ -148,8 +149,8 @@ class RapidataBenchmark:
     @classmethod
     def __extract_asset_url(
         cls, prompt: GetPromptsByBenchmarkEndpointOutput
-    ) -> str | list[str] | None:
-        """Reconstruct a prompt's asset reference from the server metadata."""
+    ) -> list[str] | None:
+        """Reconstruct a prompt's asset references from the server metadata."""
         if prompt.prompt_asset is None:
             return None
 
@@ -223,7 +224,7 @@ class RapidataBenchmark:
     __URL_SCHEME_RE = re.compile(r"^https?://", re.IGNORECASE)
 
     @classmethod
-    def __normalize_cached_asset(cls, asset: str | None) -> str | None:
+    def __normalize_cached_asset(cls, asset: list[str] | None) -> list[str] | None:
         """Mirror the representation a re-fetch would reconstruct for an asset.
 
         `__instantiate_prompts` rebuilds assets from server metadata: remote
@@ -232,10 +233,13 @@ class RapidataBenchmark:
         uploaded value here keeps `prompt_assets` identical before and after any
         re-fetch, so it stays idempotent as input to downstream calls.
         """
-        if asset is None or cls.__URL_SCHEME_RE.match(asset):
-            return asset
+        if asset is None:
+            return None
 
-        return os.path.basename(asset)
+        return [
+            part if cls.__URL_SCHEME_RE.match(part) else os.path.basename(part)
+            for part in asset
+        ]
 
     @property
     def identifiers(self) -> list[str]:
@@ -268,12 +272,13 @@ class RapidataBenchmark:
         return self.__english_prompts
 
     @property
-    def prompt_assets(self) -> list[str | list[str] | None]:
+    def prompt_assets(self) -> list[list[str] | None]:
         """
-        Returns the prompt assets that are registered for the benchmark.
+        Returns the prompt assets registered for the benchmark, aligned by index with `prompts`.
 
-        A prompt registered with several assets at once comes back as the list
-        of its parts.
+        Each entry is the list of assets shown with that prompt (one element for
+        a single asset, several for a multi-asset), or None if the prompt has no
+        asset. This is the same shape `add_prompts` takes.
         """
         if not self.__prompt_assets:
             self.__instantiate_prompts()
@@ -405,7 +410,7 @@ class RapidataBenchmark:
         self,
         identifiers: Optional[list[str]] = None,
         prompts: Optional[list[str | None] | list[str]] = None,
-        prompt_assets: Optional[list[str | None] | list[str]] = None,
+        prompt_assets: Optional[list[list[str] | None] | list[list[str]]] = None,
         tags: Optional[Sequence[Sequence[str | Tag] | None]] = None,
         origins: Optional[Sequence[Origin | str | None]] = None,
     ) -> None:
@@ -422,7 +427,7 @@ class RapidataBenchmark:
         Args:
             identifiers: The identifiers of the prompts/assets/tags that will be used to match up the media. If not provided, it will use the prompts as the identifiers.
             prompts: The prompts that will be registered for the benchmark.
-            prompt_assets: The prompt assets that will be registered for the benchmark.
+            prompt_assets: The assets per prompt, matching the `media_contexts` shape of the job definitions. Each entry is a list of image / video / audio URLs or file paths shown alongside that prompt (several entries are registered as one multi-asset), or None for no asset.
             tags: The tags per prompt, used to filter and organize the leaderboard results. They are NOT shown to the users. Each entry is a list of plain strings, a list of :class:`Tag` (a `value` plus an optional `category`), or a mix of both — strings are converted to `Tag(value, category=None)` internally. None means no tags for that prompt.
             origins: The origin of each prompt (e.g. a source dataset). Each entry is a plain string (converted to `Origin(source)`), an :class:`Origin`, or None.
 
@@ -432,7 +437,11 @@ class RapidataBenchmark:
             benchmark.add_prompts(
                 identifiers=["id1", "id2"],
                 prompts=["prompt 1", "prompt 2"],
-                prompt_assets=["https://assets.rapidata.ai/prompt_1.jpg", "https://assets.rapidata.ai/prompt_2.jpg"],
+                prompt_assets=[
+                    ["https://assets.rapidata.ai/prompt_1.jpg"],
+                    # Several assets for one prompt, e.g. a reference clip plus a still.
+                    ["https://assets.rapidata.ai/prompt_2.gif", "https://assets.rapidata.ai/prompt_2.jpg"],
+                ],
                 tags=[["landscape", "outdoor"], ["portrait"]],
                 origins=["coco", "coco"],
             )
@@ -456,13 +465,17 @@ class RapidataBenchmark:
             ):
                 raise ValueError("Prompts must be a list of strings or None.")
 
-            if prompt_assets and (
-                not isinstance(prompt_assets, list)
-                or not all(
-                    isinstance(asset, str) or asset is None for asset in prompt_assets
-                )
-            ):
-                raise ValueError("Media assets must be a list of strings or None.")
+            if prompt_assets:
+                if not isinstance(prompt_assets, list):
+                    raise ValueError(
+                        "Prompt assets must be a list with one entry per prompt, each a list of strings or None."
+                    )
+                if any(isinstance(asset, str) for asset in prompt_assets):
+                    logger.warning(
+                        "Passing a string as a prompt asset is deprecated; pass a list of strings per prompt instead. "
+                        "Wrapping each string in a single-element list."
+                    )
+                prompt_assets = [coerce_prompt_asset(asset) for asset in prompt_assets]
 
             if identifiers and (
                 not isinstance(identifiers, list)
@@ -524,7 +537,7 @@ class RapidataBenchmark:
                 prompts = cast(list[str | None], [None] * expected_length)
 
             if not prompt_assets:
-                prompt_assets = cast(list[str | None], [None] * expected_length)
+                prompt_assets = cast(list[list[str] | None], [None] * expected_length)
 
             if not tags:
                 tags = cast(
