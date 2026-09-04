@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.03.1439-40dbca9"
+    "version": "2026.09.04.1509-aa97310"
   },
   "servers": [
     {
@@ -11017,6 +11017,76 @@
         ]
       }
     },
+    "/benchmark/{benchmarkId}/prompt-structure": {
+      "put": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Replaces a benchmark's prompt structure with the submitted one.",
+        "description": "Prompts that would no longer satisfy the structure are only removed when\n deleteInvalidPrompts is set; otherwise the request is rejected with a message naming\n how many would have to go. Deleting them also removes the samples and generation items they\n produced. Returns 409 when a leaderboard's rapid context still references a segment the new\n structure removes or retypes. Content stored under a removed segment is discarded.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark to change.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The complete replacement structure and what to do with invalid prompts.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplyPromptStructureEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplyPromptStructureEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/benchmark/{benchmarkId}/runs/custom": {
       "post": {
         "tags": [
@@ -11473,6 +11543,7 @@
           "Benchmark"
         ],
         "summary": "Adds a new prompt to a benchmark.",
+        "description": "The content is validated against the benchmark's prompt structure: a required segment must be\n filled and an unknown segment key is rejected.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -27221,6 +27292,69 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark-prompt/{promptId}/segments": {
+      "put": {
+        "tags": [
+          "Prompt"
+        ],
+        "summary": "Replaces a prompt's content with the submitted segments.",
+        "description": "The replacement is complete: a segment the benchmark defines but the payload leaves out is\n cleared. Returns 400 when the content names an unknown segment or leaves a required one\n empty.",
+        "parameters": [
+          {
+            "name": "promptId",
+            "in": "path",
+            "description": "The id of the prompt to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The prompt's complete new content.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplacePromptSegmentsEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "204": {
             "description": "No Content"
@@ -44576,7 +44710,13 @@
           },
           "health": {
             "type": "number",
-            "description": "The health score of the audience.",
+            "description": "The health score of the audience: the share of graduates beyond what random clicking\n would produce. Null when nothing has been measured yet.",
+            "format": "double",
+            "nullable": true
+          },
+          "judgedShare": {
+            "type": "number",
+            "description": "The share of finished users that received an accuracy verdict from their own answers,\n rather than leaving through a session limit, low submission rate or a global drop.\n Null when no user has finished.",
             "format": "double",
             "nullable": true
           },
@@ -46381,6 +46521,12 @@
           "health": {
             "type": "number",
             "description": "The health score of the audience.",
+            "format": "double",
+            "nullable": true
+          },
+          "judgedShare": {
+            "type": "number",
+            "description": "Fraction of users who make it through the minimum number of judments required to graduate.",
             "format": "double",
             "nullable": true
           },
@@ -53071,6 +53217,56 @@
           }
         }
       },
+      "ApplyPromptStructureEndpoint_Input": {
+        "required": [
+          "segments"
+        ],
+        "type": "object",
+        "properties": {
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegmentDefinition"
+                }
+              }
+            ],
+            "description": "The complete replacement structure, in render order."
+          },
+          "deleteInvalidPrompts": {
+            "type": "boolean",
+            "description": "Whether prompts the new structure invalidates may be deleted. Defaults to false,\n which refuses the change and reports how many prompts would have to go."
+          }
+        }
+      },
+      "ApplyPromptStructureEndpoint_Output": {
+        "required": [
+          "deletedPromptCount"
+        ],
+        "type": "object",
+        "properties": {
+          "deletedPromptCount": {
+            "type": "integer",
+            "description": "How many prompts were deleted to satisfy the new structure.",
+            "format": "int32"
+          }
+        }
+      },
+      "AssetSegmentSource": {
+        "required": [
+          "segmentKeys"
+        ],
+        "type": "object",
+        "properties": {
+          "segmentKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "BenchmarkDemographicDimension": {
         "enum": [
           "AgeBucket",
@@ -53244,6 +53440,18 @@
             "description": "Multiplicative factor applied to displayed scores on the benchmark's overall scoreboard,\n relative to the Bradley-Terry center. Defaults to 1.0; must be strictly positive.",
             "format": "double",
             "nullable": true
+          },
+          "promptStructure": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegmentDefinition"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The benchmark's prompt structure, in render order. Leave unset for the default optional\n text + asset structure."
           }
         }
       },
@@ -53417,6 +53625,14 @@
           "showPromptAsset": {
             "type": "boolean",
             "description": "Whether the prompt asset should be shown on the rapids."
+          },
+          "rapidContextProjection": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidContextProjection"
+              }
+            ],
+            "description": "Which prompt segments the leaderboard's rapids show. Send this or the legacy showPrompt /\n showPromptAsset flags, not both."
           },
           "responseBudget": {
             "type": "integer",
@@ -53622,7 +53838,8 @@
           "prompt": {
             "type": "string",
             "description": "The prompt text.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "promptAsset": {
             "allOf": [
@@ -53630,7 +53847,20 @@
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ],
-            "description": "The asset associated with the prompt."
+            "description": "The asset associated with the prompt.",
+            "deprecated": true
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegmentInput"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The prompt's content, keyed by the benchmark's prompt structure. Send this or the legacy\n prompt / promptAsset fields, not both."
           },
           "tags": {
             "allOf": [
@@ -53846,7 +54076,8 @@
           "initialBoostLevel",
           "scoreShift",
           "scoreScale",
-          "lastUpdatedAt"
+          "lastUpdatedAt",
+          "promptStructure"
         ],
         "type": "object",
         "properties": {
@@ -53913,6 +54144,17 @@
             "description": "When the benchmark's rankings last changed — the latest vote recording across the leaderboards contributing to its\n overall; null when none ever received votes.",
             "format": "date-time",
             "nullable": true
+          },
+          "promptStructure": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegmentDefinition"
+                }
+              }
+            ],
+            "description": "The benchmark's prompt structure, in render order."
           }
         }
       },
@@ -54917,6 +55159,7 @@
           "instruction",
           "showPrompt",
           "showPromptAsset",
+          "rapidContextProjection",
           "isInversed",
           "responseBudget",
           "minResponses",
@@ -54953,6 +55196,14 @@
           "showPromptAsset": {
             "type": "boolean",
             "description": "Whether the prompt asset is shown on the rapids."
+          },
+          "rapidContextProjection": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidContextProjection"
+              }
+            ],
+            "description": "Which prompt segments this leaderboard's rapids show. Always populated: a leaderboard\n still on the legacy flags reports the projection those flags stand for."
           },
           "isInversed": {
             "type": "boolean",
@@ -55261,6 +55512,7 @@
       "GetPromptsByBenchmarkEndpoint_Output": {
         "required": [
           "id",
+          "segments",
           "identifier",
           "createdAt",
           "tags"
@@ -55293,7 +55545,19 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The optional asset associated with the prompt."
+            "description": "The optional asset associated with the prompt.",
+            "deprecated": true
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegment"
+                }
+              }
+            ],
+            "description": "The prompt's content, ordered by the benchmark's prompt structure. Empty for a prompt\n that carries no content at all."
           },
           "identifier": {
             "type": "string",
@@ -56514,6 +56778,101 @@
           "Pending",
           "Ready",
           "Failed"
+        ]
+      },
+      "PromptSegment": {
+        "required": [
+          "key",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PromptSegmentKind"
+          },
+          "originalText": {
+            "type": "string",
+            "nullable": true
+          },
+          "englishText": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PromptSegmentDefinition": {
+        "required": [
+          "key",
+          "kind",
+          "label",
+          "required"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PromptSegmentKind"
+          },
+          "label": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PromptSegmentInput": {
+        "required": [
+          "key",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PromptSegmentKind"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PromptSegmentKind": {
+        "enum": [
+          "Text",
+          "Asset"
+        ]
+      },
+      "PromptTextLanguage": {
+        "enum": [
+          "English",
+          "Original"
         ]
       },
       "QueryBenchmarksEndpoint_Output": {
@@ -58895,6 +59254,29 @@
           }
         }
       },
+      "RapidContextProjection": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextSegmentSource"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAsset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AssetSegmentSource"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
       "RatingGrouping": {
         "enum": [
           "Image",
@@ -58930,6 +59312,25 @@
             "description": "Optional seed for deterministic matchup selection. Reuse it across a benchmark's leaderboards to align them on the same\n image pairs; omit for random selection.",
             "format": "int64",
             "nullable": true
+          }
+        }
+      },
+      "ReplacePromptSegmentsEndpoint_Input": {
+        "required": [
+          "segments"
+        ],
+        "type": "object",
+        "properties": {
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegmentInput"
+                }
+              }
+            ],
+            "description": "The prompt's complete content."
           }
         }
       },
@@ -59334,6 +59735,21 @@
           }
         }
       },
+      "TextSegmentSource": {
+        "required": [
+          "segmentKey",
+          "language"
+        ],
+        "type": "object",
+        "properties": {
+          "segmentKey": {
+            "type": "string"
+          },
+          "language": {
+            "$ref": "#/components/schemas/PromptTextLanguage"
+          }
+        }
+      },
       "UpdateBenchmarkEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -59464,6 +59880,14 @@
               }
             ],
             "description": "Prompt tag values the leaderboard never creates matchups for; takes precedence over includedTags, even when\n another tag is included."
+          },
+          "rapidContextProjection": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidContextProjection"
+              }
+            ],
+            "description": "Which prompt segments this leaderboard's rapids show. Setting it takes the leaderboard off\n the legacy showPrompt / showPromptAsset flags, which are then kept in sync with it."
           }
         }
       },
