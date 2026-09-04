@@ -33,7 +33,7 @@ class BenchmarkPromptInfo:
     identifier: str
     prompt: str | None
     english_prompt: str | None
-    prompt_asset: str | list[str] | None
+    prompt_asset: list[str] | None
     tags: list[Tag]
     origin: Origin | None
 
@@ -60,3 +60,34 @@ def coerce_tags(tags: Sequence[str | Tag] | None) -> list[Tag]:
 def coerce_origin(origin: Origin | str | None) -> Origin | None:
     """Normalize a user-supplied origin into an ``Origin``."""
     return Origin(source=origin) if isinstance(origin, str) else origin
+
+
+def coerce_prompt_asset(asset: object) -> list[str] | None:
+    """Normalize one prompt's asset(s) to ``list[str] | None``.
+
+    A prompt's assets are a list of URLs / file paths, the same shape the job
+    definitions use for ``media_contexts``; several entries are registered as
+    one multi-asset. A bare ``str`` is still accepted for scripts written when
+    a prompt could only carry one asset and is wrapped in a single-element list.
+    """
+    if asset is None:
+        return None
+    if isinstance(asset, str):
+        if asset == "":
+            raise ValueError(
+                "A prompt asset cannot be an empty string. If not needed, set to None."
+            )
+        return [asset]
+    if isinstance(asset, list):
+        if len(asset) == 0:
+            raise ValueError(
+                "A prompt asset list cannot be empty. If not needed, set to None."
+            )
+        if any(not isinstance(item, str) or item == "" for item in asset):
+            raise ValueError(
+                "Every entry in a prompt asset list must be a non-empty string."
+            )
+        return asset
+    raise ValueError(
+        f"A prompt asset must be a list of strings or None, got {type(asset).__name__}."
+    )
