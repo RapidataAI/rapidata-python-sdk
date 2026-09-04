@@ -29,7 +29,7 @@ def _upload(prompt: BenchmarkPrompt):
     uploader._asset_uploader.upload_and_map_asset.side_effect = (
         lambda asset: IAssetInput(
             actual_instance=IAssetInputExistingAssetInput(
-                _t="ExistingAssetInput", name=f"mapped:{asset}"
+                _t="ExistingAssetInput", name=f"mapped:{','.join(asset)}"
             )
         )
     )
@@ -48,7 +48,7 @@ def test_text_and_asset_map_to_the_default_segment_keys() -> None:
         BenchmarkPrompt(
             identifier="id0",
             prompt="a red car",
-            prompt_asset="https://assets.rapidata.ai/ref.jpg",
+            prompt_asset=["https://assets.rapidata.ai/ref.jpg"],
             tags=[Tag("scene", "kind")],
             origin=Origin("coco"),
         )
@@ -74,7 +74,7 @@ def test_missing_values_send_no_segment() -> None:
 def test_asset_only_prompt_sends_only_the_asset_segment() -> None:
     payload = _upload(
         BenchmarkPrompt(
-            identifier="id0", prompt_asset="https://assets.rapidata.ai/a.jpg"
+            identifier="id0", prompt_asset=["https://assets.rapidata.ai/a.jpg"]
         )
     )
 
