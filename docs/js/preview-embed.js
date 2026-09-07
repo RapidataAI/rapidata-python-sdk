@@ -20,6 +20,9 @@ function buildPreviewUrl(campaignId, refreshCount) {
         language: 'en',
         userSegment: '0',
         refreshCount: String(refreshCount),
+        // Serve only the labeling task; without this the audience's validation
+        // examples come first and the embed shows an unrelated question.
+        isBulkLabelingPreview: 'true',
     });
     return `${RAPIDS_ORIGIN}/preview/campaign?${params.toString()}`;
 }
