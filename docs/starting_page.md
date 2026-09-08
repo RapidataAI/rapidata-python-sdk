@@ -18,12 +18,11 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
     client = RapidataClient()
 
-    audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
+    audience = client.audience.get_audience_by_id("global")
 
     job_definition = client.job.create_compare_job_definition(
-        name="Example Image Comparison",
-        instruction="Which image matches the description better?",
-        contexts=["A small blue book sitting on a large red book."],
+        name="Example Image Preference",
+        instruction="Which image do you prefer?",
         datapoints=[["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
                     "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
     )
@@ -107,14 +106,14 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
     The curated/global audiences get you started quickly. For higher quality results, use a [custom audience](audiences.md) with qualification examples.
 
 <div data-preview-embed
-     data-preview-map='{"Image":"cmp_1HSFCph25U1J22","Video":"cmp_1HSMbDk5EaUExL","Audio":"cmp_1HSMsM9Ph3Sn5o","Text":"cmp_1HSN6NhgMo4C9R"}'>
+     data-preview-map='{"Image":"cmp_1UTcmTsojyXmuz","Video":"cmp_1HSMbDk5EaUExL","Audio":"cmp_1HSMsM9Ph3Sn5o","Text":"cmp_1HSN6NhgMo4C9R"}'>
   <div class="phone-preview">
     <div class="phone-preview__notch"></div>
     <div class="phone-preview__btn phone-preview__btn--left-top"></div>
     <div class="phone-preview__btn phone-preview__btn--left-bot"></div>
     <div class="phone-preview__btn phone-preview__btn--right"></div>
     <iframe class="phone-preview__iframe"
-            src="https://rapids.rapidata.ai/preview/campaign?id=cmp_1HSFCph25U1J22&language=en&userSegment=0&refreshCount=0"
+            src="https://rapids.rapidata.ai/preview/campaign?id=cmp_1UTcmTsojyXmuz&language=en&userSegment=0&refreshCount=0&isBulkLabelingPreview=true"
             allow="clipboard-write"
             title="Live Rapidata campaign preview"></iframe>
   </div>
