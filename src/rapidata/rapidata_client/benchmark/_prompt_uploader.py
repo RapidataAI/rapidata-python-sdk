@@ -8,7 +8,12 @@ from opentelemetry import context as otel_context
 from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger, rapidata_config, tracer
-from rapidata.rapidata_client.benchmark.prompt_metadata import Origin, Tag
+from rapidata.rapidata_client.benchmark.prompt_metadata import (
+    DEFAULT_ASSET_SEGMENT_KEY,
+    DEFAULT_TEXT_SEGMENT_KEY,
+    Origin,
+    Tag,
+)
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 
 if TYPE_CHECKING:
@@ -48,31 +53,39 @@ class BenchmarkPromptUploader:
         from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_input import (
             CreatePromptForBenchmarkEndpointInput,
         )
-        from rapidata.api_client.models.i_asset_input_existing_asset_input import (
-            IAssetInputExistingAssetInput,
-        )
-        from rapidata.api_client.models.i_asset_input import IAssetInput
+        from rapidata.api_client.models.prompt_segment_input import PromptSegmentInput
+        from rapidata.api_client.models.prompt_segment_kind import PromptSegmentKind
 
         # Aliased: the generated wire models share their names with the
         # user-facing Tag/Origin imported at module scope.
         from rapidata.api_client.models.tag import Tag as ApiTag
         from rapidata.api_client.models.origin import Origin as ApiOrigin
 
+        segments: list[PromptSegmentInput] = []
+        if prompt.prompt is not None:
+            segments.append(
+                PromptSegmentInput(
+                    key=DEFAULT_TEXT_SEGMENT_KEY,
+                    kind=PromptSegmentKind.TEXT,
+                    text=prompt.prompt,
+                )
+            )
+        if prompt.prompt_asset is not None:
+            segments.append(
+                PromptSegmentInput(
+                    key=DEFAULT_ASSET_SEGMENT_KEY,
+                    kind=PromptSegmentKind.ASSET,
+                    asset=self._asset_uploader.upload_and_map_asset(
+                        prompt.prompt_asset
+                    ),
+                )
+            )
+
         self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_prompt_post(
             benchmark_id=self._benchmark_id,
             create_prompt_for_benchmark_endpoint_input=CreatePromptForBenchmarkEndpointInput(
                 identifier=prompt.identifier,
-                prompt=prompt.prompt,
-                promptAsset=(
-                    IAssetInput(
-                        actual_instance=IAssetInputExistingAssetInput(
-                            _t="ExistingAssetInput",
-                            name=self._asset_uploader.upload_asset(prompt.prompt_asset),
-                        )
-                    )
-                    if prompt.prompt_asset is not None
-                    else None
-                ),
+                segments=segments,
                 tags=[
                     ApiTag(value=tag.value, category=tag.category)
                     for tag in prompt.tags

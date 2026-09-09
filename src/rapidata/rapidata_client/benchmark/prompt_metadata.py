@@ -5,6 +5,13 @@ from dataclasses import dataclass
 from typing import Any
 
 
+#: The two segment keys every benchmark starts with — the default prompt
+#: structure the backend creates when none is supplied. The flat
+#: ``prompt`` / ``prompt_asset`` SDK surface is a view over exactly these.
+DEFAULT_TEXT_SEGMENT_KEY = "prompt"
+DEFAULT_ASSET_SEGMENT_KEY = "prompt_asset"
+
+
 @dataclass
 class Tag:
     """A structured tag attached to a benchmark prompt.

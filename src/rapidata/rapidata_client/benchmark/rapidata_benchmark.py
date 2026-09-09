@@ -22,6 +22,7 @@ from rapidata.rapidata_client.benchmark.leaderboard.vote_aggregation import (
     VoteAggregation,
 )
 from rapidata.rapidata_client.benchmark.prompt_metadata import (
+    DEFAULT_ASSET_SEGMENT_KEY,
     BenchmarkPromptInfo,
     Origin,
     Tag,
@@ -149,11 +150,24 @@ class RapidataBenchmark:
     def __extract_asset_url(
         cls, prompt: GetPromptsByBenchmarkEndpointOutput
     ) -> str | list[str] | None:
-        """Reconstruct a prompt's asset reference from the server metadata."""
-        if prompt.prompt_asset is None:
+        """Reconstruct a prompt's asset reference from the server metadata.
+
+        Reads the default asset segment: the flat `prompt_assets` surface is a
+        view over that one key, not over whatever else the benchmark's prompt
+        structure defines.
+        """
+        segment = next(
+            (
+                segment
+                for segment in prompt.segments
+                if segment.key == DEFAULT_ASSET_SEGMENT_KEY
+            ),
+            None,
+        )
+        if segment is None or segment.asset is None:
             return None
 
-        return cls.__extract_asset_reference(prompt.prompt_asset)
+        return cls.__extract_asset_reference(segment.asset)
 
     @classmethod
     def __to_prompt_info(
