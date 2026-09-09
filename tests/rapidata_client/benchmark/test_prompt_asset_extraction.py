@@ -88,13 +88,28 @@ _TEXT_ASSET = {
 }
 
 
-def _prompt(identifier: str, prompt_asset: dict | None) -> dict:
+def _prompt(
+    identifier: str,
+    prompt_asset: dict | None,
+    asset_key: str = "prompt_asset",
+) -> dict:
+    segments: list[dict] = [
+        {
+            "key": "prompt",
+            "kind": "Text",
+            "originalText": f"prompt for {identifier}",
+            "englishText": f"prompt for {identifier}",
+        }
+    ]
+    if prompt_asset is not None:
+        segments.append({"key": asset_key, "kind": "Asset", "asset": prompt_asset})
+
     return {
         "id": f"prm_{identifier}",
         "identifier": identifier,
         "originalPrompt": f"prompt for {identifier}",
         "englishPrompt": f"prompt for {identifier}",
-        "promptAsset": prompt_asset,
+        "segments": segments,
         "createdAt": "2026-09-04T12:00:00Z",
         "tags": [{"value": "scene", "category": "kind"}],
         "origin": {"source": "coco"},
@@ -129,6 +144,17 @@ def test_prompt_assets_read_back(asset, expected) -> None:
 
     assert benchmark.identifiers == ["id0"]
     assert benchmark.prompt_assets == [expected]
+
+
+def test_prompt_asset_read_from_renamed_segment() -> None:
+    """A benchmark that renamed its asset segment still surfaces the asset.
+
+    Only the default `prompt_asset` key is guaranteed; a custom prompt
+    structure (the MRI video/first-frame split, say) names its own.
+    """
+    benchmark = _make_benchmark([_prompt("id0", _FILE_ASSET, asset_key="first_frame")])
+
+    assert benchmark.prompt_assets == ["8.jpg"]
 
 
 def test_identifiers_across_mixed_asset_kinds() -> None:
