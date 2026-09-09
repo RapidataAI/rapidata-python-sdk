@@ -302,8 +302,11 @@ You can list all participants in a benchmark using the `participants` property:
 
 ```python
 for participant in benchmark.participants:
-    print(f"{participant.name} - {participant.status}")
+    print(f"{participant.name} - {participant.status} - {participant.price} per {participant.price_unit}")
 ```
+
+`price` and `price_unit` are `None` for models without a price. See
+[Update participant metadata](mri.md#update-participant-metadata) for how to set them.
 
 ### Submitting Participants
 

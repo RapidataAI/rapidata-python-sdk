@@ -7,7 +7,7 @@ As a customer you can use the RapidataClient class to access the following:
 - AudienceCreation (including filtered audiences via `.filter()` for country/language/demographic targeting)
 - ValidationSetCreation
 - FlowCreation
-- BenchmarkCreation / MRI Creation
+- BenchmarkCreation / MRI Creation (including participant metadata such as `participant.rename()` and `participant.set_price()` for the score-vs-cost chart)
 
 Orders were removed from the SDK entirely (v3.21.0) — do not add, document, or reference order creation.
 
