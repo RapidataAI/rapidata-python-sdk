@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.09.09.0832-4aa6c4e"
+    "version": "2026.09.09.1810-c43fa9f"
   },
   "servers": [
     {
@@ -10268,6 +10268,7 @@
           "SampleGeneration"
         ],
         "summary": "Starts an asynchronous sample generation run.",
+        "description": "In target mode the run queues only the samples that are missing, counting both what already\n exists and what an earlier run has not finished producing yet. A repeat call over an\n unchanged benchmark therefore queues nothing and completes immediately.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -10297,6 +10298,66 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateSampleGenerationEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/sample-generation/preview": {
+      "post": {
+        "tags": [
+          "Benchmark",
+          "SampleGeneration"
+        ],
+        "summary": "Reports how many samples the given configuration would generate, and for which participants.",
+        "description": "Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same\n payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.\n The numbers are a snapshot: in target mode they are measured against what exists and what is\n still being generated, both of which move, so a run submitted later may differ.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark the configuration would run against.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The generation configuration to price.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewSampleGenerationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewSampleGenerationEndpoint_Output"
                 }
               }
             }
@@ -15143,6 +15204,7 @@
           "Participant"
         ],
         "summary": "Disables a participant in a benchmark.",
+        "description": "The participant is no longer matched up and collects no further results, but stays listed in\n the standings. By default its already-collected votes keep counting toward every model's\n score; pass keepVotes=false to drop them from the scores and the matchups instead.\n The choice can be changed later through the participant update endpoint. Fails with 400 if\n the participant is not currently submitted.",
         "parameters": [
           {
             "name": "participantId",
@@ -15151,6 +15213,15 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "keepVotes",
+            "in": "query",
+            "description": "Whether the votes the participant already collected keep counting toward the scores while\n it is disabled. Defaults to true.",
+            "schema": {
+              "type": "boolean",
+              "default": true
             }
           }
         ],
@@ -15183,7 +15254,7 @@
           "Participant"
         ],
         "summary": "Enables a previously disabled participant in a benchmark.",
-        "description": "Fails with 400 if the participant is not currently disabled.",
+        "description": "Fails with 400 if the participant is not currently disabled. Votes that were excluded from\n the scores while it was disabled count again.",
         "parameters": [
           {
             "name": "participantId",
@@ -17502,6 +17573,14 @@
         ],
         "type": "object",
         "properties": {
+          "mode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SampleGenerationMode"
+              }
+            ],
+            "description": "How SamplesPerPrompt is read: as a count to add on top of what already\n exists, or as the count each prompt should end up at. Defaults to additive."
+          },
           "samplesPerPrompt": {
             "type": "integer",
             "description": "How many samples to request per matching prompt (1 to 16).",
@@ -17549,7 +17628,9 @@
         "required": [
           "id",
           "totalCount",
-          "skippedParticipantIds"
+          "queuedSampleCount",
+          "skippedParticipantIds",
+          "satisfiedParticipantIds"
         ],
         "type": "object",
         "properties": {
@@ -17562,6 +17643,11 @@
             "description": "The total number of generation items that were queued.",
             "format": "int32"
           },
+          "queuedSampleCount": {
+            "type": "integer",
+            "description": "How many samples the queued items will produce in total. In target mode each item\n carries only its own shortfall, so this is not simply totalCount times the\n per-prompt count.",
+            "format": "int32"
+          },
           "skippedParticipantIds": {
             "allOf": [
               {
@@ -17572,6 +17658,17 @@
               }
             ],
             "description": "Participants that matched the selection but were skipped because they have no faucet\n configured. Empty when explicit participant ids were supplied."
+          },
+          "satisfiedParticipantIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Participants nothing was queued for because they already hold the requested count.\n Distinct from SkippedParticipantIds, which is about participants that\n cannot generate at all. Always empty in additive mode."
           }
         }
       },
@@ -18971,7 +19068,8 @@
           "id",
           "name",
           "benchmarkId",
-          "status"
+          "status",
+          "votesExcluded"
         ],
         "type": "object",
         "properties": {
@@ -18994,6 +19092,10 @@
               }
             ],
             "description": "The status of the participant."
+          },
+          "votesExcluded": {
+            "type": "boolean",
+            "description": "Whether the participant's already-collected votes are dropped from the scores. Only meaningful while it is disabled."
           },
           "family": {
             "type": "string",
@@ -19480,6 +19582,7 @@
           "id",
           "benchmarkId",
           "status",
+          "mode",
           "samplesPerPrompt",
           "totalCount",
           "completedCount",
@@ -19508,9 +19611,17 @@
             ],
             "description": "The current status of the generation."
           },
+          "mode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SampleGenerationMode"
+              }
+            ],
+            "description": "How SamplesPerPrompt was interpreted when the run was created."
+          },
           "samplesPerPrompt": {
             "type": "integer",
-            "description": "How many samples are being generated per prompt.",
+            "description": "The per-prompt sample count the run was created with — samples to add in additive mode,\n the count each prompt was brought up to in target mode.",
             "format": "int32"
           },
           "totalCount": {
@@ -21089,6 +21200,143 @@
           "Disabled"
         ]
       },
+      "PreviewSampleGenerationEndpoint_Input": {
+        "required": [
+          "samplesPerPrompt"
+        ],
+        "type": "object",
+        "properties": {
+          "mode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SampleGenerationMode"
+              }
+            ],
+            "description": "How SamplesPerPrompt is read: as a count to add on top of what already\n exists, or as the count each prompt should end up at. Defaults to additive."
+          },
+          "samplesPerPrompt": {
+            "type": "integer",
+            "description": "How many samples to request per matching prompt (1 to 16).",
+            "format": "int32"
+          },
+          "participantIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Restrict generation to specific participants. Defaults to all participants\n in the benchmark that have a configured faucet."
+          },
+          "promptIdentifiers": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Restrict generation to specific prompt identifiers.\n Defaults to every prompt in the benchmark."
+          },
+          "tags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Restrict generation to prompts having at least one of these tags."
+          }
+        }
+      },
+      "PreviewSampleGenerationEndpoint_Output": {
+        "required": [
+          "totalCount",
+          "queuedSampleCount",
+          "participants",
+          "skippedParticipantIds",
+          "satisfiedParticipantIds"
+        ],
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "description": "How many generation items the run would queue.",
+            "format": "int32"
+          },
+          "queuedSampleCount": {
+            "type": "integer",
+            "description": "How many samples those items would produce, and therefore bill for.",
+            "format": "int32"
+          },
+          "participants": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PreviewSampleGenerationEndpoint_Output_Participant"
+                }
+              }
+            ],
+            "description": "The same numbers split per participant. Participants the run would generate nothing for\n are absent, so in target mode this lists exactly the models that still need work."
+          },
+          "skippedParticipantIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Participants that matched the selection but would be skipped because they have no faucet\n configured. Empty when explicit participant ids were supplied."
+          },
+          "satisfiedParticipantIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Participants the run would generate nothing for because they already hold the requested\n count. Distinct from SkippedParticipantIds, which is about participants\n that cannot generate at all. Always empty in additive mode."
+          }
+        }
+      },
+      "PreviewSampleGenerationEndpoint_Output_Participant": {
+        "required": [
+          "id",
+          "name",
+          "promptCount",
+          "queuedSampleCount"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "promptCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "queuedSampleCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "PromptEmbeddingMapStatus": {
         "enum": [
           "Pending",
@@ -22605,6 +22853,7 @@
           "name",
           "benchmarkId",
           "status",
+          "votesExcluded",
           "createdAt"
         ],
         "type": "object",
@@ -22674,6 +22923,10 @@
               }
             ],
             "description": "The status of the participant."
+          },
+          "votesExcluded": {
+            "type": "boolean",
+            "description": "Whether the participant's already-collected votes are dropped from the scores. Only meaningful while it is disabled."
           },
           "createdAt": {
             "type": "string",
@@ -23093,6 +23346,7 @@
           "id",
           "benchmarkId",
           "status",
+          "mode",
           "samplesPerPrompt",
           "totalCount",
           "completedCount",
@@ -23120,9 +23374,17 @@
             ],
             "description": "The current status of the generation."
           },
+          "mode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SampleGenerationMode"
+              }
+            ],
+            "description": "How SamplesPerPrompt was interpreted when the run was created."
+          },
           "samplesPerPrompt": {
             "type": "integer",
-            "description": "How many samples are being generated per prompt.",
+            "description": "The per-prompt sample count the run was created with — samples to add in additive mode,\n the count each prompt was brought up to in target mode.",
             "format": "int32"
           },
           "totalCount": {
@@ -23758,6 +24020,12 @@
           "Failed"
         ]
       },
+      "SampleGenerationMode": {
+        "enum": [
+          "Additive",
+          "Target"
+        ]
+      },
       "SampleGenerationStatus": {
         "enum": [
           "Pending",
@@ -23926,7 +24194,7 @@
           },
           "forcedFullRebuild": {
             "type": "boolean",
-            "description": "Whether the attempt was promoted to a full rebuild because the export configuration\n differs from the one the dataset was last built with."
+            "description": "Whether the attempt was promoted to a full rebuild because the export configuration,\n the export rules or the set of participants whose votes are excluded differs from what\n the dataset was last built with."
           }
         }
       },
@@ -24359,6 +24627,10 @@
               }
             ],
             "description": "The faucet to set or replace on the participant."
+          },
+          "votesExcluded": {
+            "type": "boolean",
+            "description": "Whether the participant's already-collected votes are dropped from the scores. Only allowed while it is disabled; enabling it resets this to false."
           }
         }
       },
