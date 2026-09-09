@@ -1,11 +1,12 @@
 """Tests for reading back the asset a benchmark prompt carries.
 
-The prompts endpoint returns the read-side ``IAsset`` union
-(``IAssetFileAsset`` / ``IAssetMultiAsset`` / ``IAssetNullAsset`` /
-``IAssetTextAsset``), never the write-side ``IAssetModel*`` classes. Asserting
-on the write-side class made every asset-carrying benchmark raise on
-``identifiers`` — and so on ``add_model``, which validates against it — before
-a single byte was uploaded. Only text-only benchmarks stayed usable.
+The asset lives in the prompt's ``prompt_asset`` segment, and the prompts
+endpoint returns it as the read-side ``IAsset`` union (``IAssetFileAsset`` /
+``IAssetMultiAsset`` / ``IAssetNullAsset`` / ``IAssetTextAsset``), never the
+write-side ``IAssetModel*`` classes. Asserting on the write-side class made
+every asset-carrying benchmark raise on ``identifiers`` — and so on
+``add_model``, which validates against it — before a single byte was uploaded.
+Only text-only benchmarks stayed usable.
 """
 
 from __future__ import annotations
@@ -89,12 +90,24 @@ _TEXT_ASSET = {
 
 
 def _prompt(identifier: str, prompt_asset: dict | None) -> dict:
+    text = f"prompt for {identifier}"
+    segments: list[dict] = [
+        {
+            "key": "prompt",
+            "kind": "Text",
+            "originalText": text,
+            "englishText": text,
+        }
+    ]
+    if prompt_asset is not None:
+        segments.append({"key": "prompt_asset", "kind": "Asset", "asset": prompt_asset})
+
     return {
         "id": f"prm_{identifier}",
         "identifier": identifier,
-        "originalPrompt": f"prompt for {identifier}",
-        "englishPrompt": f"prompt for {identifier}",
-        "promptAsset": prompt_asset,
+        "originalPrompt": text,
+        "englishPrompt": text,
+        "segments": segments,
         "createdAt": "2026-09-04T12:00:00Z",
         "tags": [{"value": "scene", "category": "kind"}],
         "origin": {"source": "coco"},
