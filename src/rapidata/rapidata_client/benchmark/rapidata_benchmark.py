@@ -14,6 +14,7 @@ from rapidata.rapidata_client.benchmark._prompt_uploader import (
 from rapidata.api_client.models.benchmark_demographic_dimension import (
     BenchmarkDemographicDimension,
 )
+from rapidata.rapidata_client.benchmark._prompt_segments import find_asset_segment
 from rapidata.rapidata_client.benchmark._vote_filters import (
     demographic_filters,
     in_filter,
@@ -150,10 +151,11 @@ class RapidataBenchmark:
         cls, prompt: GetPromptsByBenchmarkEndpointOutput
     ) -> str | list[str] | None:
         """Reconstruct a prompt's asset reference from the server metadata."""
-        if prompt.prompt_asset is None:
+        asset = find_asset_segment(prompt.segments)
+        if asset is None:
             return None
 
-        return cls.__extract_asset_reference(prompt.prompt_asset)
+        return cls.__extract_asset_reference(asset)
 
     @classmethod
     def __to_prompt_info(
