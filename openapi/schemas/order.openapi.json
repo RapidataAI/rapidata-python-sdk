@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.09.03.1439-40dbca9"
+    "version": "2026.09.09.0832-4aa6c4e"
   },
   "servers": [
     {
@@ -1125,6 +1125,81 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetJobProgressEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/{jobId}/results/groups/{groupId}": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets one group's Elo-ranked datapoints within a grouped-ranking job.",
+        "description": "Returns the same shape as a non-grouped ranking job's results. Returns 400 when the group\n does not belong to the job.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the grouped-ranking job the group belongs to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "The id of the group whose results to list.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankingResults"
                 }
               }
             }
@@ -7430,8 +7505,8 @@
             "type": "string"
           },
           "duration": {
-            "type": "string",
-            "format": "date-time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           }
         }
       },
@@ -10525,6 +10600,50 @@
             "format": "int32"
           }
         }
+      },
+      "RankingResults": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "totalVotes",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "The total number of datapoints.",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "description": "The 1-based page number.",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "The page size.",
+            "format": "int32"
+          },
+          "totalVotes": {
+            "type": "integer",
+            "description": "The total number of votes cast.",
+            "format": "int64"
+          },
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RankingDatapoint"
+                }
+              }
+            ],
+            "description": "The ranked datapoints on this page."
+          }
+        },
+        "description": "Results for a compare (ranking) job: a paged list of Elo-ranked datapoints."
       },
       "RapidState": {
         "enum": [

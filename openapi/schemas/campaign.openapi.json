@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.09.03.1439-40dbca9"
+    "version": "2026.09.09.0832-4aa6c4e"
   },
   "servers": [
     {
@@ -4009,8 +4009,8 @@
             "type": "string"
           },
           "duration": {
-            "type": "string",
-            "format": "date-time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           }
         }
       },
@@ -4029,12 +4029,12 @@
             "type": "string"
           },
           "minDuration": {
-            "type": "string",
-            "format": "date-time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           },
           "maxDuration": {
-            "type": "string",
-            "format": "date-time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           },
           "seedByUserId": {
             "type": "boolean"

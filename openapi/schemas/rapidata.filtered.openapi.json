@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.03.1439-40dbca9"
+    "version": "2026.09.09.0832-4aa6c4e"
   },
   "servers": [
     {
@@ -10966,6 +10966,76 @@
         ]
       }
     },
+    "/benchmark/{benchmarkId}/prompt-structure": {
+      "put": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Replaces a benchmark's prompt structure with the submitted one.",
+        "description": "Prompts that would no longer satisfy the structure are only removed when\n deleteInvalidPrompts is set; otherwise the request is rejected with a message naming\n how many would have to go. Deleting them also removes the samples and generation items they\n produced. Returns 409 when a leaderboard's rapid context, or the benchmark's HuggingFace\n export configuration, still references a segment the new structure removes or retypes.\n Content stored under a removed segment is discarded.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark to change.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The complete replacement structure and what to do with invalid prompts.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplyPromptStructureEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplyPromptStructureEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/benchmark/{benchmarkId}/runs/custom": {
       "post": {
         "tags": [
@@ -11422,6 +11492,7 @@
           "Benchmark"
         ],
         "summary": "Adds a new prompt to a benchmark.",
+        "description": "The content is validated against the benchmark's prompt structure: a required segment must be\n filled and an unknown segment key is rejected.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -14684,7 +14755,7 @@
           "HuggingFaceSync"
         ],
         "summary": "Returns the HuggingFace sync status of the benchmark.",
-        "description": "The repo and outcome fields are null when the benchmark has never been synced;\n isUpToDate and pendingRunCount are always set.",
+        "description": "The repo and outcome fields are null when the benchmark has never been synced;\n isUpToDate and pendingRunCount are always set. The stored export configuration\n (sampleMediaMode, segmentExports) is returned alongside the benchmark's\n availableSegments, so a configuration can be composed from what the prompt structure\n offers.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -14742,7 +14813,7 @@
           "HuggingFaceSync"
         ],
         "summary": "Starts a HuggingFace sync of the benchmark and returns its current sync status.",
-        "description": "Responds 409 Conflict when a sync is already in progress for the benchmark, or when a repo\n name is supplied that differs from the one an earlier successful sync established. The repo\n name is only honored while the benchmark has never completed a sync.",
+        "description": "The export configuration (sampleMediaMode, segmentExports) is persisted on the\n benchmark; a field left null keeps the stored value, and an empty segmentExports list\n resets to the legacy shape. A configuration that differs from the one the dataset was last\n built with promotes the attempt to a full rebuild, reported as forcedFullRebuild.\n An asset segment carried into the dataset holds exactly one file per prompt: matchups whose\n prompt carries no value, or a multi-asset, under a configured asset segment are left out of\n the export (several files belong in several segments). Responds 400 when a segment export names a key the benchmark's prompt structure does not\n define, when a column does not match ^[a-z][a-z0-9_]{0,63}$, is used twice or\n collides with a reserved dataset column (model1, model2, image1,\n image2, video1, video2, file1, file2, or any name starting\n with weighted_results_ or detailed_results_), when a key is exported twice, or\n when a mode contradicts the segment's kind (Text only for text segments, Embed\n / Url only for asset segments). Responds 409 Conflict when a sync is already in\n progress for the benchmark, or when a repo name is supplied that differs from the one an\n earlier successful sync established. The repo name is only honored while the benchmark has\n never completed a sync.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -14755,7 +14826,7 @@
           }
         ],
         "requestBody": {
-          "description": "The requested repo name and full-rebuild flag.",
+          "description": "The requested repo name, full-rebuild flag and export configuration.",
           "content": {
             "application/json": {
               "schema": {
@@ -15291,6 +15362,57 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Benchmark",
+          "PromptEmbeddingMap"
+        ],
+        "summary": "Deletes the benchmark's prompt embedding map.",
+        "description": "Restricted to platform staff, matching the compute action it undoes. Removes the map and its\n points, so the anonymous read route goes back to answering 204 No Content and the public\n Prompts tab stops showing a figure. The cached prompt embedding vectors are a shared\n (model, text) cache and are left in place, so a later recomputation still reuses them.\n \n Responds with 404 Not Found when the benchmark has no map. Safe to call while a computation\n is in flight: the running job writes back by id and simply finds nothing once the row is gone.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark whose map should be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -16992,6 +17114,7 @@
           "Benchmark"
         ],
         "summary": "Queries all leaderboards for the given benchmark.",
+        "description": "displayInstruction is presentation-only: render it instead of instruction when set, falling back to\n instruction when null. instruction stays the wording annotators were asked and results are scored on.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -17491,7 +17614,7 @@
           "Benchmark"
         ],
         "summary": "Queries a benchmark's image matchups — a page of compared image pairs with how the responses\n split between them.",
-        "description": "An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards\n comes back once per board. Filters use the prompt-ratings query's field set, applied to the\n votes a matchup is tallied from, plus four outcome fields accepted only as top-level\n and leaves: WinnerParticipantId/LooserParticipantId pick the side that\n won the whole matchup (a tie matches neither), and Responses/Extremeness\n select on the evidence the matchup carries — together a fair-coin sign test, so\n extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would\n reproduce under 5% of the time. WinnerSigma is sigma signed from the winning\n side; sort by -winner_sigma to separate records the pooled data confirms from upsets.\n Matchups of leaderboards excluded from the benchmark overall are never returned.",
+        "description": "An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards\n comes back once per board. Filters use the prompt-ratings query's field set, applied to the\n votes a matchup is tallied from, plus four outcome fields accepted only as top-level\n and leaves: WinnerParticipantId/LooserParticipantId pick the side that\n won the whole matchup (a tie matches neither), and Responses/Extremeness\n select on the evidence the matchup carries — together a fair-coin sign test, so\n extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would\n reproduce under 5% of the time. WinnerSigma is sigma signed from the winning\n side; sort by -winner_sigma to separate records the pooled data confirms from upsets.\n Matchups of leaderboards excluded from the benchmark overall are never returned.\n Each item's leaderboard carries the instruction annotators were asked plus an optional\n displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it\n when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to\n the winning side.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -20862,7 +20985,7 @@
           "Replicate"
         ],
         "summary": "Returns a single Replicate model with its input parameter schema.",
-        "description": "When supportsImageReference is true the model accepts a reference image that the\n platform auto-fills with a prompt's attached media; that input is excluded from the returned\n parameters and must not be configured by the customer.",
+        "description": "The returned parameters are the model's input schema as the provider reports it, so each one\n can be bound to a literal value or to a benchmark prompt segment. The prompt input is\n included and takes a segment binding only, because a literal there would replace every\n benchmark prompt with the same text; it falls back to the prompt's default text segment when\n a faucet leaves it unbound. Every other input, an image input included, is sent only when\n the faucet binds it — bind one to an asset segment to send a reference image.\n num_outputs is excluded: the system supplies it per run and no binding on it is\n accepted.",
         "parameters": [
           {
             "name": "modelOwner",
@@ -21130,6 +21253,7 @@
           "Leaderboard"
         ],
         "summary": "Creates a new leaderboard.",
+        "description": "displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back\n to instruction when null. It never affects run creation, vote recording or ranking.",
         "requestBody": {
           "description": "The payload describing the leaderboard to create.",
           "content": {
@@ -21431,6 +21555,7 @@
           "Leaderboard"
         ],
         "summary": "Gets a leaderboard by its id.",
+        "description": "displayInstruction is presentation-only: render it instead of instruction when set, falling back to\n instruction when null. instruction stays the wording annotators were asked and results are scored on.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -21487,6 +21612,7 @@
           "Leaderboard"
         ],
         "summary": "Updates a leaderboard using patch semantics.",
+        "description": "displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back\n to instruction when null. It never affects run creation, vote recording or ranking.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -23051,6 +23177,7 @@
           "Leaderboard"
         ],
         "summary": "Queries all leaderboards accessible to the current user's organization.",
+        "description": "displayInstruction is presentation-only: render it instead of instruction when set, falling back to\n instruction when null. instruction stays the wording annotators were asked and results are scored on.",
         "parameters": [
           {
             "name": "page",
@@ -25504,6 +25631,69 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark-prompt/{promptId}/segments": {
+      "put": {
+        "tags": [
+          "Prompt"
+        ],
+        "summary": "Replaces a prompt's content with the submitted segments.",
+        "description": "The replacement is complete: a segment the benchmark defines but the payload leaves out is\n cleared. Returns 400 when the content names an unknown segment or leaves a required one\n empty.",
+        "parameters": [
+          {
+            "name": "promptId",
+            "in": "path",
+            "description": "The id of the prompt to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The prompt's complete new content.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplacePromptSegmentsEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "204": {
             "description": "No Content"
@@ -28209,6 +28399,92 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetJobProgressEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/job/{jobId}/results/groups/{groupId}": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets one group's Elo-ranked datapoints within a grouped-ranking job.",
+        "description": "Returns the same shape as a non-grouped ranking job's results. Returns 400 when the group\n does not belong to the job.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the grouped-ranking job the group belongs to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "The id of the group whose results to list.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RankingResults"
                 }
               }
             }
@@ -40499,7 +40775,7 @@
           "ValidationSet"
         ],
         "summary": "Gets all validation sets available to the user that a rapid with the provided parameters can be added to.",
-        "description": "Matching is strict: a validation set is only returned when its asset type, modality, and prompt type\n equal the provided parameters exactly — the same constraint enforced when actually adding a rapid.\n This differs from /validation-set/recommended, which uses loose overlap matching and may return\n sets that then reject the rapid. Returns an empty array when no compatible set exists.",
+        "description": "Matching is strict: a validation set is only returned when its asset type, modality, and prompt type\n equal the provided parameters exactly — the same constraint enforced when actually adding a rapid.\n Uninitialized validation sets (no modality yet — they adopt the classifiers of the first rapid added\n to them) are compatible with any rapid and are always returned, even while still empty.\n Results cover the caller's own and public validation sets; callers allowed to query across\n organizations see compatible sets from every organization.\n This differs from /validation-set/recommended, which uses loose overlap matching and may return\n sets that then reject the rapid. Returns an empty array when no compatible set exists.",
         "parameters": [
           {
             "name": "assetType",
@@ -42692,7 +42968,13 @@
           },
           "health": {
             "type": "number",
-            "description": "The health score of the audience.",
+            "description": "The health score of the audience: the share of graduates beyond what random clicking\n would produce. Null when nothing has been measured yet.",
+            "format": "double",
+            "nullable": true
+          },
+          "judgedShare": {
+            "type": "number",
+            "description": "The share of finished users that received an accuracy verdict from their own answers,\n rather than leaving through a session limit, low submission rate or a global drop.\n Null when no user has finished.",
             "format": "double",
             "nullable": true
           },
@@ -44274,8 +44556,8 @@
             "type": "string"
           },
           "duration": {
-            "type": "string",
-            "format": "date-time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           }
         }
       },
@@ -44488,6 +44770,12 @@
           "health": {
             "type": "number",
             "description": "The health score of the audience.",
+            "format": "double",
+            "nullable": true
+          },
+          "judgedShare": {
+            "type": "number",
+            "description": "Fraction of users who make it through the minimum number of judments required to graduate.",
             "format": "double",
             "nullable": true
           },
@@ -47060,8 +47348,8 @@
             "type": "string"
           },
           "duration": {
-            "type": "string",
-            "format": "date-time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           }
         }
       },
@@ -47080,12 +47368,12 @@
             "type": "string"
           },
           "minDuration": {
-            "type": "string",
-            "format": "date-time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           },
           "maxDuration": {
-            "type": "string",
-            "format": "date-time"
+            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
           },
           "seedByUserId": {
             "type": "boolean"
@@ -51055,6 +51343,56 @@
           }
         }
       },
+      "ApplyPromptStructureEndpoint_Input": {
+        "required": [
+          "segments"
+        ],
+        "type": "object",
+        "properties": {
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegmentDefinition"
+                }
+              }
+            ],
+            "description": "The complete replacement structure, in render order."
+          },
+          "deleteInvalidPrompts": {
+            "type": "boolean",
+            "description": "Whether prompts the new structure invalidates may be deleted. Defaults to false,\n which refuses the change and reports how many prompts would have to go."
+          }
+        }
+      },
+      "ApplyPromptStructureEndpoint_Output": {
+        "required": [
+          "deletedPromptCount"
+        ],
+        "type": "object",
+        "properties": {
+          "deletedPromptCount": {
+            "type": "integer",
+            "description": "How many prompts were deleted to satisfy the new structure.",
+            "format": "int32"
+          }
+        }
+      },
+      "AssetSegmentSource": {
+        "required": [
+          "segmentKeys"
+        ],
+        "type": "object",
+        "properties": {
+          "segmentKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "BenchmarkDemographicDimension": {
         "enum": [
           "AgeBucket",
@@ -51228,6 +51566,18 @@
             "description": "Multiplicative factor applied to displayed scores on the benchmark's overall scoreboard,\n relative to the Bradley-Terry center. Defaults to 1.0; must be strictly positive.",
             "format": "double",
             "nullable": true
+          },
+          "promptStructure": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegmentDefinition"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The benchmark's prompt structure, in render order. Leave unset for the default optional\n text + asset structure."
           }
         }
       },
@@ -51394,6 +51744,11 @@
             "type": "string",
             "description": "The instruction datapoints will be matched up against."
           },
+          "displayInstruction": {
+            "type": "string",
+            "description": "Optional text to display instead of instruction. Presentation-only; it never changes what annotators are\n asked or how results are scored. Leave unset to display instruction itself.",
+            "nullable": true
+          },
           "showPrompt": {
             "type": "boolean",
             "description": "Indicates if the prompt is shown on the rapids."
@@ -51401,6 +51756,14 @@
           "showPromptAsset": {
             "type": "boolean",
             "description": "Whether the prompt asset should be shown on the rapids."
+          },
+          "rapidContextProjection": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidContextProjection"
+              }
+            ],
+            "description": "Which prompt segments the leaderboard's rapids show. Send this or the legacy showPrompt /\n showPromptAsset flags, not both."
           },
           "responseBudget": {
             "type": "integer",
@@ -51603,18 +51966,17 @@
             "type": "string",
             "description": "An identifier associated with the prompt."
           },
-          "prompt": {
-            "type": "string",
-            "description": "The prompt text.",
-            "nullable": true
-          },
-          "promptAsset": {
+          "segments": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IAssetInput"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegmentInput"
+                },
+                "nullable": true
               }
             ],
-            "description": "The asset associated with the prompt."
+            "description": "The prompt's content, keyed by the benchmark's prompt structure. Send this or the legacy\n prompt / promptAsset fields, not both."
           },
           "tags": {
             "allOf": [
@@ -51807,6 +52169,26 @@
           }
         }
       },
+      "FaucetInputBindingInput": {
+        "type": "object",
+        "properties": {
+          "literal": {},
+          "segment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "FaucetInputBindingOutput": {
+        "type": "object",
+        "properties": {
+          "literal": {},
+          "segment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "ForkBenchmarkEndpoint_Output": {
         "required": [
           "id"
@@ -51830,7 +52212,8 @@
           "initialBoostLevel",
           "scoreShift",
           "scoreScale",
-          "lastUpdatedAt"
+          "lastUpdatedAt",
+          "promptStructure"
         ],
         "type": "object",
         "properties": {
@@ -51897,6 +52280,17 @@
             "description": "When the benchmark's rankings last changed — the latest vote recording across the leaderboards contributing to its\n overall; null when none ever received votes.",
             "format": "date-time",
             "nullable": true
+          },
+          "promptStructure": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegmentDefinition"
+                }
+              }
+            ],
+            "description": "The benchmark's prompt structure, in render order."
           }
         }
       },
@@ -51990,7 +52384,10 @@
         "required": [
           "status",
           "isUpToDate",
-          "pendingRunCount"
+          "pendingRunCount",
+          "sampleMediaMode",
+          "segmentExports",
+          "availableSegments"
         ],
         "type": "object",
         "properties": {
@@ -52046,6 +52443,36 @@
             "type": "string",
             "description": "The error from the last failed attempt, or null.",
             "nullable": true
+          },
+          "sampleMediaMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HuggingFaceSampleMediaMode"
+              }
+            ],
+            "description": "The stored sample media mode; Auto when nothing has been configured yet."
+          },
+          "segmentExports": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/HuggingFaceSegmentExport"
+                }
+              }
+            ],
+            "description": "The stored segment exports in column order; empty when none are configured."
+          },
+          "availableSegments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/HuggingFaceAvailableSegment"
+                }
+              }
+            ],
+            "description": "The benchmark's prompt structure in order — the segments a configuration can pick from."
           }
         }
       },
@@ -52901,6 +53328,7 @@
           "instruction",
           "showPrompt",
           "showPromptAsset",
+          "rapidContextProjection",
           "isInversed",
           "responseBudget",
           "minResponses",
@@ -52930,6 +53358,11 @@
             "type": "string",
             "description": "The instruction used when collecting responses."
           },
+          "displayInstruction": {
+            "type": "string",
+            "description": "Text to display instead of instruction; null means display instruction itself.",
+            "nullable": true
+          },
           "showPrompt": {
             "type": "boolean",
             "description": "Whether the prompt is shown on the rapids."
@@ -52937,6 +53370,14 @@
           "showPromptAsset": {
             "type": "boolean",
             "description": "Whether the prompt asset is shown on the rapids."
+          },
+          "rapidContextProjection": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidContextProjection"
+              }
+            ],
+            "description": "Which prompt segments this leaderboard's rapids show. Always populated: a leaderboard\n still on the legacy flags reports the projection those flags stand for."
           },
           "isInversed": {
             "type": "boolean",
@@ -53245,6 +53686,7 @@
       "GetPromptsByBenchmarkEndpoint_Output": {
         "required": [
           "id",
+          "segments",
           "identifier",
           "createdAt",
           "tags"
@@ -53265,13 +53707,16 @@
             "description": "The prompt text as originally provided.",
             "nullable": true
           },
-          "promptAsset": {
+          "segments": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IAsset"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegment"
+                }
               }
             ],
-            "description": "The optional asset associated with the prompt."
+            "description": "The prompt's content, ordered by the benchmark's prompt structure. Empty for a prompt\n that carries no content at all."
           },
           "identifier": {
             "type": "string",
@@ -53340,7 +53785,6 @@
         "required": [
           "modelOwner",
           "modelName",
-          "supportsImageReference",
           "parameters"
         ],
         "type": "object",
@@ -53374,10 +53818,6 @@
             "description": "The model's latest version id, if reported by Replicate.",
             "nullable": true
           },
-          "supportsImageReference": {
-            "type": "boolean",
-            "description": "Whether the model accepts a reference image that the platform auto-fills with a prompt's\n attached media. When true that input is excluded from Parameters."
-          },
           "parameters": {
             "allOf": [
               {
@@ -53387,7 +53827,7 @@
                 }
               }
             ],
-            "description": "The model's configurable input parameters, ordered for rendering."
+            "description": "The model's input parameters as the provider reports them, ordered for rendering.\n Includes the prompt input, which takes a prompt segment rather than a literal value, and\n any image input, which takes an asset segment to send a reference image; excludes\n num_outputs, which the system supplies per run."
           }
         }
       },
@@ -54234,6 +54674,58 @@
           }
         }
       },
+      "HuggingFaceAvailableSegment": {
+        "required": [
+          "key",
+          "kind",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PromptSegmentKind"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "HuggingFaceSampleMediaMode": {
+        "enum": [
+          "Auto",
+          "Embed",
+          "Url"
+        ]
+      },
+      "HuggingFaceSegmentExport": {
+        "required": [
+          "key",
+          "column",
+          "mode"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "column": {
+            "type": "string"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/HuggingFaceSegmentExportMode"
+          }
+        }
+      },
+      "HuggingFaceSegmentExportMode": {
+        "enum": [
+          "Text",
+          "Embed",
+          "Url"
+        ]
+      },
       "HuggingFaceSyncOutcome": {
         "enum": [
           "CreatedPrivate",
@@ -54296,9 +54788,20 @@
             "description": "Optional pinned model version hash.",
             "nullable": true
           },
+          "inputs": {
+            "allOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/FaucetInputBindingInput"
+                }
+              }
+            ],
+            "description": "Model inputs keyed by parameter name (e.g. \"prompt\", \"aspect_ratio\"), each bound to a\n literal value or to a prompt segment. An input not named here is not sent at all, with one\n exception: the prompt input reads the benchmark's default text segment unless bound\n otherwise. A reference image is one of these bindings like any other — bind the model's\n image input to an asset segment to send one. num_outputs is supplied by the system\n and must not appear. Bindings are validated against the model's live input schema when the\n faucet is set."
+          },
           "additionalInputs": {
             "type": "object",
-            "description": "Extra model inputs keyed by parameter name (e.g. \"aspect_ratio\"). The system-managed keys\n (prompt, num_outputs) must not appear here — they are supplied automatically. Values are\n validated against the model's live input schema when the faucet is set."
+            "description": "Legacy form of Inputs: literal values keyed by parameter name. A key present\n in both is taken from Inputs."
           }
         },
         "description": "Configures a faucet that generates samples via the Replicate API."
@@ -54313,6 +54816,9 @@
             "$ref": "#/components/schemas/IFaucetOutputManagedFaucetOutput"
           },
           {
+            "$ref": "#/components/schemas/IFaucetOutputManagedForgeFaucetOutput"
+          },
+          {
             "$ref": "#/components/schemas/IFaucetOutputReplicateFaucetOutput"
           }
         ],
@@ -54320,12 +54826,14 @@
           "propertyName": "_t",
           "mapping": {
             "Managed": "#/components/schemas/IFaucetOutputManagedFaucetOutput",
+            "ManagedForge": "#/components/schemas/IFaucetOutputManagedForgeFaucetOutput",
             "Replicate": "#/components/schemas/IFaucetOutputReplicateFaucetOutput"
           }
         }
       },
       "IFaucetOutputManagedFaucetOutput": {
         "required": [
+          "promptSegmentKey",
           "_t"
         ],
         "properties": {
@@ -54335,6 +54843,13 @@
             ],
             "type": "string"
           },
+          "promptSegmentKey": {
+            "type": "string"
+          },
+          "mediaSegmentKey": {
+            "type": "string",
+            "nullable": true
+          },
           "testTimeScaling": {
             "type": "integer",
             "format": "int32",
@@ -54342,11 +54857,39 @@
           }
         }
       },
+      "IFaucetOutputManagedForgeFaucetOutput": {
+        "required": [
+          "procedureId",
+          "model",
+          "inputs",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ManagedForge"
+            ],
+            "type": "string"
+          },
+          "procedureId": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/FaucetInputBindingOutput"
+            }
+          }
+        }
+      },
       "IFaucetOutputReplicateFaucetOutput": {
         "required": [
           "modelOwner",
           "modelName",
-          "additionalInputs",
+          "inputs",
           "_t"
         ],
         "properties": {
@@ -54366,8 +54909,11 @@
             "type": "string",
             "nullable": true
           },
-          "additionalInputs": {
-            "type": "object"
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/FaucetInputBindingOutput"
+            }
           }
         }
       },
@@ -54450,6 +54996,101 @@
           "Pending",
           "Ready",
           "Failed"
+        ]
+      },
+      "PromptSegment": {
+        "required": [
+          "key",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PromptSegmentKind"
+          },
+          "originalText": {
+            "type": "string",
+            "nullable": true
+          },
+          "englishText": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PromptSegmentDefinition": {
+        "required": [
+          "key",
+          "kind",
+          "label",
+          "required"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PromptSegmentKind"
+          },
+          "label": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PromptSegmentInput": {
+        "required": [
+          "key",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PromptSegmentKind"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "PromptSegmentKind": {
+        "enum": [
+          "Text",
+          "Asset"
+        ]
+      },
+      "PromptTextLanguage": {
+        "enum": [
+          "English",
+          "Original"
         ]
       },
       "QueryBenchmarksEndpoint_Output": {
@@ -55139,6 +55780,11 @@
             "type": "string",
             "description": "The instruction shown on the leaderboard."
           },
+          "displayInstruction": {
+            "type": "string",
+            "description": "Text to display instead of instruction; null means display instruction itself.",
+            "nullable": true
+          },
           "showPrompt": {
             "type": "boolean",
             "description": "Whether the prompt text is shown."
@@ -55302,6 +55948,11 @@
           "instruction": {
             "type": "string",
             "description": "The instruction used when collecting responses."
+          },
+          "displayInstruction": {
+            "type": "string",
+            "description": "Text to display instead of instruction; null means display instruction itself.",
+            "nullable": true
           },
           "showPrompt": {
             "type": "boolean",
@@ -55600,6 +56251,10 @@
             "nullable": true
           },
           "instruction": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayInstruction": {
             "type": "string",
             "nullable": true
           },
@@ -56831,6 +57486,29 @@
           }
         }
       },
+      "RapidContextProjection": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextSegmentSource"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAsset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AssetSegmentSource"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
       "RatingGrouping": {
         "enum": [
           "Image",
@@ -56866,6 +57544,25 @@
             "description": "Optional seed for deterministic matchup selection. Reuse it across a benchmark's leaderboards to align them on the same\n image pairs; omit for random selection.",
             "format": "int64",
             "nullable": true
+          }
+        }
+      },
+      "ReplacePromptSegmentsEndpoint_Input": {
+        "required": [
+          "segments"
+        ],
+        "type": "object",
+        "properties": {
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PromptSegmentInput"
+                }
+              }
+            ],
+            "description": "The prompt's complete content."
           }
         }
       },
@@ -56951,7 +57648,8 @@
           "InvalidConfiguration",
           "ModelNotFound",
           "Authentication",
-          "Unknown"
+          "Unknown",
+          "InvalidOutput"
         ]
       },
       "SampleGenerationItemStatus": {
@@ -57043,12 +57741,36 @@
             "type": "boolean",
             "description": "When true, re-export the entire benchmark as a non-incremental sync. Defaults to false.",
             "nullable": true
+          },
+          "sampleMediaMode": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/HuggingFaceSampleMediaMode"
+              }
+            ],
+            "description": "How the two compared sample columns are represented. Null keeps the stored value;\n defaults to Auto on the first sync.",
+            "nullable": true
+          },
+          "segmentExports": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/HuggingFaceSegmentExport"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The prompt segments to carry into the dataset, in column order. Null keeps the stored\n configuration; an empty list resets to the legacy shape (a lone prompt column)."
           }
         }
       },
       "StartBenchmarkHuggingFaceSyncEndpoint_Output": {
         "required": [
-          "status"
+          "status",
+          "appliedSampleMediaMode",
+          "forcedFullRebuild"
         ],
         "type": "object",
         "properties": {
@@ -57095,6 +57817,18 @@
             "type": "string",
             "description": "The error from the last failed attempt, or null.",
             "nullable": true
+          },
+          "appliedSampleMediaMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HuggingFaceSampleMediaMode"
+              }
+            ],
+            "description": "The persisted sample media mode this attempt exports with. What Auto resolves to\n is decided during the upload, per content type."
+          },
+          "forcedFullRebuild": {
+            "type": "boolean",
+            "description": "Whether the attempt was promoted to a full rebuild because the export configuration\n differs from the one the dataset was last built with."
           }
         }
       },
@@ -57270,6 +58004,21 @@
           }
         }
       },
+      "TextSegmentSource": {
+        "required": [
+          "segmentKey",
+          "language"
+        ],
+        "type": "object",
+        "properties": {
+          "segmentKey": {
+            "type": "string"
+          },
+          "language": {
+            "$ref": "#/components/schemas/PromptTextLanguage"
+          }
+        }
+      },
       "UpdateBenchmarkEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -57331,6 +58080,11 @@
           "name": {
             "type": "string",
             "description": "The new name of the leaderboard."
+          },
+          "displayInstruction": {
+            "type": "string",
+            "description": "Text to display instead of the leaderboard's instruction. Presentation-only; it never changes what annotators are\n asked or how results are scored. Pass null to clear the override so instruction is displayed again.",
+            "nullable": true
           },
           "responseBudget": {
             "type": "integer",
@@ -57400,6 +58154,14 @@
               }
             ],
             "description": "Prompt tag values the leaderboard never creates matchups for; takes precedence over includedTags, even when\n another tag is included."
+          },
+          "rapidContextProjection": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidContextProjection"
+              }
+            ],
+            "description": "Which prompt segments this leaderboard's rapids show. Setting it takes the leaderboard off\n the legacy showPrompt / showPromptAsset flags, which are then kept in sync with it."
           }
         }
       },
@@ -62393,6 +63155,50 @@
             "format": "int32"
           }
         }
+      },
+      "RankingResults": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "totalVotes",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "The total number of datapoints.",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "description": "The 1-based page number.",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "The page size.",
+            "format": "int32"
+          },
+          "totalVotes": {
+            "type": "integer",
+            "description": "The total number of votes cast.",
+            "format": "int64"
+          },
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RankingDatapoint"
+                }
+              }
+            ],
+            "description": "The ranked datapoints on this page."
+          }
+        },
+        "description": "Results for a compare (ranking) job: a paged list of Elo-ranked datapoints."
       },
       "RapidState": {
         "enum": [
