@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.09.09.0832-4aa6c4e"
+    "version": "2026.09.03.1439-40dbca9"
   },
   "servers": [
     {
@@ -3025,13 +3025,7 @@
           },
           "health": {
             "type": "number",
-            "description": "The health score of the audience: the share of graduates beyond what random clicking\n would produce. Null when nothing has been measured yet.",
-            "format": "double",
-            "nullable": true
-          },
-          "judgedShare": {
-            "type": "number",
-            "description": "The share of finished users that received an accuracy verdict from their own answers,\n rather than leaving through a session limit, low submission rate or a global drop.\n Null when no user has finished.",
+            "description": "The health score of the audience.",
             "format": "double",
             "nullable": true
           },
@@ -4617,8 +4611,8 @@
             "type": "string"
           },
           "duration": {
-            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -4840,12 +4834,6 @@
           "health": {
             "type": "number",
             "description": "The health score of the audience.",
-            "format": "double",
-            "nullable": true
-          },
-          "judgedShare": {
-            "type": "number",
-            "description": "Fraction of users who make it through the minimum number of judments required to graduate.",
             "format": "double",
             "nullable": true
           },

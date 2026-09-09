@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Validation API",
     "description": "The API for the Rapidata Validation service",
-    "version": "2026.09.09.0832-4aa6c4e"
+    "version": "2026.09.03.1439-40dbca9"
   },
   "servers": [
     {
@@ -309,7 +309,7 @@
           "ValidationSet"
         ],
         "summary": "Gets all validation sets available to the user that a rapid with the provided parameters can be added to.",
-        "description": "Matching is strict: a validation set is only returned when its asset type, modality, and prompt type\n equal the provided parameters exactly — the same constraint enforced when actually adding a rapid.\n Uninitialized validation sets (no modality yet — they adopt the classifiers of the first rapid added\n to them) are compatible with any rapid and are always returned, even while still empty.\n Results cover the caller's own and public validation sets; callers allowed to query across\n organizations see compatible sets from every organization.\n This differs from /validation-set/recommended, which uses loose overlap matching and may return\n sets that then reject the rapid. Returns an empty array when no compatible set exists.",
+        "description": "Matching is strict: a validation set is only returned when its asset type, modality, and prompt type\n equal the provided parameters exactly — the same constraint enforced when actually adding a rapid.\n This differs from /validation-set/recommended, which uses loose overlap matching and may return\n sets that then reject the rapid. Returns an empty array when no compatible set exists.",
         "parameters": [
           {
             "name": "assetType",
@@ -2431,8 +2431,8 @@
             "type": "string"
           },
           "duration": {
-            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

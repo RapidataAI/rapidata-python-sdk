@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Signal API",
     "description": "The API for the Rapidata Signal service",
-    "version": "2026.09.09.0832-4aa6c4e"
+    "version": "2026.09.03.1439-40dbca9"
   },
   "servers": [
     {

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "2026.09.09.0832-4aa6c4e"
+    "version": "2026.09.03.1439-40dbca9"
   },
   "servers": [
     {
@@ -2476,8 +2476,8 @@
             "type": "string"
           },
           "duration": {
-            "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
