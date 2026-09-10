@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.09.09.1810-c43fa9f"
+    "version": "2026.09.10.1512-ad901d4"
   },
   "servers": [
     {
@@ -1841,9 +1841,9 @@
             "x-parameter-group": "sort"
           },
           {
-            "name": "definition_id",
+            "name": "id",
             "in": "query",
-            "description": "Filter by definition_id.",
+            "description": "Filter by id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -2955,9 +2955,9 @@
             "x-parameter-group": "sort"
           },
           {
-            "name": "definition_id",
+            "name": "id",
             "in": "query",
-            "description": "Filter by definition_id.",
+            "description": "Filter by id.",
             "style": "deepObject",
             "explode": true,
             "schema": {

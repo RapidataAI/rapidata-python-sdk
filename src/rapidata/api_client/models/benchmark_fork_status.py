@@ -17,21 +17,20 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class VoucherSource(str, Enum):
+class BenchmarkForkStatus(str, Enum):
     """
-    VoucherSource
+    BenchmarkForkStatus
     """
 
     """
     allowed enum values
     """
-    SIGNUP = 'Signup'
-    MANUALGRANT = 'ManualGrant'
-    TOPUP = 'TopUp'
-    WRITEOFF = 'WriteOff'
+    READY = 'Ready'
+    FORKING = 'Forking'
+    FAILED = 'Failed'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of VoucherSource from a JSON string"""
+        """Create an instance of BenchmarkForkStatus from a JSON string"""
         return cls(json.loads(json_str))
 
