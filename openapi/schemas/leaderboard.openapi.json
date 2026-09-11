@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.09.09.1810-c43fa9f"
+    "version": "2026.09.10.1512-ad901d4"
   },
   "servers": [
     {
@@ -11012,7 +11012,7 @@
           "Leaderboard"
         ],
         "summary": "Updates a leaderboard using patch semantics.",
-        "description": "displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back\n to instruction when null. It never affects run creation, vote recording or ranking.",
+        "description": "displayInstruction is presentation-only and never affects run creation, vote recording or ranking. A supplied\n featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -16897,6 +16897,13 @@
           "Language"
         ]
       },
+      "BenchmarkForkStatus": {
+        "enum": [
+          "Ready",
+          "Forking",
+          "Failed"
+        ]
+      },
       "BoostLeaderboardEndpoint_Input": {
         "required": [
           "participants",
@@ -17795,6 +17802,7 @@
           "initialBoostLevel",
           "scoreShift",
           "scoreScale",
+          "forkStatus",
           "lastUpdatedAt",
           "promptStructure"
         ],
@@ -17857,6 +17865,14 @@
             "type": "number",
             "description": "Multiplicative factor applied to displayed scores on the benchmark's overall scoreboard,\n relative to the Bradley-Terry center.",
             "format": "double"
+          },
+          "forkStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BenchmarkForkStatus"
+              }
+            ],
+            "description": "Whether the copy behind a forked benchmark has finished. Always Ready for a benchmark that was\n not forked; a fork is Forking until its job completes and Failed when the job gave up."
           },
           "lastUpdatedAt": {
             "type": "string",
@@ -23995,7 +24011,8 @@
           "Running",
           "Completed",
           "Failed",
-          "Paused"
+          "Paused",
+          "Cancelled"
         ]
       },
       "SampleGenerationItemFailureCategory": {
@@ -24528,6 +24545,17 @@
               }
             ],
             "description": "Which prompt segments this leaderboard's rapids show. Setting it takes the leaderboard off\n the legacy showPrompt / showPromptAsset flags, which are then kept in sync with it."
+          },
+          "featureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "Feature flags applied to every run this leaderboard creates from now on; the supplied list replaces the stored set,\n so an empty list clears it. Keys are open-ended and must be unique."
           }
         }
       },
