@@ -21,6 +21,7 @@ from rapidata.rapidata_client.benchmark._vote_filters import (
 from rapidata.rapidata_client.benchmark.leaderboard.vote_aggregation import (
     VoteAggregation,
 )
+from rapidata.rapidata_client.benchmark.participant._pricing import to_price_unit
 from rapidata.rapidata_client.benchmark.prompt_metadata import (
     DEFAULT_ASSET_SEGMENT_KEY,
     BenchmarkPromptInfo,
@@ -409,6 +410,8 @@ class RapidataBenchmark:
                         openapi_service=self._openapi_service,
                         benchmark_id=self.id,
                         status=p.status,
+                        price=p.cost,
+                        price_unit=to_price_unit(p.cost_unit),
                     )
                     for p in result.items
                 ]

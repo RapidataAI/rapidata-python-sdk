@@ -152,6 +152,43 @@ participant.run()
 benchmark.run()
 ```
 
+### Update participant metadata
+
+A participant's metadata can be changed after it has been added, independently
+of uploading media or submitting it for evaluation. Any participant works —
+one returned by `add_model` or one taken from `benchmark.participants`.
+
+```python
+participant = benchmark.participants[0]
+
+participant.rename("MyAIModel_v2.2")
+```
+
+#### Price
+
+A model's price places it on the benchmark's "Score vs. cost" chart. The chart
+only shows priced models, and only those quoted in the unit most models in the
+benchmark use — unpriced models stay on the leaderboard but are hidden from the
+chart.
+
+Prices are in USD per one of three units:
+
+| `unit`             | Meaning                       |
+| ------------------ | ----------------------------- |
+| `"image"`          | USD per generated image       |
+| `"video_second"`   | USD per second of video       |
+| `"million_tokens"` | USD per million tokens        |
+
+```python
+participant.set_price(0.04, "image")
+
+print(participant.price, participant.price_unit)  # 0.04 image
+
+participant.clear_price()  # hides the model from the chart again
+```
+
+`price` and `price_unit` are `None` for models without a price.
+
 ### 3c. Recovering a Partial Upload
 
 Large uploads over a slow or flaky connection can leave individual samples

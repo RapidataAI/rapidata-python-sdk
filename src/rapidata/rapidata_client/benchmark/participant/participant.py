@@ -16,6 +16,11 @@ from rapidata.rapidata_client.api.rapidata_api_client import (
 from opentelemetry import context as otel_context
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.benchmark.participant.sample_upload import SampleUpload
+from rapidata.rapidata_client.benchmark.participant._pricing import (
+    PriceUnit,
+    to_price_unit,
+    validate_price,
+)
 from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
 from rapidata.rapidata_client.exceptions.rapidata_error import RapidataError
 
@@ -44,6 +49,8 @@ class BenchmarkParticipant:
         openapi_service: The OpenAPI service for API communication.
         benchmark_id: The id of the benchmark the participant belongs to.
         status: The current status of the participant.
+        price: The model's price in USD per ``price_unit``, or ``None`` if unpriced.
+        price_unit: The unit the price is quoted in, or ``None`` if unpriced.
     """
 
     def __init__(
@@ -53,6 +60,8 @@ class BenchmarkParticipant:
         openapi_service: OpenAPIService,
         benchmark_id: str,
         status: ParticipantStatus = ParticipantStatus.CREATED,
+        price: float | None = None,
+        price_unit: PriceUnit | None = None,
     ):
         self.name = name
         self.id = id
@@ -60,6 +69,8 @@ class BenchmarkParticipant:
         self._benchmark_id = benchmark_id
         self._asset_uploader = AssetUploader(openapi_service)
         self._status = status
+        self.price: float | None = price
+        self.price_unit: PriceUnit | None = price_unit
 
     @property
     def status(self) -> ParticipantStatus:
@@ -191,6 +202,57 @@ class BenchmarkParticipant:
                 ),
             )
             self.name = name
+
+    def set_price(self, price: float, unit: PriceUnit) -> None:
+        """Sets the model's price so it appears on the benchmark's score-vs-cost chart.
+
+        Only priced participants are shown on that chart, and only those quoted
+        in the unit most participants of the benchmark use.
+
+        Args:
+            price: The price in USD per ``unit``. Must be a finite number greater than 0.
+            unit: What the price is per — ``"image"``, ``"video_second"`` or
+                ``"million_tokens"``.
+
+        Raises:
+            ValueError: If the price or unit is invalid.
+        """
+        from rapidata.api_client.models.update_participant_endpoint_input import (
+            UpdateParticipantEndpointInput,
+        )
+
+        cost, cost_unit = validate_price(price, unit)
+
+        with tracer.start_as_current_span("BenchmarkParticipant.set_price"):
+            self._openapi_service.leaderboard.participant_api.participant_participant_id_patch(
+                participant_id=self.id,
+                update_participant_endpoint_input=UpdateParticipantEndpointInput(
+                    cost=cost,
+                    costUnit=cost_unit,
+                ),
+            )
+            self.price = cost
+            self.price_unit = unit
+
+    def clear_price(self) -> None:
+        """Removes the model's price, hiding it from the score-vs-cost chart."""
+        from rapidata.api_client.models.update_participant_endpoint_input import (
+            UpdateParticipantEndpointInput,
+        )
+
+        with tracer.start_as_current_span("BenchmarkParticipant.clear_price"):
+            # Both fields must be set explicitly: the generated model only
+            # serialises a null for fields that were assigned, and an omitted
+            # field means "leave unchanged" to the PATCH endpoint.
+            self._openapi_service.leaderboard.participant_api.participant_participant_id_patch(
+                participant_id=self.id,
+                update_participant_endpoint_input=UpdateParticipantEndpointInput(
+                    cost=None,
+                    costUnit=None,
+                ),
+            )
+            self.price = None
+            self.price_unit = None
 
     def __str__(self) -> str:
         return f"BenchmarkParticipant(name={self.name}, id={self.id}, status={self._status})"
