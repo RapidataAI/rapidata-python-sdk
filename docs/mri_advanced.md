@@ -21,9 +21,9 @@ benchmark = client.mri.create_new_benchmark(
         "A portrait of a wise old wizard"
     ],
     prompt_assets=[
-        "https://assets.rapidata.ai/mountain_sunset.png",
-        "https://assets.rapidata.ai/futuristic_city.png", 
-        "https://assets.rapidata.ai/wizard_portrait.png"
+        ["https://assets.rapidata.ai/mountain_sunset.png"],
+        ["https://assets.rapidata.ai/futuristic_city.png"],
+        ["https://assets.rapidata.ai/wizard_portrait.png"]
     ]
 )
 
@@ -32,19 +32,30 @@ benchmark = client.mri.create_new_benchmark(
     name="Preference Benchmark",
     identifiers=["seed_1", "seed_2", "seed_3"],
     prompts=["prompt_1", "prompt_1", "prompt_1"],
-    prompt_assets=["https://example.com/asset1.jpg", "https://example.com/asset1.jpg", "https://example.com/asset1.jpg"]
+    prompt_assets=[["https://example.com/asset1.jpg"], ["https://example.com/asset1.jpg"], ["https://example.com/asset1.jpg"]]
 )
 
 # Example 3: Using only prompt assets
 benchmark = client.mri.create_new_benchmark(
     name="Preference Benchmark",
     identifiers=["image_1", "image_2", "image_3"],   
-    prompt_assets=["https://example.com/asset1.jpg", "https://example.com/asset2.jpg", "https://example.com/asset3.jpg"]
+    prompt_assets=[["https://example.com/asset1.jpg"], ["https://example.com/asset2.jpg"], ["https://example.com/asset3.jpg"]]
+)
+
+# Example 4: Several assets for one prompt, e.g. a reference clip plus a start frame
+benchmark = client.mri.create_new_benchmark(
+    name="Camera Motion Benchmark",
+    identifiers=["move_forward", "pan_left"],
+    prompts=["The camera moves forward", "The camera pans left"],
+    prompt_assets=[
+        ["https://example.com/move_forward.gif", "https://example.com/interior.jpg"],
+        ["https://example.com/pan_left.gif", "https://example.com/street.jpg"]
+    ]
 )
 ```
 
 !!! note
-    Media assets are images, videos, or audio files that provide visual or auditory context for your evaluation prompts. For example when evaluating image to video models.
+    Media assets are images, videos, or audio files that provide visual or auditory context for your evaluation prompts. For example when evaluating image to video models. `prompt_assets` takes one list per prompt, the same shape as `media_contexts` on job definitions: one entry for a single asset, several to show them together. `benchmark.prompt_assets` reads them back in that same shape.
 
 ### Tagging System
 
@@ -105,7 +116,7 @@ If you have already created a benchmark and want to add new prompts and assets a
 benchmark.add_prompts(
     identifiers=["new_style"],
     prompts=["Generate artwork in this new style"],
-    prompt_assets=["https://assets.rapidata.ai/new_style_ref.jpg"],
+    prompt_assets=[["https://assets.rapidata.ai/new_style_ref.jpg"]],
     tags=[["abstract", "modern"]],
 )
 ```
