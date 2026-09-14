@@ -34,7 +34,6 @@ from rapidata.api_client.api.invoice_api import InvoiceApi
 from rapidata.api_client.api.job_api import JobApi
 from rapidata.api_client.api.leaderboard_api import LeaderboardApi
 from rapidata.api_client.api.newsletter_api import NewsletterApi
-from rapidata.api_client.api.order_api import OrderApi
 from rapidata.api_client.api.organization_api import OrganizationApi
 from rapidata.api_client.api.owner_tier_override_api import OwnerTierOverrideApi
 from rapidata.api_client.api.participant_api import ParticipantApi

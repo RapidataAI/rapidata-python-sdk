@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.09.11.1415-a6501f5"
+    "version": "2026.09.14.0846-8ea7d98"
   },
   "servers": [
     {
@@ -715,7 +715,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/benchmark/{benchmarkId}/fork": {
@@ -10434,7 +10435,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/benchmark/{benchmarkId}/name": {
@@ -10485,7 +10487,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/leaderboard/faucet/replicate/models/{modelOwner}/{modelName}": {
@@ -10816,7 +10819,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       },
       "get": {
         "tags": [
@@ -10861,7 +10865,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/leaderboard/{leaderboardId}/prompts": {
@@ -10919,7 +10924,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/leaderboard/{leaderboardId}": {
@@ -14803,7 +14809,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/leaderboard/{leaderboardId}/name": {
@@ -14854,7 +14861,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/leaderboard/{leaderboardId}/response-config": {
@@ -14905,7 +14913,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/participant/{participantId}/sample": {
@@ -15021,7 +15030,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/participant/{participantId}": {
@@ -15377,7 +15387,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/participants/{participantId}/submit": {
@@ -15523,7 +15534,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/benchmark-prompt/{promptId}": {

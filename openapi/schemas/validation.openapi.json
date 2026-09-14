@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Validation API",
     "description": "The API for the Rapidata Validation service",
-    "version": "2026.09.11.1415-a6501f5"
+    "version": "2026.09.14.0846-8ea7d98"
   },
   "servers": [
     {
@@ -1237,7 +1237,8 @@
           "204": {
             "description": "No Content"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/validation-set/{validationSetId}/dimensions": {
@@ -1288,7 +1289,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/validation-set/{validationSetId}/shouldAlert": {
@@ -1339,7 +1341,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/validation-set/{validationSetId}/visibility": {
