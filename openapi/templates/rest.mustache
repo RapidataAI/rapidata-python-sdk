@@ -10,9 +10,9 @@ import threading
 import time
 from typing import Dict, Optional
 
-import httpx
+import httpx2
 from authlib.integrations.httpx_client import OAuth2Client
-from httpx import (
+from httpx2 import (
     USE_CLIENT_DEFAULT,
     ConnectError,
     Limits,
@@ -34,7 +34,7 @@ _TRANSIENT_RETRY_MAX_DELAY = 30.0
 _RETRYABLE_STATUS_CODES = {429, 502, 503, 504}
 _RETRY_AFTER_MAX_SECONDS = 60.0
 
-# httpx disables timeouts entirely when one is passed explicitly as `None`, so every
+# httpx2 disables timeouts entirely when one is passed explicitly as `None`, so every
 # request must resolve to a real Timeout or to USE_CLIENT_DEFAULT. Without this a
 # stalled upload holds its worker thread open indefinitely instead of failing fast
 # enough for the retry below to reach a healthy connection.
@@ -123,7 +123,7 @@ _retry_noise = _RetryNoiseThrottle()
 
 class RESTResponse(io.IOBase):
 
-    def __init__(self, resp: httpx.Response) -> None:
+    def __init__(self, resp: httpx2.Response) -> None:
         self.response = resp
         self.status = resp.status_code
         self.reason = resp.reason_phrase
@@ -308,7 +308,7 @@ class RESTClientObject:
         for attempt in range(_TRANSIENT_RETRY_MAX_ATTEMPTS + 1):
             try:
                 r = self._send_request(self.session, method, url, headers, body, post_params, timeout)
-            except httpx.HTTPError as e:
+            except httpx2.HTTPError as e:
                 self._handle_http_error(e, method, url, attempt)
                 continue
 
@@ -393,7 +393,7 @@ class RESTClientObject:
         return files, data
 
     @staticmethod
-    def _retry_after_from_response(response: httpx.Response) -> Optional[float]:
+    def _retry_after_from_response(response: httpx2.Response) -> Optional[float]:
         """Parse a `Retry-After` header into a bounded float seconds value.
 
         Accepts the integer-seconds form (RFC 7231). HTTP-date form is
@@ -416,7 +416,7 @@ class RESTClientObject:
     def _build_timeout(_request_timeout):
         """Build a Timeout object from the request timeout parameter.
 
-        Falls back to USE_CLIENT_DEFAULT rather than None, because httpx reads an
+        Falls back to USE_CLIENT_DEFAULT rather than None, because httpx2 reads an
         explicit None as "wait forever" instead of "use the client's default".
         """
         if not _request_timeout:
@@ -472,7 +472,7 @@ class RESTClientObject:
             client_kwargs["proxy"] = self.configuration.proxy
 
             if self.configuration.proxy_headers:
-                # httpx doesn't have a dedicated `proxy_headers` kwarg the way
+                # httpx2 doesn't have a dedicated `proxy_headers` kwarg the way
                 # urllib3 does — merging them into the default request headers
                 # is the closest equivalent.
                 existing_headers = dict(client_kwargs.get("headers") or {})
@@ -480,13 +480,13 @@ class RESTClientObject:
                 client_kwargs["headers"] = existing_headers
 
         if self.configuration.retries is not None:
-            transport = httpx.HTTPTransport(retries=self.configuration.retries, limits=limits)
+            transport = httpx2.HTTPTransport(retries=self.configuration.retries, limits=limits)
             client_kwargs["transport"] = transport
 
         return client_kwargs
 
     @staticmethod
-    def _is_retryable_error(error: httpx.HTTPError) -> bool:
+    def _is_retryable_error(error: httpx2.HTTPError) -> bool:
         """Check if the error is a transient network error safe to retry."""
         if isinstance(error, ConnectError):
             if RESTClientObject._is_certificate_validation_error(error):
@@ -518,4 +518,3 @@ class RESTClientObject:
         
         If the issue persists, please reach out to us at 'info@rapidata.ai', we're happy to help you.
         """
-
