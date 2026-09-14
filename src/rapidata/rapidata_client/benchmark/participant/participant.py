@@ -87,9 +87,7 @@ class BenchmarkParticipant:
             The Elo score, or ``None`` if it has not been computed yet (for
             example when the participant has not been evaluated).
         """
-        # The full standings must be requested: scores are recomputed relative
-        # to the whole field on every call, so filtering to a single participant
-        # would yield a meaningless score.
+        # Scores depend on the full field; filtering to one participant changes its score.
         with tracer.start_as_current_span("BenchmarkParticipant.get_elo"):
             result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_standings_query_get(
                 benchmark_id=self._benchmark_id,
@@ -130,9 +128,7 @@ class BenchmarkParticipant:
         )
 
         with tracer.start_as_current_span("BenchmarkParticipant.run"):
-            # Submitted through the batch endpoint as a batch of one: only its response
-            # carries the min-assets-per-prompt warning, and for a single participant this
-            # is equivalent to the per-participant submit.
+            # Only batch submission returns the min-assets-per-prompt warning.
             result = self._openapi_service.leaderboard.participant_api.participants_submit_post(
                 SubmitParticipantsEndpointInput(participantIds=[self.id])
             )
@@ -190,14 +186,14 @@ class BenchmarkParticipant:
         Args:
             name: The new name of the participant.
         """
-        from rapidata.api_client.models.update_participant_name_endpoint_input import (
-            UpdateParticipantNameEndpointInput,
+        from rapidata.api_client.models.update_participant_endpoint_input import (
+            UpdateParticipantEndpointInput,
         )
 
         with tracer.start_as_current_span("BenchmarkParticipant.rename"):
-            self._openapi_service.leaderboard.participant_api.participant_participant_id_name_put(
+            self._openapi_service.leaderboard.participant_api.participant_participant_id_patch(
                 participant_id=self.id,
-                update_participant_name_endpoint_input=UpdateParticipantNameEndpointInput(
+                update_participant_endpoint_input=UpdateParticipantEndpointInput(
                     name=name
                 ),
             )
@@ -241,9 +237,7 @@ class BenchmarkParticipant:
         )
 
         with tracer.start_as_current_span("BenchmarkParticipant.clear_price"):
-            # Both fields must be set explicitly: the generated model only
-            # serialises a null for fields that were assigned, and an omitted
-            # field means "leave unchanged" to the PATCH endpoint.
+            # Explicit nulls clear both fields; omitted fields remain unchanged.
             self._openapi_service.leaderboard.participant_api.participant_participant_id_patch(
                 participant_id=self.id,
                 update_participant_endpoint_input=UpdateParticipantEndpointInput(
@@ -299,10 +293,7 @@ class BenchmarkParticipant:
 
             except RapidataError as e:
                 if e.status_code == _ALREADY_EXISTS_STATUS:
-                    # The backend rejects a sample the participant already holds for
-                    # this identifier and asset. That is the success case for a retry:
-                    # the sample we wanted is there, and re-sending would double the
-                    # prompt's weight in matchup sampling.
+                    # A conflict means this sample already persisted, so retrying is unnecessary.
                     logger.debug("Sample already present for %s", identifier)
                     return None
 
