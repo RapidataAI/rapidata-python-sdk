@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.11.1415-a6501f5"
+    "version": "2026.09.14.0846-8ea7d98"
   },
   "servers": [
     {
@@ -11821,6 +11821,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -21881,6 +21882,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -21943,6 +21945,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -22340,6 +22343,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -22396,6 +22400,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -22465,6 +22470,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -26514,6 +26520,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -26576,6 +26583,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -26638,6 +26646,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -26776,6 +26785,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -27220,6 +27230,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -27399,6 +27410,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33004,6 +33016,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33074,6 +33087,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33132,6 +33146,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33191,6 +33206,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33242,6 +33258,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33293,6 +33310,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33349,6 +33367,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33409,6 +33428,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33458,6 +33478,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33507,6 +33528,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33554,6 +33576,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33614,6 +33637,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33665,6 +33689,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33732,6 +33757,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -33980,6 +34006,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -34324,6 +34351,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -34375,6 +34403,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -34426,6 +34455,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -34486,6 +34516,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -34554,6 +34585,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -34613,6 +34645,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -43714,6 +43747,7 @@
             "description": "No Content"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -43776,6 +43810,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -43838,6 +43873,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [

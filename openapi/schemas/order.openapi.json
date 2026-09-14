@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.09.11.1415-a6501f5"
+    "version": "2026.09.14.0846-8ea7d98"
   },
   "servers": [
     {
@@ -3710,7 +3710,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/clone": {
@@ -3769,7 +3770,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/complex": {
@@ -3816,7 +3818,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order": {
@@ -3864,7 +3867,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/unsupported": {
@@ -3904,7 +3908,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}": {
@@ -3944,7 +3949,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       },
       "get": {
         "tags": [
@@ -3989,7 +3995,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       },
       "patch": {
         "tags": [
@@ -4038,7 +4045,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/download-results": {
@@ -4076,7 +4084,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/results": {
@@ -4114,7 +4123,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/orders/public": {
@@ -4150,7 +4160,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/demo": {
@@ -4199,7 +4210,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/pause": {
@@ -4239,7 +4251,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/preview": {
@@ -4295,7 +4308,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/orders/aggregated-overview": {
@@ -4532,7 +4546,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/orders": {
@@ -4865,7 +4880,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/resume": {
@@ -4905,7 +4921,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/retry": {
@@ -4945,7 +4962,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/share": {
@@ -4994,7 +5012,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/submit": {
@@ -5051,7 +5070,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/unlock": {
@@ -5099,7 +5119,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     }
   },
