@@ -2,99 +2,88 @@ name: Deploy Documentation
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'docs/**'
-      - 'hooks/**'
-      - 'scripts/**'
-      - 'site_root/**'
-      - 'tests/test_docs_site.py'
-      - 'src/**'
-      - 'openapi/schemas/**'
-      - 'mkdocs.yml'
-      - 'pyproject.toml'
-      - 'uv.lock'
-      - 'CNAME'
-      - '.github/workflows/deploy_doc.yml'
-
-permissions:
-  contents: read
-
-concurrency:
-  group: docs-${{ github.event_name == 'workflow_dispatch' && 'publish' || github.ref }}
-  cancel-in-progress: false
+    inputs:
+      branch:
+        description: 'Branch to deploy docs from'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+        - main
+        - 2.x
+      version_alias:
+        description: 'Version alias for docs (e.g., 3.x, 2.x)'
+        required: true
+        default: '3.x'
+        type: choice
+        options:
+        - 3.x
+        - 2.x
+      set_latest:
+        description: 'Set this version as latest?'
+        required: true
+        default: true
+        type: boolean
 
 jobs:
-  build:
+  deploy-docs:
     runs-on: ubuntu-latest
-    env:
-      RAPIDATA_DISABLE_OTLP: '1'
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
         with:
-          ref: gh-pages
-          path: published
+          ref: ${{ github.event.inputs.branch }}
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
-          python-version-file: '.python-version'
-      - uses: astral-sh/setup-uv@v7
-      - run: uv sync --group docs --frozen
-      - run: uv run python -m pytest tests/test_docs_site.py
-      - run: uv run --group docs mkdocs build
-      - run: uv run python scripts/prepare_docs_site.py --site site --previous published
-      - run: uv run python scripts/build_public_openapi.py site/openapi.json
-      - uses: actions/upload-artifact@v4
-        with:
-          name: documentation-site
-          path: site/
-          include-hidden-files: true
-
-  deploy:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: published
-      - uses: actions/download-artifact@v4
-        with:
-          name: documentation-site
-          path: site
-      - name: Publish complete documentation site
+          python-version-file: ".python-version"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Install dependencies
+        run:  uv sync --group docs --frozen
+      - name: Configure Git for mike
         run: |
-          set -euo pipefail
-          rsync -a --delete --exclude='/.git' site/ published/
-          cd published
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add --all
-          if ! git diff --cached --quiet; then
-            git commit -m "docs: publish current documentation at root"
-            git push origin HEAD:gh-pages
+      - name: Deploy docs with mike
+        run: |
+          # Fetch gh-pages branch if it exists
+          git fetch origin gh-pages:gh-pages || true
+
+          # Deploy the version
+          if [ "${{ github.event.inputs.set_latest }}" = "true" ]; then
+            uv run mike deploy --push --update-aliases ${{ github.event.inputs.version_alias }} latest
+            uv run mike set-default --push latest
+          else
+            uv run mike deploy --push ${{ github.event.inputs.version_alias }}
           fi
-      - name: Build GitHub Pages and wait for publication
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Publish site-root files (llms.txt, robots.txt, landing page)
+        # mike serves every version under a subdirectory, so the generated
+        # llms.txt/robots.txt live under /latest/ and are invisible at the site
+        # root where crawlers and AI agents look. Mirror the curated root files
+        # (and the generated llms-full.txt) into the gh-pages root after mike has
+        # written the version. mike rewrites the root index.html as a bare
+        # redirect on set-default, so this must run last to keep our richer one.
+        if: hashFiles('site_root/**') != ''
         run: |
           set -euo pipefail
-          published_sha=$(git -C published rev-parse HEAD)
-          gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"
-          for attempt in $(seq 1 30); do
-            build=$(gh api "repos/$GITHUB_REPOSITORY/pages/builds/latest")
-            if [ "$(jq -r .commit <<< "$build")" = "$published_sha" ]; then
-              case "$(jq -r .status <<< "$build")" in
-                built) exit 0 ;;
-                errored) jq .error <<< "$build"; exit 1 ;;
-              esac
-            fi
-            sleep 10
-          done
-          echo "GitHub Pages did not publish $published_sha within five minutes."
-          exit 1
+          git fetch origin gh-pages
+          git worktree add ghpages gh-pages
+          # Static root files. Copy each published artifact explicitly so repo-only
+          # files in site_root/ (e.g. README.md) never leak onto the live site.
+          cp site_root/robots.txt ghpages/robots.txt
+          cp site_root/llms.txt   ghpages/llms.txt
+          cp site_root/index.html ghpages/index.html
+          cp -R site_root/developers ghpages/developers
+          if [ -f ghpages/latest/llms-full.txt ]; then
+            cp ghpages/latest/llms-full.txt ghpages/llms-full.txt
+          fi
+          # Public OpenAPI document, served at the predictable /openapi.json.
+          python scripts/build_public_openapi.py ghpages/openapi.json
+          cd ghpages
+          git add robots.txt llms.txt index.html llms-full.txt openapi.json developers
+          if git diff --cached --quiet; then
+            echo "Site-root files already up to date."
+          else
+            git commit -m "chore(docs): publish root llms.txt, robots.txt, openapi.json, developer portal"
+            git push origin gh-pages
+          fi

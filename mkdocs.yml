@@ -16,6 +16,7 @@ hooks:
 
 plugins:
   - search
+  - mike
   - glightbox:
       touchNavigation: true
       loop: false
@@ -51,11 +52,11 @@ plugins:
   - section-index
   - redirects:
       redirect_maps:
-        'starting_page.md': 'index.md'
+        'index.md': 'starting_page.md'
   - llmstxt-md:
       sections:
         Guides:
-          - index.md
+          - starting_page.md
           - quickstart.md
           - authentication.md
           - audiences.md
@@ -92,6 +93,10 @@ plugins:
       enable_copy_button: true
       copy_button_text: "Copy for AI"
 
+extra:
+  version:
+    provider: mike
+
 markdown_extensions:
   - admonition
   - attr_list
@@ -119,7 +124,7 @@ markdown_extensions:
 
 nav:
     - Guides:
-      - Overview: index.md
+      - Overview: starting_page.md
       - Quick Start: quickstart.md
       - Authentication: authentication.md
       - Custom Audiences: audiences.md
