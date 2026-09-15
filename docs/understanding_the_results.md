@@ -187,6 +187,8 @@ Qualification tasks are examples with known correct answers that labelers must p
 - **Quality Control**: It helps in identifying and filtering for the most reliable responses.
 - **Insight into Labeler Performance**: Provides transparency into who is contributing to your data and how reliably.
 
+We measured how well this works in practice by asking Rapidata's crowd and Prolific's panel the same 300 questions with known answers: [Rapidata vs. Prolific - Cost and Quality on the Same 300 Tasks](https://www.rapidata.ai/blog/rapidata-vs-prolific).
+
 ## Utilizing the Results
 
 - **Clear Winners**: Use `winner` / `winnerIndex` (the raw-majority winner) or `weightedWinner` / `weightedWinnerIndex` (the reliability-weighted winner) to identify which option was preferred — and be explicit about which notion of "won" you mean, since the two can differ on close votes. Both are `null` when there is no clear winner. The older `winner_index` is a deprecated alias of `winnerIndex`; prefer `winnerIndex`.
