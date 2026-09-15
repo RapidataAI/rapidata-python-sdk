@@ -1,0 +1,208 @@
+# Quickstart Guide
+
+Get real humans to label your data. This guide shows you how to create a labeling job using the Rapidata API.
+
+The workflow consists of three main concepts:
+
+1. **Audience**: A group of labelers who will work on your tasks
+2. **Job Definition**: The configuration for your labeling task (instruction, datapoints, settings)
+3. **Job**: A running labeling task assigned to an audience
+
+<div data-preview-embed data-preview-campaign="cmp_1HSFCph25U1J22">
+  <div class="phone-preview">
+    <div class="phone-preview__notch"></div>
+    <div class="phone-preview__btn phone-preview__btn--left-top"></div>
+    <div class="phone-preview__btn phone-preview__btn--left-bot"></div>
+    <div class="phone-preview__btn phone-preview__btn--right"></div>
+    <iframe class="phone-preview__iframe"
+            src="https://rapids.rapidata.ai/preview/campaign?id=cmp_1HSFCph25U1J22&language=en&userSegment=0&refreshCount=0"
+            allow="clipboard-write"
+            title="Live Rapidata campaign preview"></iframe>
+  </div>
+  <div class="preview-controls">
+    <button type="button" data-preview-refresh aria-label="Refresh preview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+      <span>Refresh</span>
+    </button>
+  </div>
+</div>
+
+## Installation
+
+Install Rapidata using pip:
+
+```
+pip install -U rapidata
+```
+
+## Usage
+
+All operations are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
+
+Create a client as follows:
+
+```py
+from rapidata import RapidataClient
+
+client = RapidataClient() # (1)!
+```
+
+1. The first time you run this on a machine, it will open a browser window to log in. Your credentials are saved to `~/.config/rapidata/credentials.json` so you don't have to log in again.
+
+Alternatively, authenticate with a client ID and secret from [Rapidata Settings](https://app.rapidata.ai/settings/tokens):
+
+```py
+from rapidata import RapidataClient
+client = RapidataClient(client_id="Your client ID", client_secret="Your client secret")
+```
+
+### Step 1: Get an Audience
+
+For general tasks, use the global audience — the broadest pool of labelers, ready to work on anything immediately:
+
+```py
+audience = client.audience.get_audience_by_id("global")
+```
+
+This example is about prompt alignment, so we use the curated **Alignment** audience instead — its labelers are already trained on that type of task:
+
+```py
+audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO") # (1)!
+```
+
+1. Curated audiences are pre-existing pools of labelers trained on a specific type of task. You can browse the curated audiences and copy their ids from the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+
+!!! note
+    The global and curated audiences get you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
+
+#### Targeting countries, languages, or demographics
+
+To restrict any audience — including the global one — to specific countries, languages, age groups, genders, or device types, derive a filtered audience with `.filter(...)`. No new recruiting or qualification is needed:
+
+```py
+from rapidata import CountryFilter, LanguageFilter
+
+audience = client.audience.get_audience_by_id("global").filter([
+    CountryFilter(["US"]),
+    LanguageFilter(["en"]),
+])
+```
+
+The result can be used anywhere a regular audience is accepted, e.g. `audience.assign_job(...)` in Step 3. See [Filtered Audiences](audiences.md#filtered-audiences) for all supported filters and how to combine them.
+
+### Step 2: Create a Job Definition
+
+A job definition configures what you want labeled:
+
+```py
+job_definition = client.job.create_compare_job_definition(
+    name="Example Image Prompt Alignment",
+    instruction="Which image matches the description better?", # (1)!
+    datapoints=[ # (2)!
+        ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
+         "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]
+    ],
+    contexts=["A small blue book sitting on a large red book."] # (3)!
+)
+```
+
+1. The instruction shown to labelers. Should be clear and unambiguous.
+2. For compare jobs, each datapoint is a pair of items. Supports URLs, local paths, or text.
+3. Optional text context shown alongside each datapoint (must match the length of `datapoints`).
+
+!!! tip
+    If some datapoints fail to upload, a `FailedUploadException` will be raised. Learn how to handle this in the [Error Handling Guide](error_handling.md).
+
+For a detailed explanation of all available parameters (including name, instruction, datapoints, contexts, quality control options, and more), see the [Job Definition Parameters Reference](job_definition_parameters.md).
+
+### Step 3: Run and Get Results
+
+```py
+job = audience.assign_job(job_definition) # (1)!
+job.view() # (2)!
+job.display_progress_bar()
+results = job.get_results() # (3)!
+```
+
+1. Assigns the job definition to the audience and starts collecting responses.
+2. Opens your browser on the running job, where you can watch responses come in and monitor progress.
+3. Blocks until the job is complete and returns the results. If the job needs manual review or runs out of funds, this raises an informative error instead of blocking — see [Cost warnings and jobs under review](audiences.md#cost-warnings-and-jobs-under-review). You can also monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard).
+
+To understand the results format, see the [Understanding the Results](understanding_the_results.md) guide.
+
+## Retrieve Existing Resources
+
+### Find Audiences
+
+```py
+# Find audiences by name
+audiences = client.audience.find_audiences("alignment")
+
+# Get a specific audience by ID
+audience = client.audience.get_audience_by_id("audience_id")
+```
+
+### Find Job Definitions
+
+```py
+# Find job definitions by name
+job_definitions = client.job.find_job_definitions("Example Image Prompt Alignment")
+
+# Get a specific job definition by ID
+job_definition = client.job.get_job_definition_by_id("job_definition_id")
+```
+
+### Find Jobs
+
+```py
+# Find jobs by name
+jobs = client.job.find_jobs("Example Image Prompt Alignment")
+
+# Get a specific job by ID
+job = client.job.get_job_by_id("job_id")
+
+# Find jobs for a specific audience
+audience = client.audience.get_audience_by_id("audience_id")
+jobs = audience.find_jobs("Prompt Alignment")
+```
+
+!!! note
+    The `find_*` can be executed without the `name` parameter to return the most recent resources.
+
+## Complete Example
+
+Here's the full workflow using the curated alignment audience:
+
+```py
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
+
+job_definition = client.job.create_compare_job_definition(
+    name="Example Image Prompt Alignment",
+    instruction="Which image matches the description better?",
+    datapoints=[
+        ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
+         "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]
+    ],
+    contexts=["A small blue book sitting on a large red book."]
+)
+
+job = audience.assign_job(job_definition)
+job.view() # (1)!
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+1. Optional — opens a browser on the running job to watch responses come in and monitor progress.
+
+## Next Steps
+
+- Create [Custom Audiences](audiences.md) for higher quality results
+- Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
+- Understand the [Results Format](understanding_the_results.md)
+- Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
+- Let your [AI agent](ai_agents.md) write the integration code for you — one-line install for Claude Code, Cursor, Copilot, and many more
