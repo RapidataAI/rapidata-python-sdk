@@ -19,6 +19,7 @@ def build_site(directory: Path) -> Path:
         "migration/index.html",
         "audiences/index.html",
         "examples/compare_job/index.html",
+        "assets/stylesheets/main.css",
         "llms-full.txt",
         "quickstart.md",
         "sitemap.xml",
@@ -64,6 +65,8 @@ def test_migrates_published_pages_and_preserves_archive(tmp_path, root_files):
         assert '<noscript><meta http-equiv="refresh"' in quickstart
         assert (site / prefix / "quickstart.md").read_text() == "current"
         assert (site / prefix / "llms-full.txt").read_text() == "current"
+        assert (site / prefix / "assets/stylesheets/main.css").read_text() == "current"
+        assert (site / prefix / "index.html").read_text() != "current"
         assert not (site / prefix).is_symlink()
     assert (site / "index.html").read_text() == "current"
     assert (site / "quickstart/index.html").read_text() == "current"

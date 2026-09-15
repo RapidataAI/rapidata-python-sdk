@@ -79,6 +79,18 @@ def prepare(site: Path, previous: Path, root_files: Path) -> None:
     for alias in ALIASES:
         historical |= pages(previous / alias)
 
+    # Pages cached under an alias keep loading their assets from that alias.
+    for alias in ALIASES:
+        for entry in list(site.iterdir()):
+            if entry.name in RESERVED:
+                continue
+            destination = site / alias / entry.name
+            if entry.is_dir():
+                shutil.copytree(entry, destination)
+            else:
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(entry, destination)
+
     for page in sorted(current | historical | {Path(p) for p in RENAMED}):
         target = Path(RENAMED.get(page.as_posix(), page.as_posix()))
         if target not in current:
@@ -94,16 +106,6 @@ def prepare(site: Path, previous: Path, root_files: Path) -> None:
             output = site / alias / page
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(content, encoding="utf-8")
-
-    # Machine-readable links need their content; HTML redirects cannot replace it.
-    for source in list(site.rglob("*.md")) + [
-        site / "llms.txt",
-        site / "llms-full.txt",
-    ]:
-        for alias in ALIASES:
-            output = site / alias / source.relative_to(site)
-            output.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, output)
 
     shutil.copytree(previous / "2.x", site / "2.x")
     (site / "versions.json").write_text(
