@@ -12,7 +12,7 @@ first run.
 
 - Developer portal: https://docs.rapidata.ai/developers/
 - OpenAPI specification: https://docs.rapidata.ai/openapi.json
-- Authentication (OAuth 2.0): https://docs.rapidata.ai/latest/authentication/
+- Authentication (OAuth 2.0): https://docs.rapidata.ai/authentication/
 - OpenID Connect discovery: https://auth.rapidata.ai/.well-known/openid-configuration
 
 ## When to use Rapidata
@@ -34,39 +34,39 @@ the official skill (see AI agents) to have integrations written for them.
 
 ## Guides
 
-- [Overview](https://docs.rapidata.ai/latest/starting_page/): what Rapidata does and its core concepts
-- [Quick Start](https://docs.rapidata.ai/latest/quickstart/): install, authenticate, and create your first order
-- [Custom Audiences](https://docs.rapidata.ai/latest/audiences/): target responses by country, language, and qualification
-- [Signals](https://docs.rapidata.ai/latest/signals/)
-- [Parameter Reference](https://docs.rapidata.ai/latest/job_definition_parameters/)
-- [Understanding Results](https://docs.rapidata.ai/latest/understanding_the_results/)
-- [Early Stopping](https://docs.rapidata.ai/latest/confidence_stopping/)
-- [Instruction Design](https://docs.rapidata.ai/latest/human_prompting/)
-- [Error Handling](https://docs.rapidata.ai/latest/error_handling/)
-- [Logging & Config](https://docs.rapidata.ai/latest/config/)
+- [Overview](https://docs.rapidata.ai/): what Rapidata does and its core concepts
+- [Quick Start](https://docs.rapidata.ai/quickstart/): install, authenticate, and create your first job
+- [Custom Audiences](https://docs.rapidata.ai/audiences/): target responses by country, language, and qualification
+- [Signals](https://docs.rapidata.ai/signals/)
+- [Parameter Reference](https://docs.rapidata.ai/job_definition_parameters/)
+- [Understanding Results](https://docs.rapidata.ai/understanding_the_results/)
+- [Early Stopping](https://docs.rapidata.ai/confidence_stopping/)
+- [Instruction Design](https://docs.rapidata.ai/human_prompting/)
+- [Error Handling](https://docs.rapidata.ai/error_handling/)
+- [Logging & Config](https://docs.rapidata.ai/config/)
 
 ## Examples
 
-- [Classification](https://docs.rapidata.ai/latest/examples/classify_job/)
-- [Comparison](https://docs.rapidata.ai/latest/examples/compare_job/)
-- [Locate](https://docs.rapidata.ai/latest/examples/locate_job/)
-- [Draw](https://docs.rapidata.ai/latest/examples/draw_job/)
-- [Select Words](https://docs.rapidata.ai/latest/examples/select_words_job/)
-- [Free Text](https://docs.rapidata.ai/latest/examples/free_text_job/)
-- [Ranking](https://docs.rapidata.ai/latest/examples/ranking_job/)
+- [Classification](https://docs.rapidata.ai/examples/classify_job/)
+- [Comparison](https://docs.rapidata.ai/examples/compare_job/)
+- [Locate](https://docs.rapidata.ai/examples/locate_job/)
+- [Draw](https://docs.rapidata.ai/examples/draw_job/)
+- [Select Words](https://docs.rapidata.ai/examples/select_words_job/)
+- [Free Text](https://docs.rapidata.ai/examples/free_text_job/)
+- [Ranking](https://docs.rapidata.ai/examples/ranking_job/)
 
 ## Model ranking & benchmarks
 
-- [Getting Started](https://docs.rapidata.ai/latest/mri/)
-- [Advanced](https://docs.rapidata.ai/latest/mri_advanced/)
+- [Getting Started](https://docs.rapidata.ai/mri/)
+- [Advanced](https://docs.rapidata.ai/mri_advanced/)
 
 ## API & AI agents
 
 - [Developer portal](https://docs.rapidata.ai/developers/): all developer resources in one place
 - [OpenAPI specification](https://docs.rapidata.ai/openapi.json): the full API surface (OAuth 2.0 / OpenID Connect)
-- [Authentication](https://docs.rapidata.ai/latest/authentication/): OAuth 2.0 client-credentials flow, scopes, token endpoint
-- [API reference](https://docs.rapidata.ai/latest/api/): the `RapidataClient` class and its managers
-- [Use Rapidata from your AI agent](https://docs.rapidata.ai/latest/ai_agents/): an official skill that teaches coding agents (Claude Code, Cursor, Copilot, and others) to write Rapidata integrations
+- [Authentication](https://docs.rapidata.ai/authentication/): OAuth 2.0 client-credentials flow, scopes, token endpoint
+- [API reference](https://docs.rapidata.ai/api/): the `RapidataClient` class and its managers
+- [Use Rapidata from your AI agent](https://docs.rapidata.ai/ai_agents/): an official skill that teaches coding agents (Claude Code, Cursor, Copilot, and others) to write Rapidata integrations
 
 ## Access
 
