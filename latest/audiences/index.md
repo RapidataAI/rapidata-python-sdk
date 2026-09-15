@@ -1,0 +1,348 @@
+# Custom Audiences
+
+Custom audiences let you train labelers with qualification examples specific to your task, resulting in higher quality labels.
+
+## Audience Types
+
+| Audience Type | Speed | Quality | Best For |
+|---------------|-------|---------|----------|
+| **Global** | Fastest | Baseline | Quick prototyping, simple tasks |
+| **Curated** | Fast | Good | Tasks with a known domain (e.g. prompt alignment) |
+| **Custom** | Slower initial setup | Highest | Production workloads, nuanced tasks |
+
+The **global audience** is the broadest pool of labelers, ready to work on any task immediately.
+
+A **curated audience** is a pre-existing pool of labelers trained on a specific type of task. It offers better quality than the global audience without requiring any setup.
+
+A **custom audience** filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to the most accurate results.
+
+!!! note
+    You can see the curated audiences along with your own in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+
+## Creating a Custom Audience
+
+### Step 1: Create the Audience
+
+```py
+from rapidata import RapidataClient
+
+client = RapidataClient()
+audience = client.audience.create_audience(name="Custom Prompt Alignment Audience") # (1)!
+```
+
+1. Creates a new, empty audience. Labelers join by passing the qualification examples you add next.
+
+#### Tuning the admission bar
+
+By default a labeler is admitted once they answer enough qualification tasks
+well enough — the server default is **75% accuracy over 10 tasks**. Set the bar
+explicitly as "solve N tasks at X accuracy" with two arguments: 
+
+```py
+audience = client.audience.create_audience(
+    name="Custom Prompt Alignment Audience",
+    target_accuracy=0.8, # (1)!
+    min_tasks=12,        # (2)!
+)
+```
+
+1. `X` — the fraction of qualification tasks (0..1) a labeler must get right to
+   be admitted. Omit to use the server default of `0.75`. - keep the random chance in mind when setting this
+2. `N` — how many qualification tasks a labeler must complete before the
+   accuracy verdict is trusted. Omit to use the server default of `10`.
+
+Supplying just one of the two is fine — the other keeps its default. A higher
+bar yields fewer but more reliable labelers.
+
+### Step 2: Add Qualification Examples
+
+Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience.
+
+!!! warning "Review your qualification examples carefully"
+    Every qualification example with its associated truth must be manually and thoroughly reviewed before use. If an example has a wrong or ambiguous truth value, the qualification process will filter out good labelers who answer correctly while letting through bad labelers who happen to match the incorrect answer — completely inverting your quality control. Always verify that each example has a clear, unambiguous correct answer.
+
+```py
+DATAPOINTS = [
+    ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
+    ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
+    ["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"],
+    ["https://assets.rapidata.ai/flux_flower.jpg", "https://assets.rapidata.ai/mj_flower.jpg"],
+    ["https://assets.rapidata.ai/flux_store_front.jpg", "https://assets.rapidata.ai/mj_store_front.jpg"],
+    ["https://assets.rapidata.ai/flux_hand.jpg", "https://assets.rapidata.ai/mj_hand.jpg"],
+    ["https://assets.rapidata.ai/flux_traffic_lights.jpg", "https://assets.rapidata.ai/mj_traffic_lights.jpg"],
+    ["https://assets.rapidata.ai/flux_plane.jpg", "https://assets.rapidata.ai/mj_plane.jpg"],
+]
+PROMPTS = [
+    "A sign that says 'Diffusion'.",
+    "A psychedelic duck with glasses",
+    "A small blue book sitting on a large red book.",
+    "A yellow flower sticking out of a bright green pot.",
+    "A store front with 'hello world' written on it.",
+    "A yellow hand on a black stone.",
+    "A green, yellow and red traffic light.",
+    "A plane flying over a person.",
+]
+
+for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
+    audience.add_compare_example(
+        instruction="Which image follows the prompt more accurately?",
+        datapoint=datapoint, # (1)!
+        truth=datapoint[0], # (2)!
+        context=prompt # (3)!
+    )
+```
+
+1. The items to compare — a list of URLs, local paths, or text strings.
+2. The correct answer — must match one of the datapoint items exactly.
+3. Additional context shown alongside the comparison (optional).
+
+!!! note
+    In practice you'd want to add more examples to the audience to improve the quality of the results.
+
+### Step 3: Start Recruiting
+
+Once all your qualification examples are added **and reviewed**, call
+`start_recruiting()` to begin the distilling/onboarding campaign that qualifies
+labelers against them. Recruiting starts only when you call this — until then,
+the audience stays in its `Created` state and recruits nobody, so a mid-upload
+failure never leaves you with a partially configured, live audience.
+
+```py
+audience.start_recruiting()
+```
+
+!!! warning "Recruiting is explicit"
+    Adding qualification examples does not start recruiting; it is a deliberate
+    step you trigger yourself with `start_recruiting()` once the examples are
+    reviewed. Calling it more than once on the same audience is a no-op.
+
+### Step 4: Create and Assign a Job
+
+Once recruiting has started, create a job definition and assign it to the audience:
+
+```py
+job_definition = client.job.create_compare_job_definition(
+    name="Prompt Alignment Job",
+    instruction="Which image follows the prompt more accurately?",
+    datapoints=[
+        ["https://assets.rapidata.ai/flux_book.jpg",
+         "https://assets.rapidata.ai/mj_book.jpg"]
+    ],
+    contexts=["A small blue book sitting on a large red book."]
+)
+
+job = audience.assign_job(job_definition)
+job.view()
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+### Cost warnings and jobs under review
+
+`assign_job` never blocks on funds: the job is always created. If its estimated cost
+exceeds your account balance, `assign_job` logs a warning with the estimate, your
+balance, and the expected shortfall — the job still runs, but may pause partway until
+you top up.
+
+Some jobs don't go straight to running. A job can enter manual review
+(`ManualApproval`) or, once out of funds mid-run, become spend-limited
+(`SpendLimited`). Neither state completes on its own, so `get_results()` raises an
+informative error naming the state (and the review reason, when available) instead of
+blocking indefinitely — top up or wait for a reviewer, then call it again.
+
+## Complete Example
+
+Here's the full workflow — creating a custom audience, adding qualification examples, and running a labeling job:
+
+```py
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+audience = client.audience.create_audience(name="Custom Prompt Alignment Audience")
+
+DATAPOINTS = [
+    ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
+    ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
+    ["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"],
+    ["https://assets.rapidata.ai/flux_flower.jpg", "https://assets.rapidata.ai/mj_flower.jpg"],
+    ["https://assets.rapidata.ai/flux_store_front.jpg", "https://assets.rapidata.ai/mj_store_front.jpg"],
+    ["https://assets.rapidata.ai/flux_hand.jpg", "https://assets.rapidata.ai/mj_hand.jpg"],
+    ["https://assets.rapidata.ai/flux_traffic_lights.jpg", "https://assets.rapidata.ai/mj_traffic_lights.jpg"],
+    ["https://assets.rapidata.ai/flux_plane.jpg", "https://assets.rapidata.ai/mj_plane.jpg"],
+]
+PROMPTS = [
+    "A sign that says 'Diffusion'.",
+    "A psychedelic duck with glasses",
+    "A small blue book sitting on a large red book.",
+    "A yellow flower sticking out of a bright green pot.",
+    "A store front with 'hello world' written on it.",
+    "A yellow hand on a black stone.",
+    "A green, yellow and red traffic light.",
+    "A plane flying over a person.",
+]
+
+for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
+    audience.add_compare_example(
+        instruction="Which image follows the prompt more accurately?",
+        datapoint=datapoint,
+        truth=datapoint[0],
+        context=prompt
+    )
+
+audience.start_recruiting() # (1)!
+
+job_definition = client.job.create_compare_job_definition(
+    name="Prompt Alignment Job",
+    instruction="Which image follows the prompt more accurately?",
+    datapoints=[
+        ["https://assets.rapidata.ai/flux_book.jpg",
+         "https://assets.rapidata.ai/mj_book.jpg"]
+    ],
+    contexts=["A small blue book sitting on a large red book."]
+)
+
+job = audience.assign_job(job_definition)
+job.view()
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+1. Recruiting is explicit: call `start_recruiting()` once all qualification examples are added and reviewed, before assigning a job.
+
+## Matching the Job UI with Settings
+
+Qualification examples default to the standard UI for their task type. If
+your job uses `settings` to change how the task is rendered (e.g.
+`NoShuffleSetting` to keep answer options in order, `AllowNeitherBothSetting`
+to add an "Unsure" button), pass the same settings to the example so the
+labeler qualifies on the exact UI they will later see.
+
+```py
+from rapidata import NoShuffleSetting
+
+audience.add_classification_example(
+    instruction="How well does the image match the description?",
+    answer_options=[
+        "1: Not at all",
+        "2: A little",
+        "3: Moderately",
+        "4: Very well",
+        "5: Perfectly",
+    ],
+    datapoint="https://assets.rapidata.ai/email-4o.png",
+    truth=["5: Perfectly", "4: Very well"],
+    context="A laptop screen with clearly readable text, addressed to the marketing team.",
+    settings=[NoShuffleSetting()], # (1)!
+)
+```
+
+1. Applies the setting as a feature flag on this single example. Use the same
+   `RapidataSetting` subclasses you would pass to `settings=` on a job or
+   order (e.g. `NoShuffleSetting`, `MarkdownSetting`,
+   `AllowNeitherBothSetting`, `ComparePanoramaSetting`). All
+   `add_*_example` methods accept `settings`.
+
+## Reusing Audiences
+
+Once created, you can reuse your audience for multiple jobs:
+
+```py
+audiences = client.audience.find_audiences("Custom Prompt Alignment Audience")
+audience = client.audience.get_audience_by_id("audience_id")
+
+job = audience.assign_job(new_job_definition)
+```
+
+## Filtered Audiences
+
+A filtered audience is a lightweight subset of an existing audience's
+qualified labelers — derived by applying filters on top of the base
+audience. No new qualification or recruiting takes place; the filtered
+audience reuses the same pool. Use it when you want to target a specific
+slice (e.g. by country or language) of an audience that you have already
+trained.
+
+### Deriving a filtered audience with `.filter()`
+
+Call `.filter(...)` on any `RapidataAudience` with a list of one or more
+filters. The call returns a `RapidataFilteredAudience` — a slim handle
+that reuses the base audience's qualified pool. Multiple filters in the
+list are combined with logical AND.
+
+```py
+from rapidata import CountryFilter, LanguageFilter
+
+base = client.audience.get_audience_by_id("audience_id")
+
+us_english_speakers = base.filter([
+    CountryFilter(["US"]),
+    LanguageFilter(["en"]),
+])
+
+job = us_english_speakers.assign_job(new_job_definition)
+```
+
+The returned object is a `RapidataFilteredAudience` — a slim variant that
+exposes only the operations that make sense for a filtered view
+(`assign_job`, `find_jobs`, `delete`, and use as `audience_id` on
+[leaderboard creation](mri.md)). It deliberately does **not** offer
+`add_classification_example`, `update_filters`, or further nested
+`.filter(...)` calls: those would either mutate the base audience's
+qualification pool (which the filtered view shares) or chain filters in
+a way that's better expressed as a single combined filter on the base.
+
+### Supported filters
+
+| Filter | Targets labelers by |
+|---|---|
+| `CountryFilter` | ISO-3166 country code (e.g. `["US", "CA"]`) |
+| `LanguageFilter` | Spoken / device language (e.g. `["en", "de"]`) |
+| `AgeFilter` | Age group (e.g. `AgeFilter([AgeGroup.BETWEEN_18_29])`) |
+| `GenderFilter` | Gender (e.g. `GenderFilter([Gender.FEMALE])`) |
+| `DeviceFilter` | Device type (e.g. `DeviceFilter([DeviceType.PHONE])`) |
+
+### Combining filters
+
+The list form combines filters with logical AND. For anything richer,
+build a single top-level filter explicitly with `AndFilter` / `OrFilter` /
+`NotFilter`, or use the equivalent `&` / `|` / `~` operators:
+
+```py
+from rapidata import CountryFilter, LanguageFilter
+
+# "US or Canadian labelers, but not French speakers"
+audience_slice = base.filter([
+    (CountryFilter(["US"]) | CountryFilter(["CA"]))
+    & ~LanguageFilter(["fr"]),
+])
+```
+
+### Using a filtered audience with a leaderboard
+
+`RapidataFilteredAudience` is a valid `audience_id` anywhere a regular
+audience id is accepted, including [`benchmark.create_leaderboard`](mri.md).
+Pass the object directly — no need to read `.id` yourself:
+
+```py
+us_english = base.filter([
+    CountryFilter(["US"]),
+    LanguageFilter(["en"]),
+])
+
+leaderboard = benchmark.create_leaderboard(
+    name="Realism (US, English)",
+    instruction="Which image is more realistic?",
+    audience_id=us_english, # (1)!
+)
+```
+
+1. Accepts an id string, a `RapidataAudience`, or a `RapidataFilteredAudience`. Defaults to the global audience when omitted.
+
+## Next Steps
+
+- Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
+- Understand the [Results Format](understanding_the_results.md)
+- Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
