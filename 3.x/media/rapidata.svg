@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd" viewBox="655.78 631.86 1383.44 1712.48">
+  <defs>
+    <style type="text/css">
+      <![CDATA[
+    .fil0 {fill:none}
+    .fil3 {fill:#0077FF}
+    .fil1 {fill:#0A1759;fill-rule:nonzero}
+    .fil2 {fill:url(#id2)}
+   ]]>
+    </style>
+    <mask id="id0">
+      <linearGradient id="id1" gradientUnits="userSpaceOnUse" x1="1762.255" y1="1763.758" x2="1149.739" y2="1599.636">
+        <stop offset="0" style="stop-opacity:1; stop-color:white"/>
+        <stop offset="1" style="stop-opacity:0; stop-color:white"/>
+      </linearGradient>
+      <rect style="fill:url(#id1)" x="1149.739" y="1056.014" width="889.479" height="1288.322"/>
+    </mask>
+    <linearGradient id="id2" gradientUnits="userSpaceOnUse" x1="669.398" y1="2206.607" x2="2064.164" y2="1401.336">
+      <stop offset="0" style="stop-opacity:1; stop-color:#0077FF"/>
+      <stop offset="1" style="stop-opacity:1; stop-color:#00ECBB"/>
+    </linearGradient>
+  </defs>
+  <g id="Layer_x0020_1">
+    <metadata id="CorelCorpID_0Corel-Layer"/>
+    <rect class="fil0" width="8226" height="3000.115"/>
+    <g id="_2161925070512">
+      <path class="fil2" d="M1096.433 711.369c284.321,-164.152 651.26,-65.834 815.415,218.491l0.004 0.013c164.159,284.325 65.836,651.261 -218.488,815.413l-0.006 0.004 -397.956 -689.295 -639.624 369.306 0 -459.518 440.655 -254.414zm252.282 1232.902l-692.937 400.066 0 -459.519 493.963 -285.189 198.974 344.642z"/>
+      <polygon class="fil3" style="mask:url(#id0)" points="1579.695,2344.336 1149.739,1599.636 1295.402,1056.014 2039.218,2344.336 "/>
+    </g>
+  </g>
+</svg>
