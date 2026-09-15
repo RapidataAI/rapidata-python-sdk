@@ -73,6 +73,8 @@ jobs:
           cp site_root/robots.txt ghpages/robots.txt
           cp site_root/llms.txt   ghpages/llms.txt
           cp site_root/index.html ghpages/index.html
+          # rm first: cp -R onto an existing dir nests into developers/developers/.
+          rm -rf ghpages/developers
           cp -R site_root/developers ghpages/developers
           if [ -f ghpages/latest/llms-full.txt ]; then
             cp ghpages/latest/llms-full.txt ghpages/llms-full.txt
