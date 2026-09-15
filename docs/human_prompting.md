@@ -154,4 +154,4 @@ If you see that labelers are giving inconsistent or incorrect answers:
 
 This helps ensure you get high quality results from labelers.
 
-For more information on creating and managing jobs, refer to the [Rapidata API documentation](starting_page.md) and [Understanding the Results](understanding_the_results.md) guide.
+For more information on creating and managing jobs, refer to the [Rapidata API documentation](index.md) and [Understanding the Results](understanding_the_results.md) guide.
