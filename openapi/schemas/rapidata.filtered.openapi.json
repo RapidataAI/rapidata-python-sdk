@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.14.1346-f81b80e"
+    "version": "2026.09.15.1609-6609ecb"
   },
   "servers": [
     {
@@ -10292,7 +10292,9 @@
                   "name",
                   "-name",
                   "member_count",
-                  "-member_count"
+                  "-member_count",
+                  "owner_email",
+                  "-owner_email"
                 ],
                 "type": "string"
               }
@@ -10352,6 +10354,55 @@
             "name": "name",
             "in": "query",
             "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "owner_email",
+            "in": "query",
+            "description": "Filter by owner_email.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -48421,7 +48472,9 @@
         "required": [
           "id",
           "name",
-          "memberCount"
+          "memberCount",
+          "ownerEmail",
+          "ownerCount"
         ],
         "type": "object",
         "properties": {
@@ -48436,6 +48489,16 @@
           "memberCount": {
             "type": "integer",
             "description": "The number of members the organization has.",
+            "format": "int32"
+          },
+          "ownerEmail": {
+            "type": "string",
+            "description": "The email of the organization's owner, absent when it has no active owner.",
+            "nullable": true
+          },
+          "ownerCount": {
+            "type": "integer",
+            "description": "The number of owners the organization has.",
             "format": "int32"
           }
         }
