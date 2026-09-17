@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.09.15.1609-6609ecb"
+    "version": "2026.09.16.1403-2566374"
   },
   "servers": [
     {

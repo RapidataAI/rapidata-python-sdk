@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.15.1609-6609ecb"
+    "version": "2026.09.16.1403-2566374"
   },
   "servers": [
     {
@@ -42992,7 +42992,7 @@
         "properties": {
           "key": {
             "type": "string",
-            "description": "Stable unique identifier; becomes the analysis key exp:<key>."
+            "description": "Stable unique identifier; becomes the analysis key recorded on eligible sessions."
           },
           "description": {
             "type": "string",
@@ -43178,7 +43178,7 @@
           },
           "key": {
             "type": "string",
-            "description": "Stable unique identifier; the analysis key is exp:<key>."
+            "description": "Stable unique identifier; the analysis key recorded on every eligible session."
           },
           "description": {
             "type": "string",
@@ -43254,7 +43254,7 @@
             "format": "date-time"
           }
         },
-        "description": "A global serve-time A/B experiment. Every eligible session is stamped with\n exp:<key> = treatment|control; treatment sessions additionally\n receive the experiment's feature flags."
+        "description": "A global serve-time A/B experiment. Every eligible session records its experiment key and arm;\n treatment sessions additionally receive the experiment's feature flags."
       },
       "ExperimentAssetKind": {
         "enum": [
