@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "2026.09.19.1603-ff82c3c"
+    "version": "2026.09.19.2033-bc0c3fe"
   },
   "servers": [
     {
@@ -1282,7 +1282,7 @@
         "tags": [
           "SimpleFlowItem"
         ],
-        "summary": "Creates a flow item that labels every datapoint of the dataset with the flow's blueprint; the dataset holds between 1 and the flow's MaxDatapointsPerItem datapoints.",
+        "summary": "Creates a flow item that labels every datapoint of the dataset with the flow's blueprint; the dataset holds between 1 and 256 datapoints.",
         "parameters": [
           {
             "name": "flowId",
@@ -1341,7 +1341,7 @@
           "SimpleFlowItem"
         ],
         "summary": "Returns the category distribution and majority per datapoint of a completed simple flow item.",
-        "description": "Returns 409 Conflict if the flow item is not yet completed or has no associated workflow. A tie has no majority value.",
+        "description": "Returns 409 Conflict until the flow item is completed. Every blueprint category is listed, with count 0 when nobody chose it; a tie has no majority value.",
         "parameters": [
           {
             "name": "flowItemId",
@@ -1653,12 +1653,6 @@
             "format": "int32",
             "nullable": true
           },
-          "maxDatapointsPerItem": {
-            "type": "integer",
-            "description": "The maximum number of datapoints a dataset may hold to be added as an item. Between 1 and 100, defaults to 24.",
-            "format": "int32",
-            "nullable": true
-          },
           "defaultTimeToLiveSeconds": {
             "type": "integer",
             "description": "The time-to-live in seconds applied to items created without one. Between 45 seconds and 1 hour, defaults to 240.",
@@ -1701,7 +1695,7 @@
           },
           "targetResponseCount": {
             "type": "integer",
-            "description": "Target average response count per completed item. Defaults to ResponsesRequired times MaxDatapointsPerItem.",
+            "description": "Target average response count per completed item for PID rate control. Defaults to ResponsesRequired times 24, a typical batch.",
             "format": "int32",
             "nullable": true
           },
@@ -2797,7 +2791,6 @@
           "serveToResponseRatio",
           "blueprint",
           "responsesRequired",
-          "maxDatapointsPerItem",
           "defaultTimeToLiveSeconds",
           "featureFlags",
           "ownerId",
@@ -2902,11 +2895,6 @@
           "responsesRequired": {
             "type": "integer",
             "description": "The number of responses collected per datapoint.",
-            "format": "int32"
-          },
-          "maxDatapointsPerItem": {
-            "type": "integer",
-            "description": "The maximum number of datapoints a dataset may hold to be added as an item.",
             "format": "int32"
           },
           "defaultTimeToLiveSeconds": {
@@ -3601,11 +3589,6 @@
           "responsesRequired": {
             "type": "integer",
             "description": "The number of responses collected per datapoint.",
-            "format": "int32"
-          },
-          "maxDatapointsPerItem": {
-            "type": "integer",
-            "description": "The maximum number of datapoints a dataset may hold to be added as an item. Between 1 and 100.",
             "format": "int32"
           },
           "defaultTimeToLiveSeconds": {
