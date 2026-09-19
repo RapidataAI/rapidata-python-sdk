@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "2026.09.19.1507-aa8ddf8"
+    "version": "2026.09.19.1603-ff82c3c"
   },
   "servers": [
     {
@@ -1248,7 +1248,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateConfigEndpoint_Input"
+                "$ref": "#/components/schemas/UpdateSimpleFlowConfigEndpoint_Input"
               }
             }
           },
@@ -1299,7 +1299,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateFlowItemEndpoint_Input"
+                "$ref": "#/components/schemas/CreateSimpleFlowItemEndpoint_Input"
               }
             }
           },
@@ -1311,7 +1311,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateFlowItemEndpoint_Output"
+                  "$ref": "#/components/schemas/CreateSimpleFlowItemEndpoint_Output"
                 }
               }
             }
@@ -1768,6 +1768,42 @@
           "flowId": {
             "type": "string",
             "description": "The ID of the created simple flow."
+          }
+        }
+      },
+      "CreateSimpleFlowItemEndpoint_Input": {
+        "required": [
+          "datasetId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "description": "The ID of the dataset to label with this flow item."
+          },
+          "timeToLiveInSeconds": {
+            "type": "integer",
+            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 45 seconds and 1 hour; defaults to the flow's default when omitted.",
+            "format": "int32",
+            "nullable": true
+          },
+          "drainDurationInSeconds": {
+            "type": "integer",
+            "description": "Optional drain duration in seconds. When set, rapids are paused this many seconds before TTL expiry to allow in-flight responses to complete.",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "CreateSimpleFlowItemEndpoint_Output": {
+        "required": [
+          "flowItemId"
+        ],
+        "type": "object",
+        "properties": {
+          "flowItemId": {
+            "type": "string",
+            "description": "The ID of the created flow item."
           }
         }
       },
@@ -3488,6 +3524,94 @@
             "description": "Deprecated. Use MaxResponses instead.",
             "format": "int32",
             "deprecated": true
+          },
+          "featureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "Feature flags to enable for this flow."
+          },
+          "targetResponseCount": {
+            "type": "integer",
+            "description": "Target average response count per completed item. Set to null to disable PID control.",
+            "format": "int32",
+            "nullable": true
+          },
+          "pidProportionalGain": {
+            "type": "number",
+            "description": "PID proportional gain.",
+            "format": "double"
+          },
+          "pidIntegralGain": {
+            "type": "number",
+            "description": "PID integral gain.",
+            "format": "double"
+          },
+          "pidDerivativeGain": {
+            "type": "number",
+            "description": "PID derivative gain.",
+            "format": "double"
+          },
+          "pidOutputOffset": {
+            "type": "number",
+            "description": "Constant offset added to the PID output before clamping, shifting the controller's operating point.",
+            "format": "double"
+          },
+          "pidMinSessionsPerMinute": {
+            "type": "integer",
+            "description": "Minimum sessions per minute the PID can set.",
+            "format": "int32"
+          },
+          "pidMaxSessionsPerMinute": {
+            "type": "integer",
+            "description": "Maximum sessions per minute the PID can set.",
+            "format": "int32"
+          },
+          "pidBatchMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PidBatchMode"
+              }
+            ],
+            "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count."
+          }
+        }
+      },
+      "UpdateSimpleFlowConfigEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string",
+            "description": "Optional audience ID. When provided, the flow will only serve items to users in this audience. Set to null to remove the audience restriction.",
+            "nullable": true
+          },
+          "blueprint": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IFlowRapidBlueprint"
+              }
+            ],
+            "description": "The blueprint of the rapids every item generates. Rejected once the flow has items."
+          },
+          "responsesRequired": {
+            "type": "integer",
+            "description": "The number of responses collected per datapoint.",
+            "format": "int32"
+          },
+          "maxDatapointsPerItem": {
+            "type": "integer",
+            "description": "The maximum number of datapoints a dataset may hold to be added as an item. Between 1 and 100.",
+            "format": "int32"
+          },
+          "defaultTimeToLiveSeconds": {
+            "type": "integer",
+            "description": "The time-to-live in seconds applied to items created without one. Between 45 seconds and 1 hour.",
+            "format": "int32"
           },
           "featureFlags": {
             "allOf": [
