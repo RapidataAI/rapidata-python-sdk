@@ -293,7 +293,7 @@ class TestCreateNewFlowBatch:
 
         call = svc.flow.simple_flow_item_api.flow_simple_flow_id_item_post.call_args
         assert call.kwargs["flow_id"] == "flw-1"
-        payload = call.kwargs["create_flow_item_endpoint_input"].to_dict()
+        payload = call.kwargs["create_simple_flow_item_endpoint_input"].to_dict()
         assert _without_none(payload) == {"datasetId": "ds-1"}
         svc.flow.ranking_flow_item_api.flow_ranking_flow_id_item_post.assert_not_called()
 

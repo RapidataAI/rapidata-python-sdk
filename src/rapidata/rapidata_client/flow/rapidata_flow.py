@@ -139,9 +139,13 @@ class RapidataFlow:
                     ),
                 )
             else:
+                from rapidata.api_client.models.create_simple_flow_item_endpoint_input import (
+                    CreateSimpleFlowItemEndpointInput,
+                )
+
                 response = self._openapi_service.flow.simple_flow_item_api.flow_simple_flow_id_item_post(
                     flow_id=self.id,
-                    create_flow_item_endpoint_input=CreateFlowItemEndpointInput(
+                    create_simple_flow_item_endpoint_input=CreateSimpleFlowItemEndpointInput(
                         datasetId=rapidata_dataset.id,
                         timeToLiveInSeconds=time_to_live,
                     ),
