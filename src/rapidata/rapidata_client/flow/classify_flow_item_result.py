@@ -9,7 +9,7 @@ class ClassifyDatapointResult:
 
     Attributes:
         majority_value: The category value chosen most often, or None on a tie.
-        distribution: Mapping of category value to the number of responses that chose it. Categories nobody chose are omitted.
+        distribution: Mapping of every category value in the flow to its response count, in the flow's category order, with 0 for categories nobody chose.
         response_count: Number of responses collected for this datapoint.
     """
 

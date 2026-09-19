@@ -111,21 +111,35 @@ class RapidataFlowItem:
         )
 
     def _get_classify_results(self) -> ClassifyFlowItemResult:
+        from rapidata.api_client.models.i_flow_simple_flow import IFlowSimpleFlow
+
         results = self._openapi_service.flow.simple_flow_item_api.flow_simple_item_flow_item_id_results_get(
             flow_item_id=self.id,
         )
 
-        datapoints = {
-            self._extract_asset_key(dp): ClassifyDatapointResult(
+        # The backend's distribution omits categories nobody chose; fill them
+        # in client-side until it returns the full blueprint itself.
+        flow_response = self._openapi_service.flow.flow_api.flow_flow_id_get(
+            flow_id=self.flow_id,
+        )
+        category_values = (
+            [category.value for category in flow_response.blueprint.categories]
+            if isinstance(flow_response, IFlowSimpleFlow)
+            else []
+        )
+
+        datapoints = {}
+        for dp in (datapoint.to_dict() for datapoint in results.datapoints):
+            counts = {
+                entry["value"]: entry["count"] for entry in dp.get("distribution", [])
+            }
+            distribution = {value: counts.pop(value, 0) for value in category_values}
+            distribution.update(counts)
+            datapoints[self._extract_asset_key(dp)] = ClassifyDatapointResult(
                 majority_value=dp.get("majorityValue"),
-                distribution={
-                    entry["value"]: entry["count"]
-                    for entry in dp.get("distribution", [])
-                },
+                distribution=distribution,
                 response_count=dp.get("responseCount", 0),
             )
-            for dp in (datapoint.to_dict() for datapoint in results.datapoints)
-        }
         self._response_count = results.total_responses
 
         return ClassifyFlowItemResult(
