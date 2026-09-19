@@ -10,6 +10,8 @@ Flows collect human responses on small batches of data. Create a flow once with 
 
 Each batch has a time limit (`time_to_live`), between 45 seconds and 1 hour, with a default of 4 minutes. When time runs out, you can retrieve the responses collected so far. Whether the batch is marked `Completed` or `Incomplete` depends on the response thresholds for its flow type.
 
+`create_new_flow_batch()` on both flow types also takes `data_type` (`"media"` or `"text"`, defaults to `"media"`), `private_metadata` (optional key-value pairs per datapoint), and `accept_failed_uploads` (defaults to `False`, which raises `FailedUploadException` if any datapoint fails to upload; set it to `True` to continue with the rest of the batch instead).
+
 ## Choose a Flow Type
 
 | Flow | Use it to | Context | Results |

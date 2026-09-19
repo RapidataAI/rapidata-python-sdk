@@ -24,8 +24,8 @@ A flow has between 2 and 8 categories, shared by every batch of the flow.
 
 You can optionally configure a **response threshold range** per datapoint:
 
-- `max_responses_per_datapoint` (default `15`): the number of accepted responses that closes an image. Collection for that image stops once it's reached.
-- `min_responses_per_datapoint` (default `10`): the minimum average responses per image you're willing to accept. If the batch's `time_to_live` expires and the item's total responses are below `min_responses_per_datapoint × number of images`, the item is marked as **Incomplete**. Otherwise it's **Completed**.
+- `max_responses_per_datapoint` (default `15`, must be at least `min_responses_per_datapoint`): the number of accepted responses that closes an image. Collection for that image stops once it's reached.
+- `min_responses_per_datapoint` (default `10`, at least `1`): the minimum average responses per image you're willing to accept. If the batch's `time_to_live` expires and the item's total responses are below `min_responses_per_datapoint × number of images`, the item is marked as **Incomplete**. Otherwise it's **Completed**.
 
 ```python
 flow = client.flow.create_classify_flow(
@@ -123,7 +123,7 @@ for item, result in results.datapoints.items():
     print(item, result.majority_value, result.distribution)
 ```
 
-`flow_item.get_status()` checks the batch status without blocking, and `flow_item.get_response_count()` returns `total_responses`. The win/loss matrix is a ranking concept: `get_win_loss_matrix()` raises a `ValueError` on a classify flow item.
+`flow_item.get_status()` checks the batch status without blocking. `flow_item.get_response_count()` returns `total_responses`, waiting for completion the same way `get_results()` does. The win/loss matrix is a ranking concept: `get_win_loss_matrix()` raises a `ValueError` on a classify flow item.
 
 !!! note
     A classify flow item enters the `Incomplete` state when its `time_to_live` expires with total responses below `min_responses_per_datapoint × number of images` (an average per image). Otherwise it's `Completed` — including when every image already reached `max_responses_per_datapoint`. Compare each image's `response_count` with `max_responses_per_datapoint` to see which images, if any, got fewer responses than others.

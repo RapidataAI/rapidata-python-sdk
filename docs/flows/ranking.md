@@ -120,7 +120,7 @@ matrix = flow_item.get_win_loss_matrix()
 
 This returns a pandas `DataFrame` where `matrix.loc[a, b]` is the number of times item `a` was preferred over item `b`.
 
-To get the total number of pairwise comparison responses collected for a flow item:
+To get the total number of pairwise comparison responses collected for a flow item, waiting for completion the same way `get_results()` does:
 
 ```python
 response_count = flow_item.get_response_count()
@@ -128,11 +128,14 @@ response_count = flow_item.get_response_count()
 
 ## 4. Update Flow Configuration
 
-You can update the configuration of a ranking flow at any time:
+You can update the configuration of a ranking flow at any time: `instruction`, `starting_elo`, `min_responses`, and `max_responses` can each be changed independently:
 
 ```python
 flow.update_config(
     instruction="Which image has higher visual quality?",
+    starting_elo=1000,
+    min_responses=20,
+    max_responses=150,
 )
 ```
 
