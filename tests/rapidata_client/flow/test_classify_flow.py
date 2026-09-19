@@ -181,7 +181,6 @@ class TestCreateClassifyFlow:
                 },
                 "at least min",
             ),
-            ({"categories": ["a", "b"], "max_datapoints_per_item": 0}, "at least 1"),
         ],
     )
     def test_rejects_invalid_input_before_calling_the_api(self, kwargs, message):
@@ -223,12 +222,12 @@ class TestCreateClassifyFlow:
                     {"label": "No", "value": "no"},
                 ],
             },
-            "responsesRequired": 5,
-            "maxDatapointsPerItem": 24,
+            "maxResponses": 5,
+            "minResponses": 3,
         }
         assert (flow.id, flow._flow_type) == ("flw-1", "simple")
 
-    def test_max_responses_per_datapoint_is_sent_as_responses_required(self):
+    def test_max_and_min_responses_per_datapoint_are_sent(self):
         pytest.importorskip(SIMPLE_FLOW_API)
         svc = _openapi_service()
         svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
@@ -246,7 +245,8 @@ class TestCreateClassifyFlow:
         payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
             "create_simple_flow_endpoint_input"
         ].to_dict()
-        assert payload["responsesRequired"] == 8
+        assert payload["maxResponses"] == 8
+        assert payload["minResponses"] == 4
 
     def test_responses_per_datapoint_alias_is_deprecated(self):
         pytest.importorskip(SIMPLE_FLOW_API)
@@ -266,7 +266,8 @@ class TestCreateClassifyFlow:
         payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
             "create_simple_flow_endpoint_input"
         ].to_dict()
-        assert payload["responsesRequired"] == 7
+        assert payload["maxResponses"] == 7
+        assert payload["minResponses"] == 7
 
     def test_string_categories_use_the_label_as_value(self):
         pytest.importorskip(SIMPLE_FLOW_API)

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.19.1603-ff82c3c"
+    "version": "2026.09.19.2045-5a20f08"
   },
   "servers": [
     {
@@ -7626,7 +7626,7 @@
           "SimpleFlow"
         ],
         "summary": "Creates a simple flow that runs one rapid blueprint over every datapoint of its items.",
-        "description": "The blueprint is fixed once the flow has items. Every datapoint collects ResponsesRequired responses.",
+        "description": "The blueprint is fixed once the flow has items. Every image collects up to MaxResponses responses; an item ending by time-to-live or stop completes when it averages MinResponses per image.",
         "requestBody": {
           "description": "The simple flow creation parameters.",
           "content": {
@@ -7746,7 +7746,7 @@
         "tags": [
           "SimpleFlowItem"
         ],
-        "summary": "Creates a flow item that labels every datapoint of the dataset with the flow's blueprint; the dataset holds between 1 and the flow's MaxDatapointsPerItem datapoints.",
+        "summary": "Creates a flow item that labels every datapoint of the dataset with the flow's blueprint; the dataset holds between 1 and 256 datapoints.",
         "parameters": [
           {
             "name": "flowId",
@@ -7816,7 +7816,7 @@
           "SimpleFlowItem"
         ],
         "summary": "Returns the category distribution and majority per datapoint of a completed simple flow item.",
-        "description": "Returns 409 Conflict if the flow item is not yet completed or has no associated workflow. A tie has no majority value.",
+        "description": "Returns 409 Conflict until the flow item is completed. Every blueprint category is listed, with count 0 when nobody chose it; a tie has no majority value.",
         "parameters": [
           {
             "name": "flowItemId",
@@ -46783,15 +46783,15 @@
             ],
             "description": "The blueprint of the rapids every item of this flow generates."
           },
-          "responsesRequired": {
+          "maxResponses": {
             "type": "integer",
-            "description": "The number of responses collected per datapoint. Defaults to 5.",
+            "description": "The number of accepted responses per image after which the image stops collecting. Defaults to 5, at least MinResponses.",
             "format": "int32",
             "nullable": true
           },
-          "maxDatapointsPerItem": {
+          "minResponses": {
             "type": "integer",
-            "description": "The maximum number of datapoints a dataset may hold to be added as an item. Between 1 and 100, defaults to 24.",
+            "description": "The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed. Defaults to 3, at least 1.",
             "format": "int32",
             "nullable": true
           },
@@ -46837,7 +46837,7 @@
           },
           "targetResponseCount": {
             "type": "integer",
-            "description": "Target average response count per completed item. Defaults to ResponsesRequired times MaxDatapointsPerItem.",
+            "description": "Target average response count per completed item for PID rate control. Defaults to MaxResponses times 24, a typical batch.",
             "format": "int32",
             "nullable": true
           },
@@ -47616,8 +47616,8 @@
           "drainDurationSeconds",
           "serveToResponseRatio",
           "blueprint",
-          "responsesRequired",
-          "maxDatapointsPerItem",
+          "minResponses",
+          "maxResponses",
           "defaultTimeToLiveSeconds",
           "featureFlags",
           "ownerId",
@@ -47719,14 +47719,14 @@
             ],
             "description": "The blueprint of the rapids every item of this flow generates."
           },
-          "responsesRequired": {
+          "minResponses": {
             "type": "integer",
-            "description": "The number of responses collected per datapoint.",
+            "description": "The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed.",
             "format": "int32"
           },
-          "maxDatapointsPerItem": {
+          "maxResponses": {
             "type": "integer",
-            "description": "The maximum number of datapoints a dataset may hold to be added as an item.",
+            "description": "The number of accepted responses per image after which the image stops collecting.",
             "format": "int32"
           },
           "defaultTimeToLiveSeconds": {
@@ -48103,14 +48103,14 @@
             ],
             "description": "The blueprint of the rapids every item generates. Rejected once the flow has items."
           },
-          "responsesRequired": {
+          "maxResponses": {
             "type": "integer",
-            "description": "The number of responses collected per datapoint.",
+            "description": "The number of accepted responses per image after which the image stops collecting. At least MinResponses.",
             "format": "int32"
           },
-          "maxDatapointsPerItem": {
+          "minResponses": {
             "type": "integer",
-            "description": "The maximum number of datapoints a dataset may hold to be added as an item. Between 1 and 100.",
+            "description": "The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed. At least 1.",
             "format": "int32"
           },
           "defaultTimeToLiveSeconds": {

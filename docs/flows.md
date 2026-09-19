@@ -194,9 +194,9 @@ flow = client.flow.create_classify_flow(
 1. The number of accepted responses that closes an image. Collection for that image stops once it's reached.
 2. The minimum average responses per image. If `time_to_live` expires with the item's total responses below this times the number of images, it's marked **Incomplete**; otherwise **Completed**.
 
-Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a full batch with the defaults comes to up to 5 × 24 = 120 responses.
+Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a full 256-item batch with the default max comes to up to 5 × 256 = 1280 responses.
 
-The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them.
+The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them. `time_to_live` works differently: it isn't set here at all, only per batch — see the next section.
 
 ### 2. Add a Flow Batch
 
