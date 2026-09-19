@@ -1,8 +1,13 @@
-# Ranking Flows
+# Flows
 
 ## Overview
 
-Ranking Flows provide a lightweight way to continuously rank items using human comparisons without the overhead of creating full jobs. They are ideal for ongoing evaluation where new items are added over time and ranked against each other in a specified time frame (ttl). Each ranking uses the configuration of the flow but is fully independent of the other rankings.
+Flows provide a lightweight way to continuously collect human responses without the overhead of creating full jobs. You create a flow once and then submit small batches of items over time. Each batch uses the configuration of the flow, is evaluated within a specified time frame (ttl), and is fully independent of the other batches.
+
+There are two kinds of flows:
+
+- **Ranking flows** rank the items of a batch against each other through pairwise comparisons.
+- **Classify flows** sort every item of a batch into one of a fixed set of categories.
 
 !!! note
     Can be used with Images, Videos, Audio, and Text.
@@ -150,6 +155,119 @@ flow.update_config(
 !!! note
     This config will only affect new flow items and not modify existing ones.
 
+
+## How to use Classify Flows
+
+### 1. Create a Flow
+
+Create a classify flow with the question shown for every item and the categories annotators choose from:
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+flow = client.flow.create_classify_flow(
+    name="Text Detection",
+    instruction="Does this image contain text?",
+    categories=["Yes", "No"],
+)
+```
+
+The categories are shared by every batch of the flow. Pass plain strings, or `(label, value)` tuples when the text shown to annotators should differ from the value returned in the results:
+
+```python
+from datetime import timedelta
+
+flow = client.flow.create_classify_flow(
+    name="Text Detection",
+    instruction="Does this image contain text?",
+    categories=[("Yes, clearly readable", "yes"), ("No", "no")],
+    responses_per_datapoint=5, # (1)!
+    max_datapoints_per_item=24, # (2)!
+    time_to_live=timedelta(minutes=4), # (3)!
+)
+```
+
+1. The number of responses collected for each item of a batch. Defaults to 5.
+2. The maximum number of items a single batch may contain. Defaults to 24; larger batches are rejected.
+3. The default time limit per batch, between 45 seconds and 1 hour. Defaults to 4 minutes and can be overridden per batch.
+
+### 2. Add a Flow Batch
+
+Submit the items to classify. Every item is classified independently with the flow's instruction and categories:
+
+```python
+flow_item = flow.create_new_flow_batch(
+    datapoints=[
+        "https://example.com/image_a.jpg",
+        "https://example.com/image_b.jpg",
+        "https://example.com/image_c.jpg",
+    ],
+)
+```
+
+Context is attached per item. `contexts` and `media_contexts` take one entry per datapoint and show it alongside that datapoint:
+
+```python
+flow_item = flow.create_new_flow_batch(
+    datapoints=[
+        "https://example.com/image_a.jpg",
+        "https://example.com/image_b.jpg",
+        "https://example.com/image_c.jpg",
+    ],
+    contexts=[ # (1)!
+        "Screenshot of a landing page",
+        "Product photo",
+        "Concert poster",
+    ],
+    time_to_live=120, # (2)!
+)
+```
+
+1. One text context per datapoint, shown together with that datapoint. `media_contexts` works the same way for image, video, or audio context.
+2. Overrides the flow's default time to live for this batch, in seconds.
+
+### 3. Get Results
+
+Call `get_results()` on the flow item. As with ranking flows, this waits until the batch completes or its time to live expires:
+
+```python
+results = flow_item.get_results()
+```
+
+This returns a `ClassifyFlowItemResult`. For the batch above it looks like this:
+
+```python
+ClassifyFlowItemResult(
+    datapoints={
+        "https://example.com/image_a.jpg": ClassifyDatapointResult(
+            majority_value="yes", distribution={"yes": 4, "no": 1}, response_count=5
+        ),
+        "https://example.com/image_b.jpg": ClassifyDatapointResult(
+            majority_value="no", distribution={"no": 5}, response_count=5
+        ),
+        "https://example.com/image_c.jpg": ClassifyDatapointResult(
+            majority_value=None, distribution={"yes": 2, "no": 2}, response_count=4
+        ),
+    },
+    total_responses=14,
+)
+```
+
+It has two fields:
+
+- `datapoints`: a mapping of each item to its `ClassifyDatapointResult`. Items are keyed by their source URL when provided, otherwise by their original filename. `majority_value` is the category value chosen most often, or `None` when the top categories are tied. `distribution` counts the responses per category value, and `response_count` is the number of responses collected for that item.
+- `total_responses`: the total number of responses collected across all items.
+
+```python
+for item, result in results.datapoints.items():
+    print(item, result.majority_value, result.distribution)
+```
+
+`flow_item.get_status()` and `flow_item.get_response_count()` work the same way as for ranking flows.
+
+## Managing Flows
 
 ### Preheating
 

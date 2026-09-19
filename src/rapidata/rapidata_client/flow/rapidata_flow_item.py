@@ -3,6 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 from time import sleep
 from rapidata.rapidata_client.config import logger, tracer
+from rapidata.rapidata_client.flow.classify_flow_item_result import (
+    ClassifyDatapointResult,
+    ClassifyFlowItemResult,
+)
 from rapidata.rapidata_client.flow.flow_item_result import FlowItemResult
 from rapidata.service.openapi_service import OpenAPIService
 
@@ -12,29 +16,41 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.get_flow_item_by_id_endpoint_output import (
         GetFlowItemByIdEndpointOutput,
     )
+    from rapidata.rapidata_client.flow._flow_type import FlowType
     import pandas as pd
 
 
 class RapidataFlowItem:
-    def __init__(self, id: str, flow_id: str, openapi_service: OpenAPIService):
+    def __init__(
+        self,
+        id: str,
+        flow_id: str,
+        openapi_service: OpenAPIService,
+        flow_type: FlowType = "ranking",
+    ):
         self.id = id
         self.flow_id = flow_id
         self._openapi_service = openapi_service
+        self._flow_type: FlowType = flow_type
         self._response_count: float | int | None = None
 
     def get_response_count(self) -> float | int:
-        """Get the total number of pairwise comparison responses for this flow item.
+        """Get the total number of responses for this flow item.
 
-        The count is derived from the win/loss matrix by summing all entries.
-        If the matrix hasn't been fetched yet, this will trigger a call to
-        :meth:`get_win_loss_matrix`, which waits for the flow item to finish.
+        For ranking flow items the count is derived from the win/loss matrix by
+        summing all entries, which triggers :meth:`get_win_loss_matrix`. For
+        classify flow items it is read from the results via :meth:`get_results`.
+        Either way this waits for the flow item to finish.
 
         Returns:
-            float | int: The total number of comparison votes collected.
+            float | int: The total number of responses collected.
         """
         with tracer.start_as_current_span("RapidataFlowItem.get_response_count"):
             if self._response_count is None:
-                self.get_win_loss_matrix()
+                if self._flow_type == "ranking":
+                    self.get_win_loss_matrix()
+                else:
+                    self.get_results()
             assert self._response_count is not None
             return self._response_count
 
@@ -49,12 +65,16 @@ class RapidataFlowItem:
             details = self._get_details()
             return details.state
 
-    def get_results(self) -> FlowItemResult:
+    def get_results(self) -> FlowItemResult | ClassifyFlowItemResult:
         """Get the results of this flow item from the API.
 
+        Waits until the flow item has reached a terminal state.
+
         Returns:
-            FlowItemResult: Contains a mapping of asset identifier to elo score
+            FlowItemResult: For ranking flow items, a mapping of asset identifier to elo score
                 and the total number of votes.
+            ClassifyFlowItemResult: For classify flow items, the majority category, response
+                distribution and response count per asset identifier, and the total number of responses.
         """
         with tracer.start_as_current_span("RapidataFlowItem.get_results"):
             from rapidata.api_client.models.flow_item_state import FlowItemState
@@ -71,22 +91,50 @@ class RapidataFlowItem:
                 status_message="Flow item '%s' is in state %s, waiting for completion...",
             )
 
-            results = self._openapi_service.flow.ranking_flow_item_api.flow_ranking_item_flow_item_id_results_get(
-                flow_item_id=self.id,
-            )
+            if self._flow_type == "ranking":
+                return self._get_ranking_results()
+            return self._get_classify_results()
 
-            datapoints = {
-                self._extract_asset_key(dp): dp.get("elo", 0)
-                for dp in (datapoint.to_dict() for datapoint in results.datapoints)
-            }
+    def _get_ranking_results(self) -> FlowItemResult:
+        results = self._openapi_service.flow.ranking_flow_item_api.flow_ranking_item_flow_item_id_results_get(
+            flow_item_id=self.id,
+        )
 
-            return FlowItemResult(
-                datapoints=datapoints,
-                total_votes=results.total_votes,
+        datapoints = {
+            self._extract_asset_key(dp): dp.get("elo", 0)
+            for dp in (datapoint.to_dict() for datapoint in results.datapoints)
+        }
+
+        return FlowItemResult(
+            datapoints=datapoints,
+            total_votes=results.total_votes,
+        )
+
+    def _get_classify_results(self) -> ClassifyFlowItemResult:
+        results = self._openapi_service.flow.simple_flow_item_api.flow_simple_item_flow_item_id_results_get(
+            flow_item_id=self.id,
+        )
+
+        datapoints = {
+            self._extract_asset_key(dp): ClassifyDatapointResult(
+                majority_value=dp.get("majorityValue"),
+                distribution={
+                    entry["value"]: entry["count"]
+                    for entry in dp.get("distribution", [])
+                },
+                response_count=dp.get("responseCount", 0),
             )
+            for dp in (datapoint.to_dict() for datapoint in results.datapoints)
+        }
+        self._response_count = results.total_responses
+
+        return ClassifyFlowItemResult(
+            datapoints=datapoints,
+            total_responses=results.total_responses,
+        )
 
     def get_win_loss_matrix(self) -> pd.DataFrame:
-        """Get the win/loss matrix of this flow item from the API.
+        """Get the win/loss matrix of this ranking flow item from the API.
 
         The win/loss matrix shows pairwise comparison counts where ``data[i][j]`` is
         the number of times row ``i`` was preferred over column ``j``.
@@ -98,6 +146,11 @@ class RapidataFlowItem:
         with tracer.start_as_current_span("RapidataFlowItem.get_win_loss_matrix"):
             import pandas as pd
             from rapidata.api_client.models.flow_item_state import FlowItemState
+
+            if self._flow_type != "ranking":
+                raise ValueError(
+                    "The win/loss matrix is only available for ranking flow items."
+                )
 
             logger.debug("Getting win/loss matrix for flow item '%s'", self.id)
             self._wait_for_state(
@@ -138,7 +191,10 @@ class RapidataFlowItem:
         return (
             source_url
             or original_filename
-            or asset.get("identifier", datapoint.get("id", "unknown"))
+            or asset.get(
+                "identifier",
+                datapoint.get("id", datapoint.get("datapointId", "unknown")),
+            )
         )
 
     def _wait_for_state(

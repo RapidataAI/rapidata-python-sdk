@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from datetime import timedelta
 from typing import TYPE_CHECKING, Sequence
 
 from rapidata.rapidata_client.config import logger, tracer
+from rapidata.rapidata_client.flow._flow_type import flow_type_from_api
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
@@ -76,6 +78,104 @@ class RapidataFlowManager:
                 openapi_service=self._openapi_service,
             )
 
+    def create_classify_flow(
+        self,
+        name: str,
+        instruction: str,
+        categories: list[str] | list[tuple[str, str]],
+        responses_per_datapoint: int = 5,
+        max_datapoints_per_item: int = 24,
+        time_to_live: timedelta | None = None,
+        validation_set_id: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+    ) -> RapidataFlow:
+        """Create a new classify flow.
+
+        Every flow item sorts each of its datapoints into one of the flow's categories.
+
+        Args:
+            name: The name of the flow.
+            instruction: The question shown with every datapoint, e.g. "Does this image contain text?".
+            categories: Between 2 and 10 answer options. A string is shown to annotators and returned in the results as is; a `(label, value)` tuple shows the label and returns the value.
+            responses_per_datapoint: The number of responses collected for each datapoint. Defaults to 5.
+            max_datapoints_per_item: The maximum number of datapoints a single flow item may contain. Defaults to 24.
+            time_to_live: How long a flow item may run before it is stopped and its partial results are returned. Between 45 seconds and 1 hour, defaults to 4 minutes. Can be overridden per flow item.
+            validation_set_id: Optional validation set ID.
+            settings: Optional settings for the flow.
+
+        Returns:
+            RapidataFlow: The created flow instance.
+        """
+        category_pairs: list[tuple[str, str]] = [
+            (
+                (category, category)
+                if isinstance(category, str)
+                else (category[0], category[1])
+            )
+            for category in categories
+        ]
+        if not 2 <= len(category_pairs) <= 10:
+            raise ValueError("Categories must contain between 2 and 10 entries.")
+        values = [value for _, value in category_pairs]
+        if len(set(values)) != len(values):
+            raise ValueError("Category values must be unique.")
+        if responses_per_datapoint < 1:
+            raise ValueError("Responses per datapoint must be at least 1.")
+        if max_datapoints_per_item < 1:
+            raise ValueError("Max datapoints per item must be at least 1.")
+
+        time_to_live_seconds = (
+            None if time_to_live is None else int(time_to_live.total_seconds())
+        )
+        if time_to_live_seconds is not None and not 45 <= time_to_live_seconds <= 3600:
+            raise ValueError("Time to live must be between 45 seconds and 1 hour.")
+
+        with tracer.start_as_current_span("RapidataFlowManager.create_classify_flow"):
+            from rapidata.api_client.models.classify_blueprint_category import (
+                ClassifyBlueprintCategory,
+            )
+            from rapidata.api_client.models.create_simple_flow_endpoint_input import (
+                CreateSimpleFlowEndpointInput,
+            )
+            from rapidata.api_client.models.i_flow_rapid_blueprint_classify_blueprint import (
+                IFlowRapidBlueprintClassifyBlueprint,
+            )
+            from rapidata.rapidata_client.flow.rapidata_flow import RapidataFlow
+
+            logger.debug("Creating classify flow: %s", name)
+
+            response = self._openapi_service.flow.simple_flow_api.flow_simple_post(
+                create_simple_flow_endpoint_input=CreateSimpleFlowEndpointInput(
+                    name=name,
+                    blueprint=IFlowRapidBlueprintClassifyBlueprint(
+                        _t="ClassifyBlueprint",
+                        title=instruction,
+                        categories=[
+                            ClassifyBlueprintCategory(label=label, value=value)
+                            for label, value in category_pairs
+                        ],
+                    ),
+                    responsesRequired=responses_per_datapoint,
+                    maxDatapointsPerItem=max_datapoints_per_item,
+                    defaultTimeToLiveSeconds=time_to_live_seconds,
+                    validationSetId=validation_set_id,
+                    featureFlags=(
+                        [setting._to_feature_flag() for setting in settings]
+                        if settings
+                        else None
+                    ),
+                ),
+            )
+
+            logger.debug("Flow created with id: %s", response.flow_id)
+
+            return RapidataFlow(
+                id=response.flow_id,
+                name=name,
+                openapi_service=self._openapi_service,
+                flow_type="simple",
+            )
+
     def get_flow_by_id(self, flow_id: str) -> RapidataFlow:
         """Get a flow by its ID.
 
@@ -94,10 +194,15 @@ class RapidataFlowManager:
                 flow_id=flow_id,
             )
 
+            flow = response.to_dict()
+            if not isinstance(flow, dict):
+                raise ValueError(f"Flow '{flow_id}' returned no flow details.")
+
             return RapidataFlow(
-                id=response.id,
-                name=response.name,
+                id=flow["id"],
+                name=flow["name"],
                 openapi_service=self._openapi_service,
+                flow_type=flow_type_from_api(flow["_t"]),
             )
 
     def find_flows(
@@ -133,6 +238,7 @@ class RapidataFlowManager:
                     id=flow.id,
                     name=flow.name,
                     openapi_service=self._openapi_service,
+                    flow_type=flow_type_from_api(flow.type.value),
                 )
                 for flow in response.items
             ]

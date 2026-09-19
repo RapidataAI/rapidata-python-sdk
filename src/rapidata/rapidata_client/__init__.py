@@ -14,6 +14,7 @@ from .job import (
     JobProgress,
 )
 from .signal import RapidataSignal, RapidataSignalManager
+from .flow import FlowItemResult, ClassifyFlowItemResult, ClassifyDatapointResult
 from .billing import BillingPeriod, RapidataBillingManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box
 from .results import RapidataResults
