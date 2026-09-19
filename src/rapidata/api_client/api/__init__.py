@@ -51,6 +51,8 @@ from rapidata.api_client.api.sample_api import SampleApi
 from rapidata.api_client.api.sample_generation_api import SampleGenerationApi
 from rapidata.api_client.api.settings_api import SettingsApi
 from rapidata.api_client.api.signal_api import SignalApi
+from rapidata.api_client.api.simple_flow_api import SimpleFlowApi
+from rapidata.api_client.api.simple_flow_item_api import SimpleFlowItemApi
 from rapidata.api_client.api.survey_api import SurveyApi
 from rapidata.api_client.api.translation_api import TranslationApi
 from rapidata.api_client.api.user_rapid_api import UserRapidApi

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.18.1219-9d0bce4"
+    "version": "2026.09.19.1507-aa8ddf8"
   },
   "servers": [
     {
@@ -78,6 +78,14 @@
     {
       "name": "RankingFlowItem",
       "x-displayName": "RankingFlowItem"
+    },
+    {
+      "name": "SimpleFlow",
+      "x-displayName": "SimpleFlow"
+    },
+    {
+      "name": "SimpleFlowItem",
+      "x-displayName": "SimpleFlowItem"
     },
     {
       "name": "Rapidata.Identity.API",
@@ -7082,7 +7090,7 @@
         ]
       }
     },
-    "/flow/ranking/{flowId}/config": {
+    "/flow/ranking/{flowId}": {
       "patch": {
         "tags": [
           "RankingFlow"
@@ -7144,6 +7152,7 @@
         ]
       }
     },
+    "/flow/ranking/{flowId}/config": {},
     "/flow/ranking/{flowId}/item": {
       "post": {
         "tags": [
@@ -7567,6 +7576,265 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetRankingFlowItemVoteMatrixEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/flow/simple": {
+      "post": {
+        "tags": [
+          "SimpleFlow"
+        ],
+        "summary": "Creates a simple flow that runs one rapid blueprint over every datapoint of its items.",
+        "description": "The blueprint is fixed once the flow has items. Every datapoint collects ResponsesRequired responses.",
+        "requestBody": {
+          "description": "The simple flow creation parameters.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSimpleFlowEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSimpleFlowEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/flow/simple/{flowId}": {
+      "patch": {
+        "tags": [
+          "SimpleFlow"
+        ],
+        "summary": "Updates the configuration of a simple flow. Changing the blueprint once the flow has items returns 409 Conflict.",
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "description": "The ID of the simple flow to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The configuration fields to update.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateConfigEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/flow/simple/{flowId}/item": {
+      "post": {
+        "tags": [
+          "SimpleFlowItem"
+        ],
+        "summary": "Creates a flow item that labels every datapoint of the dataset with the flow's blueprint; the dataset holds between 1 and the flow's MaxDatapointsPerItem datapoints.",
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "description": "The ID of the simple flow to create the item in.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The flow item creation parameters.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFlowItemEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateFlowItemEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/flow/simple/item/{flowItemId}/results": {
+      "get": {
+        "tags": [
+          "SimpleFlowItem"
+        ],
+        "summary": "Returns the category distribution and majority per datapoint of a completed simple flow item.",
+        "description": "Returns 409 Conflict if the flow item is not yet completed or has no associated workflow. A tie has no majority value.",
+        "parameters": [
+          {
+            "name": "flowItemId",
+            "in": "path",
+            "description": "The ID of the flow item to get results for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResultsEndpoint_Output"
                 }
               }
             }
@@ -46287,6 +46555,21 @@
           }
         }
       },
+      "ClassifyBlueprint_Category": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
       "CreateFlowEndpoint_Input": {
         "required": [
           "name",
@@ -46481,6 +46764,149 @@
           }
         }
       },
+      "CreateSimpleFlowEndpoint_Input": {
+        "required": [
+          "name",
+          "blueprint"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the flow."
+          },
+          "blueprint": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IFlowRapidBlueprint"
+              }
+            ],
+            "description": "The blueprint of the rapids every item of this flow generates."
+          },
+          "responsesRequired": {
+            "type": "integer",
+            "description": "The number of responses collected per datapoint. Defaults to 5.",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxDatapointsPerItem": {
+            "type": "integer",
+            "description": "The maximum number of datapoints a dataset may hold to be added as an item. Between 1 and 100, defaults to 24.",
+            "format": "int32",
+            "nullable": true
+          },
+          "defaultTimeToLiveSeconds": {
+            "type": "integer",
+            "description": "The time-to-live in seconds applied to items created without one. Between 45 seconds and 1 hour, defaults to 240.",
+            "format": "int32",
+            "nullable": true
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "Optional audience ID. When provided, the flow will only be served to users in this audience.",
+            "nullable": true
+          },
+          "validationSetId": {
+            "type": "string",
+            "description": "Optional ID of the validation set to use.",
+            "nullable": true
+          },
+          "serveToResponseRatio": {
+            "type": "number",
+            "description": "Ratio of concurrent serves to responses. When set, limits serving to avoid over-collection. Defaults to 0.8.",
+            "format": "double",
+            "nullable": true
+          },
+          "serveTimeoutSeconds": {
+            "type": "integer",
+            "description": "Time in seconds a user has to submit an answer after loading the task. Defaults to 40.",
+            "format": "int32",
+            "nullable": true
+          },
+          "featureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional feature flags to enable for this flow."
+          },
+          "targetResponseCount": {
+            "type": "integer",
+            "description": "Target average response count per completed item. Defaults to ResponsesRequired times MaxDatapointsPerItem.",
+            "format": "int32",
+            "nullable": true
+          },
+          "pidProportionalGain": {
+            "type": "number",
+            "description": "PID proportional gain. Defaults to 0.",
+            "format": "double",
+            "nullable": true
+          },
+          "pidIntegralGain": {
+            "type": "number",
+            "description": "PID integral gain. Defaults to 0.003.",
+            "format": "double",
+            "nullable": true
+          },
+          "pidDerivativeGain": {
+            "type": "number",
+            "description": "PID derivative gain. Defaults to 0.",
+            "format": "double",
+            "nullable": true
+          },
+          "pidOutputOffset": {
+            "type": "number",
+            "description": "Constant offset added to the PID output before clamping, shifting the controller's operating point. Defaults to 25.",
+            "format": "double",
+            "nullable": true
+          },
+          "pidMinSessionsPerMinute": {
+            "type": "integer",
+            "description": "Minimum sessions per minute the PID can set. Defaults to 20.",
+            "format": "int32",
+            "nullable": true
+          },
+          "pidMaxSessionsPerMinute": {
+            "type": "integer",
+            "description": "Maximum sessions per minute the PID can set. Defaults to 50.",
+            "format": "int32",
+            "nullable": true
+          },
+          "pidBatchMode": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PidBatchMode"
+              }
+            ],
+            "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to PerBatch.",
+            "nullable": true
+          },
+          "drainDurationSeconds": {
+            "type": "integer",
+            "description": "Duration in seconds for draining flow items. Defaults to 40.",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "CreateSimpleFlowEndpoint_Output": {
+        "required": [
+          "flowId"
+        ],
+        "type": "object",
+        "properties": {
+          "flowId": {
+            "type": "string",
+            "description": "The ID of the created simple flow."
+          }
+        }
+      },
       "FlowItemState": {
         "enum": [
           "Pending",
@@ -46494,7 +46920,8 @@
       },
       "FlowType": {
         "enum": [
-          "Ranking"
+          "Ranking",
+          "Simple"
         ]
       },
       "GetCompletionTimeHistogramEndpoint_Output": {
@@ -46827,6 +47254,79 @@
           }
         }
       },
+      "GetResultsEndpoint_Output": {
+        "required": [
+          "datapoints",
+          "totalResponses"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetResultsEndpoint_Output_Datapoint"
+                }
+              }
+            ],
+            "description": "The labeled datapoints with their category distribution."
+          },
+          "totalResponses": {
+            "type": "integer",
+            "description": "The total number of responses across all datapoints.",
+            "format": "int64"
+          }
+        }
+      },
+      "GetResultsEndpoint_Output_CategoryCount": {
+        "required": [
+          "value",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "GetResultsEndpoint_Output_Datapoint": {
+        "required": [
+          "datapointId",
+          "asset",
+          "majorityValue",
+          "distribution",
+          "responseCount"
+        ],
+        "type": "object",
+        "properties": {
+          "datapointId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          },
+          "majorityValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "distribution": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetResultsEndpoint_Output_CategoryCount"
+            }
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "IFlow": {
         "required": [
           "_t"
@@ -46835,13 +47335,17 @@
         "oneOf": [
           {
             "$ref": "#/components/schemas/IFlowRankingFlow"
+          },
+          {
+            "$ref": "#/components/schemas/IFlowSimpleFlow"
           }
         ],
         "description": "A flow definition exposed over the API, identified by a discriminator.\n Implementations describe the flow's type-specific configuration.",
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "RankingFlow": "#/components/schemas/IFlowRankingFlow"
+            "RankingFlow": "#/components/schemas/IFlowRankingFlow",
+            "SimpleFlow": "#/components/schemas/IFlowSimpleFlow"
           }
         }
       },
@@ -47009,6 +47513,214 @@
           "organizationId": {
             "type": "string",
             "description": "The id of the organization that owns the entity."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "The timestamp when the flow was created.",
+            "format": "date-time"
+          }
+        }
+      },
+      "IFlowRapidBlueprint": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IFlowRapidBlueprintClassifyBlueprint"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassifyBlueprint": "#/components/schemas/IFlowRapidBlueprintClassifyBlueprint"
+          }
+        }
+      },
+      "IFlowRapidBlueprintClassifyBlueprint": {
+        "required": [
+          "title",
+          "categories",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyBlueprint"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassifyBlueprint_Category"
+            }
+          }
+        }
+      },
+      "IFlowSimpleFlow": {
+        "required": [
+          "id",
+          "name",
+          "campaignId",
+          "flowItemCount",
+          "targetResponseCount",
+          "pidProportionalGain",
+          "pidIntegralGain",
+          "pidDerivativeGain",
+          "pidOutputOffset",
+          "pidMinSessionsPerMinute",
+          "pidMaxSessionsPerMinute",
+          "pidBatchMode",
+          "serveTimeoutSeconds",
+          "drainDurationSeconds",
+          "serveToResponseRatio",
+          "blueprint",
+          "responsesRequired",
+          "maxDatapointsPerItem",
+          "defaultTimeToLiveSeconds",
+          "featureFlags",
+          "ownerId",
+          "ownerMail",
+          "organizationId",
+          "createdAt",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleFlow"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "The unique identifier of the flow."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the flow."
+          },
+          "campaignId": {
+            "type": "string",
+            "description": "The ID of the campaign associated with this flow."
+          },
+          "flowItemCount": {
+            "type": "integer",
+            "description": "The total number of items that have been added to this flow. Incremented atomically on each item creation.",
+            "format": "int64"
+          },
+          "targetResponseCount": {
+            "type": "integer",
+            "description": "Target average response count per completed item. Enables PID-based automatic rate control when set. Null disables PID.",
+            "format": "int32",
+            "nullable": true
+          },
+          "pidProportionalGain": {
+            "type": "number",
+            "description": "PID proportional gain. Controls how strongly the rate reacts to the current error between target and actual response counts.",
+            "format": "double"
+          },
+          "pidIntegralGain": {
+            "type": "number",
+            "description": "PID integral gain. Eliminates steady-state error by accumulating error over time. Includes anti-windup clamping.",
+            "format": "double"
+          },
+          "pidDerivativeGain": {
+            "type": "number",
+            "description": "PID derivative gain. Provides damping by reacting to the rate of change of the error, helping prevent overshoot.",
+            "format": "double"
+          },
+          "pidOutputOffset": {
+            "type": "number",
+            "description": "Constant offset added to the PID output before clamping, shifting the controller's operating point so the P/I/D terms trim around a non-zero baseline.",
+            "format": "double"
+          },
+          "pidMinSessionsPerMinute": {
+            "type": "integer",
+            "description": "Minimum sessions per minute the PID controller can set. Prevents the rate from dropping to zero.",
+            "format": "int32"
+          },
+          "pidMaxSessionsPerMinute": {
+            "type": "integer",
+            "description": "Maximum sessions per minute the PID controller can set. Prevents the rate from exceeding infrastructure capacity.",
+            "format": "int32"
+          },
+          "pidBatchMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PidBatchMode"
+              }
+            ],
+            "description": "How the PID output maps to the campaign rate. Total: used directly. PerBatch: multiplied by active item count. PerBatchTimeWeighted: multiplied by time-weighted active item count based on remaining TTL."
+          },
+          "serveTimeoutSeconds": {
+            "type": "integer",
+            "description": "Maximum time in seconds a user has to submit an answer after loading the task. Null uses the system-wide default.",
+            "format": "int32",
+            "nullable": true
+          },
+          "drainDurationSeconds": {
+            "type": "integer",
+            "description": "Grace period in seconds after an item stops receiving new serves, allowing in-flight responses to complete.",
+            "format": "int32"
+          },
+          "serveToResponseRatio": {
+            "type": "number",
+            "description": "Ratio of serves to responses used to calculate how many tasks to serve per expected response.",
+            "format": "double",
+            "nullable": true
+          },
+          "blueprint": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IFlowRapidBlueprint"
+              }
+            ],
+            "description": "The blueprint of the rapids every item of this flow generates."
+          },
+          "responsesRequired": {
+            "type": "integer",
+            "description": "The number of responses collected per datapoint.",
+            "format": "int32"
+          },
+          "maxDatapointsPerItem": {
+            "type": "integer",
+            "description": "The maximum number of datapoints a dataset may hold to be added as an item.",
+            "format": "int32"
+          },
+          "defaultTimeToLiveSeconds": {
+            "type": "integer",
+            "description": "The time-to-live in seconds applied to items created without an explicit one.",
+            "format": "int32"
+          },
+          "featureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "Key-value feature flags that enable specific behaviors for this flow (e.g. rapid_hints)."
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The ID of the customer who owns the flow.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the customer who owns the flow."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the flow."
           },
           "createdAt": {
             "type": "string",
@@ -67833,7 +68545,9 @@
         "Flow",
         "FlowItem",
         "RankingFlow",
-        "RankingFlowItem"
+        "RankingFlowItem",
+        "SimpleFlow",
+        "SimpleFlowItem"
       ]
     },
     {
