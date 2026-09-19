@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class FlowItemResult:
-    """Result of a flow item containing elo scores and vote count.
+    """Result of a ranking flow item containing elo scores and vote count.
 
     Attributes:
         datapoints: Mapping of asset identifier to elo score.

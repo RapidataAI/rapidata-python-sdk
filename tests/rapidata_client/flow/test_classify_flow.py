@@ -252,6 +252,25 @@ class TestCreateClassifyFlow:
         ]
         assert "defaultTimeToLiveSeconds" not in _without_none(payload)
 
+    def test_time_to_live_accepts_seconds(self):
+        pytest.importorskip(SIMPLE_FLOW_API)
+        svc = _openapi_service()
+        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
+            flow_id="flw-1"
+        )
+
+        RapidataFlowManager(svc).create_classify_flow(
+            name="Text Detection",
+            instruction="Does this image contain text?",
+            categories=["Yes", "No"],
+            time_to_live=300,
+        )
+
+        payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
+            "create_simple_flow_endpoint_input"
+        ].to_dict()
+        assert payload["defaultTimeToLiveSeconds"] == 300
+
 
 class TestCreateNewFlowBatch:
     def test_ranking_flow_still_posts_to_the_ranking_item_route(self):
@@ -308,6 +327,21 @@ class TestCreateNewFlowBatch:
             "flw-1",
             "simple",
         )
+
+    @pytest.mark.parametrize("flow_type", ["ranking", "simple"])
+    @pytest.mark.parametrize("time_to_live", [44, 3601])
+    def test_rejects_time_to_live_outside_bounds_before_uploading(
+        self, flow_type, time_to_live
+    ):
+        svc = _openapi_service()
+        flow = RapidataFlow("flw-1", "Flow", svc, flow_type=flow_type)
+
+        with pytest.raises(ValueError, match="between 45 seconds and 1 hour"):
+            flow.create_new_flow_batch(
+                datapoints=["https://example.com/a.jpg"], time_to_live=time_to_live
+            )
+
+        svc.dataset.dataset_api.dataset_post.assert_not_called()
 
     def test_classify_flow_rejects_batch_level_context(self):
         svc = _openapi_service()

@@ -58,7 +58,7 @@ class RapidataFlowItem:
         """Get the current state of this flow item.
 
         Returns:
-            FlowItemState: The current state (Pending, Running, Completed, Failed, Stopped, or Incomplete).
+            FlowItemState: The current state (Pending, Running, Completed, Failed, Stopping, Stopped, or Incomplete).
         """
         with tracer.start_as_current_span("RapidataFlowItem.get_status"):
             logger.debug("Getting status for flow item '%s'", self.id)
@@ -142,6 +142,9 @@ class RapidataFlowItem:
         Returns:
             pd.DataFrame: A DataFrame where rows and columns are asset identifiers,
                 and values are win/loss counts.
+
+        Raises:
+            ValueError: If this is a classify flow item.
         """
         with tracer.start_as_current_span("RapidataFlowItem.get_win_loss_matrix"):
             import pandas as pd

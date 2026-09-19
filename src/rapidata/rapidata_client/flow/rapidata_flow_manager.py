@@ -16,7 +16,7 @@ class RapidataFlowManager:
     """Handles everything regarding flows from creation to retrieval.
 
     A manager for creating, retrieving, and searching for flows.
-    Flows are used to add small flow items that can be solved fast without the order creation overhead.
+    Flows are used to add small flow items that can be solved fast without the job creation overhead.
     """
 
     def __init__(self, openapi_service: OpenAPIService):
@@ -85,7 +85,7 @@ class RapidataFlowManager:
         categories: list[str] | list[tuple[str, str]],
         responses_per_datapoint: int = 5,
         max_datapoints_per_item: int = 24,
-        time_to_live: timedelta | None = None,
+        time_to_live: timedelta | int | None = None,
         validation_set_id: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataFlow:
@@ -98,8 +98,8 @@ class RapidataFlowManager:
             instruction: The question shown with every datapoint, e.g. "Does this image contain text?".
             categories: Between 2 and 10 answer options. A string is shown to annotators and returned in the results as is; a `(label, value)` tuple shows the label and returns the value.
             responses_per_datapoint: The number of responses collected for each datapoint. Defaults to 5.
-            max_datapoints_per_item: The maximum number of datapoints a single flow item may contain. Defaults to 24.
-            time_to_live: How long a flow item may run before it is stopped and its partial results are returned. Between 45 seconds and 1 hour, defaults to 4 minutes. Can be overridden per flow item.
+            max_datapoints_per_item: The maximum number of datapoints a single flow item may contain. Defaults to 24, at most 100.
+            time_to_live: How long a flow item may run before it is stopped and its partial results are returned, as a timedelta or in seconds. Between 45 seconds and 1 hour, defaults to 4 minutes. Can be overridden per flow item.
             validation_set_id: Optional validation set ID.
             settings: Optional settings for the flow.
 
@@ -124,9 +124,10 @@ class RapidataFlowManager:
         if max_datapoints_per_item < 1:
             raise ValueError("Max datapoints per item must be at least 1.")
 
-        time_to_live_seconds = (
-            None if time_to_live is None else int(time_to_live.total_seconds())
-        )
+        if isinstance(time_to_live, timedelta):
+            time_to_live_seconds = int(time_to_live.total_seconds())
+        else:
+            time_to_live_seconds = time_to_live
         if time_to_live_seconds is not None and not 45 <= time_to_live_seconds <= 3600:
             raise ValueError("Time to live must be between 45 seconds and 1 hour.")
 
