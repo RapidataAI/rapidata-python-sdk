@@ -142,7 +142,7 @@ nav:
       - Select Words: examples/select_words_job.md
       - Free Text: examples/free_text_job.md
       - Ranking: examples/ranking_job.md
-    - Ranking Flows:
+    - Flows:
       - Getting Started: flows.md
       - Distributed Training: distributed_training.md
     - Model Ranking:

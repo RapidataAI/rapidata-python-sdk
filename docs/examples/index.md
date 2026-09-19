@@ -158,4 +158,4 @@ Every job type the SDK can create, live. Each phone is a real campaign — try t
 
 </div>
 
-Looking for something else? [Model Ranking](../mri.md) benchmarks AI models on an ongoing leaderboard, and [Ranking Flows](../flows.md) keeps a ranking up to date without full job setup.
+Looking for something else? [Model Ranking](../mri.md) benchmarks AI models on an ongoing leaderboard, and [Flows](../flows.md) keep a ranking or classification running on new items without full job setup.

@@ -6,6 +6,8 @@ if TYPE_CHECKING:
     from rapidata.api_client.api.flow_api import FlowApi
     from rapidata.api_client.api.ranking_flow_api import RankingFlowApi
     from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi
+    from rapidata.api_client.api.simple_flow_api import SimpleFlowApi
+    from rapidata.api_client.api.simple_flow_item_api import SimpleFlowItemApi
     from rapidata.rapidata_client.api.rapidata_api_client import RapidataApiClient
 
 
@@ -15,6 +17,8 @@ class FlowService:
         self._flow_api: FlowApi | None = None
         self._ranking_flow_api: RankingFlowApi | None = None
         self._ranking_flow_item_api: RankingFlowItemApi | None = None
+        self._simple_flow_api: SimpleFlowApi | None = None
+        self._simple_flow_item_api: SimpleFlowItemApi | None = None
 
     @property
     def flow_api(self) -> FlowApi:
@@ -36,3 +40,17 @@ class FlowService:
             from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi
             self._ranking_flow_item_api = RankingFlowItemApi(self._api_client)
         return self._ranking_flow_item_api
+
+    @property
+    def simple_flow_api(self) -> SimpleFlowApi:
+        if self._simple_flow_api is None:
+            from rapidata.api_client.api.simple_flow_api import SimpleFlowApi
+            self._simple_flow_api = SimpleFlowApi(self._api_client)
+        return self._simple_flow_api
+
+    @property
+    def simple_flow_item_api(self) -> SimpleFlowItemApi:
+        if self._simple_flow_item_api is None:
+            from rapidata.api_client.api.simple_flow_item_api import SimpleFlowItemApi
+            self._simple_flow_item_api = SimpleFlowItemApi(self._api_client)
+        return self._simple_flow_item_api
