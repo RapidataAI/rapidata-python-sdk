@@ -174,11 +174,11 @@ flow = client.flow.create_classify_flow(
 )
 ```
 
-A flow has between 2 and 10 categories, shared by every batch of the flow. By default, a batch collects `responses_per_datapoint` (5) responses for each of up to `max_datapoints_per_item` (24) items, and each batch runs for up to `time_to_live` (4 minutes) before it is stopped.
+A flow has between 2 and 10 categories, shared by every batch of the flow. By default, a batch collects `responses_per_datapoint` (5) responses for each item.
 
 Each response is billed. A batch collects `responses_per_datapoint` responses for each of its items, so a full batch with the defaults comes to 5 × 24 = 120 responses.
 
-The instruction, categories, responses per datapoint and default time to live are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them.
+The instruction, categories, and responses per datapoint are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them.
 
 ### 2. Add a Flow Batch
 
@@ -213,7 +213,7 @@ flow_item = flow.create_new_flow_batch(
 ```
 
 1. One text context per datapoint, shown together with that datapoint. `media_contexts` works the same way for image, video, or audio context.
-2. Overrides the flow's default time to live for this batch, in seconds (45 to 3600).
+2. Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.
 
 The batch-level `context` and `context_assets` parameters belong to ranking flows and raise a `ValueError` on a classify flow.
 
@@ -234,7 +234,7 @@ ClassifyFlowItemResult(
             majority_value="yes", distribution={"yes": 4, "no": 1}, response_count=5
         ),
         "https://example.com/image_b.jpg": ClassifyDatapointResult(
-            majority_value="no", distribution={"no": 5}, response_count=5
+            majority_value="no", distribution={"yes": 0, "no": 5}, response_count=5
         ),
         "https://example.com/image_c.jpg": ClassifyDatapointResult(
             majority_value=None, distribution={"yes": 2, "no": 2}, response_count=4
@@ -246,7 +246,7 @@ ClassifyFlowItemResult(
 
 It has two fields:
 
-- `datapoints`: a mapping of each item to its `ClassifyDatapointResult`. Items are keyed by their source URL when provided, otherwise by their original filename. `majority_value` is the category value chosen most often, or `None` when the top categories are tied. `distribution` counts the responses per category value (categories nobody chose are omitted), and `response_count` is the number of responses collected for that item.
+- `datapoints`: a mapping of each item to its `ClassifyDatapointResult`. Items are keyed by their source URL when provided, otherwise by their original filename. `majority_value` is the category value chosen most often, or `None` when the top categories are tied. `distribution` counts the responses for every category of the flow, in the flow's category order (categories nobody chose show `0`), and `response_count` is the number of responses collected for that item.
 - `total_responses`: the total number of responses collected across all items.
 
 ```python

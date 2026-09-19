@@ -8,7 +8,6 @@ against mocks of the service layer.
 
 from __future__ import annotations
 
-from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -26,6 +25,7 @@ from rapidata.rapidata_client.flow.rapidata_flow_manager import RapidataFlowMana
 FLOW_MODULE = "rapidata.rapidata_client.flow.rapidata_flow"
 SIMPLE_FLOW_API = "rapidata.api_client.api.simple_flow_api"
 SIMPLE_FLOW_RESULTS_MODEL = "rapidata.api_client.models.get_results_endpoint_output"
+SIMPLE_FLOW_MODEL = "rapidata.api_client.models.i_flow_simple_flow"
 
 # Recorded shape of GET /flow/simple/item/{flowItemId}/results.
 CLASSIFY_RESULTS_RESPONSE = {
@@ -171,17 +171,6 @@ class TestCreateClassifyFlow:
             ({"categories": [("A", "x"), ("B", "x")]}, "unique"),
             ({"categories": ["a", "b"], "responses_per_datapoint": 0}, "at least 1"),
             ({"categories": ["a", "b"], "max_datapoints_per_item": 0}, "at least 1"),
-            (
-                {"categories": ["a", "b"], "time_to_live": timedelta(seconds=44)},
-                "45 seconds",
-            ),
-            (
-                {
-                    "categories": ["a", "b"],
-                    "time_to_live": timedelta(hours=1, seconds=1),
-                },
-                "1 hour",
-            ),
         ],
     )
     def test_rejects_invalid_input_before_calling_the_api(self, kwargs, message):
@@ -207,7 +196,6 @@ class TestCreateClassifyFlow:
             name="Text Detection",
             instruction="Does this image contain text?",
             categories=[("Yes, clearly readable", "yes"), ("No", "no")],
-            time_to_live=timedelta(minutes=5),
         )
 
         svc.flow.simple_flow_api.flow_simple_post.assert_called_once()
@@ -226,7 +214,6 @@ class TestCreateClassifyFlow:
             },
             "responsesRequired": 5,
             "maxDatapointsPerItem": 24,
-            "defaultTimeToLiveSeconds": 300,
         }
         assert (flow.id, flow._flow_type) == ("flw-1", "simple")
 
@@ -250,44 +237,7 @@ class TestCreateClassifyFlow:
             {"label": "Yes", "value": "Yes"},
             {"label": "No", "value": "No"},
         ]
-        assert payload["defaultTimeToLiveSeconds"] == 240
-
-    def test_time_to_live_defaults_to_four_minutes(self):
-        pytest.importorskip(SIMPLE_FLOW_API)
-        svc = _openapi_service()
-        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
-            flow_id="flw-1"
-        )
-
-        RapidataFlowManager(svc).create_classify_flow(
-            name="Text Detection",
-            instruction="Does this image contain text?",
-            categories=["Yes", "No"],
-        )
-
-        payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
-            "create_simple_flow_endpoint_input"
-        ].to_dict()
-        assert payload["defaultTimeToLiveSeconds"] == 240
-
-    def test_time_to_live_accepts_seconds(self):
-        pytest.importorskip(SIMPLE_FLOW_API)
-        svc = _openapi_service()
-        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
-            flow_id="flw-1"
-        )
-
-        RapidataFlowManager(svc).create_classify_flow(
-            name="Text Detection",
-            instruction="Does this image contain text?",
-            categories=["Yes", "No"],
-            time_to_live=300,
-        )
-
-        payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
-            "create_simple_flow_endpoint_input"
-        ].to_dict()
-        assert payload["defaultTimeToLiveSeconds"] == 300
+        assert "defaultTimeToLiveSeconds" not in _without_none(payload)
 
 
 class TestCreateNewFlowBatch:
@@ -404,6 +354,52 @@ class TestClassifyResults:
         ]
         results.total_responses = CLASSIFY_RESULTS_RESPONSE["totalResponses"]
         return results
+
+    def test_distribution_includes_every_blueprint_category(self):
+        model_module = pytest.importorskip(SIMPLE_FLOW_MODEL)
+        svc = _openapi_service()
+        flow_response = model_module.IFlowSimpleFlow.model_construct(
+            blueprint=MagicMock(
+                categories=[
+                    MagicMock(value="yes"),
+                    MagicMock(value="no"),
+                    MagicMock(value="maybe"),
+                ]
+            )
+        )
+        svc.flow.flow_api.flow_flow_id_get.return_value = flow_response
+        results = MagicMock()
+        results.datapoints = [
+            MagicMock(
+                **{
+                    "to_dict.return_value": {
+                        "datapointId": "dp-1",
+                        "asset": {"identifier": "asset-1", "metadata": {}},
+                        "majorityValue": "yes",
+                        "distribution": [
+                            {"value": "yes", "count": 5},
+                            {"value": "unexpected", "count": 2},
+                        ],
+                        "responseCount": 7,
+                    }
+                }
+            )
+        ]
+        results.total_responses = 7
+        svc.flow.simple_flow_item_api.flow_simple_item_flow_item_id_results_get.return_value = (
+            results
+        )
+        item = RapidataFlowItem("fli-1", "flw-1", svc, flow_type="simple")
+
+        result = item.get_results()
+
+        assert result.datapoints["asset-1"].distribution == {  # type: ignore[union-attr]
+            "yes": 5,
+            "no": 0,
+            "maybe": 0,
+            "unexpected": 2,
+        }
+        svc.flow.flow_api.flow_flow_id_get.assert_called_once_with(flow_id="flw-1")
 
     def test_get_results_returns_classify_result_for_classify_items(self):
         svc = _openapi_service()
