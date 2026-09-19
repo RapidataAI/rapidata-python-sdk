@@ -8,7 +8,6 @@ against mocks of the service layer.
 
 from __future__ import annotations
 
-from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -167,8 +166,8 @@ class TestCreateClassifyFlow:
     @pytest.mark.parametrize(
         ("kwargs", "message"),
         [
-            ({"categories": ["only"]}, "between 2 and 10"),
-            ({"categories": [str(i) for i in range(11)]}, "between 2 and 10"),
+            ({"categories": ["only"]}, "between 2 and 8"),
+            ({"categories": [str(i) for i in range(9)]}, "between 2 and 8"),
             ({"categories": [("A", "x"), ("B", "x")]}, "unique"),
             (
                 {"categories": ["a", "b"], "min_responses_per_datapoint": 0},
@@ -181,14 +180,6 @@ class TestCreateClassifyFlow:
                     "min_responses_per_datapoint": 3,
                 },
                 "at least min",
-            ),
-            ({"categories": ["a", "b"], "time_to_live": 44}, "45 seconds"),
-            (
-                {
-                    "categories": ["a", "b"],
-                    "time_to_live": timedelta(hours=1, seconds=1),
-                },
-                "1 hour",
             ),
         ],
     )
@@ -236,44 +227,6 @@ class TestCreateClassifyFlow:
         }
         assert (flow.id, flow._flow_type) == ("flw-1", "simple")
 
-    def test_time_to_live_is_sent_as_seconds(self):
-        pytest.importorskip(SIMPLE_FLOW_API)
-        svc = _openapi_service()
-        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
-            flow_id="flw-1"
-        )
-
-        RapidataFlowManager(svc).create_classify_flow(
-            name="Text Detection",
-            instruction="Does this image contain text?",
-            categories=["Yes", "No"],
-            time_to_live=300,
-        )
-
-        payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
-            "create_simple_flow_endpoint_input"
-        ].to_dict()
-        assert payload["defaultTimeToLiveSeconds"] == 300
-
-    def test_time_to_live_accepts_a_timedelta(self):
-        pytest.importorskip(SIMPLE_FLOW_API)
-        svc = _openapi_service()
-        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
-            flow_id="flw-1"
-        )
-
-        RapidataFlowManager(svc).create_classify_flow(
-            name="Text Detection",
-            instruction="Does this image contain text?",
-            categories=["Yes", "No"],
-            time_to_live=timedelta(minutes=5),
-        )
-
-        payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
-            "create_simple_flow_endpoint_input"
-        ].to_dict()
-        assert payload["defaultTimeToLiveSeconds"] == 300
-
     def test_max_and_min_responses_per_datapoint_are_sent(self):
         pytest.importorskip(SIMPLE_FLOW_API)
         svc = _openapi_service()
@@ -294,27 +247,6 @@ class TestCreateClassifyFlow:
         ].to_dict()
         assert payload["maxResponses"] == 8
         assert payload["minResponses"] == 4
-
-    def test_responses_per_datapoint_alias_is_deprecated(self):
-        pytest.importorskip(SIMPLE_FLOW_API)
-        svc = _openapi_service()
-        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
-            flow_id="flw-1"
-        )
-
-        with pytest.warns(DeprecationWarning, match="max_responses_per_datapoint"):
-            RapidataFlowManager(svc).create_classify_flow(
-                name="Text Detection",
-                instruction="Does this image contain text?",
-                categories=["Yes", "No"],
-                responses_per_datapoint=7,
-            )
-
-        payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
-            "create_simple_flow_endpoint_input"
-        ].to_dict()
-        assert payload["maxResponses"] == 7
-        assert payload["minResponses"] == 7
 
     def test_string_categories_use_the_label_as_value(self):
         pytest.importorskip(SIMPLE_FLOW_API)
