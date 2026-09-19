@@ -53,7 +53,7 @@ class RapidataFlow:
             data_type: The data type of the datapoints. Defaults to "media".
             private_metadata: Optional key-value metadata per datapoint.
             accept_failed_uploads: If True, continues even if some uploads fail.
-            time_to_live: The time to live for the flow item in seconds, between 45 seconds and 1 hour. If it takes longer than this to complete, the flow item will be stopped and the results will be returned. Defaults to 4 minutes for ranking flows and to the flow's time to live for classify flows.
+            time_to_live: The time to live for the flow item in seconds, between 45 seconds and 1 hour. If it takes longer than this to complete, the flow item will be stopped and the results will be returned. Defaults to 4 minutes.
             contexts: Optional text context per datapoint, shown alongside that datapoint.
             media_contexts: Optional image, video, or audio paths/URLs per datapoint, shown alongside that datapoint. Each entry is a single asset or a list of assets.
 

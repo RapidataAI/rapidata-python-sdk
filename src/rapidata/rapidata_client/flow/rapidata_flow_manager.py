@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import timedelta
+import warnings
 from typing import TYPE_CHECKING, Sequence
 
 from rapidata.rapidata_client.config import logger, tracer
@@ -83,11 +83,12 @@ class RapidataFlowManager:
         name: str,
         instruction: str,
         categories: list[str] | list[tuple[str, str]],
-        responses_per_datapoint: int = 5,
-        max_datapoints_per_item: int = 24,
-        time_to_live: timedelta | int | None = None,
+        max_responses_per_datapoint: int = 15,
+        min_responses_per_datapoint: int = 10,
         validation_set_id: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
+        *,
+        responses_per_datapoint: int | None = None,
     ) -> RapidataFlow:
         """Create a new classify flow.
 
@@ -97,15 +98,25 @@ class RapidataFlowManager:
             name: The name of the flow.
             instruction: The question shown with every datapoint, e.g. "Does this image contain text?".
             categories: Between 2 and 10 answer options. A string is shown to annotators and returned in the results as is; a `(label, value)` tuple shows the label and returns the value.
-            responses_per_datapoint: The number of responses collected for each datapoint. Defaults to 5.
-            max_datapoints_per_item: The maximum number of datapoints a single flow item may contain. Defaults to 24, at most 100.
-            time_to_live: How long a flow item may run before it is stopped and its partial results are returned, as a timedelta or in seconds. Between 45 seconds and 1 hour, defaults to 4 minutes. Can be overridden per flow item.
+            max_responses_per_datapoint: The number of accepted responses that closes an image. Defaults to 15, must be at least min_responses_per_datapoint.
+            min_responses_per_datapoint: The average responses per image an item needs, once it ends by time_to_live, to be Completed rather than Incomplete. Defaults to 10, at least 1.
             validation_set_id: Optional validation set ID.
             settings: Optional settings for the flow.
+            responses_per_datapoint: Deprecated, use max_responses_per_datapoint. Sets both max and min to this value.
 
         Returns:
             RapidataFlow: The created flow instance.
         """
+        if responses_per_datapoint is not None:
+            warnings.warn(
+                "responses_per_datapoint is deprecated, use max_responses_per_datapoint"
+                " (and optionally min_responses_per_datapoint).",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            max_responses_per_datapoint = responses_per_datapoint
+            min_responses_per_datapoint = responses_per_datapoint
+
         category_pairs: list[tuple[str, str]] = [
             (
                 (category, category)
@@ -119,17 +130,12 @@ class RapidataFlowManager:
         values = [value for _, value in category_pairs]
         if len(set(values)) != len(values):
             raise ValueError("Category values must be unique.")
-        if responses_per_datapoint < 1:
-            raise ValueError("Responses per datapoint must be at least 1.")
-        if max_datapoints_per_item < 1:
-            raise ValueError("Max datapoints per item must be at least 1.")
-
-        if isinstance(time_to_live, timedelta):
-            time_to_live_seconds = int(time_to_live.total_seconds())
-        else:
-            time_to_live_seconds = time_to_live
-        if time_to_live_seconds is not None and not 45 <= time_to_live_seconds <= 3600:
-            raise ValueError("Time to live must be between 45 seconds and 1 hour.")
+        if min_responses_per_datapoint < 1:
+            raise ValueError("Min responses per datapoint must be at least 1.")
+        if max_responses_per_datapoint < min_responses_per_datapoint:
+            raise ValueError(
+                "Max responses per datapoint must be at least min responses per datapoint."
+            )
 
         with tracer.start_as_current_span("RapidataFlowManager.create_classify_flow"):
             from rapidata.api_client.models.classify_blueprint_category import (
@@ -156,9 +162,8 @@ class RapidataFlowManager:
                             for label, value in category_pairs
                         ],
                     ),
-                    responsesRequired=responses_per_datapoint,
-                    maxDatapointsPerItem=max_datapoints_per_item,
-                    defaultTimeToLiveSeconds=time_to_live_seconds,
+                    maxResponses=max_responses_per_datapoint,
+                    minResponses=min_responses_per_datapoint,
                     validationSetId=validation_set_id,
                     featureFlags=(
                         [setting._to_feature_flag() for setting in settings]
