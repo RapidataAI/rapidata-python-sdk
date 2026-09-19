@@ -185,15 +185,15 @@ flow = client.flow.create_classify_flow(
     categories=[("Yes, clearly readable", "yes"), ("No", "no")],
     responses_per_datapoint=5, # (1)!
     max_datapoints_per_item=24, # (2)!
-    time_to_live=timedelta(minutes=4), # (3)!
+    time_to_live=timedelta(minutes=10), # (3)!
 )
 ```
 
 1. The number of responses collected for each item of a batch. Defaults to 5.
 2. The maximum number of items a single batch may contain. Defaults to 24, at most 100; larger batches are rejected.
-3. The default time limit per batch as a `timedelta` or in seconds, between 45 seconds and 1 hour. Defaults to 4 minutes and can be overridden per batch.
+3. The default time limit per batch as a `timedelta` or in seconds, between 45 seconds and 1 hour. Defaults to 4 minutes when left as `None`; shown here overridden to 10 minutes, and it can still be overridden again per batch.
 
-Every response is billed at your organization's per-response rate. A batch collects `responses_per_datapoint` responses for each of its items, so a full batch with the defaults is billed as 5 × 24 = 120 responses.
+Each response is billed. A batch collects `responses_per_datapoint` responses for each of its items, so a full batch with the defaults comes to 5 × 24 = 120 responses.
 
 The instruction, categories, responses per datapoint and default time to live are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them.
 
