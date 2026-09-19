@@ -178,8 +178,8 @@ A flow has between 2 and 10 categories, shared by every batch of the flow.
 
 You can optionally configure a **response threshold range** per image, the same way ranking flows do:
 
-- `max_responses_per_datapoint` (default `5`): the number of accepted responses that closes an image. Collection for that image stops once it's reached.
-- `min_responses_per_datapoint` (default `3`): the minimum average responses per image you're willing to accept. If `time_to_live` expires and the item's total responses are below `min_responses_per_datapoint × number of images`, the item is marked as **Incomplete**. Otherwise it's **Completed**.
+- `max_responses_per_datapoint` (default `15`): the number of accepted responses that closes an image. Collection for that image stops once it's reached.
+- `min_responses_per_datapoint` (default `10`): the minimum average responses per image you're willing to accept. If `time_to_live` expires and the item's total responses are below `min_responses_per_datapoint × number of images`, the item is marked as **Incomplete**. Otherwise it's **Completed**.
 
 ```python
 flow = client.flow.create_classify_flow(
@@ -194,9 +194,9 @@ flow = client.flow.create_classify_flow(
 1. The number of accepted responses that closes an image. Collection for that image stops once it's reached.
 2. The minimum average responses per image. If `time_to_live` expires with the item's total responses below this times the number of images, it's marked **Incomplete**; otherwise **Completed**.
 
-Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a full 256-item batch with the default max comes to up to 5 × 256 = 1280 responses.
+Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a full 256-item batch with the default max comes to up to 15 × 256 = 3840 responses.
 
-The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them. `time_to_live` works differently: it isn't set here at all, only per batch — see the next section.
+The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them. `time_to_live` isn't part of this — it's set per batch only, as a plain integer of seconds — see [Add a Flow Batch](#2-add-a-flow-batch_1) below.
 
 ### 2. Add a Flow Batch
 

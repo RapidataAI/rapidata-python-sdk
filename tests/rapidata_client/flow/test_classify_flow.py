@@ -222,8 +222,8 @@ class TestCreateClassifyFlow:
                     {"label": "No", "value": "no"},
                 ],
             },
-            "maxResponses": 5,
-            "minResponses": 3,
+            "maxResponses": 15,
+            "minResponses": 10,
         }
         assert (flow.id, flow._flow_type) == ("flw-1", "simple")
 

@@ -83,8 +83,8 @@ class RapidataFlowManager:
         name: str,
         instruction: str,
         categories: list[str] | list[tuple[str, str]],
-        max_responses_per_datapoint: int = 5,
-        min_responses_per_datapoint: int = 3,
+        max_responses_per_datapoint: int = 15,
+        min_responses_per_datapoint: int = 10,
         validation_set_id: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         *,
@@ -98,8 +98,8 @@ class RapidataFlowManager:
             name: The name of the flow.
             instruction: The question shown with every datapoint, e.g. "Does this image contain text?".
             categories: Between 2 and 10 answer options. A string is shown to annotators and returned in the results as is; a `(label, value)` tuple shows the label and returns the value.
-            max_responses_per_datapoint: The number of accepted responses that closes an image. Defaults to 5, must be at least min_responses_per_datapoint.
-            min_responses_per_datapoint: The average responses per image an item needs, once it ends by time_to_live, to be Completed rather than Incomplete. Defaults to 3, at least 1.
+            max_responses_per_datapoint: The number of accepted responses that closes an image. Defaults to 15, must be at least min_responses_per_datapoint.
+            min_responses_per_datapoint: The average responses per image an item needs, once it ends by time_to_live, to be Completed rather than Incomplete. Defaults to 10, at least 1.
             validation_set_id: Optional validation set ID.
             settings: Optional settings for the flow.
             responses_per_datapoint: Deprecated, use max_responses_per_datapoint. Sets both max and min to this value.
