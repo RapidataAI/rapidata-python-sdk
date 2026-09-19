@@ -186,8 +186,8 @@ flow = client.flow.create_classify_flow(
     name="Text Detection",
     instruction="Does this image contain text?",
     categories=["Yes", "No"],
-    max_responses_per_datapoint=8, # (1)!
-    min_responses_per_datapoint=4, # (2)!
+    max_responses_per_datapoint=15, # (1)!
+    min_responses_per_datapoint=10, # (2)!
 )
 ```
 
