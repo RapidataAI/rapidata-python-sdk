@@ -174,11 +174,29 @@ flow = client.flow.create_classify_flow(
 )
 ```
 
-A flow has between 2 and 10 categories, shared by every batch of the flow. By default, a batch collects `responses_per_datapoint` (5) responses for each item.
+A flow has between 2 and 10 categories, shared by every batch of the flow.
 
-Each response is billed. A batch collects `responses_per_datapoint` responses for each of its items, so a full batch with the defaults comes to 5 × 24 = 120 responses.
+You can optionally configure a **response threshold range** per image, the same way ranking flows do:
 
-The instruction, categories, and responses per datapoint are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them.
+- `max_responses_per_datapoint` (default `5`): the number of accepted responses that closes an image. Collection for that image stops once it's reached.
+- `min_responses_per_datapoint` (default `3`): the minimum average responses per image you're willing to accept. If `time_to_live` expires and the item's total responses are below `min_responses_per_datapoint × number of images`, the item is marked as **Incomplete**. Otherwise it's **Completed**.
+
+```python
+flow = client.flow.create_classify_flow(
+    name="Text Detection",
+    instruction="Does this image contain text?",
+    categories=["Yes", "No"],
+    max_responses_per_datapoint=8, # (1)!
+    min_responses_per_datapoint=4, # (2)!
+)
+```
+
+1. The number of accepted responses that closes an image. Collection for that image stops once it's reached.
+2. The minimum average responses per image. If `time_to_live` expires with the item's total responses below this times the number of images, it's marked **Incomplete**; otherwise **Completed**.
+
+Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a full batch with the defaults comes to up to 5 × 24 = 120 responses.
+
+The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them.
 
 ### 2. Add a Flow Batch
 
@@ -257,7 +275,7 @@ for item, result in results.datapoints.items():
 `flow_item.get_status()` works the same way as for ranking flows, and `flow_item.get_response_count()` returns `total_responses`. The win/loss matrix is a ranking concept: `get_win_loss_matrix()` raises a `ValueError` on a classify flow item.
 
 !!! note
-    When the time to live expires, a classify batch is `Completed` as long as it collected at least one response; compare each item's `response_count` with `responses_per_datapoint` to see which fell short. Only a batch without any response becomes `Incomplete`.
+    A classify flow item enters the `Incomplete` state when its `time_to_live` expires with total responses below `min_responses_per_datapoint × number of images` (an average per image). Otherwise it's `Completed` — including when every image already reached `max_responses_per_datapoint`. Compare each image's `response_count` with `max_responses_per_datapoint` to see which images, if any, got fewer responses than others.
 
 ## Managing Flows
 

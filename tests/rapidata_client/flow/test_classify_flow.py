@@ -169,7 +169,18 @@ class TestCreateClassifyFlow:
             ({"categories": ["only"]}, "between 2 and 10"),
             ({"categories": [str(i) for i in range(11)]}, "between 2 and 10"),
             ({"categories": [("A", "x"), ("B", "x")]}, "unique"),
-            ({"categories": ["a", "b"], "responses_per_datapoint": 0}, "at least 1"),
+            (
+                {"categories": ["a", "b"], "min_responses_per_datapoint": 0},
+                "at least 1",
+            ),
+            (
+                {
+                    "categories": ["a", "b"],
+                    "max_responses_per_datapoint": 2,
+                    "min_responses_per_datapoint": 3,
+                },
+                "at least min",
+            ),
             ({"categories": ["a", "b"], "max_datapoints_per_item": 0}, "at least 1"),
         ],
     )
@@ -216,6 +227,46 @@ class TestCreateClassifyFlow:
             "maxDatapointsPerItem": 24,
         }
         assert (flow.id, flow._flow_type) == ("flw-1", "simple")
+
+    def test_max_responses_per_datapoint_is_sent_as_responses_required(self):
+        pytest.importorskip(SIMPLE_FLOW_API)
+        svc = _openapi_service()
+        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
+            flow_id="flw-1"
+        )
+
+        RapidataFlowManager(svc).create_classify_flow(
+            name="Text Detection",
+            instruction="Does this image contain text?",
+            categories=["Yes", "No"],
+            max_responses_per_datapoint=8,
+            min_responses_per_datapoint=4,
+        )
+
+        payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
+            "create_simple_flow_endpoint_input"
+        ].to_dict()
+        assert payload["responsesRequired"] == 8
+
+    def test_responses_per_datapoint_alias_is_deprecated(self):
+        pytest.importorskip(SIMPLE_FLOW_API)
+        svc = _openapi_service()
+        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
+            flow_id="flw-1"
+        )
+
+        with pytest.warns(DeprecationWarning, match="max_responses_per_datapoint"):
+            RapidataFlowManager(svc).create_classify_flow(
+                name="Text Detection",
+                instruction="Does this image contain text?",
+                categories=["Yes", "No"],
+                responses_per_datapoint=7,
+            )
+
+        payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
+            "create_simple_flow_endpoint_input"
+        ].to_dict()
+        assert payload["responsesRequired"] == 7
 
     def test_string_categories_use_the_label_as_value(self):
         pytest.importorskip(SIMPLE_FLOW_API)
