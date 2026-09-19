@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "2026.09.19.2045-5a20f08"
+    "version": "2026.09.19.2051-b65081c"
   },
   "servers": [
     {
@@ -1658,13 +1658,6 @@
             "description": "The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed. Defaults to 3, at least 1.",
             "format": "int32",
             "nullable": true
-          },
-          "responsesRequired": {
-            "type": "integer",
-            "description": "Deprecated. Use MaxResponses instead.",
-            "format": "int32",
-            "nullable": true,
-            "deprecated": true
           },
           "defaultTimeToLiveSeconds": {
             "type": "integer",
@@ -3614,12 +3607,6 @@
             "type": "integer",
             "description": "The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed. At least 1.",
             "format": "int32"
-          },
-          "responsesRequired": {
-            "type": "integer",
-            "description": "Deprecated. Use MaxResponses instead.",
-            "format": "int32",
-            "deprecated": true
           },
           "defaultTimeToLiveSeconds": {
             "type": "integer",

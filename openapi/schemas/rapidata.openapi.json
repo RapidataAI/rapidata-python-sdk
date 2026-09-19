@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.19.2045-5a20f08"
+    "version": "2026.09.19.2051-b65081c"
   },
   "servers": [
     {
@@ -51410,13 +51410,6 @@
             "format": "int32",
             "nullable": true
           },
-          "responsesRequired": {
-            "type": "integer",
-            "description": "Deprecated. Use MaxResponses instead.",
-            "format": "int32",
-            "nullable": true,
-            "deprecated": true
-          },
           "defaultTimeToLiveSeconds": {
             "type": "integer",
             "description": "The time-to-live in seconds applied to items created without one. Between 45 seconds and 1 hour, defaults to 240.",
@@ -52787,12 +52780,6 @@
             "type": "integer",
             "description": "The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed. At least 1.",
             "format": "int32"
-          },
-          "responsesRequired": {
-            "type": "integer",
-            "description": "Deprecated. Use MaxResponses instead.",
-            "format": "int32",
-            "deprecated": true
           },
           "defaultTimeToLiveSeconds": {
             "type": "integer",
