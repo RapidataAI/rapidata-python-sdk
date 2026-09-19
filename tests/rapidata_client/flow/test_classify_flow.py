@@ -250,7 +250,25 @@ class TestCreateClassifyFlow:
             {"label": "Yes", "value": "Yes"},
             {"label": "No", "value": "No"},
         ]
-        assert "defaultTimeToLiveSeconds" not in _without_none(payload)
+        assert payload["defaultTimeToLiveSeconds"] == 240
+
+    def test_time_to_live_defaults_to_four_minutes(self):
+        pytest.importorskip(SIMPLE_FLOW_API)
+        svc = _openapi_service()
+        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
+            flow_id="flw-1"
+        )
+
+        RapidataFlowManager(svc).create_classify_flow(
+            name="Text Detection",
+            instruction="Does this image contain text?",
+            categories=["Yes", "No"],
+        )
+
+        payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
+            "create_simple_flow_endpoint_input"
+        ].to_dict()
+        assert payload["defaultTimeToLiveSeconds"] == 240
 
     def test_time_to_live_accepts_seconds(self):
         pytest.importorskip(SIMPLE_FLOW_API)

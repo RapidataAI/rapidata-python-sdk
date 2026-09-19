@@ -174,24 +174,7 @@ flow = client.flow.create_classify_flow(
 )
 ```
 
-A flow has between 2 and 10 categories, shared by every batch of the flow. Pass plain strings, or `(label, value)` tuples when the text shown to annotators should differ from the value returned in the results:
-
-```python
-from datetime import timedelta
-
-flow = client.flow.create_classify_flow(
-    name="Text Detection",
-    instruction="Does this image contain text?",
-    categories=[("Yes, clearly readable", "yes"), ("No", "no")],
-    responses_per_datapoint=5, # (1)!
-    max_datapoints_per_item=24, # (2)!
-    time_to_live=timedelta(minutes=10), # (3)!
-)
-```
-
-1. The number of responses collected for each item of a batch. Defaults to 5.
-2. The maximum number of items a single batch may contain. Defaults to 24, at most 100; larger batches are rejected.
-3. The default time limit per batch as a `timedelta` or in seconds, between 45 seconds and 1 hour. Defaults to 4 minutes when left as `None`; shown here overridden to 10 minutes, and it can still be overridden again per batch.
+A flow has between 2 and 10 categories, shared by every batch of the flow. By default, a batch collects `responses_per_datapoint` (5) responses for each of up to `max_datapoints_per_item` (24) items, and each batch runs for up to `time_to_live` (4 minutes) before it is stopped.
 
 Each response is billed. A batch collects `responses_per_datapoint` responses for each of its items, so a full batch with the defaults comes to 5 × 24 = 120 responses.
 

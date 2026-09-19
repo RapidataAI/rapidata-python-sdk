@@ -85,7 +85,7 @@ class RapidataFlowManager:
         categories: list[str] | list[tuple[str, str]],
         responses_per_datapoint: int = 5,
         max_datapoints_per_item: int = 24,
-        time_to_live: timedelta | int | None = None,
+        time_to_live: timedelta | int = timedelta(minutes=4),
         validation_set_id: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataFlow:
@@ -99,7 +99,7 @@ class RapidataFlowManager:
             categories: Between 2 and 10 answer options. A string is shown to annotators and returned in the results as is; a `(label, value)` tuple shows the label and returns the value.
             responses_per_datapoint: The number of responses collected for each datapoint. Defaults to 5.
             max_datapoints_per_item: The maximum number of datapoints a single flow item may contain. Defaults to 24, at most 100.
-            time_to_live: How long a flow item may run before it is stopped and its partial results are returned, as a timedelta or in seconds. Between 45 seconds and 1 hour, defaults to 4 minutes. Can be overridden per flow item.
+            time_to_live: How long a flow item may run before it is stopped and its partial results are returned, as a timedelta or in seconds, between 45 seconds and 1 hour. Defaults to 4 minutes. A batch's own `time_to_live` (in seconds, 45 to 3600) overrides this per batch.
             validation_set_id: Optional validation set ID.
             settings: Optional settings for the flow.
 
@@ -128,7 +128,7 @@ class RapidataFlowManager:
             time_to_live_seconds = int(time_to_live.total_seconds())
         else:
             time_to_live_seconds = time_to_live
-        if time_to_live_seconds is not None and not 45 <= time_to_live_seconds <= 3600:
+        if not 45 <= time_to_live_seconds <= 3600:
             raise ValueError("Time to live must be between 45 seconds and 1 hour.")
 
         with tracer.start_as_current_span("RapidataFlowManager.create_classify_flow"):
