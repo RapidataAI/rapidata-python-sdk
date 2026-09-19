@@ -1984,29 +1984,26 @@
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">"Yes"</span><span class="p">,</span> <span class="s2">"No"</span><span class="p">],</span>
 </span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>A flow has between 2 and 10 categories, shared by every batch of the flow.</p>
-<p>You can optionally configure a <strong>response threshold range</strong> per image, the same way ranking flows do, and the flow's default <code>time_to_live</code>:</p>
+<p>A flow has between 2 and 8 categories, shared by every batch of the flow.</p>
+<p>You can optionally configure a <strong>response threshold range</strong> per image, the same way ranking flows do:</p>
 <ul>
 <li><code>max_responses_per_datapoint</code> (default <code>15</code>): the number of accepted responses that closes an image. Collection for that image stops once it's reached.</li>
-<li><code>min_responses_per_datapoint</code> (default <code>10</code>): the minimum average responses per image you're willing to accept. If <code>time_to_live</code> expires and the item's total responses are below <code>min_responses_per_datapoint × number of images</code>, the item is marked as <strong>Incomplete</strong>. Otherwise it's <strong>Completed</strong>.</li>
-<li><code>time_to_live</code> (default 4 minutes): how long a batch may run before it's stopped, in seconds, between 45 seconds and 1 hour. Each batch can override this with its own <code>time_to_live</code>.</li>
+<li><code>min_responses_per_datapoint</code> (default <code>10</code>): the minimum average responses per image you're willing to accept. If the batch's <code>time_to_live</code> expires and the item's total responses are below <code>min_responses_per_datapoint × number of images</code>, the item is marked as <strong>Incomplete</strong>. Otherwise it's <strong>Completed</strong>.</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">flow</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">create_classify_flow</span><span class="p">(</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Text Detection"</span><span class="p">,</span>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Does this image contain text?"</span><span class="p">,</span>
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">"Yes"</span><span class="p">,</span> <span class="s2">"No"</span><span class="p">],</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">max_responses_per_datapoint</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="c1"># (1)!</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">min_responses_per_datapoint</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="c1"># (2)!</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="n">time_to_live</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="c1"># (3)!</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="p">)</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">max_responses_per_datapoint</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="c1"># (1)!</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">min_responses_per_datapoint</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="c1"># (2)!</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="p">)</span>
 </span></code></pre></div>
 <ol>
 <li>The number of accepted responses that closes an image. Collection for that image stops once it's reached.</li>
-<li>The minimum average responses per image. If <code>time_to_live</code> expires with the item's total responses below this times the number of images, it's marked <strong>Incomplete</strong>; otherwise <strong>Completed</strong>.</li>
-<li>How long the flow's batches run by default before stopping, in seconds, between 45 seconds and 1 hour. Defaults to 4 minutes when omitted. Each batch can override this with its own <code>time_to_live</code>.</li>
+<li>The minimum average responses per image. If the batch's <code>time_to_live</code> expires with the item's total responses below this times the number of images, it's marked <strong>Incomplete</strong>; otherwise <strong>Completed</strong>.</li>
 </ol>
 <p>Each response is billed. A batch collects up to <code>max_responses_per_datapoint</code> responses for each of its items, so a full 256-item batch with the default max comes to up to 15 × 256 = 3840 responses.</p>
-<p>The instruction, categories, response thresholds, and default time to live are fixed once the flow exists: <code>update_config()</code> raises a <code>ValueError</code> for classify flows, so create a new flow to change them.</p>
+<p>The instruction, categories, and response thresholds are fixed once the flow exists: <code>update_config()</code> raises a <code>ValueError</code> for classify flows, so create a new flow to change them.</p>
 <h3 id="2-add-a-flow-batch_1">2. Add a Flow Batch<a class="headerlink" href="#2-add-a-flow-batch_1" title="Permanent link">#</a></h3>
 <p>Submit the items to classify. Every item is classified independently with the flow's instruction and categories:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">flow_item</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">create_new_flow_batch</span><span class="p">(</span>

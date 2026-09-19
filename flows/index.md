@@ -174,32 +174,29 @@ flow = client.flow.create_classify_flow(
 )
 ```
 
-A flow has between 2 and 10 categories, shared by every batch of the flow.
+A flow has between 2 and 8 categories, shared by every batch of the flow.
 
-You can optionally configure a **response threshold range** per image, the same way ranking flows do, and the flow's default `time_to_live`:
+You can optionally configure a **response threshold range** per image, the same way ranking flows do:
 
 - `max_responses_per_datapoint` (default `15`): the number of accepted responses that closes an image. Collection for that image stops once it's reached.
-- `min_responses_per_datapoint` (default `10`): the minimum average responses per image you're willing to accept. If `time_to_live` expires and the item's total responses are below `min_responses_per_datapoint × number of images`, the item is marked as **Incomplete**. Otherwise it's **Completed**.
-- `time_to_live` (default 4 minutes): how long a batch may run before it's stopped, in seconds, between 45 seconds and 1 hour. Each batch can override this with its own `time_to_live`.
+- `min_responses_per_datapoint` (default `10`): the minimum average responses per image you're willing to accept. If the batch's `time_to_live` expires and the item's total responses are below `min_responses_per_datapoint × number of images`, the item is marked as **Incomplete**. Otherwise it's **Completed**.
 
 ```python
 flow = client.flow.create_classify_flow(
     name="Text Detection",
     instruction="Does this image contain text?",
     categories=["Yes", "No"],
-    max_responses_per_datapoint=8, # (1)!
-    min_responses_per_datapoint=4, # (2)!
-    time_to_live=300, # (3)!
+    max_responses_per_datapoint=15, # (1)!
+    min_responses_per_datapoint=10, # (2)!
 )
 ```
 
 1. The number of accepted responses that closes an image. Collection for that image stops once it's reached.
-2. The minimum average responses per image. If `time_to_live` expires with the item's total responses below this times the number of images, it's marked **Incomplete**; otherwise **Completed**.
-3. How long the flow's batches run by default before stopping, in seconds, between 45 seconds and 1 hour. Defaults to 4 minutes when omitted. Each batch can override this with its own `time_to_live`.
+2. The minimum average responses per image. If the batch's `time_to_live` expires with the item's total responses below this times the number of images, it's marked **Incomplete**; otherwise **Completed**.
 
 Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a full 256-item batch with the default max comes to up to 15 × 256 = 3840 responses.
 
-The instruction, categories, response thresholds, and default time to live are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them.
+The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them.
 
 ### 2. Add a Flow Batch
 
