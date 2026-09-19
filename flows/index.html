@@ -1984,25 +1984,29 @@
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">"Yes"</span><span class="p">,</span> <span class="s2">"No"</span><span class="p">],</span>
 </span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>A flow has between 2 and 10 categories, shared by every batch of the flow. Pass plain strings, or <code>(label, value)</code> tuples when the text shown to annotators should differ from the value returned in the results:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">flow</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">create_classify_flow</span><span class="p">(</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Text Detection"</span><span class="p">,</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Does this image contain text?"</span><span class="p">,</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">categories</span><span class="o">=</span><span class="p">[(</span><span class="s2">"Yes, clearly readable"</span><span class="p">,</span> <span class="s2">"yes"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"No"</span><span class="p">,</span> <span class="s2">"no"</span><span class="p">)],</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="c1"># (1)!</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="n">max_datapoints_per_item</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="c1"># (2)!</span>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="n">time_to_live</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="c1"># (3)!</span>
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="p">)</span>
+<p>A flow has between 2 and 10 categories, shared by every batch of the flow.</p>
+<p>You can optionally configure a <strong>response threshold range</strong> per image, the same way ranking flows do, and the flow's default <code>time_to_live</code>:</p>
+<ul>
+<li><code>max_responses_per_datapoint</code> (default <code>15</code>): the number of accepted responses that closes an image. Collection for that image stops once it's reached.</li>
+<li><code>min_responses_per_datapoint</code> (default <code>10</code>): the minimum average responses per image you're willing to accept. If <code>time_to_live</code> expires and the item's total responses are below <code>min_responses_per_datapoint × number of images</code>, the item is marked as <strong>Incomplete</strong>. Otherwise it's <strong>Completed</strong>.</li>
+<li><code>time_to_live</code> (default 4 minutes): how long a batch may run before it's stopped, in seconds, between 45 seconds and 1 hour. Each batch can override this with its own <code>time_to_live</code>.</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">flow</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">create_classify_flow</span><span class="p">(</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Text Detection"</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Does this image contain text?"</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s2">"Yes"</span><span class="p">,</span> <span class="s2">"No"</span><span class="p">],</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">max_responses_per_datapoint</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="c1"># (1)!</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">min_responses_per_datapoint</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="c1"># (2)!</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="n">time_to_live</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="c1"># (3)!</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="p">)</span>
 </span></code></pre></div>
 <ol>
-<li>The number of responses collected for each item of a batch. Defaults to 5.</li>
-<li>The maximum number of items a single batch may contain. Defaults to 24, at most 100; larger batches are rejected.</li>
-<li>The default time limit per batch as a <code>timedelta</code> or in seconds, between 45 seconds and 1 hour. Defaults to 4 minutes and can be overridden per batch.</li>
+<li>The number of accepted responses that closes an image. Collection for that image stops once it's reached.</li>
+<li>The minimum average responses per image. If <code>time_to_live</code> expires with the item's total responses below this times the number of images, it's marked <strong>Incomplete</strong>; otherwise <strong>Completed</strong>.</li>
+<li>How long the flow's batches run by default before stopping, in seconds, between 45 seconds and 1 hour. Defaults to 4 minutes when omitted. Each batch can override this with its own <code>time_to_live</code>.</li>
 </ol>
-<p>Every response is billed at your organization's per-response rate. A batch collects <code>responses_per_datapoint</code> responses for each of its items, so a full batch with the defaults is billed as 5 × 24 = 120 responses.</p>
-<p>The instruction, categories, responses per datapoint and default time to live are fixed once the flow exists: <code>update_config()</code> raises a <code>ValueError</code> for classify flows, so create a new flow to change them.</p>
+<p>Each response is billed. A batch collects up to <code>max_responses_per_datapoint</code> responses for each of its items, so a full 256-item batch with the default max comes to up to 15 × 256 = 3840 responses.</p>
+<p>The instruction, categories, response thresholds, and default time to live are fixed once the flow exists: <code>update_config()</code> raises a <code>ValueError</code> for classify flows, so create a new flow to change them.</p>
 <h3 id="2-add-a-flow-batch_1">2. Add a Flow Batch<a class="headerlink" href="#2-add-a-flow-batch_1" title="Permanent link">#</a></h3>
 <p>Submit the items to classify. Every item is classified independently with the flow's instruction and categories:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">flow_item</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">create_new_flow_batch</span><span class="p">(</span>
@@ -2030,7 +2034,7 @@
 </span></code></pre></div>
 <ol>
 <li>One text context per datapoint, shown together with that datapoint. <code>media_contexts</code> works the same way for image, video, or audio context.</li>
-<li>Overrides the flow's default time to live for this batch, in seconds (45 to 3600).</li>
+<li>Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.</li>
 </ol>
 <p>The batch-level <code>context</code> and <code>context_assets</code> parameters belong to ranking flows and raise a <code>ValueError</code> on a classify flow.</p>
 <h3 id="3-get-results_1">3. Get Results<a class="headerlink" href="#3-get-results_1" title="Permanent link">#</a></h3>
@@ -2044,7 +2048,7 @@
 </span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>            <span class="n">majority_value</span><span class="o">=</span><span class="s2">"yes"</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="p">{</span><span class="s2">"yes"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">"no"</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="n">response_count</span><span class="o">=</span><span class="mi">5</span>
 </span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>        <span class="p">),</span>
 </span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>        <span class="s2">"https://example.com/image_b.jpg"</span><span class="p">:</span> <span class="n">ClassifyDatapointResult</span><span class="p">(</span>
-</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>            <span class="n">majority_value</span><span class="o">=</span><span class="s2">"no"</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="p">{</span><span class="s2">"no"</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span> <span class="n">response_count</span><span class="o">=</span><span class="mi">5</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>            <span class="n">majority_value</span><span class="o">=</span><span class="s2">"no"</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="p">{</span><span class="s2">"yes"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"no"</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span> <span class="n">response_count</span><span class="o">=</span><span class="mi">5</span>
 </span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>        <span class="p">),</span>
 </span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>        <span class="s2">"https://example.com/image_c.jpg"</span><span class="p">:</span> <span class="n">ClassifyDatapointResult</span><span class="p">(</span>
 </span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>            <span class="n">majority_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="p">{</span><span class="s2">"yes"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"no"</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="n">response_count</span><span class="o">=</span><span class="mi">4</span>
@@ -2055,7 +2059,7 @@
 </span></code></pre></div>
 <p>It has two fields:</p>
 <ul>
-<li><code>datapoints</code>: a mapping of each item to its <code>ClassifyDatapointResult</code>. Items are keyed by their source URL when provided, otherwise by their original filename. <code>majority_value</code> is the category value chosen most often, or <code>None</code> when the top categories are tied. <code>distribution</code> counts the responses per category value (categories nobody chose are omitted), and <code>response_count</code> is the number of responses collected for that item.</li>
+<li><code>datapoints</code>: a mapping of each item to its <code>ClassifyDatapointResult</code>. Items are keyed by their source URL when provided, otherwise by their original filename. <code>majority_value</code> is the category value chosen most often, or <code>None</code> when the top categories are tied. <code>distribution</code> counts the responses for every category of the flow, in the flow's category order (categories nobody chose show <code>0</code>), and <code>response_count</code> is the number of responses collected for that item.</li>
 <li><code>total_responses</code>: the total number of responses collected across all items.</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">datapoints</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -2064,7 +2068,7 @@
 <p><code>flow_item.get_status()</code> works the same way as for ranking flows, and <code>flow_item.get_response_count()</code> returns <code>total_responses</code>. The win/loss matrix is a ranking concept: <code>get_win_loss_matrix()</code> raises a <code>ValueError</code> on a classify flow item.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>When the time to live expires, a classify batch is <code>Completed</code> as long as it collected at least one response; compare each item's <code>response_count</code> with <code>responses_per_datapoint</code> to see which fell short. Only a batch without any response becomes <code>Incomplete</code>.</p>
+<p>A classify flow item enters the <code>Incomplete</code> state when its <code>time_to_live</code> expires with total responses below <code>min_responses_per_datapoint × number of images</code> (an average per image). Otherwise it's <code>Completed</code> — including when every image already reached <code>max_responses_per_datapoint</code>. Compare each image's <code>response_count</code> with <code>max_responses_per_datapoint</code> to see which images, if any, got fewer responses than others.</p>
 </div>
 <h2 id="managing-flows">Managing Flows<a class="headerlink" href="#managing-flows" title="Permanent link">#</a></h2>
 <h3 id="preheating">Preheating<a class="headerlink" href="#preheating" title="Permanent link">#</a></h3>
