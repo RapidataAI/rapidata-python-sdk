@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "2026.09.19.2033-bc0c3fe"
+    "version": "2026.09.19.2051-b65081c"
   },
   "servers": [
     {
@@ -1184,7 +1184,7 @@
           "SimpleFlow"
         ],
         "summary": "Creates a simple flow that runs one rapid blueprint over every datapoint of its items.",
-        "description": "The blueprint is fixed once the flow has items. Every datapoint collects ResponsesRequired responses.",
+        "description": "The blueprint is fixed once the flow has items. Every image collects up to MaxResponses responses; an item ending by time-to-live or stop completes when it averages MinResponses per image.",
         "requestBody": {
           "description": "The simple flow creation parameters.",
           "content": {
@@ -1647,9 +1647,15 @@
             ],
             "description": "The blueprint of the rapids every item of this flow generates."
           },
-          "responsesRequired": {
+          "maxResponses": {
             "type": "integer",
-            "description": "The number of responses collected per datapoint. Defaults to 5.",
+            "description": "The number of accepted responses per image after which the image stops collecting. Defaults to 5, at least MinResponses.",
+            "format": "int32",
+            "nullable": true
+          },
+          "minResponses": {
+            "type": "integer",
+            "description": "The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed. Defaults to 3, at least 1.",
             "format": "int32",
             "nullable": true
           },
@@ -1695,7 +1701,7 @@
           },
           "targetResponseCount": {
             "type": "integer",
-            "description": "Target average response count per completed item for PID rate control. Defaults to ResponsesRequired times 24, a typical batch.",
+            "description": "Target average response count per completed item for PID rate control. Defaults to MaxResponses times 24, a typical batch.",
             "format": "int32",
             "nullable": true
           },
@@ -2790,7 +2796,8 @@
           "drainDurationSeconds",
           "serveToResponseRatio",
           "blueprint",
-          "responsesRequired",
+          "minResponses",
+          "maxResponses",
           "defaultTimeToLiveSeconds",
           "featureFlags",
           "ownerId",
@@ -2892,9 +2899,14 @@
             ],
             "description": "The blueprint of the rapids every item of this flow generates."
           },
-          "responsesRequired": {
+          "minResponses": {
             "type": "integer",
-            "description": "The number of responses collected per datapoint.",
+            "description": "The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed.",
+            "format": "int32"
+          },
+          "maxResponses": {
+            "type": "integer",
+            "description": "The number of accepted responses per image after which the image stops collecting.",
             "format": "int32"
           },
           "defaultTimeToLiveSeconds": {
@@ -3586,9 +3598,14 @@
             ],
             "description": "The blueprint of the rapids every item generates. Rejected once the flow has items."
           },
-          "responsesRequired": {
+          "maxResponses": {
             "type": "integer",
-            "description": "The number of responses collected per datapoint.",
+            "description": "The number of accepted responses per image after which the image stops collecting. At least MinResponses.",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "description": "The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed. At least 1.",
             "format": "int32"
           },
           "defaultTimeToLiveSeconds": {
