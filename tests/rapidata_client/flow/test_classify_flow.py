@@ -25,9 +25,7 @@ from rapidata.rapidata_client.flow.rapidata_flow_manager import RapidataFlowMana
 
 FLOW_MODULE = "rapidata.rapidata_client.flow.rapidata_flow"
 SIMPLE_FLOW_API = "rapidata.api_client.api.simple_flow_api"
-SIMPLE_FLOW_RESULTS_MODEL = (
-    "rapidata.api_client.models.get_simple_flow_item_results_endpoint_output"
-)
+SIMPLE_FLOW_RESULTS_MODEL = "rapidata.api_client.models.get_results_endpoint_output"
 
 # Recorded shape of GET /flow/simple/item/{flowItemId}/results.
 CLASSIFY_RESULTS_RESPONSE = {
@@ -132,7 +130,9 @@ class TestFlowType:
         ("discriminator", "expected"),
         [("RankingFlow", "ranking"), ("SimpleFlow", "simple")],
     )
-    def test_get_flow_by_id_carries_type_from_discriminator(self, discriminator, expected):
+    def test_get_flow_by_id_carries_type_from_discriminator(
+        self, discriminator, expected
+    ):
         svc = _openapi_service()
         svc.flow.flow_api.flow_flow_id_get.return_value.to_dict.return_value = {
             "_t": discriminator,
@@ -171,8 +171,17 @@ class TestCreateClassifyFlow:
             ({"categories": [("A", "x"), ("B", "x")]}, "unique"),
             ({"categories": ["a", "b"], "responses_per_datapoint": 0}, "at least 1"),
             ({"categories": ["a", "b"], "max_datapoints_per_item": 0}, "at least 1"),
-            ({"categories": ["a", "b"], "time_to_live": timedelta(seconds=44)}, "45 seconds"),
-            ({"categories": ["a", "b"], "time_to_live": timedelta(hours=1, seconds=1)}, "1 hour"),
+            (
+                {"categories": ["a", "b"], "time_to_live": timedelta(seconds=44)},
+                "45 seconds",
+            ),
+            (
+                {
+                    "categories": ["a", "b"],
+                    "time_to_live": timedelta(hours=1, seconds=1),
+                },
+                "1 hour",
+            ),
         ],
     )
     def test_rejects_invalid_input_before_calling_the_api(self, kwargs, message):
@@ -180,7 +189,9 @@ class TestCreateClassifyFlow:
 
         with pytest.raises(ValueError, match=message):
             RapidataFlowManager(svc).create_classify_flow(
-                name="Text Detection", instruction="Does this image contain text?", **kwargs
+                name="Text Detection",
+                instruction="Does this image contain text?",
+                **kwargs,
             )
 
         svc.flow.simple_flow_api.flow_simple_post.assert_not_called()
@@ -188,7 +199,9 @@ class TestCreateClassifyFlow:
     def test_payload_matches_generated_model(self):
         pytest.importorskip(SIMPLE_FLOW_API)
         svc = _openapi_service()
-        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(flow_id="flw-1")
+        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
+            flow_id="flw-1"
+        )
 
         flow = RapidataFlowManager(svc).create_classify_flow(
             name="Text Detection",
@@ -220,7 +233,9 @@ class TestCreateClassifyFlow:
     def test_string_categories_use_the_label_as_value(self):
         pytest.importorskip(SIMPLE_FLOW_API)
         svc = _openapi_service()
-        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(flow_id="flw-1")
+        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
+            flow_id="flw-1"
+        )
 
         RapidataFlowManager(svc).create_classify_flow(
             name="Text Detection",
@@ -244,7 +259,10 @@ class TestCreateNewFlowBatch:
         flow = RapidataFlow("flw-1", "Ranking", svc)
 
         item, _ = _create_batch(
-            flow, datapoints=["https://example.com/a.jpg"], context="Model X", time_to_live=60
+            flow,
+            datapoints=["https://example.com/a.jpg"],
+            context="Model X",
+            time_to_live=60,
         )
 
         call = svc.flow.ranking_flow_item_api.flow_ranking_flow_id_item_post.call_args
@@ -267,12 +285,15 @@ class TestCreateNewFlowBatch:
             flow,
             datapoints=["https://example.com/a.jpg", "https://example.com/b.jpg"],
             contexts=["first", "second"],
-            media_contexts=["https://example.com/ctx.jpg", ["https://example.com/ctx2.jpg"]],
+            media_contexts=[
+                "https://example.com/ctx.jpg",
+                ["https://example.com/ctx2.jpg"],
+            ],
         )
 
         call = svc.flow.simple_flow_item_api.flow_simple_flow_id_item_post.call_args
         assert call.kwargs["flow_id"] == "flw-1"
-        payload = call.kwargs["create_simple_flow_item_endpoint_input"].to_dict()
+        payload = call.kwargs["create_flow_item_endpoint_input"].to_dict()
         assert _without_none(payload) == {"datasetId": "ds-1"}
         svc.flow.ranking_flow_item_api.flow_ranking_flow_id_item_post.assert_not_called()
 
@@ -282,14 +303,22 @@ class TestCreateNewFlowBatch:
             ["https://example.com/ctx.jpg"],
             ["https://example.com/ctx2.jpg"],
         ]
-        assert (item.id, item.flow_id, item._flow_type) == ("fli-simple", "flw-1", "simple")
+        assert (item.id, item.flow_id, item._flow_type) == (
+            "fli-simple",
+            "flw-1",
+            "simple",
+        )
 
     def test_classify_flow_rejects_batch_level_context(self):
         svc = _openapi_service()
         flow = RapidataFlow("flw-1", "Classify", svc, flow_type="simple")
 
-        with pytest.raises(ValueError, match="Only ranking flows take a batch-level context"):
-            flow.create_new_flow_batch(datapoints=["https://example.com/a.jpg"], context="x")
+        with pytest.raises(
+            ValueError, match="Only ranking flows take a batch-level context"
+        ):
+            flow.create_new_flow_batch(
+                datapoints=["https://example.com/a.jpg"], context="x"
+            )
 
         svc.dataset.dataset_api.dataset_post.assert_not_called()
 
@@ -339,7 +368,7 @@ class TestClassifyResults:
 
     def test_recorded_response_parses_through_the_generated_model(self):
         model_module = pytest.importorskip(SIMPLE_FLOW_RESULTS_MODEL)
-        output = model_module.GetSimpleFlowItemResultsEndpointOutput.from_dict(
+        output = model_module.GetResultsEndpointOutput.from_dict(
             CLASSIFY_RESULTS_RESPONSE
         )
         svc = _openapi_service()
@@ -361,7 +390,9 @@ class TestClassifyResults:
         svc.flow.ranking_flow_item_api.flow_ranking_item_flow_item_id_vote_matrix_get.assert_not_called()
 
     def test_win_loss_matrix_is_ranking_only(self):
-        item = RapidataFlowItem("fli-1", "flw-1", _openapi_service(), flow_type="simple")
+        item = RapidataFlowItem(
+            "fli-1", "flw-1", _openapi_service(), flow_type="simple"
+        )
 
         with pytest.raises(ValueError, match="only available for ranking flow items"):
             item.get_win_loss_matrix()

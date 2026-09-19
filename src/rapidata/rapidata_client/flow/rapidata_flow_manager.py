@@ -137,9 +137,6 @@ class RapidataFlowManager:
             from rapidata.api_client.models.create_simple_flow_endpoint_input import (
                 CreateSimpleFlowEndpointInput,
             )
-            from rapidata.api_client.models.i_flow_rapid_blueprint import (
-                IFlowRapidBlueprint,
-            )
             from rapidata.api_client.models.i_flow_rapid_blueprint_classify_blueprint import (
                 IFlowRapidBlueprintClassifyBlueprint,
             )
@@ -150,15 +147,13 @@ class RapidataFlowManager:
             response = self._openapi_service.flow.simple_flow_api.flow_simple_post(
                 create_simple_flow_endpoint_input=CreateSimpleFlowEndpointInput(
                     name=name,
-                    blueprint=IFlowRapidBlueprint(
-                        actual_instance=IFlowRapidBlueprintClassifyBlueprint(
-                            _t="ClassifyBlueprint",
-                            title=instruction,
-                            categories=[
-                                ClassifyBlueprintCategory(label=label, value=value)
-                                for label, value in category_pairs
-                            ],
-                        )
+                    blueprint=IFlowRapidBlueprintClassifyBlueprint(
+                        _t="ClassifyBlueprint",
+                        title=instruction,
+                        categories=[
+                            ClassifyBlueprintCategory(label=label, value=value)
+                            for label, value in category_pairs
+                        ],
                     ),
                     responsesRequired=responses_per_datapoint,
                     maxDatapointsPerItem=max_datapoints_per_item,
