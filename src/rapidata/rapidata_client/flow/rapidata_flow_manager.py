@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import warnings
+from datetime import timedelta
 from typing import TYPE_CHECKING, Sequence
 
 from rapidata.rapidata_client.config import logger, tracer
@@ -85,6 +86,7 @@ class RapidataFlowManager:
         categories: list[str] | list[tuple[str, str]],
         max_responses_per_datapoint: int = 15,
         min_responses_per_datapoint: int = 10,
+        time_to_live: timedelta | int | None = None,
         validation_set_id: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         *,
@@ -100,6 +102,7 @@ class RapidataFlowManager:
             categories: Between 2 and 10 answer options. A string is shown to annotators and returned in the results as is; a `(label, value)` tuple shows the label and returns the value.
             max_responses_per_datapoint: The number of accepted responses that closes an image. Defaults to 15, must be at least min_responses_per_datapoint.
             min_responses_per_datapoint: The average responses per image an item needs, once it ends by time_to_live, to be Completed rather than Incomplete. Defaults to 10, at least 1.
+            time_to_live: The flow's default time to live, as a timedelta or in seconds, between 45 seconds and 1 hour. Defaults to 4 minutes when omitted. Each batch can override this with its own `time_to_live`.
             validation_set_id: Optional validation set ID.
             settings: Optional settings for the flow.
             responses_per_datapoint: Deprecated, use max_responses_per_datapoint. Sets both max and min to this value.
@@ -136,6 +139,12 @@ class RapidataFlowManager:
             raise ValueError(
                 "Max responses per datapoint must be at least min responses per datapoint."
             )
+        if isinstance(time_to_live, timedelta):
+            time_to_live_seconds = int(time_to_live.total_seconds())
+        else:
+            time_to_live_seconds = time_to_live
+        if time_to_live_seconds is not None and not 45 <= time_to_live_seconds <= 3600:
+            raise ValueError("Time to live must be between 45 seconds and 1 hour.")
 
         with tracer.start_as_current_span("RapidataFlowManager.create_classify_flow"):
             from rapidata.api_client.models.classify_blueprint_category import (
@@ -164,6 +173,7 @@ class RapidataFlowManager:
                     ),
                     maxResponses=max_responses_per_datapoint,
                     minResponses=min_responses_per_datapoint,
+                    defaultTimeToLiveSeconds=time_to_live_seconds,
                     validationSetId=validation_set_id,
                     featureFlags=(
                         [setting._to_feature_flag() for setting in settings]

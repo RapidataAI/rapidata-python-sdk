@@ -8,6 +8,7 @@ against mocks of the service layer.
 
 from __future__ import annotations
 
+from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -181,6 +182,14 @@ class TestCreateClassifyFlow:
                 },
                 "at least min",
             ),
+            ({"categories": ["a", "b"], "time_to_live": 44}, "45 seconds"),
+            (
+                {
+                    "categories": ["a", "b"],
+                    "time_to_live": timedelta(hours=1, seconds=1),
+                },
+                "1 hour",
+            ),
         ],
     )
     def test_rejects_invalid_input_before_calling_the_api(self, kwargs, message):
@@ -226,6 +235,44 @@ class TestCreateClassifyFlow:
             "minResponses": 10,
         }
         assert (flow.id, flow._flow_type) == ("flw-1", "simple")
+
+    def test_time_to_live_is_sent_as_seconds(self):
+        pytest.importorskip(SIMPLE_FLOW_API)
+        svc = _openapi_service()
+        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
+            flow_id="flw-1"
+        )
+
+        RapidataFlowManager(svc).create_classify_flow(
+            name="Text Detection",
+            instruction="Does this image contain text?",
+            categories=["Yes", "No"],
+            time_to_live=300,
+        )
+
+        payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
+            "create_simple_flow_endpoint_input"
+        ].to_dict()
+        assert payload["defaultTimeToLiveSeconds"] == 300
+
+    def test_time_to_live_accepts_a_timedelta(self):
+        pytest.importorskip(SIMPLE_FLOW_API)
+        svc = _openapi_service()
+        svc.flow.simple_flow_api.flow_simple_post.return_value = MagicMock(
+            flow_id="flw-1"
+        )
+
+        RapidataFlowManager(svc).create_classify_flow(
+            name="Text Detection",
+            instruction="Does this image contain text?",
+            categories=["Yes", "No"],
+            time_to_live=timedelta(minutes=5),
+        )
+
+        payload = svc.flow.simple_flow_api.flow_simple_post.call_args.kwargs[
+            "create_simple_flow_endpoint_input"
+        ].to_dict()
+        assert payload["defaultTimeToLiveSeconds"] == 300
 
     def test_max_and_min_responses_per_datapoint_are_sent(self):
         pytest.importorskip(SIMPLE_FLOW_API)
