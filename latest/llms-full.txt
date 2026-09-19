@@ -160,7 +160,7 @@ The SDK is built around three concepts:
 | **Free text** | Collect free-form text answers from real people | [Free Text example](examples/free_text_job.md) |
 | **Rank** | Order a set of images, videos, or texts via pairwise matchups | [Ranking example](examples/ranking_job.md) |
 | **Rank models** | Benchmark AI models on leaderboards with human evaluation | [Model Ranking](mri.md) |
-| **Continuous ranking** | Lightweight ongoing ranking without full job setup | [Ranking Flows](flows.md) |
+| **Flows** | Lightweight ongoing ranking or classification without full job setup | [Flows](flows.md) |
 
 
 ## Quick Start
@@ -2740,7 +2740,7 @@ Every job type the SDK can create, live. Each phone is a real campaign — try t
 
 </div>
 
-Looking for something else? [Model Ranking](../mri.md) benchmarks AI models on an ongoing leaderboard, and [Ranking Flows](../flows.md) keeps a ranking up to date without full job setup.
+Looking for something else? [Model Ranking](../mri.md) benchmarks AI models on an ongoing leaderboard, and [Flows](../flows.md) keep a ranking or classification running on new items without full job setup.
 
 
 ## Classification
@@ -3464,7 +3464,7 @@ print(results)
 4. Half the comparisons are random; the rest are close matchups between similarly-rated datapoints.
 
 !!! note
-    For benchmarking AI models on an ongoing leaderboard, see [Model Ranking](../mri.md); for lightweight continuous ranking without full job setup, see [Ranking Flows](../flows.md).
+    For benchmarking AI models on an ongoing leaderboard, see [Model Ranking](../mri.md); for lightweight continuous ranking without full job setup, see [Flows](../flows.md).
 
 
 # Benchmarks
@@ -4292,11 +4292,16 @@ being set up) are skipped, so the list only contains jobs you can act on.
 
 ## Getting Started
 
-# Ranking Flows
+# Flows
 
 ## Overview
 
-Ranking Flows provide a lightweight way to continuously rank items using human comparisons without the overhead of creating full jobs. They are ideal for ongoing evaluation where new items are added over time and ranked against each other in a specified time frame (ttl). Each ranking uses the configuration of the flow but is fully independent of the other rankings.
+Flows provide a lightweight way to continuously collect human responses without the overhead of creating full jobs. You create a flow once and then submit small batches of items over time. Each batch uses the configuration of the flow, is evaluated within a specified time frame (ttl), and is fully independent of the other batches.
+
+There are two kinds of flows:
+
+- **Ranking flows** rank the items of a batch against each other through pairwise comparisons.
+- **Classify flows** sort every item of a batch into one of a fixed set of categories.
 
 !!! note
     Can be used with Images, Videos, Audio, and Text.
@@ -4364,7 +4369,7 @@ flow_item = flow.create_new_flow_batch(
 ```
 
 1. Shown alongside the instruction for each comparison.
-2. Automatically stops the flow item after this many seconds (minimum 60) and returns partial results.
+2. Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.
 
 ### 3. Get Results
 
@@ -4405,11 +4410,11 @@ ranked = sorted(results.datapoints.items(), key=lambda item: item[1], reverse=Tr
 You can also check the status without blocking:
 
 ```python
-status = flow_item.get_status()  # Pending, Running, Completed, Failed, Stopped, or Incomplete
+status = flow_item.get_status()  # Pending, Running, Completed, Failed, Stopping, Stopped, or Incomplete
 ```
 
 !!! note
-    A flow item enters the `Incomplete` state when its `time_to_live` expires before all responses are collected. You can still retrieve partial results from incomplete flow items.
+    A ranking flow item enters the `Incomplete` state when its `time_to_live` expires with fewer than `min_response_threshold` responses. You can still retrieve partial results from incomplete flow items.
 
 To get the win/loss matrix per flow item and see what datapoints were preferred over each other:
 
@@ -4425,15 +4430,15 @@ To get the total number of pairwise comparison responses collected for a flow it
 response_count = flow_item.get_response_count()
 ```
 
-To query all flow items for a flow:
+To list the flow items of a flow, newest first and 10 per page by default:
 
 ```python
-all_items = flow.get_flow_items()
+recent_items = flow.get_flow_items()
 ```
 
 ### 4. Update Flow Configuration
 
-You can update the flow configuration at any time:
+You can update the configuration of a ranking flow at any time:
 
 ```python
 flow.update_config(
@@ -4444,6 +4449,128 @@ flow.update_config(
 !!! note
     This config will only affect new flow items and not modify existing ones.
 
+
+## How to use Classify Flows
+
+### 1. Create a Flow
+
+Create a classify flow with the question shown for every item and the categories annotators choose from:
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+flow = client.flow.create_classify_flow(
+    name="Text Detection",
+    instruction="Does this image contain text?",
+    categories=["Yes", "No"],
+)
+```
+
+A flow has between 2 and 10 categories, shared by every batch of the flow. Pass plain strings, or `(label, value)` tuples when the text shown to annotators should differ from the value returned in the results:
+
+```python
+from datetime import timedelta
+
+flow = client.flow.create_classify_flow(
+    name="Text Detection",
+    instruction="Does this image contain text?",
+    categories=[("Yes, clearly readable", "yes"), ("No", "no")],
+    responses_per_datapoint=5, # (1)!
+    max_datapoints_per_item=24, # (2)!
+    time_to_live=timedelta(minutes=4), # (3)!
+)
+```
+
+1. The number of responses collected for each item of a batch. Defaults to 5.
+2. The maximum number of items a single batch may contain. Defaults to 24, at most 100; larger batches are rejected.
+3. The default time limit per batch as a `timedelta` or in seconds, between 45 seconds and 1 hour. Defaults to 4 minutes and can be overridden per batch.
+
+Every response is billed at your organization's per-response rate. A batch collects `responses_per_datapoint` responses for each of its items, so a full batch with the defaults is billed as 5 × 24 = 120 responses.
+
+The instruction, categories, responses per datapoint and default time to live are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them.
+
+### 2. Add a Flow Batch
+
+Submit the items to classify. Every item is classified independently with the flow's instruction and categories:
+
+```python
+flow_item = flow.create_new_flow_batch(
+    datapoints=[
+        "https://example.com/image_a.jpg",
+        "https://example.com/image_b.jpg",
+        "https://example.com/image_c.jpg",
+    ],
+)
+```
+
+Context is attached per item. `contexts` and `media_contexts` take exactly one entry per datapoint and show it alongside that datapoint:
+
+```python
+flow_item = flow.create_new_flow_batch(
+    datapoints=[
+        "https://example.com/image_a.jpg",
+        "https://example.com/image_b.jpg",
+        "https://example.com/image_c.jpg",
+    ],
+    contexts=[ # (1)!
+        "Screenshot of a landing page",
+        "Product photo",
+        "Concert poster",
+    ],
+    time_to_live=120, # (2)!
+)
+```
+
+1. One text context per datapoint, shown together with that datapoint. `media_contexts` works the same way for image, video, or audio context.
+2. Overrides the flow's default time to live for this batch, in seconds (45 to 3600).
+
+The batch-level `context` and `context_assets` parameters belong to ranking flows and raise a `ValueError` on a classify flow.
+
+### 3. Get Results
+
+Call `get_results()` on the flow item. As with ranking flows, this waits until the batch completes or its time to live expires:
+
+```python
+results = flow_item.get_results()
+```
+
+This returns a `ClassifyFlowItemResult`. For the batch above it looks like this:
+
+```python
+ClassifyFlowItemResult(
+    datapoints={
+        "https://example.com/image_a.jpg": ClassifyDatapointResult(
+            majority_value="yes", distribution={"yes": 4, "no": 1}, response_count=5
+        ),
+        "https://example.com/image_b.jpg": ClassifyDatapointResult(
+            majority_value="no", distribution={"no": 5}, response_count=5
+        ),
+        "https://example.com/image_c.jpg": ClassifyDatapointResult(
+            majority_value=None, distribution={"yes": 2, "no": 2}, response_count=4
+        ),
+    },
+    total_responses=14,
+)
+```
+
+It has two fields:
+
+- `datapoints`: a mapping of each item to its `ClassifyDatapointResult`. Items are keyed by their source URL when provided, otherwise by their original filename. `majority_value` is the category value chosen most often, or `None` when the top categories are tied. `distribution` counts the responses per category value (categories nobody chose are omitted), and `response_count` is the number of responses collected for that item.
+- `total_responses`: the total number of responses collected across all items.
+
+```python
+for item, result in results.datapoints.items():
+    print(item, result.majority_value, result.distribution)
+```
+
+`flow_item.get_status()` works the same way as for ranking flows, and `flow_item.get_response_count()` returns `total_responses`. The win/loss matrix is a ranking concept: `get_win_loss_matrix()` raises a `ValueError` on a classify flow item.
+
+!!! note
+    When the time to live expires, a classify batch is `Completed` as long as it collected at least one response; compare each item's `response_count` with `responses_per_datapoint` to see which fell short. Only a batch without any response becomes `Incomplete`.
+
+## Managing Flows
 
 ### Preheating
 
@@ -4466,6 +4593,8 @@ flow = client.flow.get_flow_by_id("flow_id_here")
 # List recent flows
 recent_flows = client.flow.find_flows(amount=10)
 ```
+
+Retrieved flows keep their kind, so batches created through them return the matching result type.
 
 ### Deleting a Flow
 

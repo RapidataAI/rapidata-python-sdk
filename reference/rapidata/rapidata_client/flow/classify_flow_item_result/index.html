@@ -5,7 +5,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.rapidata.ai/reference/rapidata/rapidata_client/filter/age_filter/">
+        <link rel="canonical" href="https://docs.rapidata.ai/reference/rapidata/rapidata_client/flow/classify_flow_item_result/">
       
       
       
@@ -18,7 +18,7 @@
     
     
       
-        <title>Age filter - Rapidata Python SDK</title>
+        <title>Classify flow item result - Rapidata Python SDK</title>
       
     
     
@@ -109,7 +109,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rapidata.rapidata_client.filter.age_filter" class="md-skip">
+        <a href="#rapidata.rapidata_client.flow.classify_flow_item_result" class="md-skip">
           Skip to content
         </a>
       
@@ -144,7 +144,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Age filter
+              Classify flow item result
             
           </span>
         </div>
@@ -1430,10 +1430,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.filter.age_filter" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.flow.classify_flow_item_result" class="md-nav__link">
     <span class="md-ellipsis">
       
-        age_filter
+        classify_flow_item_result
       
     </span>
   </a>
@@ -1441,10 +1441,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.filter.age_filter.AgeFilter" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyDatapointResult" class="md-nav__link">
     <span class="md-ellipsis">
       
-        AgeFilter
+        ClassifyDatapointResult
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyFlowItemResult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ClassifyFlowItemResult
       
     </span>
   </a>
@@ -1471,13 +1482,13 @@
   
 
 
-  <h1>Age filter</h1>
+  <h1>Classify flow item result</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="rapidata.rapidata_client.filter.age_filter"></a>
+<a id="rapidata.rapidata_client.flow.classify_flow_item_result"></a>
     <div class="doc doc-contents first">
 
 
@@ -1503,49 +1514,70 @@
 
 
 
-<h2 id="rapidata.rapidata_client.filter.age_filter.AgeFilter" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">AgeFilter</span>
+<h2 id="rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyDatapointResult" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">ClassifyDatapointResult</span>
 
 
-<a href="#rapidata.rapidata_client.filter.age_filter.AgeFilter" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">AgeFilter</span><span class="p">(</span><span class="n">age_groups</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="AgeGroup (rapidata.rapidata_client.filter.models.age_group.AgeGroup)" href="../models/age_group/#rapidata.rapidata_client.filter.models.age_group.AgeGroup">AgeGroup</a></span><span class="p">])</span>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyDatapointResult" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ClassifyDatapointResult</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">majority_value</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">distribution</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="int">int</span></span><span class="p">],</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">response_count</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="rapidata.rapidata_client.filter._base_filter.RapidataFilter">RapidataFilter</span></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
-        <p>AgeFilter Class</p>
-<p>Can be used to filter who to target based on age groups.</p>
+        <p>Classification outcome of a single datapoint in a classify flow item.</p>
 
 
-<p><span class="doc-section-title">Parameters:</span></p>
+<p><span class="doc-section-title">Attributes:</span></p>
     <table>
       <thead>
         <tr>
           <th>Name</th>
           <th>Type</th>
           <th>Description</th>
-          <th>Default</th>
         </tr>
       </thead>
       <tbody>
           <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyDatapointResult.majority_value">majority_value</span></code></td>
             <td>
-                <code>age_groups</code>
-            </td>
-            <td>
-                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="AgeGroup (rapidata.rapidata_client.filter.models.age_group.AgeGroup)" href="../models/age_group/#rapidata.rapidata_client.filter.models.age_group.AgeGroup">AgeGroup</a>]</code>
+                  <code><span title="str">str</span> | None</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>List of age groups to filter by.</p>
+                <p>The category value chosen most often, or None on a tie.</p>
               </div>
             </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyDatapointResult.distribution">distribution</span></code></td>
             <td>
-                <em>required</em>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="int">int</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Mapping of category value to the number of responses that chose it. Categories nobody chose are omitted.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyDatapointResult.response_count">response_count</span></code></td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of responses collected for this datapoint.</p>
+              </div>
             </td>
           </tr>
       </tbody>
@@ -1558,13 +1590,106 @@
 
 
 
-                  <details class="mkdocstrings-source">
-                    <summary>Source code in <code>src/rapidata/rapidata_client/filter/age_filter.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-20">20</a></span>
-<span class="normal"><a href="#__codelineno-0-21">21</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">age_groups</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AgeGroup</span><span class="p">]):</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">age_groups</span><span class="o">=</span><span class="n">age_groups</span><span class="p">)</span>
-</span></code></pre></div></td></tr></tbody></table></div>
-                  </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyFlowItemResult" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">ClassifyFlowItemResult</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyFlowItemResult" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ClassifyFlowItemResult</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">datapoints</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-internal" title="ClassifyDatapointResult
+
+
+  
+      dataclass
+   (rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyDatapointResult)" href="#rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyDatapointResult">ClassifyDatapointResult</a></span><span class="p">],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">total_responses</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+
+
+        <p>Result of a classify flow item.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyFlowItemResult.datapoints">datapoints</span></code></td>
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <a class="autorefs autorefs-internal" title="ClassifyDatapointResult
+
+
+  
+      dataclass
+   (rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyDatapointResult)" href="#rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyDatapointResult">ClassifyDatapointResult</a>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Mapping of asset identifier to its classification outcome.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.flow.classify_flow_item_result.ClassifyFlowItemResult.total_responses">total_responses</span></code></td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Total number of responses collected for this flow item.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
 
 
 

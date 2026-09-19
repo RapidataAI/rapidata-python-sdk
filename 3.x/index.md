@@ -154,4 +154,4 @@ The SDK is built around three concepts:
 | **Free text** | Collect free-form text answers from real people | [Free Text example](examples/free_text_job.md) |
 | **Rank** | Order a set of images, videos, or texts via pairwise matchups | [Ranking example](examples/ranking_job.md) |
 | **Rank models** | Benchmark AI models on leaderboards with human evaluation | [Model Ranking](mri.md) |
-| **Continuous ranking** | Lightweight ongoing ranking without full job setup | [Ranking Flows](flows.md) |
+| **Flows** | Lightweight ongoing ranking or classification without full job setup | [Flows](flows.md) |
