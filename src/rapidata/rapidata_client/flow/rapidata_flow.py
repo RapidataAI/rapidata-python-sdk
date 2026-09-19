@@ -53,7 +53,7 @@ class RapidataFlow:
             data_type: The data type of the datapoints. Defaults to "media".
             private_metadata: Optional key-value metadata per datapoint.
             accept_failed_uploads: If True, continues even if some uploads fail.
-            time_to_live: The time to live for the flow item in seconds. If it takes longer than this to complete, the flow item will be stopped and the results will be returned. Classify flows default to the flow's time to live.
+            time_to_live: The time to live for the flow item in seconds, between 45 seconds and 1 hour. If it takes longer than this to complete, the flow item will be stopped and the results will be returned. Defaults to 4 minutes for ranking flows and to the flow's time to live for classify flows.
             contexts: Optional text context per datapoint, shown alongside that datapoint.
             media_contexts: Optional image, video, or audio paths/URLs per datapoint, shown alongside that datapoint. Each entry is a single asset or a list of assets.
 
@@ -71,8 +71,8 @@ class RapidataFlow:
                 RapidataFlowItem,
             )
 
-            if time_to_live is not None and time_to_live < 45:
-                raise ValueError("Time to live must be at least 45 seconds.")
+            if time_to_live is not None and not 45 <= time_to_live <= 3600:
+                raise ValueError("Time to live must be between 45 seconds and 1 hour.")
             if context_assets is not None and not 1 <= len(context_assets) <= 10:
                 raise ValueError("Context assets must contain between 1 and 10 assets.")
             if self._flow_type != "ranking" and (
@@ -161,7 +161,7 @@ class RapidataFlow:
             )
 
     def get_flow_items(self, amount: int = 10, page: int = 1) -> list[RapidataFlowItem]:
-        """Query flow items for this flow, returning them in order of creation.
+        """Query flow items for this flow, newest first.
 
         Args:
             amount (int, optional): The amount of flow items to return. Defaults to 10.
@@ -208,6 +208,9 @@ class RapidataFlow:
             starting_elo: New starting ELO rating.
             min_responses: New minimum number of responses.
             max_responses: New maximum number of responses.
+
+        Raises:
+            ValueError: If this is a classify flow; its configuration is fixed at creation.
         """
         with tracer.start_as_current_span("RapidataFlow.update_config"):
             from rapidata.api_client.models.update_config_endpoint_input import (
