@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.09.19.2051-b65081c"
+    "version": "2026.09.19.2230-8070a57"
   },
   "servers": [
     {
@@ -14788,7 +14788,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SubmitParticipantEndpoint_Output"
+                  "$ref": "#/components/schemas/SubmitLeaderboardParticipantEndpoint_Output"
                 }
               }
             }
@@ -24227,6 +24227,25 @@
           }
         }
       },
+      "SubmitLeaderboardParticipantEndpoint_Output": {
+        "required": [
+          "validDatapoints",
+          "invalidDatapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "validDatapoints": {
+            "type": "integer",
+            "description": "The number of valid datapoints collected by the participant.",
+            "format": "int32"
+          },
+          "invalidDatapoints": {
+            "type": "integer",
+            "description": "The number of invalid datapoints collected by the participant.",
+            "format": "int32"
+          }
+        }
+      },
       "SubmitParticipantByBenchmarkEndpoint_Output": {
         "required": [
           "validDatapoints",
@@ -24246,6 +24265,25 @@
           }
         }
       },
+      "SubmitParticipantEndpoint_MinAssetsPerPromptWarning": {
+        "required": [
+          "minAssetsPerPrompt",
+          "underfilledPrompts"
+        ],
+        "type": "object",
+        "properties": {
+          "minAssetsPerPrompt": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "underfilledPrompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubmitParticipantEndpoint_UnderfilledPrompt"
+            }
+          }
+        }
+      },
       "SubmitParticipantEndpoint_Output": {
         "required": [
           "validDatapoints",
@@ -24261,6 +24299,30 @@
           "invalidDatapoints": {
             "type": "integer",
             "description": "The number of invalid datapoints collected by the participant.",
+            "format": "int32"
+          },
+          "minAssetsPerPromptWarning": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SubmitParticipantEndpoint_MinAssetsPerPromptWarning"
+              }
+            ],
+            "description": "Set when the benchmark enforces a minimum number of samples per prompt and some prompts\n fall short. null when the gate is off or every prompt satisfies it. Advisory — the\n submission still succeeded."
+          }
+        }
+      },
+      "SubmitParticipantEndpoint_UnderfilledPrompt": {
+        "required": [
+          "identifier",
+          "assetCount"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "assetCount": {
+            "type": "integer",
             "format": "int32"
           }
         }

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "2026.09.19.2051-b65081c"
+    "version": "2026.09.19.2230-8070a57"
   },
   "servers": [
     {
@@ -1340,8 +1340,8 @@
         "tags": [
           "SimpleFlowItem"
         ],
-        "summary": "Returns the category distribution and majority per datapoint of a completed simple flow item.",
-        "description": "Returns 409 Conflict until the flow item is completed. Every blueprint category is listed, with count 0 when nobody chose it; a tie has no majority value.",
+        "summary": "Returns the category distribution and majority per datapoint of a simple flow item.",
+        "description": "Counts are partial and keep rising while the item is still collecting, and 409 Conflict until it starts. Every blueprint category is listed, with count 0 when nobody chose it; a tie has no majority value.",
         "parameters": [
           {
             "name": "flowItemId",
