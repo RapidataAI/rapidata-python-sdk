@@ -10,18 +10,25 @@ from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config._env_utils import apply_env_overrides
 
 
-def _running_under_pytest() -> bool:
-    """Return True when the importing process is a pytest run."""
-    return "PYTEST_CURRENT_TEST" in os.environ or "pytest" in sys.modules
+def _otlp_disabled_by_env() -> bool:
+    """Return True when RAPIDATA_DISABLE_OTLP asks for tracing to stay off."""
+    return os.environ.get("RAPIDATA_DISABLE_OTLP", "0").lower() in ("1", "true", "yes")
+
+
+def _running_under_test() -> bool:
+    """Return True when the calling process looks like a test run rather than real usage."""
+    if "PYTEST_CURRENT_TEST" in os.environ or "pytest" in sys.modules:
+        return True
+    # A process that imported unittest.mock is driving the SDK with fakes, whose
+    # failures are indistinguishable from customer errors once they reach the collector.
+    return "unittest.mock" in sys.modules
 
 
 def _default_enable_otlp() -> bool:
-    """Return the default for enable_otlp, respecting the RAPIDATA_DISABLE_OTLP env var."""
-    if os.environ.get("RAPIDATA_DISABLE_OTLP", "0").lower() in ("1", "true", "yes"):
+    """Return the default for enable_otlp, respecting RAPIDATA_DISABLE_OTLP and test runners."""
+    if _otlp_disabled_by_env():
         return False
-    # Test suites drive the SDK with mocks; their validation failures are
-    # indistinguishable from customer errors once they reach the collector.
-    return not _running_under_pytest()
+    return not _running_under_test()
 
 
 # Type alias for config update handlers
@@ -52,8 +59,9 @@ class LoggingConfig(BaseModel):
         format (str): The logging format. Defaults to "%(asctime)s - %(name)s - %(levelname)s - %(message)s".
         silent_mode (bool): Whether to disable the prints and progress bars. Does NOT affect the logging. Defaults to False.
         enable_otlp (bool): Whether to enable OpenTelemetry trace logs. Defaults to True,
-            except under pytest, where it defaults to False. Can also be disabled via the
-            RAPIDATA_DISABLE_OTLP=1 environment variable, or forced on by passing it explicitly.
+            except under a test runner, where it defaults to False. Can also be disabled via
+            the RAPIDATA_DISABLE_OTLP=1 environment variable, or forced on by passing it
+            explicitly.
         environment (str): The API environment the client targets, used to derive the
             OTLP collector host (``otlp-sdk.<environment>``). Set by RapidataClient.
     """

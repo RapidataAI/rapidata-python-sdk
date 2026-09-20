@@ -10,7 +10,12 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.resources import Resource
 from rapidata import __version__
-from .logging_config import LoggingConfig, register_config_handler
+from .logging_config import (
+    LoggingConfig,
+    _otlp_disabled_by_env,
+    _running_under_test,
+    register_config_handler,
+)
 from rapidata.rapidata_client.config import logger
 
 
@@ -132,6 +137,7 @@ class RapidataTracer:
         self._real_tracer = None
         self._no_op_tracer = NoOpTracer()
         self._enabled = True  # Default to enabled
+        self._explicitly_enabled = False
         self._environment = "rapidata.ai"
         self.session_id: str | None = None
         self.client_id: str | None = None
@@ -147,6 +153,9 @@ class RapidataTracer:
     def _update_tracer(self, config: LoggingConfig) -> None:
         """Update the tracer based on the new configuration."""
         self._enabled = config.enable_otlp
+        self._explicitly_enabled = (
+            config.enable_otlp and "enable_otlp" in config.model_fields_set
+        )
         self._environment = config.environment
 
     def _ensure_initialized(self) -> None:
@@ -156,6 +165,14 @@ class RapidataTracer:
 
         with self._init_lock:
             if self._otlp_initialized:
+                return
+
+            # The config defaults are fixed at import time, before a test runner has
+            # necessarily imported its mocks or set the env var; re-check at first span.
+            if not self._explicitly_enabled and (
+                _otlp_disabled_by_env() or _running_under_test()
+            ):
+                self._enabled = False
                 return
 
             try:
