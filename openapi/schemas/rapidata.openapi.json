@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.19.2051-b65081c"
+    "version": "2026.09.19.2230-8070a57"
   },
   "servers": [
     {
@@ -7928,8 +7928,8 @@
         "tags": [
           "SimpleFlowItem"
         ],
-        "summary": "Returns the category distribution and majority per datapoint of a completed simple flow item.",
-        "description": "Returns 409 Conflict until the flow item is completed. Every blueprint category is listed, with count 0 when nobody chose it; a tie has no majority value.",
+        "summary": "Returns the category distribution and majority per datapoint of a simple flow item.",
+        "description": "Counts are partial and keep rising while the item is still collecting, and 409 Conflict until it starts. Every blueprint category is listed, with count 0 when nobody chose it; a tie has no majority value.",
         "parameters": [
           {
             "name": "flowItemId",
@@ -26879,7 +26879,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SubmitParticipantEndpoint_Output"
+                  "$ref": "#/components/schemas/SubmitLeaderboardParticipantEndpoint_Output"
                 }
               }
             }
@@ -61213,6 +61213,25 @@
           }
         }
       },
+      "SubmitLeaderboardParticipantEndpoint_Output": {
+        "required": [
+          "validDatapoints",
+          "invalidDatapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "validDatapoints": {
+            "type": "integer",
+            "description": "The number of valid datapoints collected by the participant.",
+            "format": "int32"
+          },
+          "invalidDatapoints": {
+            "type": "integer",
+            "description": "The number of invalid datapoints collected by the participant.",
+            "format": "int32"
+          }
+        }
+      },
       "SubmitParticipantByBenchmarkEndpoint_Output": {
         "required": [
           "validDatapoints",
@@ -61232,6 +61251,25 @@
           }
         }
       },
+      "SubmitParticipantEndpoint_MinAssetsPerPromptWarning": {
+        "required": [
+          "minAssetsPerPrompt",
+          "underfilledPrompts"
+        ],
+        "type": "object",
+        "properties": {
+          "minAssetsPerPrompt": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "underfilledPrompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubmitParticipantEndpoint_UnderfilledPrompt"
+            }
+          }
+        }
+      },
       "SubmitParticipantEndpoint_Output": {
         "required": [
           "validDatapoints",
@@ -61247,6 +61285,30 @@
           "invalidDatapoints": {
             "type": "integer",
             "description": "The number of invalid datapoints collected by the participant.",
+            "format": "int32"
+          },
+          "minAssetsPerPromptWarning": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SubmitParticipantEndpoint_MinAssetsPerPromptWarning"
+              }
+            ],
+            "description": "Set when the benchmark enforces a minimum number of samples per prompt and some prompts\n fall short. null when the gate is off or every prompt satisfies it. Advisory — the\n submission still succeeded."
+          }
+        }
+      },
+      "SubmitParticipantEndpoint_UnderfilledPrompt": {
+        "required": [
+          "identifier",
+          "assetCount"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "assetCount": {
+            "type": "integer",
             "format": "int32"
           }
         }
