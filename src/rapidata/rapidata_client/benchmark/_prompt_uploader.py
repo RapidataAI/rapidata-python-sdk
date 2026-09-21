@@ -31,7 +31,7 @@ class BenchmarkPrompt:
 
     identifier: str
     prompt: str | None = None
-    prompt_asset: str | None = None
+    prompt_asset: list[str] | None = None
     tags: list[Tag] = field(default_factory=list)
     origin: Origin | None = None
 
