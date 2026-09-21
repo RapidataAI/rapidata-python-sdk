@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.19.2230-8070a57"
+    "version": "2026.09.20.1313-5425063"
   },
   "servers": [
     {
@@ -51355,7 +51355,7 @@
           },
           "timeToLiveInSeconds": {
             "type": "integer",
-            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 45 seconds and 1 hour; defaults to 4 minutes when omitted.",
+            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 45 seconds and 1 hour, and must exceed the drain duration by at least 30 seconds; defaults to 4 minutes when omitted.",
             "format": "int32",
             "nullable": true
           },
@@ -51534,7 +51534,7 @@
           },
           "timeToLiveInSeconds": {
             "type": "integer",
-            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 45 seconds and 1 hour; defaults to the flow's default when omitted.",
+            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 45 seconds and 1 hour, and must exceed the drain duration by at least 30 seconds; defaults to the flow's default when omitted.",
             "format": "int32",
             "nullable": true
           },
