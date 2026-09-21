@@ -1,22 +1,18 @@
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from rapidata.rapidata_client.config import logger, tracer
 from rapidata.rapidata_client.dataset._rapidata_dataset import RapidataDataset
-from rapidata.rapidata_client.datapoints._datapoints_validator import (
-    DatapointsValidator,
-)
-from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
-from rapidata.service.openapi_service import OpenAPIService
 
 if TYPE_CHECKING:
+    from rapidata.service.openapi_service import OpenAPIService
+    from rapidata.rapidata_client.datapoints._datapoint import Datapoint
     from rapidata.rapidata_client.flow._flow_type import FlowType
     from rapidata.rapidata_client.flow.rapidata_flow_item import RapidataFlowItem
-    from rapidata.api_client.models.flow_item_state import FlowItemState
 
 
 class RapidataFlow:
@@ -25,151 +21,43 @@ class RapidataFlow:
         id: str,
         name: str,
         openapi_service: OpenAPIService,
-        flow_type: FlowType = "ranking",
+        flow_type: FlowType,
     ):
         self.id = id
         self.name = name
         self._openapi_service = openapi_service
         self._flow_type: FlowType = flow_type
 
-    def create_new_flow_batch(
+    @staticmethod
+    def _validate_time_to_live(time_to_live: int | None) -> None:
+        if time_to_live is not None and not 45 <= time_to_live <= 3600:
+            raise ValueError("Time to live must be between 45 seconds and 1 hour.")
+
+    def _upload_dataset(
         self,
-        datapoints: list[str],
-        context: str | None = None,
-        context_assets: list[str] | None = None,
-        data_type: Literal["media", "text"] = "media",
-        private_metadata: list[dict[str, str]] | None = None,
-        accept_failed_uploads: bool = False,
-        time_to_live: int | None = None,
-        contexts: list[str] | None = None,
-        media_contexts: list[str] | list[list[str]] | None = None,
-    ) -> RapidataFlowItem:
-        """Create a new flow batch by uploading datapoints to a dataset and submitting it.
+        datapoints: list[Datapoint],
+        accept_failed_uploads: bool,
+    ) -> RapidataDataset:
+        from rapidata.api_client.models.create_dataset_endpoint_input import (
+            CreateDatasetEndpointInput,
+        )
 
-        Args:
-            datapoints: The list of datapoints (paths or URLs) to upload.
-            context: The context shown alongside the instruction. Ranking flows only.
-            context_assets: Optional image, video, or audio paths/URLs shown alongside the instruction. Ranking flows only.
-            data_type: The data type of the datapoints. Defaults to "media".
-            private_metadata: Optional key-value metadata per datapoint.
-            accept_failed_uploads: If True, continues even if some uploads fail.
-            time_to_live: The time to live for the flow item in seconds, between 45 seconds and 1 hour. If it takes longer than this to complete, the flow item will be stopped and the results will be returned. Defaults to 4 minutes.
-            contexts: Optional text context per datapoint, shown alongside that datapoint.
-            media_contexts: Optional image, video, or audio paths/URLs per datapoint, shown alongside that datapoint. Each entry is a single asset or a list of assets.
-
-        Returns:
-            RapidataFlowItem: The created flow item.
-        """
-        with tracer.start_as_current_span("RapidataFlow.create_new_flow_batch"):
-            from rapidata.api_client.models.create_dataset_endpoint_input import (
-                CreateDatasetEndpointInput,
-            )
-            from rapidata.api_client.models.create_flow_item_endpoint_input import (
-                CreateFlowItemEndpointInput,
-            )
-            from rapidata.rapidata_client.flow.rapidata_flow_item import (
-                RapidataFlowItem,
-            )
-
-            if time_to_live is not None and not 45 <= time_to_live <= 3600:
-                raise ValueError("Time to live must be between 45 seconds and 1 hour.")
-            if context_assets is not None and not 1 <= len(context_assets) <= 10:
-                raise ValueError("Context assets must contain between 1 and 10 assets.")
-            if self._flow_type != "ranking" and (
-                context is not None or context_assets is not None
-            ):
-                raise ValueError(
-                    "Only ranking flows take a batch-level context. "
-                    "Pass contexts or media_contexts to attach a context to each datapoint."
-                )
-
-            logger.debug("Creating flow item for flow '%s'", self.name)
-
-            datapoints_instances = DatapointsValidator.map_datapoints(
-                datapoints=datapoints,
-                contexts=contexts,
-                media_contexts=(
-                    [
-                        [media] if isinstance(media, str) else media
-                        for media in media_contexts
-                    ]
-                    if media_contexts is not None
-                    else None
-                ),
-                data_type=data_type,
-                private_metadata=private_metadata,
-            )
-            dataset = self._openapi_service.dataset.dataset_api.dataset_post(
-                create_dataset_endpoint_input=CreateDatasetEndpointInput(
-                    name=self.name + "_dataset",
-                ),
-            )
-            rapidata_dataset = RapidataDataset(
-                dataset.dataset_id, self._openapi_service
-            )
-
-            with tracer.start_as_current_span("add_datapoints"):
-                _, failed_uploads = rapidata_dataset.add_datapoints(
-                    datapoints_instances
-                )
-
-                if failed_uploads and not accept_failed_uploads:
-                    raise FailedUploadException(rapidata_dataset, failed_uploads)
-                elif failed_uploads:
-                    logger.warning(
-                        "Failed to upload %d datapoints", len(failed_uploads)
-                    )
-
-            if self._flow_type == "ranking":
-                context_asset_input = (
-                    AssetUploader(self._openapi_service).upload_and_map_asset(
-                        context_assets
-                    )
-                    if context_assets
-                    else None
-                )
-
-                response = self._openapi_service.flow.ranking_flow_item_api.flow_ranking_flow_id_item_post(
-                    flow_id=self.id,
-                    create_flow_item_endpoint_input=CreateFlowItemEndpointInput(
-                        datasetId=rapidata_dataset.id,
-                        context=context,
-                        contextAsset=context_asset_input,
-                        timeToLiveInSeconds=time_to_live,
-                    ),
-                )
-            else:
-                from rapidata.api_client.models.create_simple_flow_item_endpoint_input import (
-                    CreateSimpleFlowItemEndpointInput,
-                )
-
-                response = self._openapi_service.flow.simple_flow_item_api.flow_simple_flow_id_item_post(
-                    flow_id=self.id,
-                    create_simple_flow_item_endpoint_input=CreateSimpleFlowItemEndpointInput(
-                        datasetId=rapidata_dataset.id,
-                        timeToLiveInSeconds=time_to_live,
-                    ),
-                )
-
-            logger.debug("Flow item created with id: %s", response.flow_item_id)
-
-            return RapidataFlowItem(
-                id=response.flow_item_id,
-                flow_id=self.id,
-                openapi_service=self._openapi_service,
-                flow_type=self._flow_type,
-            )
+        dataset = self._openapi_service.dataset.dataset_api.dataset_post(
+            create_dataset_endpoint_input=CreateDatasetEndpointInput(
+                name=self.name + "_dataset"
+            ),
+        )
+        rapidata_dataset = RapidataDataset(dataset.dataset_id, self._openapi_service)
+        with tracer.start_as_current_span("add_datapoints"):
+            _, failed_uploads = rapidata_dataset.add_datapoints(datapoints)
+            if failed_uploads and not accept_failed_uploads:
+                raise FailedUploadException(rapidata_dataset, failed_uploads)
+            if failed_uploads:
+                logger.warning("Failed to upload %d datapoints", len(failed_uploads))
+        return rapidata_dataset
 
     def get_flow_items(self, amount: int = 10, page: int = 1) -> list[RapidataFlowItem]:
-        """Query flow items for this flow, newest first.
-
-        Args:
-            amount (int, optional): The amount of flow items to return. Defaults to 10.
-            page (int, optional): The page of flow items to return. Defaults to 1.
-
-        Returns:
-            list[RapidataFlowItem]: A list of flow items.
-        """
+        """Query flow items for this flow, newest first."""
         with tracer.start_as_current_span("RapidataFlow.get_flow_items"):
             from rapidata.rapidata_client.flow.rapidata_flow_item import (
                 RapidataFlowItem,
@@ -193,44 +81,6 @@ class RapidataFlow:
                 )
                 for item in response.items
             ]
-
-    def update_config(
-        self,
-        instruction: str | None = None,
-        starting_elo: int | None = None,
-        min_responses: int | None = None,
-        max_responses: int | None = None,
-    ) -> None:
-        """Update the configuration of this ranking flow.
-
-        Args:
-            instruction: New instruction for comparisons.
-            starting_elo: New starting ELO rating.
-            min_responses: New minimum number of responses.
-            max_responses: New maximum number of responses.
-
-        Raises:
-            ValueError: If this is a classify flow; its configuration is fixed at creation.
-        """
-        with tracer.start_as_current_span("RapidataFlow.update_config"):
-            from rapidata.api_client.models.update_config_endpoint_input import (
-                UpdateConfigEndpointInput,
-            )
-
-            if self._flow_type != "ranking":
-                raise ValueError("update_config is only available for ranking flows.")
-
-            logger.debug("Updating config for flow '%s'", self.name)
-
-            self._openapi_service.flow.ranking_flow_api.flow_ranking_flow_id_patch(
-                flow_id=self.id,
-                update_config_endpoint_input=UpdateConfigEndpointInput(
-                    criteria=instruction,
-                    startingElo=starting_elo,
-                    minResponses=min_responses,
-                    maxResponses=max_responses,
-                ),
-            )
 
     def delete(self) -> None:
         """Soft delete this flow."""

@@ -6,8 +6,10 @@ Flows provide a lightweight way to continuously collect human responses without 
 
 There are two kinds of flows:
 
-- **Ranking flows** rank the items of a batch against each other through pairwise comparisons.
-- **Classify flows** sort every item of a batch into one of a fixed set of categories.
+- **Ranking flows** (`RapidataRankingFlow`) rank the items of a batch against each other through pairwise comparisons.
+- **Classify flows** (`RapidataClassifyFlow`) sort every item of a batch into one of a fixed set of categories.
+
+Both classes inherit shared listing and deletion methods from `RapidataFlow` and can be imported from `rapidata`. The creation methods return the corresponding subclass.
 
 !!! note
     Can be used with Images, Videos, Audio, and Text.
@@ -60,7 +62,7 @@ flow_item = flow.create_new_flow_batch(
 )
 ```
 
-You can optionally provide a `context` and a `time_to_live`:
+Ranking batches accept one shared `context: str` and `context_assets: list[str]` (1–10 image, video, or audio paths/URLs). You can also set `time_to_live`:
 
 ```python
 flow_item = flow.create_new_flow_batch(
@@ -196,7 +198,7 @@ flow = client.flow.create_classify_flow(
 
 Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a full 256-item batch with the default max comes to up to 15 × 256 = 3840 responses.
 
-The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` raises a `ValueError` for classify flows, so create a new flow to change them.
+The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` is only available on `RapidataRankingFlow`, so create a new flow to change them.
 
 ### 2. Add a Flow Batch
 
@@ -212,7 +214,7 @@ flow_item = flow.create_new_flow_batch(
 )
 ```
 
-Context is attached per item. `contexts` and `media_contexts` take exactly one entry per datapoint and show it alongside that datapoint:
+Context is attached per item. `context: list[str]` and `context_assets: list[list[str]]` take exactly one entry per datapoint and show it alongside that datapoint:
 
 ```python
 flow_item = flow.create_new_flow_batch(
@@ -221,19 +223,24 @@ flow_item = flow.create_new_flow_batch(
         "https://example.com/image_b.jpg",
         "https://example.com/image_c.jpg",
     ],
-    contexts=[ # (1)!
+    context=[ # (1)!
         "Screenshot of a landing page",
         "Product photo",
         "Concert poster",
+    ],
+    context_assets=[
+        ["https://example.com/reference_a.jpg", "https://example.com/reference_a2.jpg"],
+        ["https://example.com/reference_b.jpg"],
+        ["https://example.com/reference_c.jpg"],
     ],
     time_to_live=120, # (2)!
 )
 ```
 
-1. One text context per datapoint, shown together with that datapoint. `media_contexts` works the same way for image, video, or audio context.
+1. One text context per datapoint, shown together with that datapoint. `context_assets` takes one list of image, video, or audio paths/URLs per datapoint.
 2. Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.
 
-The batch-level `context` and `context_assets` parameters belong to ranking flows and raise a `ValueError` on a classify flow.
+For classify flows, replace the former `contexts` argument with `context` and `media_contexts` with `context_assets`. Wrap each single media context in a list. A single string context or flat list of context assets is rejected before uploading. Omit either argument when it is not needed.
 
 ### 3. Get Results
 
@@ -301,7 +308,18 @@ flow = client.flow.get_flow_by_id("flow_id_here")
 recent_flows = client.flow.find_flows(amount=10)
 ```
 
-Retrieved flows keep their kind, so batches created through them return the matching result type.
+`get_flow_by_id()` and `find_flows()` return `RapidataRankingFlow` or `RapidataClassifyFlow` instances according to the stored flow type. Narrow the type before passing kind-specific batch arguments:
+
+```python
+from rapidata import RapidataClassifyFlow
+
+flow = client.flow.get_flow_by_id("flow_id_here")
+if isinstance(flow, RapidataClassifyFlow):
+    flow_item = flow.create_new_flow_batch(
+        datapoints=["https://example.com/image_a.jpg"],
+        context=["Screenshot of a landing page"],
+    )
+```
 
 ### Deleting a Flow
 

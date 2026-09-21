@@ -4,4 +4,15 @@ from rapidata.rapidata_client.flow.classify_flow_item_result import (
     ClassifyFlowItemResult,
 )
 
-__all__ = ["FlowItemResult", "ClassifyFlowItemResult", "ClassifyDatapointResult"]
+from .rapidata_flow import RapidataFlow
+from .rapidata_ranking_flow import RapidataRankingFlow
+from .rapidata_classify_flow import RapidataClassifyFlow
+
+__all__ = [
+    "FlowItemResult",
+    "ClassifyFlowItemResult",
+    "ClassifyDatapointResult",
+    "RapidataFlow",
+    "RapidataRankingFlow",
+    "RapidataClassifyFlow",
+]
