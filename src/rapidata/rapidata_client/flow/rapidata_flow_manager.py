@@ -1,22 +1,17 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Sequence
+from typing import Sequence
 
 from rapidata.rapidata_client.config import logger, tracer
 from rapidata.rapidata_client.flow._flow_type import flow_type_from_api
+from rapidata.rapidata_client.flow.rapidata_ranking_flow import RapidataRankingFlow
+from rapidata.rapidata_client.flow.rapidata_classify_flow import RapidataClassifyFlow
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
-if TYPE_CHECKING:
-    from rapidata.rapidata_client.flow.rapidata_flow import RapidataFlow
-
 
 class RapidataFlowManager:
-    """Handles everything regarding flows from creation to retrieval.
-
-    A manager for creating, retrieving, and searching for flows.
-    Flows are used to add small flow items that can be solved fast without the job creation overhead.
-    """
+    """Handles everything regarding flows from creation to retrieval."""
 
     def __init__(self, openapi_service: OpenAPIService):
         self._openapi_service = openapi_service
@@ -29,20 +24,8 @@ class RapidataFlowManager:
         min_response_threshold: int | None = None,
         validation_set_id: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-    ) -> RapidataFlow:
-        """Create a new ranking flow.
-
-        Args:
-            name: The name of the flow.
-            instruction: The instruction for the ranking comparisons. Will be shown with each matchup.
-            max_response_threshold: The maximum number of responses that will be collected per flow item. Defaults to 100.
-            min_response_threshold: The minimum number of responses required for the flow to be considered complete in case of a timeout. Defaults to max_response_threshold.
-            validation_set_id: Optional validation set ID.
-            settings: Optional settings for the flow.
-
-        Returns:
-            RapidataFlow: The created flow instance.
-        """
+    ) -> RapidataRankingFlow:
+        """Create a new ranking flow."""
         if min_response_threshold is None:
             min_response_threshold = max_response_threshold
 
@@ -50,7 +33,6 @@ class RapidataFlowManager:
             from rapidata.api_client.models.create_flow_endpoint_input import (
                 CreateFlowEndpointInput,
             )
-            from rapidata.rapidata_client.flow.rapidata_flow import RapidataFlow
 
             logger.debug("Creating ranking flow: %s", name)
 
@@ -71,7 +53,7 @@ class RapidataFlowManager:
 
             logger.debug("Flow created with id: %s", response.flow_id)
 
-            return RapidataFlow(
+            return RapidataRankingFlow(
                 id=response.flow_id,
                 name=name,
                 openapi_service=self._openapi_service,
@@ -86,23 +68,8 @@ class RapidataFlowManager:
         min_responses_per_datapoint: int = 10,
         validation_set_id: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-    ) -> RapidataFlow:
-        """Create a new classify flow.
-
-        Every flow item sorts each of its datapoints into one of the flow's categories.
-
-        Args:
-            name: The name of the flow.
-            instruction: The question shown with every datapoint, e.g. "Does this image contain text?".
-            categories: Between 2 and 8 answer options. A string is shown to annotators and returned in the results as is; a `(label, value)` tuple shows the label and returns the value.
-            max_responses_per_datapoint: The number of accepted responses that closes an image. Defaults to 15, must be at least min_responses_per_datapoint.
-            min_responses_per_datapoint: The average responses per image an item needs, once it ends by its time to live, to be Completed rather than Incomplete. Defaults to 10, at least 1.
-            validation_set_id: Optional validation set ID.
-            settings: Optional settings for the flow.
-
-        Returns:
-            RapidataFlow: The created flow instance.
-        """
+    ) -> RapidataClassifyFlow:
+        """Create a new classify flow."""
         category_pairs: list[tuple[str, str]] = [
             (
                 (category, category)
@@ -133,7 +100,6 @@ class RapidataFlowManager:
             from rapidata.api_client.models.i_flow_rapid_blueprint_classify_blueprint import (
                 IFlowRapidBlueprintClassifyBlueprint,
             )
-            from rapidata.rapidata_client.flow.rapidata_flow import RapidataFlow
 
             logger.debug("Creating classify flow: %s", name)
 
@@ -161,25 +127,17 @@ class RapidataFlowManager:
 
             logger.debug("Flow created with id: %s", response.flow_id)
 
-            return RapidataFlow(
+            return RapidataClassifyFlow(
                 id=response.flow_id,
                 name=name,
                 openapi_service=self._openapi_service,
-                flow_type="simple",
             )
 
-    def get_flow_by_id(self, flow_id: str) -> RapidataFlow:
-        """Get a flow by its ID.
-
-        Args:
-            flow_id: The ID of the flow.
-
-        Returns:
-            RapidataFlow: The flow instance.
-        """
+    def get_flow_by_id(
+        self, flow_id: str
+    ) -> RapidataRankingFlow | RapidataClassifyFlow:
+        """Get a flow by its ID."""
         with tracer.start_as_current_span("RapidataFlowManager.get_flow_by_id"):
-            from rapidata.rapidata_client.flow.rapidata_flow import RapidataFlow
-
             logger.debug("Getting flow by id: %s", flow_id)
 
             response = self._openapi_service.flow.flow_api.flow_flow_id_get(
@@ -190,31 +148,25 @@ class RapidataFlowManager:
             if not isinstance(flow, dict):
                 raise ValueError(f"Flow '{flow_id}' returned no flow details.")
 
-            return RapidataFlow(
+            flow_class = (
+                RapidataRankingFlow
+                if flow_type_from_api(flow["_t"]) == "ranking"
+                else RapidataClassifyFlow
+            )
+            return flow_class(
                 id=flow["id"],
                 name=flow["name"],
                 openapi_service=self._openapi_service,
-                flow_type=flow_type_from_api(flow["_t"]),
             )
 
     def find_flows(
         self, name: str = "", amount: int = 10, page: int = 1
-    ) -> list[RapidataFlow]:
-        """Find your recent flows.
-
-        Args:
-            name: The name of the flow - matching flow will contain the name. Defaults to "" for any flow.
-            amount: The maximum number of flows to return. Defaults to 10.
-            page: The page of flows to return. Defaults to 1.
-
-        Returns:
-            list[RapidataFlow]: A list of RapidataFlow instances.
-        """
+    ) -> list[RapidataRankingFlow | RapidataClassifyFlow]:
+        """Find your recent flows."""
         with tracer.start_as_current_span("RapidataFlowManager.find_flows"):
             from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
                 AudienceAudienceIdJobsGetJobIdParameter,
             )
-            from rapidata.rapidata_client.flow.rapidata_flow import RapidataFlow
 
             logger.debug("Finding flows, amount: %s", amount)
 
@@ -226,11 +178,14 @@ class RapidataFlowManager:
             )
 
             return [
-                RapidataFlow(
+                (
+                    RapidataRankingFlow
+                    if flow_type_from_api(flow.type.value) == "ranking"
+                    else RapidataClassifyFlow
+                )(
                     id=flow.id,
                     name=flow.name,
                     openapi_service=self._openapi_service,
-                    flow_type=flow_type_from_api(flow.type.value),
                 )
                 for flow in response.items
             ]

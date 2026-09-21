@@ -1,11 +1,3 @@
-"""Tests for classify flow support in the flow wrappers.
-
-Classify flows ride on the backend's simple flow routes. The generated client
-for those routes only exists once the backend is deployed and the client is
-regenerated, so the tests that need it skip until then; everything else runs
-against mocks of the service layer.
-"""
-
 from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
@@ -18,7 +10,10 @@ from rapidata.rapidata_client.flow.classify_flow_item_result import (
     ClassifyDatapointResult,
     ClassifyFlowItemResult,
 )
-from rapidata.rapidata_client.flow.rapidata_flow import RapidataFlow
+from rapidata import RapidataFlow, RapidataRankingFlow, RapidataClassifyFlow
+from rapidata.rapidata_client.exceptions.failed_upload_exception import (
+    FailedUploadException,
+)
 from rapidata.rapidata_client.flow.rapidata_flow_item import RapidataFlowItem
 from rapidata.rapidata_client.flow.rapidata_flow_manager import RapidataFlowManager
 
@@ -101,7 +96,9 @@ def _without_none(payload: dict) -> dict:
     return {key: value for key, value in payload.items() if value is not None}
 
 
-def _create_batch(flow: RapidataFlow, **kwargs) -> tuple[RapidataFlowItem, MagicMock]:
+def _create_batch(
+    flow: RapidataRankingFlow | RapidataClassifyFlow, **kwargs
+) -> tuple[RapidataFlowItem, MagicMock]:
     dataset = MagicMock()
     dataset.id = "ds-1"
     dataset.add_datapoints.side_effect = lambda datapoints: (datapoints, [])
@@ -142,6 +139,11 @@ class TestFlowType:
 
         flow = RapidataFlowManager(svc).get_flow_by_id("flw-1")
 
+        expected_class = (
+            RapidataRankingFlow if expected == "ranking" else RapidataClassifyFlow
+        )
+        assert isinstance(flow, expected_class)
+        assert isinstance(flow, RapidataFlow)
         assert (flow.id, flow.name, flow._flow_type) == ("flw-1", "My Flow", expected)
 
     def test_find_flows_carries_type_from_enum(self):
@@ -156,6 +158,8 @@ class TestFlowType:
 
         flows = RapidataFlowManager(svc).find_flows()
 
+        assert isinstance(flows[0], RapidataRankingFlow)
+        assert isinstance(flows[1], RapidataClassifyFlow)
         assert [(flow.id, flow._flow_type) for flow in flows] == [
             ("flw-r", "ranking"),
             ("flw-s", "simple"),
@@ -225,6 +229,7 @@ class TestCreateClassifyFlow:
             "maxResponses": 15,
             "minResponses": 10,
         }
+        assert isinstance(flow, RapidataClassifyFlow)
         assert (flow.id, flow._flow_type) == ("flw-1", "simple")
 
     def test_max_and_min_responses_per_datapoint_are_sent(self):
@@ -274,7 +279,7 @@ class TestCreateClassifyFlow:
 class TestCreateNewFlowBatch:
     def test_ranking_flow_still_posts_to_the_ranking_item_route(self):
         svc = _openapi_service()
-        flow = RapidataFlow("flw-1", "Ranking", svc)
+        flow = RapidataRankingFlow("flw-1", "Ranking", svc)
 
         item, _ = _create_batch(
             flow,
@@ -297,14 +302,14 @@ class TestCreateNewFlowBatch:
     def test_classify_flow_posts_only_the_dataset_to_the_simple_item_route(self):
         pytest.importorskip(SIMPLE_FLOW_API)
         svc = _openapi_service()
-        flow = RapidataFlow("flw-1", "Classify", svc, flow_type="simple")
+        flow = RapidataClassifyFlow("flw-1", "Classify", svc)
 
         item, dataset = _create_batch(
             flow,
             datapoints=["https://example.com/a.jpg", "https://example.com/b.jpg"],
             contexts=["first", "second"],
-            media_contexts=[
-                "https://example.com/ctx.jpg",
+            context_assets=[
+                ["https://example.com/ctx.jpg", "https://example.com/extra.jpg"],
                 ["https://example.com/ctx2.jpg"],
             ],
         )
@@ -318,7 +323,7 @@ class TestCreateNewFlowBatch:
         uploaded = dataset.add_datapoints.call_args.args[0]
         assert [dp.context for dp in uploaded] == ["first", "second"]
         assert [dp.media_context for dp in uploaded] == [
-            ["https://example.com/ctx.jpg"],
+            ["https://example.com/ctx.jpg", "https://example.com/extra.jpg"],
             ["https://example.com/ctx2.jpg"],
         ]
         assert (item.id, item.flow_id, item._flow_type) == (
@@ -333,7 +338,10 @@ class TestCreateNewFlowBatch:
         self, flow_type, time_to_live
     ):
         svc = _openapi_service()
-        flow = RapidataFlow("flw-1", "Flow", svc, flow_type=flow_type)
+        flow_class = (
+            RapidataRankingFlow if flow_type == "ranking" else RapidataClassifyFlow
+        )
+        flow = flow_class("flw-1", "Flow", svc)
 
         with pytest.raises(ValueError, match="between 45 seconds and 1 hour"):
             flow.create_new_flow_batch(
@@ -344,13 +352,11 @@ class TestCreateNewFlowBatch:
 
     def test_classify_flow_rejects_batch_level_context(self):
         svc = _openapi_service()
-        flow = RapidataFlow("flw-1", "Classify", svc, flow_type="simple")
+        flow = RapidataClassifyFlow("flw-1", "Classify", svc)
 
-        with pytest.raises(
-            ValueError, match="Only ranking flows take a batch-level context"
-        ):
+        with pytest.raises(ValueError, match="Contexts must be a list of strings"):
             flow.create_new_flow_batch(
-                datapoints=["https://example.com/a.jpg"], context="x"
+                datapoints=["https://example.com/a.jpg"], contexts="x"
             )
 
         svc.dataset.dataset_api.dataset_post.assert_not_called()
@@ -360,7 +366,7 @@ class TestCreateNewFlowBatch:
         svc.flow.ranking_flow_item_api.flow_ranking_flow_id_item_get.return_value.items = [
             MagicMock(id="fli-1")
         ]
-        flow = RapidataFlow("flw-1", "Classify", svc, flow_type="simple")
+        flow = RapidataClassifyFlow("flw-1", "Classify", svc)
 
         items = flow.get_flow_items()
 
@@ -368,10 +374,11 @@ class TestCreateNewFlowBatch:
 
     def test_update_config_is_ranking_only(self):
         svc = _openapi_service()
-        flow = RapidataFlow("flw-1", "Classify", svc, flow_type="simple")
+        flow = RapidataClassifyFlow("flw-1", "Classify", svc)
 
-        with pytest.raises(ValueError, match="only available for ranking flows"):
-            flow.update_config(instruction="new")
+        assert not hasattr(flow, "update_config")
+        assert not hasattr(RapidataFlow, "update_config")
+        assert not hasattr(RapidataFlow, "create_new_flow_batch")
 
         svc.flow.ranking_flow_api.flow_ranking_flow_id_patch.assert_not_called()
 
@@ -499,3 +506,105 @@ class TestClassifyResults:
 
         assert (result.datapoints, result.total_votes) == ({"asset-1": 1234}, 12)  # type: ignore[union-attr]
         svc.flow.simple_flow_item_api.flow_simple_item_flow_item_id_results_get.assert_not_called()
+
+
+class TestSeparatedFlows:
+    def test_create_ranking_flow_returns_ranking_class(self):
+        svc = _openapi_service()
+        svc.flow.ranking_flow_api.flow_ranking_post.return_value.flow_id = "flw-r"
+        flow = RapidataFlowManager(svc).create_ranking_flow("Ranking", "Choose one")
+        assert isinstance(flow, RapidataRankingFlow)
+        assert isinstance(flow, RapidataFlow)
+        flow.update_config(instruction="Choose the best", min_responses=5)
+        request = svc.flow.ranking_flow_api.flow_ranking_flow_id_patch.call_args.kwargs
+        assert request["flow_id"] == "flw-r"
+        assert _without_none(request["update_config_endpoint_input"].to_dict()) == {
+            "criteria": "Choose the best",
+            "minResponses": 5,
+        }
+
+    @pytest.mark.parametrize(
+        "kwargs, message",
+        [
+            ({"contexts": []}, "Number of contexts"),
+            ({"contexts": ["one", "two"]}, "Number of contexts"),
+            ({"contexts": [1]}, "list of strings"),
+            ({"context_assets": ["https://example.com/a.jpg"]}, "list of lists"),
+            ({"context_assets": [[1]]}, "list of lists"),
+            ({"context_assets": "x"}, "list of lists"),
+            ({"context_assets": []}, "Number of context assets"),
+            ({"context_assets": [["a"], ["b"]]}, "Number of context assets"),
+        ],
+    )
+    def test_classify_rejects_invalid_context_before_upload(self, kwargs, message):
+        svc = _openapi_service()
+        flow = RapidataClassifyFlow("flw-c", "Classify", svc)
+        with pytest.raises(ValueError, match=message):
+            flow.create_new_flow_batch(datapoints=["hello"], data_type="text", **kwargs)
+        svc.dataset.dataset_api.dataset_post.assert_not_called()
+        svc.flow.simple_flow_item_api.flow_simple_flow_id_item_post.assert_not_called()
+
+    @pytest.mark.parametrize("flow_class", [RapidataRankingFlow, RapidataClassifyFlow])
+    @pytest.mark.parametrize("accept_failed_uploads", [False, True])
+    def test_failed_uploads_require_opt_in(self, flow_class, accept_failed_uploads):
+        svc = _openapi_service()
+        flow = flow_class("flw-1", "Flow", svc)
+        dataset = MagicMock(id="ds-1")
+        dataset.add_datapoints.return_value = ([], [MagicMock()])
+        with patch(f"{FLOW_MODULE}.RapidataDataset", return_value=dataset):
+            if accept_failed_uploads:
+                item = flow.create_new_flow_batch(
+                    ["hello"],
+                    data_type="text",
+                    accept_failed_uploads=True,
+                    time_to_live=45,
+                )
+                assert item.flow_id == flow.id
+            else:
+                with pytest.raises(FailedUploadException):
+                    flow.create_new_flow_batch(["hello"], data_type="text")
+                svc.flow.simple_flow_item_api.flow_simple_flow_id_item_post.assert_not_called()
+                svc.flow.ranking_flow_item_api.flow_ranking_flow_id_item_post.assert_not_called()
+
+    def test_ranking_context_assets_are_uploaded_once_for_the_batch(self):
+        svc = _openapi_service()
+        flow = RapidataRankingFlow("flw-r", "Ranking", svc)
+        module = "rapidata.rapidata_client.flow.rapidata_ranking_flow"
+        with patch(f"{module}.AssetUploader") as uploader:
+            uploader.return_value.upload_and_map_asset.return_value = None
+            _, dataset = _create_batch(
+                flow,
+                datapoints=["hello", "world"],
+                data_type="text",
+                context="shared",
+                context_assets=["a.jpg", "b.jpg"],
+                private_metadata=[{"id": "a"}, {"id": "b"}],
+            )
+        uploader.return_value.upload_and_map_asset.assert_called_once_with(
+            ["a.jpg", "b.jpg"]
+        )
+        uploaded = dataset.add_datapoints.call_args.args[0]
+        assert [dp.context for dp in uploaded] == [None, None]
+        assert [dp.private_metadata for dp in uploaded] == [{"id": "a"}, {"id": "b"}]
+
+    @pytest.mark.parametrize("flow_class", [RapidataRankingFlow, RapidataClassifyFlow])
+    def test_delete_uses_shared_route(self, flow_class):
+        svc = _openapi_service()
+        flow_class("flw-1", "Flow", svc).delete()
+        svc.flow.flow_api.flow_flow_id_delete.assert_called_once_with(flow_id="flw-1")
+
+
+@pytest.mark.parametrize(
+    "flow_class, kwargs",
+    [
+        (RapidataRankingFlow, {"contexts": ["per item"]}),
+        (RapidataRankingFlow, {"media_contexts": [["reference.jpg"]]}),
+        (RapidataClassifyFlow, {"context": "shared"}),
+    ],
+)
+def test_batch_rejects_context_arguments_for_other_flow_types(flow_class, kwargs):
+    svc = _openapi_service()
+    flow = flow_class("flw-1", "Flow", svc)
+    with pytest.raises(TypeError, match="unexpected keyword argument"):
+        flow.create_new_flow_batch(["hello"], data_type="text", **kwargs)
+    svc.dataset.dataset_api.dataset_post.assert_not_called()
