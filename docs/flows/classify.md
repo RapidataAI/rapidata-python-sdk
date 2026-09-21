@@ -40,7 +40,7 @@ flow = client.flow.create_classify_flow(
 1. The number of accepted responses that closes an image. Collection for that image stops once it's reached.
 2. The minimum average responses per image. If the batch's `time_to_live` expires with the item's total responses below this times the number of images, it's marked **Incomplete**; otherwise **Completed**.
 
-Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a full 256-item batch with the default max comes to up to 15 × 256 = 3840 responses.
+Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a six-item batch with the default maximum collects up to 15 × 6 = 90 responses.
 
 The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` is only available on `RapidataRankingFlow`, so create a new flow to change them.
 
@@ -84,7 +84,7 @@ flow_item = flow.create_new_flow_batch(
 1. One text context per datapoint, shown together with that datapoint. `context_assets` takes one list of image, video, or audio paths/URLs per datapoint.
 2. Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.
 
-For classify flows, replace the former `contexts` argument with `context` and `media_contexts` with `context_assets`. Wrap each single media context in a list. A single string context or flat list of context assets is rejected before uploading. Omit either argument when it is not needed.
+Each `context_assets` entry is a list, even when it contains only one asset. Omit `context` or `context_assets` when it is not needed.
 
 ## 3. Get Results
 
