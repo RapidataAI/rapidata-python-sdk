@@ -33,7 +33,6 @@ class CreateSimpleFlowEndpointInput(LazyValidatedModel):
     blueprint: IFlowRapidBlueprintClassifyBlueprint = Field(description="The blueprint of the rapids every item of this flow generates.")
     max_responses: Optional[StrictInt] = Field(default=None, description="The number of accepted responses per image after which the image stops collecting. Defaults to 5, at least MinResponses.", alias="maxResponses")
     min_responses: Optional[StrictInt] = Field(default=None, description="The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed. Defaults to 3, at least 1.", alias="minResponses")
-    default_time_to_live_seconds: Optional[StrictInt] = Field(default=None, description="The time-to-live in seconds applied to items created without one. Between 45 seconds and 1 hour, defaults to 240.", alias="defaultTimeToLiveSeconds")
     audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience ID. When provided, the flow will only be served to users in this audience.", alias="audienceId")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="Optional ID of the validation set to use.", alias="validationSetId")
     serve_to_response_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ratio of concurrent serves to responses. When set, limits serving to avoid over-collection. Defaults to 0.8.", alias="serveToResponseRatio")
@@ -48,7 +47,7 @@ class CreateSimpleFlowEndpointInput(LazyValidatedModel):
     pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set. Defaults to 50.", alias="pidMaxSessionsPerMinute")
     pid_batch_mode: Optional[PidBatchMode] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to PerBatch.", alias="pidBatchMode")
     drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Duration in seconds for draining flow items. Defaults to 40.", alias="drainDurationSeconds")
-    __properties: ClassVar[List[str]] = ["name", "blueprint", "maxResponses", "minResponses", "defaultTimeToLiveSeconds", "audienceId", "validationSetId", "serveToResponseRatio", "serveTimeoutSeconds", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds"]
+    __properties: ClassVar[List[str]] = ["name", "blueprint", "maxResponses", "minResponses", "audienceId", "validationSetId", "serveToResponseRatio", "serveTimeoutSeconds", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -104,11 +103,6 @@ class CreateSimpleFlowEndpointInput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.min_responses is None and "min_responses" in self.model_fields_set:
             _dict['minResponses'] = None
-
-        # set to None if default_time_to_live_seconds (nullable) is None
-        # and model_fields_set contains the field
-        if self.default_time_to_live_seconds is None and "default_time_to_live_seconds" in self.model_fields_set:
-            _dict['defaultTimeToLiveSeconds'] = None
 
         # set to None if audience_id (nullable) is None
         # and model_fields_set contains the field
@@ -196,7 +190,6 @@ class CreateSimpleFlowEndpointInput(LazyValidatedModel):
             "blueprint": IFlowRapidBlueprintClassifyBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
             "maxResponses": obj.get("maxResponses"),
             "minResponses": obj.get("minResponses"),
-            "defaultTimeToLiveSeconds": obj.get("defaultTimeToLiveSeconds"),
             "audienceId": obj.get("audienceId"),
             "validationSetId": obj.get("validationSetId"),
             "serveToResponseRatio": obj.get("serveToResponseRatio"),

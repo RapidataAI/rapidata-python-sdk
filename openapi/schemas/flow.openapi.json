@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "2026.09.20.1313-5425063"
+    "version": "2026.09.21.1939-25d3534"
   },
   "servers": [
     {
@@ -1659,12 +1659,6 @@
             "format": "int32",
             "nullable": true
           },
-          "defaultTimeToLiveSeconds": {
-            "type": "integer",
-            "description": "The time-to-live in seconds applied to items created without one. Between 45 seconds and 1 hour, defaults to 240.",
-            "format": "int32",
-            "nullable": true
-          },
           "audienceId": {
             "type": "string",
             "description": "Optional audience ID. When provided, the flow will only be served to users in this audience.",
@@ -2798,7 +2792,6 @@
           "blueprint",
           "minResponses",
           "maxResponses",
-          "defaultTimeToLiveSeconds",
           "featureFlags",
           "ownerId",
           "ownerMail",
@@ -2907,11 +2900,6 @@
           "maxResponses": {
             "type": "integer",
             "description": "The number of accepted responses per image after which the image stops collecting.",
-            "format": "int32"
-          },
-          "defaultTimeToLiveSeconds": {
-            "type": "integer",
-            "description": "The time-to-live in seconds applied to items created without an explicit one.",
             "format": "int32"
           },
           "featureFlags": {
@@ -3606,11 +3594,6 @@
           "minResponses": {
             "type": "integer",
             "description": "The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed. At least 1.",
-            "format": "int32"
-          },
-          "defaultTimeToLiveSeconds": {
-            "type": "integer",
-            "description": "The time-to-live in seconds applied to items created without one. Between 45 seconds and 1 hour.",
             "format": "int32"
           },
           "featureFlags": {
