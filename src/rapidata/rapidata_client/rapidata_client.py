@@ -32,6 +32,7 @@ from rapidata.rapidata_client.config import (
     managed_print,
     rapidata_config,
 )
+from rapidata.rapidata_client.config._agent_hint import agent_hint_once
 
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.job.rapidata_job_manager import RapidataJobManager
@@ -67,7 +68,12 @@ _OTLP_COLLECTOR_ENVIRONMENTS = frozenset({"rapidata.ai", "rabbitdata.ch"})
 
 
 class RapidataClient:
-    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create jobs, audiences, and validation sets."""
+    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create jobs, audiences, and validation sets.
+
+    Coding agents: read the maintained guide before writing code instead of
+    inferring usage from this source. ``python -m rapidata skill`` prints it;
+    https://docs.rapidata.ai/llms-full.txt is the online copy.
+    """
 
     def __init__(
         self,
@@ -156,6 +162,10 @@ class RapidataClient:
         with tracer.start_as_current_span("RapidataClient.__init__"):
             logger.debug("Checking version")
             self._check_version()
+
+            hint = agent_hint_once()
+            if hint:
+                managed_print(hint)
 
             logger.debug("Initializing OpenAPIService")
             self._openapi_service = OpenAPIService(

@@ -1,3 +1,10 @@
+"""Rapidata Python SDK: human feedback at scale through ``RapidataClient``.
+
+Coding agents: do not infer usage from this source tree. Read the maintained
+guide first with ``python -m rapidata skill`` (``--install`` keeps it in the
+project) or at https://docs.rapidata.ai/llms-full.txt.
+"""
+
 __version__ = "3.25.2"
 
 from .rapidata_client import (
