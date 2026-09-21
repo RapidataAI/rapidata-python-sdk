@@ -49,4 +49,4 @@ print(results)
 4. Half the comparisons are random; the rest are close matchups between similarly-rated datapoints.
 
 !!! note
-    For benchmarking AI models on an ongoing leaderboard, see [Model Ranking](../mri.md); for lightweight continuous ranking without full job setup, see [Flows](../flows.md).
+    For benchmarking AI models on an ongoing leaderboard, see [Model Ranking](../mri.md); for lightweight continuous ranking without full job setup, see [Ranking Flows](../flows/ranking.md).
