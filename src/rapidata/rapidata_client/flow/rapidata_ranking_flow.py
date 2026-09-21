@@ -27,10 +27,8 @@ class RapidataRankingFlow(RapidataFlow):
         private_metadata: list[dict[str, str]] | None = None,
         accept_failed_uploads: bool = False,
         time_to_live: int | None = None,
-        contexts: list[str] | None = None,
-        media_contexts: list[str] | list[list[str]] | None = None,
     ) -> RapidataFlowItem:
-        """Rank a batch with shared context and optional per-datapoint contexts."""
+        """Rank a batch with shared text and asset context."""
         from rapidata.api_client.models.create_flow_item_endpoint_input import (
             CreateFlowItemEndpointInput,
         )
@@ -42,15 +40,6 @@ class RapidataRankingFlow(RapidataFlow):
                 raise ValueError("Context assets must contain between 1 and 10 assets.")
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
-                contexts=contexts,
-                media_contexts=(
-                    [
-                        [media] if isinstance(media, str) else media
-                        for media in media_contexts
-                    ]
-                    if media_contexts is not None
-                    else None
-                ),
                 data_type=data_type,
                 private_metadata=private_metadata,
             )

@@ -307,7 +307,7 @@ class TestCreateNewFlowBatch:
         item, dataset = _create_batch(
             flow,
             datapoints=["https://example.com/a.jpg", "https://example.com/b.jpg"],
-            context=["first", "second"],
+            contexts=["first", "second"],
             context_assets=[
                 ["https://example.com/ctx.jpg", "https://example.com/extra.jpg"],
                 ["https://example.com/ctx2.jpg"],
@@ -354,9 +354,9 @@ class TestCreateNewFlowBatch:
         svc = _openapi_service()
         flow = RapidataClassifyFlow("flw-1", "Classify", svc)
 
-        with pytest.raises(ValueError, match="Context must be a list of strings"):
+        with pytest.raises(ValueError, match="Contexts must be a list of strings"):
             flow.create_new_flow_batch(
-                datapoints=["https://example.com/a.jpg"], context="x"
+                datapoints=["https://example.com/a.jpg"], contexts="x"
             )
 
         svc.dataset.dataset_api.dataset_post.assert_not_called()
@@ -526,9 +526,9 @@ class TestSeparatedFlows:
     @pytest.mark.parametrize(
         "kwargs, message",
         [
-            ({"context": []}, "Number of contexts"),
-            ({"context": ["one", "two"]}, "Number of contexts"),
-            ({"context": [1]}, "list of strings"),
+            ({"contexts": []}, "Number of contexts"),
+            ({"contexts": ["one", "two"]}, "Number of contexts"),
+            ({"contexts": [1]}, "list of strings"),
             ({"context_assets": ["https://example.com/a.jpg"]}, "list of lists"),
             ({"context_assets": [[1]]}, "list of lists"),
             ({"context_assets": "x"}, "list of lists"),
@@ -592,3 +592,19 @@ class TestSeparatedFlows:
         svc = _openapi_service()
         flow_class("flw-1", "Flow", svc).delete()
         svc.flow.flow_api.flow_flow_id_delete.assert_called_once_with(flow_id="flw-1")
+
+
+@pytest.mark.parametrize(
+    "flow_class, kwargs",
+    [
+        (RapidataRankingFlow, {"contexts": ["per item"]}),
+        (RapidataRankingFlow, {"media_contexts": [["reference.jpg"]]}),
+        (RapidataClassifyFlow, {"context": "shared"}),
+    ],
+)
+def test_batch_rejects_context_arguments_for_other_flow_types(flow_class, kwargs):
+    svc = _openapi_service()
+    flow = flow_class("flw-1", "Flow", svc)
+    with pytest.raises(TypeError, match="unexpected keyword argument"):
+        flow.create_new_flow_batch(["hello"], data_type="text", **kwargs)
+    svc.dataset.dataset_api.dataset_post.assert_not_called()

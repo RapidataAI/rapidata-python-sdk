@@ -60,7 +60,7 @@ flow = client.flow.get_flow_by_id("flow_id_here")
 if isinstance(flow, RapidataClassifyFlow):
     flow_item = flow.create_new_flow_batch(
         datapoints=["https://example.com/image_a.jpg"],
-        context=["Screenshot of a landing page"],
+        contexts=["Screenshot of a landing page"],
     )
 ```
 

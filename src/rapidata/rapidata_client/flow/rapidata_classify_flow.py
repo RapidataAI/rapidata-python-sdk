@@ -20,7 +20,7 @@ class RapidataClassifyFlow(RapidataFlow):
     def create_new_flow_batch(
         self,
         datapoints: list[str],
-        context: list[str] | None = None,
+        contexts: list[str] | None = None,
         context_assets: list[list[str]] | None = None,
         data_type: Literal["media", "text"] = "media",
         private_metadata: list[dict[str, str]] | None = None,
@@ -35,12 +35,12 @@ class RapidataClassifyFlow(RapidataFlow):
 
         with tracer.start_as_current_span("RapidataClassifyFlow.create_new_flow_batch"):
             self._validate_time_to_live(time_to_live)
-            if context is not None:
-                if not isinstance(context, list) or any(
-                    not isinstance(value, str) for value in context
+            if contexts is not None:
+                if not isinstance(contexts, list) or any(
+                    not isinstance(value, str) for value in contexts
                 ):
-                    raise ValueError("Context must be a list of strings.")
-                if len(context) != len(datapoints):
+                    raise ValueError("Contexts must be a list of strings.")
+                if len(contexts) != len(datapoints):
                     raise ValueError(
                         "Number of contexts must match number of datapoints."
                     )
@@ -59,7 +59,7 @@ class RapidataClassifyFlow(RapidataFlow):
                     )
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
-                contexts=context,
+                contexts=contexts,
                 media_contexts=context_assets,
                 data_type=data_type,
                 private_metadata=private_metadata,

@@ -58,7 +58,7 @@ flow_item = flow.create_new_flow_batch(
 )
 ```
 
-Context is attached per item. `context: list[str]` and `context_assets: list[list[str]]` take exactly one entry per datapoint and show it alongside that datapoint:
+Context is attached per item. `contexts: list[str]` and `context_assets: list[list[str]]` take exactly one entry per datapoint and show it alongside that datapoint:
 
 ```python
 flow_item = flow.create_new_flow_batch(
@@ -67,7 +67,7 @@ flow_item = flow.create_new_flow_batch(
         "https://example.com/image_b.jpg",
         "https://example.com/image_c.jpg",
     ],
-    context=[ # (1)!
+    contexts=[ # (1)!
         "Screenshot of a landing page",
         "Product photo",
         "Concert poster",
@@ -84,7 +84,7 @@ flow_item = flow.create_new_flow_batch(
 1. One text context per datapoint, shown together with that datapoint. `context_assets` takes one list of image, video, or audio paths/URLs per datapoint.
 2. Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.
 
-Each `context_assets` entry is a list, even when it contains only one asset. Omit `context` or `context_assets` when it is not needed.
+Each `context_assets` entry is a list, even when it contains only one asset. Omit `contexts` or `context_assets` when it is not needed.
 
 ## 3. Get Results
 
