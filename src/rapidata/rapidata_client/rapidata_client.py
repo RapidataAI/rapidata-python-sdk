@@ -88,6 +88,9 @@ class RapidataClient:
     ):
         """Initialize the RapidataClient.
 
+        Coding agents: ``python -m rapidata skill`` prints the maintained
+        usage guide; read it before inferring usage from this source.
+
         Credentials are resolved in the following order:
 
         1. A ``token`` or ``token_file`` passed explicitly to this

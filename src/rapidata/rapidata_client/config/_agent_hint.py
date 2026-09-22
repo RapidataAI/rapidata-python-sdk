@@ -16,12 +16,13 @@ LLMS_FULL_URL = "https://docs.rapidata.ai/llms-full.txt"
 AGENT_DOCS_URL = "https://docs.rapidata.ai/ai_agents/"
 
 # Env vars set by the agent runtimes we know. Truthiness is enough: Claude Code
-# exports CLAUDECODE=1, Cursor exports CURSOR_AGENT=1, Codex exports
-# CODEX_SANDBOX, Gemini CLI exports GEMINI_CLI=1.
+# exports CLAUDECODE=1, Cursor CURSOR_AGENT=1, Codex CODEX_THREAD_ID (and
+# CODEX_SANDBOX when sandboxed), Gemini CLI GEMINI_CLI=1.
 _AGENT_ENV_VARS = (
     "CLAUDECODE",
     "CLAUDE_CODE",
     "CURSOR_AGENT",
+    "CODEX_THREAD_ID",
     "CODEX_SANDBOX",
     "GEMINI_CLI",
 )
