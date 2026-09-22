@@ -610,6 +610,26 @@ Some jobs don't go straight to running. A job can enter manual review
 informative error naming the state (and the review reason, when available) instead of
 blocking indefinitely — top up or wait for a reviewer, then call it again.
 
+### Queueing a job behind another
+
+Pass `run_after` to hold a job until an earlier one is done. The queued job is created
+immediately in the `Queued` state and starts as soon as the preceding job completes or
+fails, so the same audience isn't splitting its annotators across both at once.
+
+```py
+first = audience.assign_job(job_definition)
+second = audience.assign_job(other_job_definition, run_after=first)
+```
+
+`run_after` also accepts a job id, which lets you queue behind a job from an earlier
+session:
+
+```py
+second = audience.assign_job(other_job_definition, run_after="job_id")
+```
+
+Chain further jobs by pointing each one at its predecessor.
+
 ## Complete Example
 
 Here's the full workflow — creating a custom audience, adding qualification examples, and running a labeling job:
@@ -3790,9 +3810,9 @@ benchmark = client.mri.create_new_benchmark(
         "A portrait of a wise old wizard"
     ],
     prompt_assets=[
-        "https://assets.rapidata.ai/mountain_sunset.png",
-        "https://assets.rapidata.ai/futuristic_city.png", 
-        "https://assets.rapidata.ai/wizard_portrait.png"
+        ["https://assets.rapidata.ai/mountain_sunset.png"],
+        ["https://assets.rapidata.ai/futuristic_city.png"],
+        ["https://assets.rapidata.ai/wizard_portrait.png"]
     ]
 )
 
@@ -3801,19 +3821,30 @@ benchmark = client.mri.create_new_benchmark(
     name="Preference Benchmark",
     identifiers=["seed_1", "seed_2", "seed_3"],
     prompts=["prompt_1", "prompt_1", "prompt_1"],
-    prompt_assets=["https://example.com/asset1.jpg", "https://example.com/asset1.jpg", "https://example.com/asset1.jpg"]
+    prompt_assets=[["https://example.com/asset1.jpg"], ["https://example.com/asset1.jpg"], ["https://example.com/asset1.jpg"]]
 )
 
 # Example 3: Using only prompt assets
 benchmark = client.mri.create_new_benchmark(
     name="Preference Benchmark",
     identifiers=["image_1", "image_2", "image_3"],   
-    prompt_assets=["https://example.com/asset1.jpg", "https://example.com/asset2.jpg", "https://example.com/asset3.jpg"]
+    prompt_assets=[["https://example.com/asset1.jpg"], ["https://example.com/asset2.jpg"], ["https://example.com/asset3.jpg"]]
+)
+
+# Example 4: Several assets for one prompt, e.g. a reference clip plus a start frame
+benchmark = client.mri.create_new_benchmark(
+    name="Camera Motion Benchmark",
+    identifiers=["move_forward", "pan_left"],
+    prompts=["The camera moves forward", "The camera pans left"],
+    prompt_assets=[
+        ["https://example.com/move_forward.gif", "https://example.com/interior.jpg"],
+        ["https://example.com/pan_left.gif", "https://example.com/street.jpg"]
+    ]
 )
 ```
 
 !!! note
-    Media assets are images, videos, or audio files that provide visual or auditory context for your evaluation prompts. For example when evaluating image to video models.
+    Media assets are images, videos, or audio files that provide visual or auditory context for your evaluation prompts. For example when evaluating image to video models. `prompt_assets` takes one list per prompt, the same shape as `media_contexts` on job definitions: one entry for a single asset, several to show them together. `benchmark.prompt_assets` reads them back in that same shape.
 
 ### Tagging System
 
@@ -3874,7 +3905,7 @@ If you have already created a benchmark and want to add new prompts and assets a
 benchmark.add_prompts(
     identifiers=["new_style"],
     prompts=["Generate artwork in this new style"],
-    prompt_assets=["https://assets.rapidata.ai/new_style_ref.jpg"],
+    prompt_assets=[["https://assets.rapidata.ai/new_style_ref.jpg"]],
     tags=[["abstract", "modern"]],
 )
 ```
@@ -4801,6 +4832,16 @@ Pick your agent. One command. Done.
 | **Any other** | `npx skills add RapidataAI/skills` |
 
 Install once. Works in every session after that. That's it.
+
+Already have the SDK installed? It carries the same skill:
+
+```bash
+python -m rapidata skill                    # print it
+python -m rapidata skill --install          # write it to .claude/skills/rapidata/SKILL.md
+python -m rapidata skill --install --agent cursor   # or cursor, codex, generic (AGENTS.md)
+```
+
+When the SDK runs inside a coding agent it detects (Claude Code, Cursor, Codex, Gemini CLI) and no skill has been installed, `RapidataClient()` prints this pointer once per process. Set `RAPIDATA_AGENT_HINT=0` to silence it, or `RAPIDATA_AGENT_HINT=1` to force it for an agent it does not recognise.
 
 ??? note "No install — just the raw SKILL.md"
 

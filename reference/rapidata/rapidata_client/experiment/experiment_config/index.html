@@ -5,7 +5,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.rapidata.ai/reference/rapidata/rapidata_client/benchmark/prompt_metadata/">
+        <link rel="canonical" href="https://docs.rapidata.ai/reference/rapidata/rapidata_client/experiment/experiment_config/">
       
       
       
@@ -18,7 +18,7 @@
     
     
       
-        <title>Prompt metadata - Rapidata Python SDK</title>
+        <title>Experiment config - Rapidata Python SDK</title>
       
     
     
@@ -109,7 +109,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rapidata.rapidata_client.benchmark.prompt_metadata" class="md-skip">
+        <a href="#rapidata.rapidata_client.experiment.experiment_config" class="md-skip">
           Skip to content
         </a>
       
@@ -144,7 +144,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Prompt metadata
+              Experiment config
             
           </span>
         </div>
@@ -1490,10 +1490,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.benchmark.prompt_metadata" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.experiment.experiment_config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        prompt_metadata
+        experiment_config
       
     </span>
   </a>
@@ -1501,76 +1501,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.benchmark.prompt_metadata.Tag" class="md-nav__link">
+  <a href="#rapidata.rapidata_client.experiment.experiment_config.ExperimentConfig" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tag
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.benchmark.prompt_metadata.Origin" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Origin
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.benchmark.prompt_metadata.BenchmarkPromptInfo" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BenchmarkPromptInfo
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.benchmark.prompt_metadata.is_tag_list" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        is_tag_list
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.benchmark.prompt_metadata.coerce_tags" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        coerce_tags
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.benchmark.prompt_metadata.coerce_origin" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        coerce_origin
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rapidata.rapidata_client.benchmark.prompt_metadata.coerce_prompt_asset" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        coerce_prompt_asset
+        ExperimentConfig
       
     </span>
   </a>
@@ -1597,13 +1531,13 @@
   
 
 
-  <h1>Prompt metadata</h1>
+  <h1>Experiment config</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="rapidata.rapidata_client.benchmark.prompt_metadata"></a>
+<a id="rapidata.rapidata_client.experiment.experiment_config"></a>
     <div class="doc doc-contents first">
 
 
@@ -1629,27 +1563,27 @@
 
 
 
-<h2 id="rapidata.rapidata_client.benchmark.prompt_metadata.Tag" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">Tag</span>
+<h2 id="rapidata.rapidata_client.experiment.experiment_config.ExperimentConfig" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">ExperimentConfig</span>
 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
   </span>
 
-<a href="#rapidata.rapidata_client.benchmark.prompt_metadata.Tag" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">Tag</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">category</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<a href="#rapidata.rapidata_client.experiment.experiment_config.ExperimentConfig" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ExperimentConfig</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">job_definition</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="RapidataJobDefinition (rapidata.rapidata_client.job.rapidata_job_definition.RapidataJobDefinition)" href="../../job/rapidata_job_definition/#rapidata.rapidata_client.job.rapidata_job_definition.RapidataJobDefinition">RapidataJobDefinition</a></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">experiment_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">audience</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="RapidataAudience (rapidata.rapidata_client.audience.rapidata_audience.RapidataAudience)" href="../../audience/rapidata_audience/#rapidata.rapidata_client.audience.rapidata_audience.RapidataAudience">RapidataAudience</a></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
 
 
-        <p>A structured tag attached to a benchmark prompt.</p>
-<p>Tags are metadata used to filter and organize benchmark results; they are
-never shown to the annotators. <code>category</code> optionally groups related tags
-(e.g. <code>Tag("landscape", category="scene")</code>); leave it <code>None</code> for a bare
-tag.</p>
+        <p>Ties a job definition and audience to the experiment they should run under.</p>
 
 
 
@@ -1680,340 +1614,6 @@ tag.</p>
 
 </div>
 
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="rapidata.rapidata_client.benchmark.prompt_metadata.Origin" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">Origin</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#rapidata.rapidata_client.benchmark.prompt_metadata.Origin" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">Origin</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-
-
-        <p>Where a benchmark prompt originated from (e.g. a source dataset).</p>
-
-
-
-
-
-
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="rapidata.rapidata_client.benchmark.prompt_metadata.BenchmarkPromptInfo" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">BenchmarkPromptInfo</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#rapidata.rapidata_client.benchmark.prompt_metadata.BenchmarkPromptInfo" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">BenchmarkPromptInfo</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">identifier</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">prompt</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">english_prompt</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">prompt_asset</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">tags</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="Tag
-
-
-  
-      dataclass
-   (rapidata.rapidata_client.benchmark.prompt_metadata.Tag)" href="#rapidata.rapidata_client.benchmark.prompt_metadata.Tag">Tag</a></span><span class="p">],</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">origin</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="Origin
-
-
-  
-      dataclass
-   (rapidata.rapidata_client.benchmark.prompt_metadata.Origin)" href="#rapidata.rapidata_client.benchmark.prompt_metadata.Origin">Origin</a></span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-
-
-        <p>A single prompt returned by a filtered/sorted benchmark prompt query.</p>
-
-
-
-
-
-
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="rapidata.rapidata_client.benchmark.prompt_metadata.is_tag_list" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">is_tag_list</span>
-
-
-<a href="#rapidata.rapidata_client.benchmark.prompt_metadata.is_tag_list" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">is_tag_list</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="bool">bool</span></span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Whether <code>value</code> is usable as one prompt's tag list.</p>
-<p>A bare <code>str</code> is itself a <code>Sequence</code> of characters, so it has to be
-rejected explicitly or <code>tags=["a", "b"]</code> would silently be read as two
-prompts' worth of tags instead of one.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/rapidata/rapidata_client/benchmark/prompt_metadata.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_tag_list</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="w">    </span><span class="sd">"""Whether ``value`` is usable as one prompt's tag list.</span>
-</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>
-</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="sd">    A bare ``str`` is itself a ``Sequence`` of characters, so it has to be</span>
-</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    rejected explicitly or ``tags=["a", "b"]`` would silently be read as two</span>
-</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">    prompts' worth of tags instead of one.</span>
-</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">    """</span>
-</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">))</span>
-</span></code></pre></div></td></tr></tbody></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="rapidata.rapidata_client.benchmark.prompt_metadata.coerce_tags" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">coerce_tags</span>
-
-
-<a href="#rapidata.rapidata_client.benchmark.prompt_metadata.coerce_tags" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">coerce_tags</span><span class="p">(</span><span class="n">tags</span><span class="p">:</span> <span class="n"><span title="collections.abc.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="Tag
-
-
-  
-      dataclass
-   (rapidata.rapidata_client.benchmark.prompt_metadata.Tag)" href="#rapidata.rapidata_client.benchmark.prompt_metadata.Tag">Tag</a></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="Tag
-
-
-  
-      dataclass
-   (rapidata.rapidata_client.benchmark.prompt_metadata.Tag)" href="#rapidata.rapidata_client.benchmark.prompt_metadata.Tag">Tag</a></span><span class="p">]</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Normalize user-supplied tags into <code>Tag</code> objects.</p>
-<p>Bare strings become uncategorized tags, so callers can keep passing the
-plain <code>list[str]</code> they used before categories existed.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/rapidata/rapidata_client/benchmark/prompt_metadata.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
-<span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span>
-<span class="normal"><a href="#__codelineno-0-64">64</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="k">def</span><span class="w"> </span><span class="nf">coerce_tags</span><span class="p">(</span><span class="n">tags</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">Tag</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
-</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="w">    </span><span class="sd">"""Normalize user-supplied tags into ``Tag`` objects.</span>
-</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a>
-</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">    Bare strings become uncategorized tags, so callers can keep passing the</span>
-</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">    plain ``list[str]`` they used before categories existed.</span>
-</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="sd">    """</span>
-</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">Tag</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">item</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">(</span><span class="n">tags</span> <span class="ow">or</span> <span class="p">[])]</span>
-</span></code></pre></div></td></tr></tbody></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="rapidata.rapidata_client.benchmark.prompt_metadata.coerce_origin" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">coerce_origin</span>
-
-
-<a href="#rapidata.rapidata_client.benchmark.prompt_metadata.coerce_origin" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">coerce_origin</span><span class="p">(</span><span class="n">origin</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="Origin
-
-
-  
-      dataclass
-   (rapidata.rapidata_client.benchmark.prompt_metadata.Origin)" href="#rapidata.rapidata_client.benchmark.prompt_metadata.Origin">Origin</a></span> <span class="o">|</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="Origin
-
-
-  
-      dataclass
-   (rapidata.rapidata_client.benchmark.prompt_metadata.Origin)" href="#rapidata.rapidata_client.benchmark.prompt_metadata.Origin">Origin</a></span> <span class="o">|</span> <span class="kc">None</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Normalize a user-supplied origin into an <code>Origin</code>.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/rapidata/rapidata_client/benchmark/prompt_metadata.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span>
-<span class="normal"><a href="#__codelineno-0-69">69</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="k">def</span><span class="w"> </span><span class="nf">coerce_origin</span><span class="p">(</span><span class="n">origin</span><span class="p">:</span> <span class="n">Origin</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Origin</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="w">    </span><span class="sd">"""Normalize a user-supplied origin into an ``Origin``."""</span>
-</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="k">return</span> <span class="n">Origin</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">origin</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">origin</span>
-</span></code></pre></div></td></tr></tbody></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="rapidata.rapidata_client.benchmark.prompt_metadata.coerce_prompt_asset" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">coerce_prompt_asset</span>
-
-
-<a href="#rapidata.rapidata_client.benchmark.prompt_metadata.coerce_prompt_asset" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">coerce_prompt_asset</span><span class="p">(</span><span class="n">asset</span><span class="p">:</span> <span class="n"><span title="object">object</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Normalize one prompt's asset(s) to <code>list[str] | None</code>.</p>
-<p>A prompt's assets are a list of URLs / file paths, the same shape the job
-definitions use for <code>media_contexts</code>; several entries are registered as
-one multi-asset. A bare <code>str</code> is still accepted for scripts written when
-a prompt could only carry one asset and is wrapped in a single-element list.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/rapidata/rapidata_client/benchmark/prompt_metadata.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-72"> 72</a></span>
-<span class="normal"><a href="#__codelineno-0-73"> 73</a></span>
-<span class="normal"><a href="#__codelineno-0-74"> 74</a></span>
-<span class="normal"><a href="#__codelineno-0-75"> 75</a></span>
-<span class="normal"><a href="#__codelineno-0-76"> 76</a></span>
-<span class="normal"><a href="#__codelineno-0-77"> 77</a></span>
-<span class="normal"><a href="#__codelineno-0-78"> 78</a></span>
-<span class="normal"><a href="#__codelineno-0-79"> 79</a></span>
-<span class="normal"><a href="#__codelineno-0-80"> 80</a></span>
-<span class="normal"><a href="#__codelineno-0-81"> 81</a></span>
-<span class="normal"><a href="#__codelineno-0-82"> 82</a></span>
-<span class="normal"><a href="#__codelineno-0-83"> 83</a></span>
-<span class="normal"><a href="#__codelineno-0-84"> 84</a></span>
-<span class="normal"><a href="#__codelineno-0-85"> 85</a></span>
-<span class="normal"><a href="#__codelineno-0-86"> 86</a></span>
-<span class="normal"><a href="#__codelineno-0-87"> 87</a></span>
-<span class="normal"><a href="#__codelineno-0-88"> 88</a></span>
-<span class="normal"><a href="#__codelineno-0-89"> 89</a></span>
-<span class="normal"><a href="#__codelineno-0-90"> 90</a></span>
-<span class="normal"><a href="#__codelineno-0-91"> 91</a></span>
-<span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
-<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
-<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
-<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
-<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
-<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
-<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
-<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
-<span class="normal"><a href="#__codelineno-0-100">100</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="k">def</span><span class="w"> </span><span class="nf">coerce_prompt_asset</span><span class="p">(</span><span class="n">asset</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="w">    </span><span class="sd">"""Normalize one prompt's asset(s) to ``list[str] | None``.</span>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>
-</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">    A prompt's assets are a list of URLs / file paths, the same shape the job</span>
-</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">    definitions use for ``media_contexts``; several entries are registered as</span>
-</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">    one multi-asset. A bare ``str`` is still accepted for scripts written when</span>
-</span><span id="__span-0-78"><a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">    a prompt could only carry one asset and is wrapped in a single-element list.</span>
-</span><span id="__span-0-79"><a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="sd">    """</span>
-</span><span id="__span-0-80"><a id="__codelineno-0-80" name="__codelineno-0-80"></a>    <span class="k">if</span> <span class="n">asset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-81"><a id="__codelineno-0-81" name="__codelineno-0-81"></a>        <span class="k">return</span> <span class="kc">None</span>
-</span><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">asset</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83"></a>        <span class="k">if</span> <span class="n">asset</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
-</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="__span-0-85"><a id="__codelineno-0-85" name="__codelineno-0-85"></a>                <span class="s2">"A prompt asset cannot be an empty string. If not needed, set to None."</span>
-</span><span id="__span-0-86"><a id="__codelineno-0-86" name="__codelineno-0-86"></a>            <span class="p">)</span>
-</span><span id="__span-0-87"><a id="__codelineno-0-87" name="__codelineno-0-87"></a>        <span class="k">return</span> <span class="p">[</span><span class="n">asset</span><span class="p">]</span>
-</span><span id="__span-0-88"><a id="__codelineno-0-88" name="__codelineno-0-88"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">asset</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="__span-0-89"><a id="__codelineno-0-89" name="__codelineno-0-89"></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">asset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91"></a>                <span class="s2">"A prompt asset list cannot be empty. If not needed, set to None."</span>
-</span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92"></a>            <span class="p">)</span>
-</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93"></a>        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">item</span> <span class="o">==</span> <span class="s2">""</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">asset</span><span class="p">):</span>
-</span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95"></a>                <span class="s2">"Every entry in a prompt asset list must be a non-empty string."</span>
-</span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96"></a>            <span class="p">)</span>
-</span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="k">return</span> <span class="n">asset</span>
-</span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-</span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="sa">f</span><span class="s2">"A prompt asset must be a list of strings or None, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">asset</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">."</span>
-</span><span id="__span-0-100"><a id="__codelineno-0-100" name="__codelineno-0-100"></a>    <span class="p">)</span>
-</span></code></pre></div></td></tr></tbody></table></div>
-            </details>
-    </div>
-
-</div>
 
 
 

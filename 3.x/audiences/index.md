@@ -151,6 +151,26 @@ Some jobs don't go straight to running. A job can enter manual review
 informative error naming the state (and the review reason, when available) instead of
 blocking indefinitely — top up or wait for a reviewer, then call it again.
 
+### Queueing a job behind another
+
+Pass `run_after` to hold a job until an earlier one is done. The queued job is created
+immediately in the `Queued` state and starts as soon as the preceding job completes or
+fails, so the same audience isn't splitting its annotators across both at once.
+
+```py
+first = audience.assign_job(job_definition)
+second = audience.assign_job(other_job_definition, run_after=first)
+```
+
+`run_after` also accepts a job id, which lets you queue behind a job from an earlier
+session:
+
+```py
+second = audience.assign_job(other_job_definition, run_after="job_id")
+```
+
+Chain further jobs by pointing each one at its predecessor.
+
 ## Complete Example
 
 Here's the full workflow — creating a custom audience, adding qualification examples, and running a labeling job:
