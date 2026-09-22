@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.09.21.1939-25d3534"
+    "version": "2026.09.22.0935-19ce148"
   },
   "servers": [
     {
@@ -1097,7 +1097,7 @@
         }
       }
     },
-    "/campaign/experiments/{experimentKey}/state": {
+    "/campaign/experiments/{experimentId}/state": {
       "post": {
         "tags": [
           "Experiment"
@@ -1106,9 +1106,9 @@
         "description": "Valid transitions: draft/paused → active, active → paused, active/paused → completed;\n anything else is 409 with code invalid_transition. Activation additionally guards\n against flag keys owned by another running experiment (flag_key_in_use), an\n already-elapsed end date\n (invalid_window), and sticky enrollment without a leavable user predicate\n (invalid_enrollment_mode).",
         "parameters": [
           {
-            "name": "experimentKey",
+            "name": "experimentId",
             "in": "path",
-            "description": "The experiment's stable key.",
+            "description": "The experiment id.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1162,7 +1162,7 @@
           "Experiment"
         ],
         "summary": "Creates an experiment in the draft state and returns the full document.",
-        "description": "The split salt is generated server-side. Returns 409 with code\n experiment_key_exists when the key is already taken.",
+        "description": "The split salt is generated server-side. Returns 400 when an attached-scope experiment sets\n campaign predicates.",
         "requestBody": {
           "description": "The experiment to create.",
           "content": {
@@ -1251,7 +1251,7 @@
         }
       }
     },
-    "/campaign/experiments/{experimentKey}": {
+    "/campaign/experiments/{experimentId}": {
       "get": {
         "tags": [
           "Experiment"
@@ -1259,9 +1259,9 @@
         "summary": "Returns the experiment with the given key.",
         "parameters": [
           {
-            "name": "experimentKey",
+            "name": "experimentId",
             "in": "path",
-            "description": "The experiment's stable key.",
+            "description": "The experiment id.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1302,12 +1302,12 @@
           "Experiment"
         ],
         "summary": "Updates the provided fields of an experiment and returns the full updated document.",
-        "description": "Omitted fields are left untouched. Key and salt are never updatable; flags are updatable\n only while the experiment is a draft — afterwards the response is 409 with code\n immutable_field.",
+        "description": "Omitted fields are left untouched. Name and salt are never updatable; flags are updatable\n only while the experiment is a draft — afterwards the response is 409 with code\n immutable_field.",
         "parameters": [
           {
-            "name": "experimentKey",
+            "name": "experimentId",
             "in": "path",
-            "description": "The experiment's stable key.",
+            "description": "The experiment id.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2007,20 +2007,28 @@
       },
       "CreateExperimentEndpoint_Input": {
         "required": [
-          "key",
+          "name",
           "description",
           "flags",
           "split"
         ],
         "type": "object",
         "properties": {
-          "key": {
+          "name": {
             "type": "string",
-            "description": "Stable unique identifier; becomes the analysis key recorded on eligible sessions."
+            "description": "Human-readable name."
           },
           "description": {
             "type": "string",
             "description": "Human-readable description of the hypothesis."
+          },
+          "scope": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentScope"
+              }
+            ],
+            "description": "Defaults to global. Attached experiments must omit every campaign predicate (campaignTypes, excludedCampaignIds, organizationIds, excludedOrganizationIds)."
           },
           "flags": {
             "allOf": [
@@ -2190,9 +2198,10 @@
       "Experiment": {
         "required": [
           "id",
-          "key",
+          "name",
           "description",
           "state",
+          "scope",
           "flags",
           "eligibility",
           "userEnrollment",
@@ -2207,9 +2216,9 @@
             "type": "string",
             "description": "The unique id of the experiment document."
           },
-          "key": {
+          "name": {
             "type": "string",
-            "description": "Stable unique identifier; the analysis key recorded on every eligible session."
+            "description": "Human-readable name."
           },
           "description": {
             "type": "string",
@@ -2222,6 +2231,14 @@
               }
             ],
             "description": "The lifecycle state."
+          },
+          "scope": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExperimentScope"
+              }
+            ],
+            "description": "Whether the experiment is evaluated for any matching campaign or only for campaigns attached to it."
           },
           "flags": {
             "allOf": [
@@ -2285,7 +2302,7 @@
             "format": "date-time"
           }
         },
-        "description": "A global serve-time A/B experiment. Every eligible session records its experiment key and arm;\n treatment sessions additionally receive the experiment's feature flags."
+        "description": "A serve-time A/B experiment. Every eligible session records its experiment id, name and arm;\n treatment sessions additionally receive the experiment's feature flags."
       },
       "ExperimentAssetKind": {
         "enum": [
@@ -2351,13 +2368,6 @@
             },
             "nullable": true
           },
-          "campaignIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
           "excludedCampaignIds": {
             "type": "array",
             "items": {
@@ -2416,6 +2426,12 @@
           "Polygon",
           "Scrub",
           "Transcription"
+        ]
+      },
+      "ExperimentScope": {
+        "enum": [
+          "global",
+          "attached"
         ]
       },
       "ExperimentSplit": {

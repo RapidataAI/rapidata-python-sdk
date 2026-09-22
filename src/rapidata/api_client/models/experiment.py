@@ -19,6 +19,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.experiment_eligibility import ExperimentEligibility
+from rapidata.api_client.models.experiment_scope import ExperimentScope
 from rapidata.api_client.models.experiment_split import ExperimentSplit
 from rapidata.api_client.models.experiment_state import ExperimentState
 from rapidata.api_client.models.experiment_user_enrollment import ExperimentUserEnrollment
@@ -30,12 +31,13 @@ from typing_extensions import Self
 
 class Experiment(LazyValidatedModel):
     """
-    A global serve-time A/B experiment. Every eligible session records its experiment key and arm;  treatment sessions additionally receive the experiment's feature flags.
+    A serve-time A/B experiment. Every eligible session records its experiment id, name and arm;  treatment sessions additionally receive the experiment's feature flags.
     """ # noqa: E501
     id: StrictStr = Field(description="The unique id of the experiment document.")
-    key: StrictStr = Field(description="Stable unique identifier; the analysis key recorded on every eligible session.")
+    name: StrictStr = Field(description="Human-readable name.")
     description: StrictStr = Field(description="Human-readable description of the hypothesis.")
     state: ExperimentState = Field(description="The lifecycle state.")
+    scope: ExperimentScope = Field(description="Whether the experiment is evaluated for any matching campaign or only for campaigns attached to it.")
     flags: List[FeatureFlag]
     eligibility: ExperimentEligibility = Field(description="The predicates deciding which sessions are part of the population.")
     user_enrollment: ExperimentUserEnrollment = Field(description="How users enter and leave the population.", alias="userEnrollment")
@@ -45,7 +47,7 @@ class Experiment(LazyValidatedModel):
     created_by: StrictStr = Field(description="The email of the admin who created the experiment.", alias="createdBy")
     created_at: datetime = Field(description="When the experiment was created.", alias="createdAt")
     updated_at: datetime = Field(description="When the experiment was last changed.", alias="updatedAt")
-    __properties: ClassVar[List[str]] = ["id", "key", "description", "state", "flags", "eligibility", "userEnrollment", "split", "startAt", "endAt", "createdBy", "createdAt", "updatedAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "state", "scope", "flags", "eligibility", "userEnrollment", "split", "startAt", "endAt", "createdBy", "createdAt", "updatedAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -118,9 +120,10 @@ class Experiment(LazyValidatedModel):
 
         _data = {
             "id": obj.get("id"),
-            "key": obj.get("key"),
+            "name": obj.get("name"),
             "description": obj.get("description"),
             "state": obj.get("state"),
+            "scope": obj.get("scope"),
             "flags": [FeatureFlag.from_dict(_item) for _item in obj["flags"]] if obj.get("flags") is not None else None,
             "eligibility": ExperimentEligibility.from_dict(obj["eligibility"]) if obj.get("eligibility") is not None else None,
             "userEnrollment": obj.get("userEnrollment"),

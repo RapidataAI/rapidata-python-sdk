@@ -34,7 +34,8 @@ class CreateJobEndpointInput(LazyValidatedModel):
     preceding_job_id: Optional[StrictStr] = Field(default=None, description="Optional id of a job that must finish before this job starts. When set, this job is  queued until the preceding job completes or fails.", alias="precedingJobId")
     notify_owner_on_completion: Optional[StrictBool] = Field(default=None, description="Whether the job's owner should be emailed when the job completes. Defaults to false.", alias="notifyOwnerOnCompletion")
     check_for_explicit_content: Optional[StrictBool] = Field(default=None, description="Whether Rapidata's explicit-content check should run for this job. Leave null to use  the default for the caller's account. Set true to force the check on. Set false to  skip it — honored only when the account is permitted to skip; otherwise the check  still runs and ContentCheckSkipDenied is set on the response.", alias="checkForExplicitContent")
-    __properties: ClassVar[List[str]] = ["jobDefinitionId", "audienceId", "revisionNumber", "name", "priority", "precedingJobId", "notifyOwnerOnCompletion", "checkForExplicitContent"]
+    experiment_id: Optional[StrictStr] = Field(default=None, description="Id of an experiment to attach to the job's campaign so every session it serves is  assigned to one of the experiment's arms. Platform admins only; an unknown or  unattachable key fails the job.", alias="experimentId")
+    __properties: ClassVar[List[str]] = ["jobDefinitionId", "audienceId", "revisionNumber", "name", "priority", "precedingJobId", "notifyOwnerOnCompletion", "checkForExplicitContent", "experimentId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -96,6 +97,11 @@ class CreateJobEndpointInput(LazyValidatedModel):
         if self.check_for_explicit_content is None and "check_for_explicit_content" in self.model_fields_set:
             _dict['checkForExplicitContent'] = None
 
+        # set to None if experiment_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.experiment_id is None and "experiment_id" in self.model_fields_set:
+            _dict['experimentId'] = None
+
         return _dict
 
     @classmethod
@@ -115,7 +121,8 @@ class CreateJobEndpointInput(LazyValidatedModel):
             "priority": obj.get("priority"),
             "precedingJobId": obj.get("precedingJobId"),
             "notifyOwnerOnCompletion": obj.get("notifyOwnerOnCompletion"),
-            "checkForExplicitContent": obj.get("checkForExplicitContent")
+            "checkForExplicitContent": obj.get("checkForExplicitContent"),
+            "experimentId": obj.get("experimentId")
         }
         try:
             _obj = cls.model_validate(_data)

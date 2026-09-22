@@ -36,14 +36,13 @@ class ExperimentEligibility(LazyValidatedModel):
     media_context: Optional[ExperimentContextRequirement] = Field(default=None, alias="mediaContext")
     text_context: Optional[ExperimentContextRequirement] = Field(default=None, alias="textContext")
     campaign_types: Optional[List[ExperimentCampaignType]] = Field(default=None, alias="campaignTypes")
-    campaign_ids: Optional[List[StrictStr]] = Field(default=None, alias="campaignIds")
     excluded_campaign_ids: Optional[List[StrictStr]] = Field(default=None, alias="excludedCampaignIds")
     organization_ids: Optional[List[StrictStr]] = Field(default=None, alias="organizationIds")
     excluded_organization_ids: Optional[List[StrictStr]] = Field(default=None, alias="excludedOrganizationIds")
     countries: Optional[List[StrictStr]] = None
     languages: Optional[List[StrictStr]] = None
     user: Optional[ExperimentUserEligibility] = None
-    __properties: ClassVar[List[str]] = ["rapidTypes", "assetKinds", "mediaContext", "textContext", "campaignTypes", "campaignIds", "excludedCampaignIds", "organizationIds", "excludedOrganizationIds", "countries", "languages", "user"]
+    __properties: ClassVar[List[str]] = ["rapidTypes", "assetKinds", "mediaContext", "textContext", "campaignTypes", "excludedCampaignIds", "organizationIds", "excludedOrganizationIds", "countries", "languages", "user"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -108,11 +107,6 @@ class ExperimentEligibility(LazyValidatedModel):
         if self.campaign_types is None and "campaign_types" in self.model_fields_set:
             _dict['campaignTypes'] = None
 
-        # set to None if campaign_ids (nullable) is None
-        # and model_fields_set contains the field
-        if self.campaign_ids is None and "campaign_ids" in self.model_fields_set:
-            _dict['campaignIds'] = None
-
         # set to None if excluded_campaign_ids (nullable) is None
         # and model_fields_set contains the field
         if self.excluded_campaign_ids is None and "excluded_campaign_ids" in self.model_fields_set:
@@ -160,7 +154,6 @@ class ExperimentEligibility(LazyValidatedModel):
             "mediaContext": obj.get("mediaContext"),
             "textContext": obj.get("textContext"),
             "campaignTypes": obj.get("campaignTypes"),
-            "campaignIds": obj.get("campaignIds"),
             "excludedCampaignIds": obj.get("excludedCampaignIds"),
             "organizationIds": obj.get("organizationIds"),
             "excludedOrganizationIds": obj.get("excludedOrganizationIds"),

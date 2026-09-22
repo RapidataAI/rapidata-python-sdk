@@ -42,9 +42,9 @@ class ExperimentApi:
 
 
     @validate_call
-    def campaign_experiments_experiment_key_get(
+    def campaign_experiments_experiment_id_get(
         self,
-        experiment_key: Annotated[StrictStr, Field(description="The experiment's stable key.")],
+        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -61,8 +61,8 @@ class ExperimentApi:
         """Returns the experiment with the given key.
 
 
-        :param experiment_key: The experiment's stable key. (required)
-        :type experiment_key: str
+        :param experiment_id: The experiment id. (required)
+        :type experiment_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -85,8 +85,8 @@ class ExperimentApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._campaign_experiments_experiment_key_get_serialize(
-            experiment_key=experiment_key,
+        _param = self._campaign_experiments_experiment_id_get_serialize(
+            experiment_id=experiment_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -111,9 +111,9 @@ class ExperimentApi:
 
 
     @validate_call
-    def campaign_experiments_experiment_key_get_with_http_info(
+    def campaign_experiments_experiment_id_get_with_http_info(
         self,
-        experiment_key: Annotated[StrictStr, Field(description="The experiment's stable key.")],
+        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -130,8 +130,8 @@ class ExperimentApi:
         """Returns the experiment with the given key.
 
 
-        :param experiment_key: The experiment's stable key. (required)
-        :type experiment_key: str
+        :param experiment_id: The experiment id. (required)
+        :type experiment_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -154,8 +154,8 @@ class ExperimentApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._campaign_experiments_experiment_key_get_serialize(
-            experiment_key=experiment_key,
+        _param = self._campaign_experiments_experiment_id_get_serialize(
+            experiment_id=experiment_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -180,9 +180,9 @@ class ExperimentApi:
 
 
     @validate_call
-    def campaign_experiments_experiment_key_get_without_preload_content(
+    def campaign_experiments_experiment_id_get_without_preload_content(
         self,
-        experiment_key: Annotated[StrictStr, Field(description="The experiment's stable key.")],
+        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -199,8 +199,8 @@ class ExperimentApi:
         """Returns the experiment with the given key.
 
 
-        :param experiment_key: The experiment's stable key. (required)
-        :type experiment_key: str
+        :param experiment_id: The experiment id. (required)
+        :type experiment_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -223,8 +223,8 @@ class ExperimentApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._campaign_experiments_experiment_key_get_serialize(
-            experiment_key=experiment_key,
+        _param = self._campaign_experiments_experiment_id_get_serialize(
+            experiment_id=experiment_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -244,9 +244,9 @@ class ExperimentApi:
         return response_data.response
 
 
-    def _campaign_experiments_experiment_key_get_serialize(
+    def _campaign_experiments_experiment_id_get_serialize(
         self,
-        experiment_key,
+        experiment_id,
         _request_auth,
         _content_type,
         _headers,
@@ -268,8 +268,8 @@ class ExperimentApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if experiment_key is not None:
-            _path_params['experimentKey'] = experiment_key
+        if experiment_id is not None:
+            _path_params['experimentId'] = experiment_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -292,7 +292,7 @@ class ExperimentApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/campaign/experiments/{experimentKey}',
+            resource_path='/campaign/experiments/{experimentId}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -309,9 +309,9 @@ class ExperimentApi:
 
 
     @validate_call
-    def campaign_experiments_experiment_key_patch(
+    def campaign_experiments_experiment_id_patch(
         self,
-        experiment_key: Annotated[StrictStr, Field(description="The experiment's stable key.")],
+        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
         update_experiment_endpoint_input: Annotated[UpdateExperimentEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
@@ -328,10 +328,10 @@ class ExperimentApi:
     ) -> Experiment:
         """Updates the provided fields of an experiment and returns the full updated document.
 
-        Omitted fields are left untouched. Key and salt are never updatable; flags are updatable  only while the experiment is a draft — afterwards the response is 409 with code  immutable_field.
+        Omitted fields are left untouched. Name and salt are never updatable; flags are updatable  only while the experiment is a draft — afterwards the response is 409 with code  immutable_field.
 
-        :param experiment_key: The experiment's stable key. (required)
-        :type experiment_key: str
+        :param experiment_id: The experiment id. (required)
+        :type experiment_id: str
         :param update_experiment_endpoint_input: The fields to update. (required)
         :type update_experiment_endpoint_input: UpdateExperimentEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -356,8 +356,8 @@ class ExperimentApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._campaign_experiments_experiment_key_patch_serialize(
-            experiment_key=experiment_key,
+        _param = self._campaign_experiments_experiment_id_patch_serialize(
+            experiment_id=experiment_id,
             update_experiment_endpoint_input=update_experiment_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -383,9 +383,9 @@ class ExperimentApi:
 
 
     @validate_call
-    def campaign_experiments_experiment_key_patch_with_http_info(
+    def campaign_experiments_experiment_id_patch_with_http_info(
         self,
-        experiment_key: Annotated[StrictStr, Field(description="The experiment's stable key.")],
+        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
         update_experiment_endpoint_input: Annotated[UpdateExperimentEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
@@ -402,10 +402,10 @@ class ExperimentApi:
     ) -> ApiResponse[Experiment]:
         """Updates the provided fields of an experiment and returns the full updated document.
 
-        Omitted fields are left untouched. Key and salt are never updatable; flags are updatable  only while the experiment is a draft — afterwards the response is 409 with code  immutable_field.
+        Omitted fields are left untouched. Name and salt are never updatable; flags are updatable  only while the experiment is a draft — afterwards the response is 409 with code  immutable_field.
 
-        :param experiment_key: The experiment's stable key. (required)
-        :type experiment_key: str
+        :param experiment_id: The experiment id. (required)
+        :type experiment_id: str
         :param update_experiment_endpoint_input: The fields to update. (required)
         :type update_experiment_endpoint_input: UpdateExperimentEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -430,8 +430,8 @@ class ExperimentApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._campaign_experiments_experiment_key_patch_serialize(
-            experiment_key=experiment_key,
+        _param = self._campaign_experiments_experiment_id_patch_serialize(
+            experiment_id=experiment_id,
             update_experiment_endpoint_input=update_experiment_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -457,9 +457,9 @@ class ExperimentApi:
 
 
     @validate_call
-    def campaign_experiments_experiment_key_patch_without_preload_content(
+    def campaign_experiments_experiment_id_patch_without_preload_content(
         self,
-        experiment_key: Annotated[StrictStr, Field(description="The experiment's stable key.")],
+        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
         update_experiment_endpoint_input: Annotated[UpdateExperimentEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
@@ -476,10 +476,10 @@ class ExperimentApi:
     ) -> RESTResponseType:
         """Updates the provided fields of an experiment and returns the full updated document.
 
-        Omitted fields are left untouched. Key and salt are never updatable; flags are updatable  only while the experiment is a draft — afterwards the response is 409 with code  immutable_field.
+        Omitted fields are left untouched. Name and salt are never updatable; flags are updatable  only while the experiment is a draft — afterwards the response is 409 with code  immutable_field.
 
-        :param experiment_key: The experiment's stable key. (required)
-        :type experiment_key: str
+        :param experiment_id: The experiment id. (required)
+        :type experiment_id: str
         :param update_experiment_endpoint_input: The fields to update. (required)
         :type update_experiment_endpoint_input: UpdateExperimentEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -504,8 +504,8 @@ class ExperimentApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._campaign_experiments_experiment_key_patch_serialize(
-            experiment_key=experiment_key,
+        _param = self._campaign_experiments_experiment_id_patch_serialize(
+            experiment_id=experiment_id,
             update_experiment_endpoint_input=update_experiment_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -526,9 +526,9 @@ class ExperimentApi:
         return response_data.response
 
 
-    def _campaign_experiments_experiment_key_patch_serialize(
+    def _campaign_experiments_experiment_id_patch_serialize(
         self,
-        experiment_key,
+        experiment_id,
         update_experiment_endpoint_input,
         _request_auth,
         _content_type,
@@ -551,8 +551,8 @@ class ExperimentApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if experiment_key is not None:
-            _path_params['experimentKey'] = experiment_key
+        if experiment_id is not None:
+            _path_params['experimentId'] = experiment_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -590,7 +590,7 @@ class ExperimentApi:
 
         return self.api_client.param_serialize(
             method='PATCH',
-            resource_path='/campaign/experiments/{experimentKey}',
+            resource_path='/campaign/experiments/{experimentId}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -607,9 +607,9 @@ class ExperimentApi:
 
 
     @validate_call
-    def campaign_experiments_experiment_key_state_post(
+    def campaign_experiments_experiment_id_state_post(
         self,
-        experiment_key: Annotated[StrictStr, Field(description="The experiment's stable key.")],
+        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
         change_experiment_state_endpoint_input: Annotated[ChangeExperimentStateEndpointInput, Field(description="The transition to apply.")],
         _request_timeout: Union[
             None,
@@ -628,8 +628,8 @@ class ExperimentApi:
 
         Valid transitions: draft/paused → active, active → paused, active/paused → completed;  anything else is 409 with code invalid_transition. Activation additionally guards  against flag keys owned by another running experiment (flag_key_in_use), an  already-elapsed end date  (invalid_window), and sticky enrollment without a leavable user predicate  (invalid_enrollment_mode).
 
-        :param experiment_key: The experiment's stable key. (required)
-        :type experiment_key: str
+        :param experiment_id: The experiment id. (required)
+        :type experiment_id: str
         :param change_experiment_state_endpoint_input: The transition to apply. (required)
         :type change_experiment_state_endpoint_input: ChangeExperimentStateEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -654,8 +654,8 @@ class ExperimentApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._campaign_experiments_experiment_key_state_post_serialize(
-            experiment_key=experiment_key,
+        _param = self._campaign_experiments_experiment_id_state_post_serialize(
+            experiment_id=experiment_id,
             change_experiment_state_endpoint_input=change_experiment_state_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -681,9 +681,9 @@ class ExperimentApi:
 
 
     @validate_call
-    def campaign_experiments_experiment_key_state_post_with_http_info(
+    def campaign_experiments_experiment_id_state_post_with_http_info(
         self,
-        experiment_key: Annotated[StrictStr, Field(description="The experiment's stable key.")],
+        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
         change_experiment_state_endpoint_input: Annotated[ChangeExperimentStateEndpointInput, Field(description="The transition to apply.")],
         _request_timeout: Union[
             None,
@@ -702,8 +702,8 @@ class ExperimentApi:
 
         Valid transitions: draft/paused → active, active → paused, active/paused → completed;  anything else is 409 with code invalid_transition. Activation additionally guards  against flag keys owned by another running experiment (flag_key_in_use), an  already-elapsed end date  (invalid_window), and sticky enrollment without a leavable user predicate  (invalid_enrollment_mode).
 
-        :param experiment_key: The experiment's stable key. (required)
-        :type experiment_key: str
+        :param experiment_id: The experiment id. (required)
+        :type experiment_id: str
         :param change_experiment_state_endpoint_input: The transition to apply. (required)
         :type change_experiment_state_endpoint_input: ChangeExperimentStateEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -728,8 +728,8 @@ class ExperimentApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._campaign_experiments_experiment_key_state_post_serialize(
-            experiment_key=experiment_key,
+        _param = self._campaign_experiments_experiment_id_state_post_serialize(
+            experiment_id=experiment_id,
             change_experiment_state_endpoint_input=change_experiment_state_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -755,9 +755,9 @@ class ExperimentApi:
 
 
     @validate_call
-    def campaign_experiments_experiment_key_state_post_without_preload_content(
+    def campaign_experiments_experiment_id_state_post_without_preload_content(
         self,
-        experiment_key: Annotated[StrictStr, Field(description="The experiment's stable key.")],
+        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
         change_experiment_state_endpoint_input: Annotated[ChangeExperimentStateEndpointInput, Field(description="The transition to apply.")],
         _request_timeout: Union[
             None,
@@ -776,8 +776,8 @@ class ExperimentApi:
 
         Valid transitions: draft/paused → active, active → paused, active/paused → completed;  anything else is 409 with code invalid_transition. Activation additionally guards  against flag keys owned by another running experiment (flag_key_in_use), an  already-elapsed end date  (invalid_window), and sticky enrollment without a leavable user predicate  (invalid_enrollment_mode).
 
-        :param experiment_key: The experiment's stable key. (required)
-        :type experiment_key: str
+        :param experiment_id: The experiment id. (required)
+        :type experiment_id: str
         :param change_experiment_state_endpoint_input: The transition to apply. (required)
         :type change_experiment_state_endpoint_input: ChangeExperimentStateEndpointInput
         :param _request_timeout: timeout setting for this request. If one
@@ -802,8 +802,8 @@ class ExperimentApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._campaign_experiments_experiment_key_state_post_serialize(
-            experiment_key=experiment_key,
+        _param = self._campaign_experiments_experiment_id_state_post_serialize(
+            experiment_id=experiment_id,
             change_experiment_state_endpoint_input=change_experiment_state_endpoint_input,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -824,9 +824,9 @@ class ExperimentApi:
         return response_data.response
 
 
-    def _campaign_experiments_experiment_key_state_post_serialize(
+    def _campaign_experiments_experiment_id_state_post_serialize(
         self,
-        experiment_key,
+        experiment_id,
         change_experiment_state_endpoint_input,
         _request_auth,
         _content_type,
@@ -849,8 +849,8 @@ class ExperimentApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if experiment_key is not None:
-            _path_params['experimentKey'] = experiment_key
+        if experiment_id is not None:
+            _path_params['experimentId'] = experiment_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -888,7 +888,7 @@ class ExperimentApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/campaign/experiments/{experimentKey}/state',
+            resource_path='/campaign/experiments/{experimentId}/state',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1192,7 +1192,7 @@ class ExperimentApi:
     ) -> Experiment:
         """Creates an experiment in the draft state and returns the full document.
 
-        The split salt is generated server-side. Returns 409 with code  experiment_key_exists when the key is already taken.
+        The split salt is generated server-side. Returns 400 when an attached-scope experiment sets  campaign predicates.
 
         :param create_experiment_endpoint_input: The experiment to create. (required)
         :type create_experiment_endpoint_input: CreateExperimentEndpointInput
@@ -1262,7 +1262,7 @@ class ExperimentApi:
     ) -> ApiResponse[Experiment]:
         """Creates an experiment in the draft state and returns the full document.
 
-        The split salt is generated server-side. Returns 409 with code  experiment_key_exists when the key is already taken.
+        The split salt is generated server-side. Returns 400 when an attached-scope experiment sets  campaign predicates.
 
         :param create_experiment_endpoint_input: The experiment to create. (required)
         :type create_experiment_endpoint_input: CreateExperimentEndpointInput
@@ -1332,7 +1332,7 @@ class ExperimentApi:
     ) -> RESTResponseType:
         """Creates an experiment in the draft state and returns the full document.
 
-        The split salt is generated server-side. Returns 409 with code  experiment_key_exists when the key is already taken.
+        The split salt is generated server-side. Returns 400 when an attached-scope experiment sets  campaign predicates.
 
         :param create_experiment_endpoint_input: The experiment to create. (required)
         :type create_experiment_endpoint_input: CreateExperimentEndpointInput
