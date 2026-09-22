@@ -32,6 +32,7 @@ def test_assign_job_warns_on_cost_warning(monkeypatch):
     response.cost_warning = CreateJobEndpointCostWarningModel(
         estimatedCost=120.0, availableBalance=50.0, shortfall=70.0
     )
+    response.content_check_skip_denied = None
     openapi_service.order.job_api.job_post.return_value = response
 
     warn = MagicMock()
@@ -53,6 +54,7 @@ def test_assign_job_no_warning_when_cost_within_balance(monkeypatch):
     response = MagicMock()
     response.job_id = "job-1"
     response.cost_warning = None
+    response.content_check_skip_denied = None
     openapi_service.order.job_api.job_post.return_value = response
 
     warn = MagicMock()
