@@ -66,6 +66,7 @@ class RapidataJob:
         definition_id: str,
         openapi_service: OpenAPIService,
         pipeline_id: str | None = None,
+        experiment_id: str | None = None,
     ):
         self.id = job_id
         self.name = name
@@ -76,8 +77,14 @@ class RapidataJob:
         self.__pipeline_id = pipeline_id
         self.__completed_at = None
         self.__estimated_cost: CostEstimate | None = None
+        self.__experiment_id = experiment_id
         self.job_details_page = f"https://app.{self._openapi_service.environment}/audiences/{self.audience_id}/job/{self.id}"
         logger.debug("RapidataJob initialized")
+
+    @property
+    def experiment_id(self) -> str | None:
+        """Internal: id of the experiment attached to this job's campaign, if any."""
+        return self.__experiment_id
 
     # States a job can settle into that will never progress to Completed/Failed on
     # their own: ManualApproval needs a Rapidata reviewer to act, SpendLimited needs
