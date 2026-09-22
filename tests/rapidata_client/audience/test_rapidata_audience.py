@@ -24,6 +24,7 @@ def _make_audience(
     response = MagicMock()
     response.job_id = "job-1"
     response.cost_warning = None
+    response.content_check_skip_denied = None
     openapi_service.order.job_api.job_post.return_value = response
 
     openapi_service.audience.audience_api.audience_audience_id_user_metrics_get.return_value.users_per_state = (
