@@ -50,13 +50,12 @@ class IFlowSimpleFlow(LazyValidatedModel):
     blueprint: IFlowRapidBlueprintClassifyBlueprint = Field(description="The blueprint of the rapids every item of this flow generates.")
     min_responses: StrictInt = Field(description="The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed.", alias="minResponses")
     max_responses: StrictInt = Field(description="The number of accepted responses per image after which the image stops collecting.", alias="maxResponses")
-    default_time_to_live_seconds: StrictInt = Field(description="The time-to-live in seconds applied to items created without an explicit one.", alias="defaultTimeToLiveSeconds")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     owner_id: UUID = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The email of the customer who owns the flow.", alias="ownerMail")
     organization_id: StrictStr = Field(description="The id of the organization that owns the flow.", alias="organizationId")
     created_at: datetime = Field(description="The timestamp when the flow was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["_t", "id", "name", "campaignId", "flowItemCount", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "serveTimeoutSeconds", "drainDurationSeconds", "serveToResponseRatio", "blueprint", "minResponses", "maxResponses", "defaultTimeToLiveSeconds", "featureFlags", "ownerId", "ownerMail", "organizationId", "createdAt"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "name", "campaignId", "flowItemCount", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "serveTimeoutSeconds", "drainDurationSeconds", "serveToResponseRatio", "blueprint", "minResponses", "maxResponses", "featureFlags", "ownerId", "ownerMail", "organizationId", "createdAt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -156,7 +155,6 @@ class IFlowSimpleFlow(LazyValidatedModel):
             "blueprint": IFlowRapidBlueprintClassifyBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
             "minResponses": obj.get("minResponses"),
             "maxResponses": obj.get("maxResponses"),
-            "defaultTimeToLiveSeconds": obj.get("defaultTimeToLiveSeconds"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),

@@ -33,7 +33,6 @@ class UpdateSimpleFlowConfigEndpointInput(LazyValidatedModel):
     blueprint: Optional[IFlowRapidBlueprintClassifyBlueprint] = Field(default=None, description="The blueprint of the rapids every item generates. Rejected once the flow has items.")
     max_responses: Optional[StrictInt] = Field(default=None, description="The number of accepted responses per image after which the image stops collecting. At least MinResponses.", alias="maxResponses")
     min_responses: Optional[StrictInt] = Field(default=None, description="The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed. At least 1.", alias="minResponses")
-    default_time_to_live_seconds: Optional[StrictInt] = Field(default=None, description="The time-to-live in seconds applied to items created without one. Between 45 seconds and 1 hour.", alias="defaultTimeToLiveSeconds")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     target_response_count: Optional[StrictInt] = Field(default=None, description="Target average response count per completed item. Set to null to disable PID control.", alias="targetResponseCount")
     pid_proportional_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID proportional gain.", alias="pidProportionalGain")
@@ -43,7 +42,7 @@ class UpdateSimpleFlowConfigEndpointInput(LazyValidatedModel):
     pid_min_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Minimum sessions per minute the PID can set.", alias="pidMinSessionsPerMinute")
     pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set.", alias="pidMaxSessionsPerMinute")
     pid_batch_mode: Optional[PidBatchMode] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count.", alias="pidBatchMode")
-    __properties: ClassVar[List[str]] = ["audienceId", "blueprint", "maxResponses", "minResponses", "defaultTimeToLiveSeconds", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode"]
+    __properties: ClassVar[List[str]] = ["audienceId", "blueprint", "maxResponses", "minResponses", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -116,7 +115,6 @@ class UpdateSimpleFlowConfigEndpointInput(LazyValidatedModel):
             "blueprint": IFlowRapidBlueprintClassifyBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
             "maxResponses": obj.get("maxResponses"),
             "minResponses": obj.get("minResponses"),
-            "defaultTimeToLiveSeconds": obj.get("defaultTimeToLiveSeconds"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "targetResponseCount": obj.get("targetResponseCount"),
             "pidProportionalGain": obj.get("pidProportionalGain"),
