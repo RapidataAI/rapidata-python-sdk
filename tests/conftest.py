@@ -1,15 +1,8 @@
 """Pytest configuration shared by the whole test suite.
 
-The SDK ships OTLP tracing on by default, and `rapidata_config` reads
-`RAPIDATA_DISABLE_OTLP` once at import time. Without this, every test run
-exports spans to the production collector: the suite drives the SDK with
-`MagicMock` arguments, so the resulting validation failures land in prod
-telemetry as real errors from `Rapidata.Python.SDK` and drown out genuine
-customer failures.
-
-Setting the env var before `rapidata` is imported is what actually disables
-tracing; the explicit config assignment below is a safety net in case something
-imported the package during collection first.
+OTLP export only starts once a `RapidataClient` is constructed, so tests that
+drive components with `MagicMock` services never reach the collector. Disabling
+it here as well keeps a test that does build a client from exporting either.
 """
 
 import os

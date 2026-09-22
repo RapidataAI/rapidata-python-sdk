@@ -35,6 +35,7 @@ def get_system_attributes() -> dict[str, str | int | None]:
 class TracerProtocol(Protocol):
     """Protocol that defines the tracer interface for type checking."""
 
+    def activate(self) -> None: ...
     def start_span(self, name: str, *args, **kwargs) -> Any: ...
     def start_as_current_span(self, name: str, *args, **kwargs) -> Any: ...
     def set_session_id(self, session_id: str) -> None: ...
@@ -70,6 +71,9 @@ class NoOpSpan:
 
 class NoOpTracer:
     """A no-op tracer that returns no-op spans when tracing is disabled."""
+
+    def activate(self) -> None:
+        pass
 
     def start_span(self, name: str, *args, **kwargs) -> NoOpSpan:
         return NoOpSpan()
@@ -122,7 +126,12 @@ class SpanContextManagerWrapper:
 
 
 class RapidataTracer:
-    """Tracer implementation that updates when the configuration changes."""
+    """Tracer implementation that updates when the configuration changes.
+
+    Spans are no-ops until ``activate()`` is called, which RapidataClient does
+    on construction. SDK components built directly against a mocked service, as
+    test suites do, therefore never reach the collector.
+    """
 
     def __init__(self, name: str = __name__):
         self._name = name
@@ -132,6 +141,7 @@ class RapidataTracer:
         self._real_tracer = None
         self._no_op_tracer = NoOpTracer()
         self._enabled = True  # Default to enabled
+        self._activated = False
         self._environment = "rapidata.ai"
         self.session_id: str | None = None
         self.client_id: str | None = None
@@ -148,6 +158,17 @@ class RapidataTracer:
         """Update the tracer based on the new configuration."""
         self._enabled = config.enable_otlp
         self._environment = config.environment
+
+    def activate(self) -> None:
+        """Allow spans to be exported from this process."""
+        self._activated = True
+
+    def _exporting(self) -> bool:
+        """Return True when spans should go to the real tracer."""
+        if not (self._enabled and self._activated):
+            return False
+        self._ensure_initialized()
+        return self._real_tracer is not None
 
     def _ensure_initialized(self) -> None:
         """Lazily initialize OTLP tracing on first use."""
@@ -197,24 +218,22 @@ class RapidataTracer:
 
     def start_span(self, name: str, *args, **kwargs) -> Any:
         """Start a span, or return a no-op span if tracing is disabled."""
-        if self._enabled:
-            self._ensure_initialized()
-            if self._real_tracer:
-                span = self._real_tracer.start_span(name, *args, **kwargs)
-                return self._add_attributes_to_span(span)
+        if self._exporting():
+            assert self._real_tracer is not None
+            span = self._real_tracer.start_span(name, *args, **kwargs)
+            return self._add_attributes_to_span(span)
         return self._no_op_tracer.start_span(name, *args, **kwargs)
 
     def start_as_current_span(self, name: str, *args, **kwargs) -> Any:
         """Start a span as current, or return a no-op span if tracing is disabled."""
-        if self._enabled:
-            self._ensure_initialized()
-            if self._real_tracer:
-                context_manager = self._real_tracer.start_as_current_span(
-                    name, *args, **kwargs
-                )
-                return SpanContextManagerWrapper(
-                    context_manager, self.session_id, self.client_id, self.email
-                )
+        if self._exporting():
+            assert self._real_tracer is not None
+            context_manager = self._real_tracer.start_as_current_span(
+                name, *args, **kwargs
+            )
+            return SpanContextManagerWrapper(
+                context_manager, self.session_id, self.client_id, self.email
+            )
         return self._no_op_tracer.start_as_current_span(name, *args, **kwargs)
 
     def set_session_id(self, session_id: str) -> None:
@@ -236,10 +255,8 @@ class RapidataTracer:
 
     def __getattr__(self, name: str) -> Any:
         """Delegate attribute access to the appropriate tracer."""
-        if self._enabled:
-            self._ensure_initialized()
-            if self._real_tracer:
-                return getattr(self._real_tracer, name)
+        if self._exporting():
+            return getattr(self._real_tracer, name)
         return getattr(self._no_op_tracer, name)
 
 

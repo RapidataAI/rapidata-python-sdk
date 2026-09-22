@@ -27,6 +27,7 @@ from rapidata.rapidata_client.demographic.demographic_manager import Demographic
 from rapidata.rapidata_client.context.context_manager import ContextManager
 
 from rapidata.rapidata_client.config import (
+    activate_telemetry,
     logger,
     tracer,
     managed_print,
@@ -138,6 +139,7 @@ class RapidataClient:
                 reading the current billing period, its outstanding cost and the
                 remaining credits.
         """
+        activate_telemetry()
         tracer.set_session_id(
             uuid.UUID(int=random.Random().getrandbits(128), version=4).hex
         )

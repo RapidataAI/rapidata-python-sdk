@@ -14,6 +14,7 @@ from .logging_config import LoggingConfig, register_config_handler
 class LoggerProtocol(Protocol):
     """Protocol that defines the logger interface for type checking."""
 
+    def activate(self) -> None: ...
     def debug(self, msg: object, *args, **kwargs) -> None: ...
     def info(self, msg: object, *args, **kwargs) -> None: ...
     def warning(self, msg: object, *args, **kwargs) -> None: ...
@@ -37,7 +38,11 @@ class LoggerProtocol(Protocol):
 
 
 class RapidataLogger:
-    """Logger implementation that updates when the configuration changes."""
+    """Logger implementation that updates when the configuration changes.
+
+    Records stay local until ``activate()`` is called, which RapidataClient does
+    on construction, so processes that never create a client never export logs.
+    """
 
     def __init__(self, name: str = "rapidata"):
         self._logger = logging.getLogger(name)
@@ -45,6 +50,7 @@ class RapidataLogger:
         self._init_lock = threading.Lock()
         self._otlp_handler = None
         self._otlp_enabled = True  # Default to enabled
+        self._activated = False
         self._otlp_attached = False
         self._environment = "rapidata.ai"
 
@@ -132,9 +138,13 @@ class RapidataLogger:
             file_handler.setFormatter(file_formatter)
             self._logger.addHandler(file_handler)
 
+    def activate(self) -> None:
+        """Allow log records to be exported from this process."""
+        self._activated = True
+
     def _maybe_attach_otlp(self) -> None:
         """Attach OTLP handler to the logger if enabled and not yet attached."""
-        if not self._otlp_enabled or self._otlp_attached:
+        if not (self._otlp_enabled and self._activated) or self._otlp_attached:
             return
 
         self._ensure_otlp_initialized()
