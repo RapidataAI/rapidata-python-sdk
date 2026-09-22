@@ -46,11 +46,12 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
     failed_at: Optional[datetime] = Field(default=None, description="The timestamp when the job failed.", alias="failedAt")
     failure_message: Optional[StrictStr] = Field(default=None, description="The failure message.", alias="failureMessage")
     review_reason: Optional[ReviewReason] = Field(default=None, description="Why the job was routed to manual review, when it is (or was) in  ManualApproval. Null when no customer-facing reason  applies.", alias="reviewReason")
+    experiment_id: Optional[StrictStr] = Field(default=None, description="The id of the experiment attached to the job's campaign, or null when there is none.", alias="experimentId")
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     owner_id: UUID = Field(description="The owner id.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The owner email.", alias="ownerMail")
     organization_id: StrictStr = Field(description="The id of the organization that owns the entity.", alias="organizationId")
-    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "campaignId", "audienceName", "state", "isPublic", "audienceDeleted", "completedAt", "resultFileName", "failedAt", "failureMessage", "reviewReason", "createdAt", "ownerId", "ownerMail", "organizationId"]
+    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "campaignId", "audienceName", "state", "isPublic", "audienceDeleted", "completedAt", "resultFileName", "failedAt", "failureMessage", "reviewReason", "experimentId", "createdAt", "ownerId", "ownerMail", "organizationId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -122,6 +123,11 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
         if self.review_reason is None and "review_reason" in self.model_fields_set:
             _dict['reviewReason'] = None
 
+        # set to None if experiment_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.experiment_id is None and "experiment_id" in self.model_fields_set:
+            _dict['experimentId'] = None
+
         return _dict
 
     @classmethod
@@ -150,6 +156,7 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
             "failedAt": obj.get("failedAt"),
             "failureMessage": obj.get("failureMessage"),
             "reviewReason": obj.get("reviewReason"),
+            "experimentId": obj.get("experimentId"),
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),

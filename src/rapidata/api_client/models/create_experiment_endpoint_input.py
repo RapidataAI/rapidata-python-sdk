@@ -20,6 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.create_experiment_endpoint_split import CreateExperimentEndpointSplit
 from rapidata.api_client.models.experiment_eligibility import ExperimentEligibility
+from rapidata.api_client.models.experiment_scope import ExperimentScope
 from rapidata.api_client.models.experiment_user_enrollment import ExperimentUserEnrollment
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from pydantic import ValidationError
@@ -31,15 +32,16 @@ class CreateExperimentEndpointInput(LazyValidatedModel):
     """
     CreateExperimentEndpointInput
     """ # noqa: E501
-    key: StrictStr = Field(description="Stable unique identifier; becomes the analysis key recorded on eligible sessions.")
+    name: StrictStr = Field(description="Human-readable name.")
     description: StrictStr = Field(description="Human-readable description of the hypothesis.")
+    scope: Optional[ExperimentScope] = Field(default=None, description="Defaults to global. Attached experiments must omit every campaign predicate (campaignTypes, excludedCampaignIds, organizationIds, excludedOrganizationIds).")
     flags: List[FeatureFlag]
     eligibility: Optional[ExperimentEligibility] = Field(default=None, description="Eligibility predicates. Omitted predicates match anything.")
     user_enrollment: Optional[ExperimentUserEnrollment] = Field(default=None, description="Defaults to perSession.", alias="userEnrollment")
     split: CreateExperimentEndpointSplit = Field(description="The traffic split; the salt is generated server-side.")
     start_at: Optional[datetime] = Field(default=None, description="Start of the experiment window.", alias="startAt")
     end_at: Optional[datetime] = Field(default=None, description="End of the experiment window.", alias="endAt")
-    __properties: ClassVar[List[str]] = ["key", "description", "flags", "eligibility", "userEnrollment", "split", "startAt", "endAt"]
+    __properties: ClassVar[List[str]] = ["name", "description", "scope", "flags", "eligibility", "userEnrollment", "split", "startAt", "endAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -116,8 +118,9 @@ class CreateExperimentEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "key": obj.get("key"),
+            "name": obj.get("name"),
             "description": obj.get("description"),
+            "scope": obj.get("scope"),
             "flags": [FeatureFlag.from_dict(_item) for _item in obj["flags"]] if obj.get("flags") is not None else None,
             "eligibility": ExperimentEligibility.from_dict(obj["eligibility"]) if obj.get("eligibility") is not None else None,
             "userEnrollment": obj.get("userEnrollment"),
