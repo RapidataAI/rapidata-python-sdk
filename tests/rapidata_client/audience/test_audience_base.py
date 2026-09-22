@@ -1,12 +1,13 @@
-"""Tests for the create-time cost warning surfaced by assign_job.
+"""Tests for assign_job — cost warnings, experiment id, and job queueing.
 
 When job creation returns a costWarning (estimate exceeds balance), assign_job
 logs an advisory warning. The job is created regardless; behaviour is otherwise
-unchanged.
+unchanged. `run_after` resolves to the precedingJobId the API expects.
 """
 
 from __future__ import annotations
 
+from datetime import datetime
 from unittest.mock import MagicMock
 
 import rapidata.rapidata_client.audience._audience_base as base_module
@@ -14,6 +15,7 @@ from rapidata.api_client.models.create_job_endpoint_cost_warning_model import (
     CreateJobEndpointCostWarningModel,
 )
 from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
+from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
 
 def _make_audience() -> tuple[RapidataAudienceBase, MagicMock]:
@@ -102,3 +104,62 @@ def test_create_job_with_experiment_id_sets_job_experiment_id():
     ]
     assert posted_input.experiment_id == "exp-1"
     assert job._experiment_id == "exp-1"
+
+
+def test_assign_job_queues_behind_a_job():
+    audience, openapi_service = _make_audience()
+    response = MagicMock()
+    response.job_id = "job-2"
+    response.experiment_id = None
+    response.cost_warning = None
+    response.content_check_skip_denied = None
+    openapi_service.order.job_api.job_post.return_value = response
+
+    preceding = RapidataJob(
+        job_id="job-1",
+        name="First",
+        audience_id="aud-1",
+        created_at=datetime.now(),
+        definition_id="def-1",
+        openapi_service=openapi_service,
+    )
+    audience.assign_job(MagicMock(id="def-2", name="Second"), run_after=preceding)
+
+    posted_input = openapi_service.order.job_api.job_post.call_args.kwargs[
+        "create_job_endpoint_input"
+    ]
+    assert posted_input.preceding_job_id == "job-1"
+
+
+def test_assign_job_queues_behind_a_job_id():
+    audience, openapi_service = _make_audience()
+    response = MagicMock()
+    response.job_id = "job-2"
+    response.experiment_id = None
+    response.cost_warning = None
+    response.content_check_skip_denied = None
+    openapi_service.order.job_api.job_post.return_value = response
+
+    audience.assign_job(MagicMock(id="def-2", name="Second"), run_after="job-1")
+
+    posted_input = openapi_service.order.job_api.job_post.call_args.kwargs[
+        "create_job_endpoint_input"
+    ]
+    assert posted_input.preceding_job_id == "job-1"
+
+
+def test_assign_job_sends_no_preceding_job_by_default():
+    audience, openapi_service = _make_audience()
+    response = MagicMock()
+    response.job_id = "job-1"
+    response.experiment_id = None
+    response.cost_warning = None
+    response.content_check_skip_denied = None
+    openapi_service.order.job_api.job_post.return_value = response
+
+    audience.assign_job(MagicMock(id="def-1", name="My Job"))
+
+    posted_input = openapi_service.order.job_api.job_post.call_args.kwargs[
+        "create_job_endpoint_input"
+    ]
+    assert posted_input.preceding_job_id is None

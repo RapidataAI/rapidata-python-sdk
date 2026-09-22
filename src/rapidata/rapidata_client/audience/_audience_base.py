@@ -59,7 +59,11 @@ class RapidataAudienceBase:
         """The filters applied to the audience."""
         return self._filters
 
-    def assign_job(self, job_definition: RapidataJobDefinition) -> RapidataJob:
+    def assign_job(
+        self,
+        job_definition: RapidataJobDefinition,
+        run_after: RapidataJob | str | None = None,
+    ) -> RapidataJob:
         """Assign a job to this audience.
 
         Creates a new job instance from the job definition and assigns it to this audience.
@@ -67,17 +71,21 @@ class RapidataAudienceBase:
 
         Args:
             job_definition (JobDefinition): The job definition to create and assign to the audience.
+            run_after (RapidataJob | str | None): A job that must finish before this one starts.
+                The new job is created in the `Queued` state and starts once that job completes
+                or fails. Accepts a job or its id. Defaults to None, which starts the job right away.
 
         Returns:
             RapidataJob: The created job instance.
         """
         with tracer.start_as_current_span(f"{type(self).__name__}.assign_job"):
-            return self._create_job(job_definition)
+            return self._create_job(job_definition, run_after=run_after)
 
     def _create_job(
         self,
         job_definition: RapidataJobDefinition,
         experiment_id: str | None = None,
+        run_after: RapidataJob | str | None = None,
     ) -> RapidataJob:
         """Creates a job instance from the job definition and assigns it to this audience.
 
@@ -86,6 +94,7 @@ class RapidataAudienceBase:
             experiment_id: Internal — id of an experiment to attach to the job's
                 campaign. Platform.Admin only; ``None`` behaves exactly like
                 :py:meth:`assign_job`.
+            run_after: A job, or job id, that must finish before this one starts.
 
         Returns:
             RapidataJob: The created job instance.
@@ -97,12 +106,16 @@ class RapidataAudienceBase:
         from datetime import datetime
 
         logger.debug(f"Assigning job to audience: {self.id}")
+        preceding_job_id = (
+            run_after.id if isinstance(run_after, RapidataJob) else run_after
+        )
         response = self._openapi_service.order.job_api.job_post(
             create_job_endpoint_input=CreateJobEndpointInput(
                 audienceId=self.id,
                 jobDefinitionId=job_definition.id,
                 checkForExplicitContent=rapidata_config.upload.checkForExplicitContent,
                 experimentId=experiment_id,
+                precedingJobId=preceding_job_id,
             ),
         )
         job = RapidataJob(
