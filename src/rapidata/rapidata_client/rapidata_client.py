@@ -24,6 +24,7 @@ from rapidata.rapidata_client.validation.validation_set_manager import (
 )
 
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
+from rapidata.rapidata_client.experiment.experiment_manager import ExperimentManager
 from rapidata.rapidata_client.context.context_manager import ContextManager
 
 from rapidata.rapidata_client.config import (
@@ -210,6 +211,9 @@ class RapidataClient:
             self._demographic = DemographicManager(
                 openapi_service=self._openapi_service
             )
+
+            logger.debug("Initializing ExperimentManager")
+            self._experiment = ExperimentManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing ContextManager")
             self.context = ContextManager(openapi_service=self._openapi_service)

@@ -76,6 +76,7 @@ class RapidataJob:
         self.__pipeline_id = pipeline_id
         self.__completed_at = None
         self.__estimated_cost: CostEstimate | None = None
+        self._experiment_id: str | None = None
         self.job_details_page = f"https://app.{self._openapi_service.environment}/audiences/{self.audience_id}/job/{self.id}"
         logger.debug("RapidataJob initialized")
 

@@ -64,3 +64,41 @@ def test_assign_job_no_warning_when_cost_within_balance(monkeypatch):
 
     warn.assert_not_called()
     assert job.id == "job-1"
+
+
+def test_assign_job_sends_no_experiment_id():
+    audience, openapi_service = _make_audience()
+    response = MagicMock()
+    response.job_id = "job-1"
+    response.experiment_id = None
+    response.cost_warning = None
+    response.content_check_skip_denied = None
+    openapi_service.order.job_api.job_post.return_value = response
+
+    job = audience.assign_job(MagicMock(id="def-1", name="My Job"))
+
+    posted_input = openapi_service.order.job_api.job_post.call_args.kwargs[
+        "create_job_endpoint_input"
+    ]
+    assert posted_input.experiment_id is None
+    assert job._experiment_id is None
+
+
+def test_create_job_with_experiment_id_sets_job_experiment_id():
+    audience, openapi_service = _make_audience()
+    response = MagicMock()
+    response.job_id = "job-1"
+    response.experiment_id = "exp-1"
+    response.cost_warning = None
+    response.content_check_skip_denied = None
+    openapi_service.order.job_api.job_post.return_value = response
+
+    job = audience._create_job(
+        MagicMock(id="def-1", name="My Job"), experiment_id="exp-1"
+    )
+
+    posted_input = openapi_service.order.job_api.job_post.call_args.kwargs[
+        "create_job_endpoint_input"
+    ]
+    assert posted_input.experiment_id == "exp-1"
+    assert job._experiment_id == "exp-1"

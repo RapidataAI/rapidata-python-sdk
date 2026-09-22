@@ -72,38 +72,54 @@ class RapidataAudienceBase:
             RapidataJob: The created job instance.
         """
         with tracer.start_as_current_span(f"{type(self).__name__}.assign_job"):
-            from rapidata.api_client.models.create_job_endpoint_input import (
-                CreateJobEndpointInput,
-            )
-            from rapidata.rapidata_client.job.rapidata_job import RapidataJob
-            from datetime import datetime
+            return self._create_job(job_definition)
 
-            logger.debug(f"Assigning job to audience: {self.id}")
-            response = self._openapi_service.order.job_api.job_post(
-                create_job_endpoint_input=CreateJobEndpointInput(
-                    audienceId=self.id,
-                    jobDefinitionId=job_definition.id,
-                    checkForExplicitContent=rapidata_config.upload.checkForExplicitContent,
-                ),
-            )
-            job = RapidataJob(
-                job_id=response.job_id,
-                name=job_definition.name,
-                audience_id=self.id,
-                created_at=datetime.now(),
-                definition_id=job_definition.id,
-                openapi_service=self._openapi_service,
-            )
-            logger.info(f"Assigned job to audience: {self.id}")
-            managed_print(
-                f"Job '{job.name}' is now viewable under: {job.job_details_page}"
-            )
-            self._warn_if_cost_exceeds_balance(job, response.cost_warning)
-            self._warn_if_content_check_skip_denied(
-                job, response.content_check_skip_denied
-            )
-            self._warn_if_no_graduated_annotators(job)
-            return job
+    def _create_job(
+        self,
+        job_definition: RapidataJobDefinition,
+        experiment_id: str | None = None,
+    ) -> RapidataJob:
+        """Creates a job instance from the job definition and assigns it to this audience.
+
+        Args:
+            job_definition: The job definition to create and assign to the audience.
+            experiment_id: Internal — id of an experiment to attach to the job's
+                campaign. Platform.Admin only; ``None`` behaves exactly like
+                :py:meth:`assign_job`.
+
+        Returns:
+            RapidataJob: The created job instance.
+        """
+        from rapidata.api_client.models.create_job_endpoint_input import (
+            CreateJobEndpointInput,
+        )
+        from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+        from datetime import datetime
+
+        logger.debug(f"Assigning job to audience: {self.id}")
+        response = self._openapi_service.order.job_api.job_post(
+            create_job_endpoint_input=CreateJobEndpointInput(
+                audienceId=self.id,
+                jobDefinitionId=job_definition.id,
+                checkForExplicitContent=rapidata_config.upload.checkForExplicitContent,
+                experimentId=experiment_id,
+            ),
+        )
+        job = RapidataJob(
+            job_id=response.job_id,
+            name=job_definition.name,
+            audience_id=self.id,
+            created_at=datetime.now(),
+            definition_id=job_definition.id,
+            openapi_service=self._openapi_service,
+        )
+        job._experiment_id = response.experiment_id
+        logger.info(f"Assigned job to audience: {self.id}")
+        managed_print(f"Job '{job.name}' is now viewable under: {job.job_details_page}")
+        self._warn_if_cost_exceeds_balance(job, response.cost_warning)
+        self._warn_if_content_check_skip_denied(job, response.content_check_skip_denied)
+        self._warn_if_no_graduated_annotators(job)
+        return job
 
     def _warn_if_no_graduated_annotators(self, job: RapidataJob) -> None:
         """Hook: warn when no annotator has graduated to answer the job yet.
