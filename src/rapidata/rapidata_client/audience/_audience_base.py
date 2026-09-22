@@ -112,8 +112,8 @@ class RapidataAudienceBase:
             created_at=datetime.now(),
             definition_id=job_definition.id,
             openapi_service=self._openapi_service,
-            experiment_id=response.experiment_id,
         )
+        job._experiment_id = response.experiment_id
         logger.info(f"Assigned job to audience: {self.id}")
         managed_print(f"Job '{job.name}' is now viewable under: {job.job_details_page}")
         self._warn_if_cost_exceeds_balance(job, response.cost_warning)

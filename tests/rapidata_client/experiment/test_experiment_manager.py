@@ -87,4 +87,4 @@ def test_run_experiment_posts_to_audience_id_with_experiment_id():
     posted_input = call_kwargs["create_job_endpoint_input"]
     assert posted_input.audience_id == "aud-1"
     assert posted_input.experiment_id == "exp-1"
-    assert job.experiment_id == "exp-1"
+    assert job._experiment_id == "exp-1"

@@ -81,7 +81,7 @@ def test_assign_job_sends_no_experiment_id():
         "create_job_endpoint_input"
     ]
     assert posted_input.experiment_id is None
-    assert job.experiment_id is None
+    assert job._experiment_id is None
 
 
 def test_create_job_with_experiment_id_sets_job_experiment_id():
@@ -101,4 +101,4 @@ def test_create_job_with_experiment_id_sets_job_experiment_id():
         "create_job_endpoint_input"
     ]
     assert posted_input.experiment_id == "exp-1"
-    assert job.experiment_id == "exp-1"
+    assert job._experiment_id == "exp-1"
