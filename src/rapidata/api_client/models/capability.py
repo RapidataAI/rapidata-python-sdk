@@ -28,6 +28,7 @@ class Capability(str, Enum):
     PREHEATBOOST = 'PreheatBoost'
     MANAGEDIMAGEFAUCET = 'ManagedImageFaucet'
     REQUESTFEATURES = 'RequestFeatures'
+    RUNEXPERIMENTS = 'RunExperiments'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
