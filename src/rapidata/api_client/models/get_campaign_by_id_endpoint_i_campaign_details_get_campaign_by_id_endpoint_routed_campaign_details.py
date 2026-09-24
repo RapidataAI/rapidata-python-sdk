@@ -17,7 +17,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.boosting_control_mode import BoostingControlMode
 from rapidata.api_client.models.boosting_profile import BoostingProfile
 from rapidata.api_client.models.campaign_status import CampaignStatus
@@ -47,10 +47,11 @@ class GetCampaignByIdEndpointICampaignDetailsGetCampaignByIdEndpointRoutedCampai
     filters: List[ICampaignFilter]
     selections: List[ICampaignSelection]
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
+    experiment_id: Optional[StrictStr] = Field(default=None, description="The id of the experiment attached to this campaign, or null when none is attached.", alias="experimentId")
     owner_mail: StrictStr = Field(description="The email of the campaign owner.", alias="ownerMail")
     organization_id: StrictStr = Field(description="The id of the organization that owns the campaign.", alias="organizationId")
     created_at: datetime = Field(description="The timestamp when the campaign was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["_t", "id", "name", "status", "priority", "boostingProfile", "boostingControlMode", "hasBooster", "boostLevel", "stickyConfig", "filters", "selections", "featureFlags", "ownerMail", "organizationId", "createdAt"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "name", "status", "priority", "boostingProfile", "boostingControlMode", "hasBooster", "boostLevel", "stickyConfig", "filters", "selections", "featureFlags", "experimentId", "ownerMail", "organizationId", "createdAt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -121,6 +122,11 @@ class GetCampaignByIdEndpointICampaignDetailsGetCampaignByIdEndpointRoutedCampai
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if experiment_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.experiment_id is None and "experiment_id" in self.model_fields_set:
+            _dict['experimentId'] = None
+
         return _dict
 
     @classmethod
@@ -146,6 +152,7 @@ class GetCampaignByIdEndpointICampaignDetailsGetCampaignByIdEndpointRoutedCampai
             "filters": [ICampaignFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "selections": [ICampaignSelection.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "experimentId": obj.get("experimentId"),
             "ownerMail": obj.get("ownerMail"),
             "organizationId": obj.get("organizationId"),
             "createdAt": obj.get("createdAt")

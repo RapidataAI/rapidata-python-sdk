@@ -1014,9 +1014,9 @@ class RankingFlowItemApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> GetRankingFlowItemResultsEndpointOutput:
-        """Returns ranking results with Elo scores for a completed flow item.
+        """Returns ranking results with Elo scores for a flow item.
 
-        Returns 409 Conflict if the flow item is not yet completed or has no associated workflow.
+        Scores and votes are partial while the item is still collecting, and 409 Conflict until it starts.
 
         :param flow_item_id: The ID of the flow item to get results for. (required)
         :type flow_item_id: str
@@ -1085,9 +1085,9 @@ class RankingFlowItemApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetRankingFlowItemResultsEndpointOutput]:
-        """Returns ranking results with Elo scores for a completed flow item.
+        """Returns ranking results with Elo scores for a flow item.
 
-        Returns 409 Conflict if the flow item is not yet completed or has no associated workflow.
+        Scores and votes are partial while the item is still collecting, and 409 Conflict until it starts.
 
         :param flow_item_id: The ID of the flow item to get results for. (required)
         :type flow_item_id: str
@@ -1156,9 +1156,9 @@ class RankingFlowItemApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Returns ranking results with Elo scores for a completed flow item.
+        """Returns ranking results with Elo scores for a flow item.
 
-        Returns 409 Conflict if the flow item is not yet completed or has no associated workflow.
+        Scores and votes are partial while the item is still collecting, and 409 Conflict until it starts.
 
         :param flow_item_id: The ID of the flow item to get results for. (required)
         :type flow_item_id: str
