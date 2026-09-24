@@ -6,6 +6,14 @@ import pytest
 import requests
 
 from rapidata import __main__ as cli
+from rapidata import _agent_hint
+
+
+@pytest.fixture(autouse=True)
+def marker(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
+    path = tmp_path / "skill-read"
+    monkeypatch.setattr(_agent_hint, "SKILL_READ_MARKER", path)
+    return path
 
 
 @pytest.fixture
@@ -46,3 +54,8 @@ def test_fetch_failure_points_at_the_online_copy(
 def test_no_command_prints_help(capsys: pytest.CaptureFixture[str]):
     assert cli.main([]) == 0
     assert "skill" in capsys.readouterr().out
+
+
+def test_reading_the_skill_writes_the_marker(skill: str, marker: Path):
+    assert cli.main(["skill"]) == 0
+    assert marker.is_file()

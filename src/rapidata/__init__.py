@@ -7,6 +7,10 @@ project) or at https://docs.rapidata.ai/llms-full.txt.
 
 __version__ = "3.25.6"
 
+from ._agent_hint import print_agent_hint as _print_agent_hint
+
+_print_agent_hint()
+
 from .rapidata_client import (
     RapidataClient,
     RapidataAudience,
