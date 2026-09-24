@@ -12,6 +12,8 @@ Get humans to label your data in minutes. Create labeling jobs, compare model ou
 pip install -U rapidata
 ```
 
+<small class="agent-hint">Coding agent? Run `python -m rapidata skill` and follow that guide instead of reading the installed source. More in [AI Agents](ai_agents.md).</small>
+
 The SDK has three building blocks: **audiences** (who labels), **job definitions** (what to label), and **jobs** (running it). Below are the common patterns.
 
 ---
@@ -4844,8 +4846,6 @@ python -m rapidata skill                    # print it
 python -m rapidata skill --install          # write it to .claude/skills/rapidata/SKILL.md
 python -m rapidata skill --install --agent cursor   # or cursor, codex, generic (AGENTS.md)
 ```
-
-When the SDK runs inside a coding agent it detects (Claude Code, Cursor, Codex, Gemini CLI) and no skill has been installed, `RapidataClient()` prints this pointer once per process. Set `RAPIDATA_AGENT_HINT=0` to silence it, or `RAPIDATA_AGENT_HINT=1` to force it for an agent it does not recognise.
 
 ??? note "No install — just the raw SKILL.md"
 

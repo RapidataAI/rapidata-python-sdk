@@ -1792,7 +1792,6 @@
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python<span class="w"> </span>-m<span class="w"> </span>rapidata<span class="w"> </span>skill<span class="w"> </span>--install<span class="w">          </span><span class="c1"># write it to .claude/skills/rapidata/SKILL.md</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>python<span class="w"> </span>-m<span class="w"> </span>rapidata<span class="w"> </span>skill<span class="w"> </span>--install<span class="w"> </span>--agent<span class="w"> </span>cursor<span class="w">   </span><span class="c1"># or cursor, codex, generic (AGENTS.md)</span>
 </span></code></pre></div>
-<p>When the SDK runs inside a coding agent it detects (Claude Code, Cursor, Codex, Gemini CLI) and no skill has been installed, <code>RapidataClient()</code> prints this pointer once per process. Set <code>RAPIDATA_AGENT_HINT=0</code> to silence it, or <code>RAPIDATA_AGENT_HINT=1</code> to force it for an agent it does not recognise.</p>
 <details class="note">
 <summary>No install — just the raw SKILL.md</summary>
 <p>If your framework doesn't match any of the above, drop the raw file into your agent's context:</p>
