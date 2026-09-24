@@ -5,7 +5,7 @@ guide first with ``python -m rapidata skill`` (``--install`` keeps it in the
 project) or at https://docs.rapidata.ai/llms-full.txt.
 """
 
-__version__ = "3.25.5"
+__version__ = "3.25.6"
 
 from .rapidata_client import (
     RapidataClient,
