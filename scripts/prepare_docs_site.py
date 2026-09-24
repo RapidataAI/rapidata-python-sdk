@@ -49,6 +49,7 @@ def redirect(destination: Path) -> str:
 <head>
   <meta charset="utf-8">
   <title>Documentation moved</title>
+  <meta name="robots" content="noindex">
   <link rel="canonical" href="{SITE_URL}{escaped}">
   <script>window.location.replace({json.dumps(url)} + window.location.search + window.location.hash);</script>
   <noscript><meta http-equiv="refresh" content="0; url={escaped}"></noscript>
@@ -65,8 +66,6 @@ def prepare(site: Path, previous: Path, root_files: Path) -> None:
         raise ValueError(
             "Use a clean MkDocs build, without archived versions or aliases"
         )
-    if not (previous / "2.x/index.html").is_file():
-        raise ValueError("The published 2.x archive is required before deployment")
 
     for name in ("robots.txt", "llms.txt"):
         shutil.copyfile(root_files / name, site / name)
@@ -78,6 +77,8 @@ def prepare(site: Path, previous: Path, root_files: Path) -> None:
     historical = pages(previous)
     for alias in ALIASES:
         historical |= pages(previous / alias)
+    legacy = {path.relative_to(previous) for path in (previous / "2.x").rglob("*.html")}
+    legacy.add(Path("2.x/index.html"))
 
     # Pages cached under an alias keep loading their assets from that alias.
     for alias in ALIASES:
@@ -107,17 +108,11 @@ def prepare(site: Path, previous: Path, root_files: Path) -> None:
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(content, encoding="utf-8")
 
-    shutil.copytree(previous / "2.x", site / "2.x")
-    (site / "versions.json").write_text(
-        json.dumps(
-            [
-                {"version": "3.x", "title": "Current", "aliases": ["latest"]},
-                {"version": "2.x", "title": "2.x (legacy)", "aliases": []},
-            ]
-        )
-        + "\n",
-        encoding="utf-8",
-    )
+    home = redirect(Path("index.html"))
+    for page in legacy:
+        output = site / page
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(home, encoding="utf-8")
 
 
 if __name__ == "__main__":

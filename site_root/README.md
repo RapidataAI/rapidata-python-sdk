@@ -18,9 +18,8 @@ It explicitly requests a Pages build after pushing and waits for publication.
 
 ## Compatibility
 
-The publisher copies the existing `2.x/` archive unchanged and retains
-`versions.json` for its version selector. It refuses to publish without the archive.
-Remove this requirement deliberately when retiring 2.x.
+The 2.x documentation is retired. Every page ever published under `2.x/` is an
+HTML redirect to the homepage; its assets, search index and sitemap are not published.
 
 `latest/` and `3.x/` contain HTML redirects to current root pages. Redirects preserve
 query strings and fragments in JavaScript, with a no-JavaScript fallback link and
