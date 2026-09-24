@@ -10,6 +10,10 @@ OpenID Connect secured; authenticate with a client ID/secret created at
 https://app.rapidata.ai/settings/tokens, or via interactive browser login on
 first run.
 
+Coding agents: before writing SDK code, run `python -m rapidata skill` (after
+`pip install rapidata`) and follow that guide. Do not reconstruct usage from the
+installed source. Setup per agent: https://docs.rapidata.ai/ai_agents/
+
 - Developer portal: https://docs.rapidata.ai/developers/
 - OpenAPI specification: https://docs.rapidata.ai/openapi.json
 - Authentication (OAuth 2.0): https://docs.rapidata.ai/authentication/

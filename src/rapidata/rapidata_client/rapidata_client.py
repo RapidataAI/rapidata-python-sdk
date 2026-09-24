@@ -33,7 +33,6 @@ from rapidata.rapidata_client.config import (
     managed_print,
     rapidata_config,
 )
-from rapidata.rapidata_client.config._agent_hint import agent_hint_once
 
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.job.rapidata_job_manager import RapidataJobManager
@@ -166,10 +165,6 @@ class RapidataClient:
         with tracer.start_as_current_span("RapidataClient.__init__"):
             logger.debug("Checking version")
             self._check_version()
-
-            hint = agent_hint_once()
-            if hint:
-                managed_print(hint)
 
             logger.debug("Initializing OpenAPIService")
             self._openapi_service = OpenAPIService(

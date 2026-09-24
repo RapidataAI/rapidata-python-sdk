@@ -14,12 +14,18 @@ from pathlib import Path
 import requests
 
 from rapidata import __version__
-from rapidata.rapidata_client.config._agent_hint import (
-    AGENT_DOCS_URL,
-    LLMS_FULL_URL,
-    SKILL_INSTALL_PATHS,
-    SKILL_RAW_URL,
-)
+
+SKILL_RAW_URL = "https://raw.githubusercontent.com/RapidataAI/skills/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md"
+LLMS_FULL_URL = "https://docs.rapidata.ai/llms-full.txt"
+AGENT_DOCS_URL = "https://docs.rapidata.ai/ai_agents/"
+
+# Where each agent picks up a project-local skill file, relative to the project root.
+SKILL_INSTALL_PATHS: dict[str, str] = {
+    "claude": ".claude/skills/rapidata/SKILL.md",
+    "cursor": ".cursor/rules/rapidata.mdc",
+    "codex": ".codex/skills/rapidata/SKILL.md",
+    "generic": "AGENTS.md",
+}
 
 
 def fetch_skill(timeout: float = 10) -> str:
