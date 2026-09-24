@@ -27,8 +27,6 @@ python -m rapidata skill --install          # write it to .claude/skills/rapidat
 python -m rapidata skill --install --agent cursor   # or cursor, codex, generic (AGENTS.md)
 ```
 
-When the SDK runs inside a coding agent it detects (Claude Code, Cursor, Codex, Gemini CLI) and no skill has been installed, `RapidataClient()` prints this pointer once per process. Set `RAPIDATA_AGENT_HINT=0` to silence it, or `RAPIDATA_AGENT_HINT=1` to force it for an agent it does not recognise.
-
 ??? note "No install — just the raw SKILL.md"
 
     If your framework doesn't match any of the above, drop the raw file into your agent's context:
