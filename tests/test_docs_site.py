@@ -38,10 +38,13 @@ def root_files(tmp_path):
     return directory
 
 
-def test_migrates_published_pages_and_preserves_archive(tmp_path, root_files):
+def test_migrates_published_pages_and_retires_archive(tmp_path, root_files):
     previous = tmp_path / "published"
     write(previous, "2.x/index.html", "legacy homepage")
     write(previous, "2.x/assets/style.css", "legacy styles")
+    write(previous, "2.x/reference/order/index.html", "legacy order API")
+    write(previous, "2.x/sitemap.xml", "legacy sitemap")
+    write(previous, "versions.json", "legacy selector")
     write(previous, "quickstart/index.html", "obsolete instructions")
     write(previous, "examples/compare_order/index.html", "obsolete example")
     write(previous, "3.x/reference/removed/index.html", "obsolete API")
@@ -71,8 +74,13 @@ def test_migrates_published_pages_and_preserves_archive(tmp_path, root_files):
     assert (site / "index.html").read_text() == "current"
     assert (site / "quickstart/index.html").read_text() == "current"
     assert (site / "sitemap.xml").read_text() == "current"
-    assert (site / "2.x/index.html").read_text() == "legacy homepage"
-    assert (site / "2.x/assets/style.css").read_text() == "legacy styles"
+    for page in ("2.x/index.html", "2.x/reference/order/index.html"):
+        legacy = (site / page).read_text()
+        assert 'href="https://docs.rapidata.ai/"' in legacy
+        assert '<meta name="robots" content="noindex">' in legacy
+    assert not (site / "2.x/assets/style.css").exists()
+    assert not (site / "2.x/sitemap.xml").exists()
+    assert not (site / "versions.json").exists()
     assert (site / "CNAME").read_text() == "docs.rapidata.ai"
     assert (site / ".nojekyll").is_file()
     assert not (site / "README.md").exists()
@@ -83,12 +91,13 @@ def test_migrates_published_pages_and_preserves_archive(tmp_path, root_files):
     assert (next_site / "3.x/reference/removed/index.html").read_text() == removed
     assert (next_site / "latest/quickstart.md").read_text() == "current"
     assert not (next_site / "latest/latest").exists()
+    assert (next_site / "2.x/reference/order/index.html").read_text() == legacy
 
 
-def test_missing_archive_blocks_deployment(tmp_path, root_files):
+def test_publishes_without_legacy_archive(tmp_path, root_files):
     site = build_site(tmp_path / "site")
-    with pytest.raises(ValueError, match="2.x archive is required"):
-        prepare(site, tmp_path / "missing", root_files)
+    prepare(site, tmp_path / "missing", root_files)
+    assert 'href="https://docs.rapidata.ai/"' in (site / "2.x/index.html").read_text()
 
 
 def test_existing_alias_blocks_reusing_dirty_build(tmp_path, root_files):
