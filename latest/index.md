@@ -25,6 +25,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
         instruction="Which image do you prefer?",
         datapoints=[["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
                     "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
+        responses_per_datapoint=25,
     )
 
     job = audience.assign_job(job_definition)
@@ -48,6 +49,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
         contexts=["A group of elephants painting vibrant murals on a city wall."],
         datapoints=[["https://assets.rapidata.ai/0074_sora_1.mp4",
                     "https://assets.rapidata.ai/0074_hunyuan_1724.mp4"]],
+        responses_per_datapoint=25,
     )
 
     job = audience.assign_job(job_definition)
@@ -70,6 +72,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
         instruction="Which audio clip sounds more natural?",
         datapoints=[["https://assets.rapidata.ai/Chat_gpt.mp3",
                     "https://assets.rapidata.ai/ElevenLabs.mp3"]],
+        responses_per_datapoint=25,
     )
 
     job = audience.assign_job(job_definition)
@@ -93,6 +96,7 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
         datapoints=[["The children were amazed by the magician's tricks",
                     "The children were amusing by the magician's tricks."]],
         data_type="text",
+        responses_per_datapoint=25,
     )
 
     job = audience.assign_job(job_definition)
