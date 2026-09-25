@@ -65,7 +65,7 @@ flow_item = flow.create_new_flow_batch(
 ```
 
 1. Shown alongside the instruction for each comparison.
-2. Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.
+2. Stops the flow item after this many seconds and returns the responses collected so far. Between 70 seconds and 1 hour; defaults to 4 minutes when omitted.
 
 ## 3. Get Results
 
