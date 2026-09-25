@@ -11,6 +11,7 @@ from rapidata import _agent_hint
 from rapidata._agent_hint import (
     AGENT_HINT,
     agent_hint,
+    detected_coding_agent,
     mark_skill_read,
     running_under_coding_agent,
 )
@@ -18,7 +19,7 @@ from rapidata._agent_hint import (
 
 @pytest.fixture(autouse=True)
 def clean_env(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
-    for var in _agent_hint._AGENT_ENV_VARS + ("RAPIDATA_AGENT_HINT",):
+    for var in (*_agent_hint._AGENT_ENV_VARS, "RAPIDATA_AGENT_HINT"):
         monkeypatch.delenv(var, raising=False)
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(_agent_hint, "SKILL_READ_MARKER", tmp_path / "skill-read")
@@ -41,6 +42,31 @@ def test_override_silences(monkeypatch: pytest.MonkeyPatch, value: str):
     monkeypatch.setenv("CLAUDECODE", "1")
     monkeypatch.setenv("RAPIDATA_AGENT_HINT", value)
     assert agent_hint() is None
+
+
+@pytest.mark.parametrize(
+    ("env", "expected"),
+    [
+        ({}, None),
+        ({"CLAUDECODE": "1", "AI_AGENT": "claude-code/2"}, "claude-code"),
+        ({"CURSOR_AGENT": "1"}, "cursor"),
+        ({"CODEX_SANDBOX": "seatbelt"}, "codex"),
+        ({"AI_AGENT": "something-new"}, "unknown"),
+    ],
+)
+def test_detected_coding_agent_names_the_runtime(
+    monkeypatch: pytest.MonkeyPatch, env: dict[str, str], expected: str | None
+):
+    for var, value in env.items():
+        monkeypatch.setenv(var, value)
+    assert detected_coding_agent() == expected
+
+
+def test_detection_ignores_hint_override(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("CLAUDECODE", "1")
+    monkeypatch.setenv("RAPIDATA_AGENT_HINT", "0")
+    assert detected_coding_agent() == "claude-code"
+    assert running_under_coding_agent() is False
 
 
 def test_silent_once_the_guide_was_read(monkeypatch: pytest.MonkeyPatch):

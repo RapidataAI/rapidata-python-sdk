@@ -70,7 +70,9 @@ class ConditionalValidationSelection(RapidataSelection):
                 validationSetId=self.validation_set_id,
                 validationChances=[
                     ConditionalValidationSelectionValidationChance(
-                        userScoreThreshold=threshold, chance=chance, rapidCount=rapid_count
+                        userScoreThreshold=threshold,
+                        chance=chance,
+                        rapidCount=rapid_count,
                     )
                     for threshold, chance, rapid_count in zip(
                         self.thresholds, self.chances, self.rapid_counts

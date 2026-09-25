@@ -570,7 +570,9 @@ class ValidationSetManager:
         logger.debug("Creating validation set")
         validation_set_id = (
             self._openapi_service.validation.validation_api.validation_set_post(
-                create_validation_set_endpoint_input=CreateValidationSetEndpointInput(name=name)
+                create_validation_set_endpoint_input=CreateValidationSetEndpointInput(
+                    name=name
+                )
             )
         ).validation_set_id
 

@@ -10,20 +10,25 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.resources import Resource
 from rapidata import __version__
+from rapidata._agent_hint import detected_coding_agent
 from .logging_config import LoggingConfig, register_config_handler
 from rapidata.rapidata_client.config import logger
 
 
-def get_system_attributes() -> dict[str, str | int | None]:
+def get_system_attributes() -> dict[str, str | int | bool | None]:
     """Gather system telemetry for traces."""
     try:
-        attrs = {
+        attrs: dict[str, str | int | bool | None] = {
             "system.os": platform.system(),
             "system.os.version": platform.release(),
             "system.arch": platform.machine(),
             "python.version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
             "process.cpu_count": os.cpu_count(),
         }
+        agent = detected_coding_agent()
+        attrs["agent.detected"] = agent is not None
+        if agent:
+            attrs["agent.name"] = agent
         logger.debug(f"System attributes: {attrs}")
         return attrs
     except Exception:
