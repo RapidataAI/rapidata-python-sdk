@@ -528,9 +528,3 @@ body {
 
 #llms-copy-button button:hover::after { opacity: 1; }
 #llms-copy-button button.copied::after { opacity: 0 !important; }
-
-.md-typeset .agent-hint {
-    display: block;
-    margin-top: -0.4rem;
-    color: var(--md-default-fg-color--light);
-}

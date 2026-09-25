@@ -12,8 +12,6 @@ Get humans to label your data in minutes. Create labeling jobs, compare model ou
 pip install -U rapidata
 ```
 
-<small class="agent-hint">Coding agent? Run `python -m rapidata skill` and follow that guide instead of reading the installed source. More in [AI Agents](ai_agents.md).</small>
-
 The SDK has three building blocks: **audiences** (who labels), **job definitions** (what to label), and **jobs** (running it). Below are the common patterns.
 
 ---
