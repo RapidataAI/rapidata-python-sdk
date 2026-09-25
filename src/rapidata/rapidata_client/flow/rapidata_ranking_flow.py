@@ -83,13 +83,17 @@ class RapidataRankingFlow(RapidataFlow):
 
             logger.debug("Updating config for flow '%s'", self.name)
 
+            update_input = UpdateConfigEndpointInput(
+                criteria=instruction,
+                startingElo=starting_elo,
+                minResponses=min_responses,
+                maxResponses=max_responses,
+            )
+            # The field is nullable, so passing None would reset the drain to follow the serve timeout.
+            if drain_duration is not None:
+                update_input.drain_duration_seconds = drain_duration
+
             self._openapi_service.flow.ranking_flow_api.flow_ranking_flow_id_patch(
                 flow_id=self.id,
-                update_config_endpoint_input=UpdateConfigEndpointInput(
-                    criteria=instruction,
-                    startingElo=starting_elo,
-                    minResponses=min_responses,
-                    maxResponses=max_responses,
-                    drainDurationSeconds=drain_duration,
-                ),
+                update_config_endpoint_input=update_input,
             )
