@@ -3524,6 +3524,11 @@
             ],
             "description": "Feature flags to enable for this flow."
           },
+          "drainDurationSeconds": {
+            "type": "integer",
+            "description": "Duration in seconds before an item's time to live at which it stops serving new users. Applies to items created after the update.",
+            "format": "int32"
+          },
           "targetResponseCount": {
             "type": "integer",
             "description": "Target average response count per completed item. Set to null to disable PID control.",
@@ -3606,6 +3611,11 @@
               }
             ],
             "description": "Feature flags to enable for this flow."
+          },
+          "drainDurationSeconds": {
+            "type": "integer",
+            "description": "Duration in seconds before an item's time to live at which it stops serving new users. Applies to items created after the update.",
+            "format": "int32"
           },
           "targetResponseCount": {
             "type": "integer",

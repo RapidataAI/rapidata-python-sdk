@@ -73,6 +73,7 @@ class RapidataRankingFlow(RapidataFlow):
         starting_elo: int | None = None,
         min_responses: int | None = None,
         max_responses: int | None = None,
+        drain_duration: int | None = None,
     ) -> None:
         """Update the instruction and response thresholds of this ranking flow."""
         with tracer.start_as_current_span("RapidataFlow.update_config"):
@@ -89,5 +90,6 @@ class RapidataRankingFlow(RapidataFlow):
                     startingElo=starting_elo,
                     minResponses=min_responses,
                     maxResponses=max_responses,
+                    drainDurationSeconds=drain_duration,
                 ),
             )

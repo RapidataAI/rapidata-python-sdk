@@ -372,14 +372,19 @@ class TestCreateNewFlowBatch:
 
         assert [(item.id, item._flow_type) for item in items] == [("fli-1", "simple")]
 
-    def test_update_config_is_ranking_only(self):
+    def test_update_config_sends_only_the_drain_duration(self):
         svc = _openapi_service()
         flow = RapidataClassifyFlow("flw-1", "Classify", svc)
 
-        assert not hasattr(flow, "update_config")
+        flow.update_config(drain_duration=20)
+
+        call = svc.flow.simple_flow_api.flow_simple_flow_id_patch.call_args
+        assert call.kwargs["flow_id"] == "flw-1"
+        assert call.kwargs["update_simple_flow_config_endpoint_input"].to_dict() == {
+            "drainDurationSeconds": 20
+        }
         assert not hasattr(RapidataFlow, "update_config")
         assert not hasattr(RapidataFlow, "create_new_flow_batch")
-
         svc.flow.ranking_flow_api.flow_ranking_flow_id_patch.assert_not_called()
 
 
