@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import pytest
 
+from rapidata.rapidata_client.config import tracer
 from rapidata.rapidata_client.config.logging_config import (
     LoggingConfig,
     _default_enable_otlp,
@@ -49,3 +50,13 @@ def test_explicit_true_overrides_the_pytest_default(monkeypatch: pytest.MonkeyPa
     monkeypatch.delenv("RAPIDATA_DISABLE_OTLP", raising=False)
 
     assert LoggingConfig(enable_otlp=True).enable_otlp is True
+
+
+def test_standalone_config_does_not_enable_the_global_tracer(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    monkeypatch.delenv("RAPIDATA_DISABLE_OTLP", raising=False)
+
+    LoggingConfig(enable_otlp=True)
+
+    assert tracer._enabled is False
