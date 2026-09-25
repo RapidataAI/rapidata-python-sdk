@@ -72,10 +72,6 @@ class LoggingConfig(BaseModel):
     enable_otlp: bool = Field(default_factory=_default_enable_otlp)
     environment: str = Field(default="rapidata.ai")
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self._notify_handlers()
-
     def __setattr__(self, name: str, value) -> None:
         super().__setattr__(name, value)
         # Sync enable_otlp to env var so child processes (e.g. Ray workers) inherit it

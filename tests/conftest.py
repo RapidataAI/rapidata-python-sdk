@@ -56,6 +56,6 @@ def agent_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
 @pytest.fixture(autouse=True)
 def _resync_tracer_to_global_config():
     yield
-    # Constructing any LoggingConfig broadcasts to the global tracer, so a test that
-    # builds one with enable_otlp=True would re-enable export for every later test.
+    # Re-applies the global config so a test that pointed the shared tracer elsewhere
+    # cannot leave export enabled for the tests after it.
     rapidata_config.logging._notify_handlers()

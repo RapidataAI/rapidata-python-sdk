@@ -42,3 +42,5 @@ class RapidataConfig(BaseModel):
 
 
 rapidata_config = RapidataConfig()
+# Only the global config drives the shared logger/tracer; a standalone LoggingConfig must not.
+rapidata_config.logging._notify_handlers()
