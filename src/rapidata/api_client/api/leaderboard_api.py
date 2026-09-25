@@ -2661,7 +2661,7 @@ class LeaderboardApi:
     ) -> None:
         """Updates a leaderboard using patch semantics.
 
-        displayInstruction is presentation-only and never affects run creation, vote recording or ranking. A supplied  featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.
+        displayInstruction is presentation-only and never affects run creation, vote recording or ranking; setting or clearing it requires platform-admin. A supplied  featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.
 
         :param leaderboard_id: The id of the leaderboard to update. (required)
         :type leaderboard_id: str
@@ -2735,7 +2735,7 @@ class LeaderboardApi:
     ) -> ApiResponse[None]:
         """Updates a leaderboard using patch semantics.
 
-        displayInstruction is presentation-only and never affects run creation, vote recording or ranking. A supplied  featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.
+        displayInstruction is presentation-only and never affects run creation, vote recording or ranking; setting or clearing it requires platform-admin. A supplied  featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.
 
         :param leaderboard_id: The id of the leaderboard to update. (required)
         :type leaderboard_id: str
@@ -2809,7 +2809,7 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Updates a leaderboard using patch semantics.
 
-        displayInstruction is presentation-only and never affects run creation, vote recording or ranking. A supplied  featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.
+        displayInstruction is presentation-only and never affects run creation, vote recording or ranking; setting or clearing it requires platform-admin. A supplied  featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.
 
         :param leaderboard_id: The id of the leaderboard to update. (required)
         :type leaderboard_id: str
@@ -4614,7 +4614,7 @@ class LeaderboardApi:
     ) -> CreateLeaderboardEndpointOutput:
         """Creates a new leaderboard.
 
-        displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back  to instruction when null. It never affects run creation, vote recording or ranking.
+        displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back  to instruction when null. It never affects run creation, vote recording or ranking, and supplying it requires platform-admin.
 
         :param create_leaderboard_endpoint_input: The payload describing the leaderboard to create. (required)
         :type create_leaderboard_endpoint_input: CreateLeaderboardEndpointInput
@@ -4684,7 +4684,7 @@ class LeaderboardApi:
     ) -> ApiResponse[CreateLeaderboardEndpointOutput]:
         """Creates a new leaderboard.
 
-        displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back  to instruction when null. It never affects run creation, vote recording or ranking.
+        displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back  to instruction when null. It never affects run creation, vote recording or ranking, and supplying it requires platform-admin.
 
         :param create_leaderboard_endpoint_input: The payload describing the leaderboard to create. (required)
         :type create_leaderboard_endpoint_input: CreateLeaderboardEndpointInput
@@ -4754,7 +4754,7 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Creates a new leaderboard.
 
-        displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back  to instruction when null. It never affects run creation, vote recording or ranking.
+        displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back  to instruction when null. It never affects run creation, vote recording or ranking, and supplying it requires platform-admin.
 
         :param create_leaderboard_endpoint_input: The payload describing the leaderboard to create. (required)
         :type create_leaderboard_endpoint_input: CreateLeaderboardEndpointInput

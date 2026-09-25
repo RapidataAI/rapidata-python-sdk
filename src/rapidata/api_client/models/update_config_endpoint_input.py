@@ -37,7 +37,7 @@ class UpdateConfigEndpointInput(LazyValidatedModel):
     serve_to_response_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Ratio of concurrent serves to max responses. Set to null to remove the limit.", alias="serveToResponseRatio")
     serve_timeout_seconds: Optional[StrictInt] = Field(default=None, description="Time in seconds a user has to submit an answer after loading the task. Set to null to use the global default.", alias="serveTimeoutSeconds")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Duration in seconds before an item's time to live at which it stops serving new users. Applies to items created after the update.", alias="drainDurationSeconds")
+    drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Seconds before an item's time to live at which it stops serving new users. Set to null to follow the serve timeout. Applies to items created after the update.", alias="drainDurationSeconds")
     target_response_count: Optional[StrictInt] = Field(default=None, description="Target average response count per completed item. Set to null to disable PID control.", alias="targetResponseCount")
     pid_proportional_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID proportional gain.", alias="pidProportionalGain")
     pid_integral_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID integral gain.", alias="pidIntegralGain")
@@ -109,6 +109,11 @@ class UpdateConfigEndpointInput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.serve_timeout_seconds is None and "serve_timeout_seconds" in self.model_fields_set:
             _dict['serveTimeoutSeconds'] = None
+
+        # set to None if drain_duration_seconds (nullable) is None
+        # and model_fields_set contains the field
+        if self.drain_duration_seconds is None and "drain_duration_seconds" in self.model_fields_set:
+            _dict['drainDurationSeconds'] = None
 
         # set to None if target_response_count (nullable) is None
         # and model_fields_set contains the field

@@ -46,7 +46,7 @@ class CreateSimpleFlowEndpointInput(LazyValidatedModel):
     pid_min_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Minimum sessions per minute the PID can set. Defaults to 20.", alias="pidMinSessionsPerMinute")
     pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set. Defaults to 50.", alias="pidMaxSessionsPerMinute")
     pid_batch_mode: Optional[PidBatchMode] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count. Defaults to PerBatch.", alias="pidBatchMode")
-    drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Duration in seconds for draining flow items. Defaults to 40.", alias="drainDurationSeconds")
+    drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Seconds before an item's time to live at which it stops serving new users. Defaults to following the serve timeout.", alias="drainDurationSeconds")
     __properties: ClassVar[List[str]] = ["name", "blueprint", "maxResponses", "minResponses", "audienceId", "validationSetId", "serveToResponseRatio", "serveTimeoutSeconds", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidOutputOffset", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode", "drainDurationSeconds"]
 
     # model_config is inherited from LazyValidatedModel

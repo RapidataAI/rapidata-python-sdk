@@ -30,6 +30,7 @@ class Capability(str, Enum):
     REQUESTFEATURES = 'RequestFeatures'
     RUNEXPERIMENTS = 'RunExperiments'
     MANAGEDFORGEFAUCET = 'ManagedForgeFaucet'
+    UPLOADLONGMEDIA = 'UploadLongMedia'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

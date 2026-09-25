@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.09.24.1846-0d510e2"
+    "version": "2026.09.25.1743-4cba489"
   },
   "servers": [
     {
@@ -10722,7 +10722,7 @@
           "Leaderboard"
         ],
         "summary": "Creates a new leaderboard.",
-        "description": "displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back\n to instruction when null. It never affects run creation, vote recording or ranking.",
+        "description": "displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back\n to instruction when null. It never affects run creation, vote recording or ranking, and supplying it requires platform-admin.",
         "requestBody": {
           "description": "The payload describing the leaderboard to create.",
           "content": {
@@ -11018,7 +11018,7 @@
           "Leaderboard"
         ],
         "summary": "Updates a leaderboard using patch semantics.",
-        "description": "displayInstruction is presentation-only and never affects run creation, vote recording or ranking. A supplied\n featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.",
+        "description": "displayInstruction is presentation-only and never affects run creation, vote recording or ranking; setting or clearing it requires platform-admin. A supplied\n featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.",
         "parameters": [
           {
             "name": "leaderboardId",
