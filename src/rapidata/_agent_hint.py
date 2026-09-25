@@ -46,6 +46,8 @@ AGENT_HINT = (
     "  python -m rapidata skill            # print the guide\n"
     "  python -m rapidata skill --install  # keep it in this project\n"
     f"  {LLMS_FULL_URL}\n"
+    "Before the first RapidataClient(), run `python -m rapidata status`. If it reports not logged in,\n"
+    "run `python -m rapidata login` and show the user the URL it prints (it waits up to 5 minutes).\n"
     "This message stops once the guide has been read. RAPIDATA_AGENT_HINT=0 silences it."
 )
 
