@@ -12,7 +12,9 @@ _ENV_PREFIX = "RAPIDATA_"
 _SIMPLE_SCALARS = frozenset({str, int, float, Path})
 
 
-def apply_env_overrides(model_fields: dict[str, FieldInfo], data: dict[str, Any]) -> dict[str, Any]:
+def apply_env_overrides(
+    model_fields: dict[str, FieldInfo], data: dict[str, Any]
+) -> dict[str, Any]:
     """Apply environment variable overrides to model data.
 
     For each model field not already in ``data``, checks for an environment

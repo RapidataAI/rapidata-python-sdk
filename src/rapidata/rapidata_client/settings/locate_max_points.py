@@ -25,7 +25,5 @@ class LocateMaxPointsSetting(RapidataSetting):
 
     def __init__(self, value: int = 3):
         if value < 1:
-            raise ValueError(
-                "The maximum number of points must be at least 1."
-            )
+            raise ValueError("The maximum number of points must be at least 1.")
         super().__init__(key="locate_max_points", value=value)

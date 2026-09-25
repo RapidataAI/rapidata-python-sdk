@@ -26,9 +26,7 @@ class DatapointsValidator:
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("Number of contexts must match number of datapoints")
         if media_contexts is not None and len(media_contexts) != len(datapoints):
-            raise ValueError(
-                "Number of media contexts must match number of datapoints"
-            )
+            raise ValueError("Number of media contexts must match number of datapoints")
         if sentences and len(sentences) != len(datapoints):
             raise ValueError("Number of sentences must match number of datapoints")
         if private_metadata and len(private_metadata) != len(datapoints):

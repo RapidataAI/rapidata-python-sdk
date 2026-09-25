@@ -29,16 +29,16 @@ SKILL_INSTALL_PATHS: dict[str, str] = {
 
 SKILL_READ_MARKER = Path.home() / ".config" / "rapidata" / "skill-read"
 
-# Claude Code exports CLAUDECODE=1 and AI_AGENT, Cursor CURSOR_AGENT=1,
-# Codex CODEX_THREAD_ID (CODEX_SANDBOX when sandboxed), Gemini CLI GEMINI_CLI=1.
-_AGENT_ENV_VARS = (
-    "AI_AGENT",
-    "CLAUDECODE",
-    "CURSOR_AGENT",
-    "CODEX_THREAD_ID",
-    "CODEX_SANDBOX",
-    "GEMINI_CLI",
-)
+# Env var each agent runtime exports -> the name reported in traces. Specific
+# vars come before the generic AI_AGENT so the first match names the runtime.
+_AGENT_ENV_VARS: dict[str, str] = {
+    "CLAUDECODE": "claude-code",
+    "CURSOR_AGENT": "cursor",
+    "CODEX_THREAD_ID": "codex",
+    "CODEX_SANDBOX": "codex",
+    "GEMINI_CLI": "gemini-cli",
+    "AI_AGENT": "unknown",
+}
 
 AGENT_HINT = (
     "rapidata: coding agent detected. Before exploring the installed source, "
@@ -48,6 +48,16 @@ AGENT_HINT = (
     f"  {LLMS_FULL_URL}\n"
     "This message stops once the guide has been read. RAPIDATA_AGENT_HINT=0 silences it."
 )
+
+
+def detected_coding_agent() -> str | None:
+    """Return the name of the coding-agent runtime driving this process, or None.
+
+    Ignores ``RAPIDATA_AGENT_HINT``: silencing the hint does not change what drives the process.
+    """
+    return next(
+        (name for var, name in _AGENT_ENV_VARS.items() if os.environ.get(var)), None
+    )
 
 
 def running_under_coding_agent() -> bool:
@@ -61,7 +71,7 @@ def running_under_coding_agent() -> bool:
         return False
     if override in ("1", "true", "yes"):
         return True
-    return any(os.environ.get(var) for var in _AGENT_ENV_VARS)
+    return detected_coding_agent() is not None
 
 
 def skill_seen(root: Path | None = None) -> bool:

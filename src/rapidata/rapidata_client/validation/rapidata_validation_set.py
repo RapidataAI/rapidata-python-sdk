@@ -101,7 +101,8 @@ class RapidataValidationSet:
                 can_be_flagged,
             )
             self._openapi_service.validation.validation_api.validation_set_validation_set_id_patch(
-                self.id, UpdateValidationSetEndpointInput(isFlagOverruled=(not can_be_flagged))
+                self.id,
+                UpdateValidationSetEndpointInput(isFlagOverruled=(not can_be_flagged)),
             )
             return self
 
