@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.09.23.1028-76c2d0f"
+    "version": "2026.09.24.1846-0d510e2"
   },
   "servers": [
     {
@@ -4137,7 +4137,7 @@
           "HuggingFaceSync"
         ],
         "summary": "Starts a HuggingFace sync of the benchmark and returns its current sync status.",
-        "description": "The export configuration (sampleMediaMode, segmentExports) is persisted on the\n benchmark; a field left null keeps the stored value, and an empty segmentExports list\n resets to the legacy shape. A configuration that differs from the one the dataset was last\n built with promotes the attempt to a full rebuild, reported as forcedFullRebuild.\n An asset segment carried into the dataset holds exactly one file per prompt: matchups whose\n prompt carries no value, or a multi-asset, under a configured asset segment are left out of\n the export (several files belong in several segments). Responds 400 when a segment export names a key the benchmark's prompt structure does not\n define, when a column does not match ^[a-z][a-z0-9_]{0,63}$, is used twice or\n collides with a reserved dataset column (model1, model2, image1,\n image2, video1, video2, file1, file2, or any name starting\n with weighted_results_ or detailed_results_), when a key is exported twice, or\n when a mode contradicts the segment's kind (Text only for text segments, Embed\n / Url only for asset segments). Responds 409 Conflict when a sync is already in\n progress for the benchmark, or when a repo name is supplied that differs from the one an\n earlier successful sync established. The repo name is only honored while the benchmark has\n never completed a sync.",
+        "description": "The export configuration (sampleMediaMode, segmentExports) is persisted on the\n benchmark; a field left null keeps the stored value, and an empty segmentExports list\n resets to the legacy shape. Every sync rebuilds the whole dataset; an existing README is kept.\n An asset segment carried into the dataset holds exactly one file per prompt: matchups whose\n prompt carries no value, or a multi-asset, under a configured asset segment are left out of\n the export (several files belong in several segments). Responds 400 when a segment export names a key the benchmark's prompt structure does not\n define, when a column does not match ^[a-z][a-z0-9_]{0,63}$, is used twice or\n collides with a reserved dataset column (model1, model2, image1,\n image2, video1, video2, file1, file2, or any name starting\n with weighted_results_ or detailed_results_), when a key is exported twice, or\n when a mode contradicts the segment's kind (Text only for text segments, Embed\n / Url only for asset segments). Responds 409 Conflict when a sync is already in\n progress for the benchmark, or when a repo name is supplied that differs from the one an\n earlier successful sync established. The repo name is only honored while the benchmark has\n never completed a sync.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -24132,11 +24132,6 @@
             "description": "Optional target repo name. Only honored while the benchmark has never completed a sync;\n defaults to a name derived from the benchmark name.",
             "nullable": true
           },
-          "fullRebuild": {
-            "type": "boolean",
-            "description": "When true, re-export the entire benchmark as a non-incremental sync. Defaults to false.",
-            "nullable": true
-          },
           "sampleMediaMode": {
             "type": "string",
             "oneOf": [
@@ -24164,8 +24159,7 @@
       "StartBenchmarkHuggingFaceSyncEndpoint_Output": {
         "required": [
           "status",
-          "appliedSampleMediaMode",
-          "forcedFullRebuild"
+          "appliedSampleMediaMode"
         ],
         "type": "object",
         "properties": {
@@ -24220,10 +24214,6 @@
               }
             ],
             "description": "The persisted sample media mode this attempt exports with. What Auto resolves to\n is decided during the upload, per content type."
-          },
-          "forcedFullRebuild": {
-            "type": "boolean",
-            "description": "Whether the attempt was promoted to a full rebuild because the export configuration,\n the export rules or the set of participants whose votes are excluded differs from what\n the dataset was last built with."
           }
         }
       },

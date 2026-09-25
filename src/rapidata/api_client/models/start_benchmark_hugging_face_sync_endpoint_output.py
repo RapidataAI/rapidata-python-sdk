@@ -16,7 +16,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.hugging_face_sample_media_mode import HuggingFaceSampleMediaMode
 from rapidata.api_client.models.hugging_face_sync_outcome import HuggingFaceSyncOutcome
@@ -38,8 +38,7 @@ class StartBenchmarkHuggingFaceSyncEndpointOutput(LazyValidatedModel):
     last_synced_at: Optional[datetime] = Field(default=None, description="When the benchmark was last successfully synced, or null.", alias="lastSyncedAt")
     last_error: Optional[StrictStr] = Field(default=None, description="The error from the last failed attempt, or null.", alias="lastError")
     applied_sample_media_mode: HuggingFaceSampleMediaMode = Field(description="The persisted sample media mode this attempt exports with. What Auto resolves to  is decided during the upload, per content type.", alias="appliedSampleMediaMode")
-    forced_full_rebuild: StrictBool = Field(description="Whether the attempt was promoted to a full rebuild because the export configuration,  the export rules or the set of participants whose votes are excluded differs from what  the dataset was last built with.", alias="forcedFullRebuild")
-    __properties: ClassVar[List[str]] = ["status", "outcome", "repoId", "repoUrl", "prUrl", "lastSyncedAt", "lastError", "appliedSampleMediaMode", "forcedFullRebuild"]
+    __properties: ClassVar[List[str]] = ["status", "outcome", "repoId", "repoUrl", "prUrl", "lastSyncedAt", "lastError", "appliedSampleMediaMode"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -125,8 +124,7 @@ class StartBenchmarkHuggingFaceSyncEndpointOutput(LazyValidatedModel):
             "prUrl": obj.get("prUrl"),
             "lastSyncedAt": obj.get("lastSyncedAt"),
             "lastError": obj.get("lastError"),
-            "appliedSampleMediaMode": obj.get("appliedSampleMediaMode"),
-            "forcedFullRebuild": obj.get("forcedFullRebuild")
+            "appliedSampleMediaMode": obj.get("appliedSampleMediaMode")
         }
         try:
             _obj = cls.model_validate(_data)

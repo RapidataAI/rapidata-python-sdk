@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.hugging_face_sample_media_mode import HuggingFaceSampleMediaMode
 from rapidata.api_client.models.hugging_face_segment_export import HuggingFaceSegmentExport
@@ -29,10 +29,9 @@ class StartBenchmarkHuggingFaceSyncEndpointInput(LazyValidatedModel):
     StartBenchmarkHuggingFaceSyncEndpointInput
     """ # noqa: E501
     repo_name: Optional[StrictStr] = Field(default=None, description="Optional target repo name. Only honored while the benchmark has never completed a sync;  defaults to a name derived from the benchmark name.", alias="repoName")
-    full_rebuild: Optional[StrictBool] = Field(default=None, description="When true, re-export the entire benchmark as a non-incremental sync. Defaults to false.", alias="fullRebuild")
     sample_media_mode: Optional[HuggingFaceSampleMediaMode] = Field(default=None, description="How the two compared sample columns are represented. Null keeps the stored value;  defaults to Auto on the first sync.", alias="sampleMediaMode")
     segment_exports: Optional[List[HuggingFaceSegmentExport]] = Field(default=None, alias="segmentExports")
-    __properties: ClassVar[List[str]] = ["repoName", "fullRebuild", "sampleMediaMode", "segmentExports"]
+    __properties: ClassVar[List[str]] = ["repoName", "sampleMediaMode", "segmentExports"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -81,11 +80,6 @@ class StartBenchmarkHuggingFaceSyncEndpointInput(LazyValidatedModel):
         if self.repo_name is None and "repo_name" in self.model_fields_set:
             _dict['repoName'] = None
 
-        # set to None if full_rebuild (nullable) is None
-        # and model_fields_set contains the field
-        if self.full_rebuild is None and "full_rebuild" in self.model_fields_set:
-            _dict['fullRebuild'] = None
-
         # set to None if sample_media_mode (nullable) is None
         # and model_fields_set contains the field
         if self.sample_media_mode is None and "sample_media_mode" in self.model_fields_set:
@@ -109,7 +103,6 @@ class StartBenchmarkHuggingFaceSyncEndpointInput(LazyValidatedModel):
 
         _data = {
             "repoName": obj.get("repoName"),
-            "fullRebuild": obj.get("fullRebuild"),
             "sampleMediaMode": obj.get("sampleMediaMode"),
             "segmentExports": [HuggingFaceSegmentExport.from_dict(_item) for _item in obj["segmentExports"]] if obj.get("segmentExports") is not None else None
         }

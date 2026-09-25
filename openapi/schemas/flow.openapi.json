@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Flow API",
     "description": "The API for the Rapidata Flow service",
-    "version": "2026.09.23.1028-76c2d0f"
+    "version": "2026.09.24.1846-0d510e2"
   },
   "servers": [
     {
@@ -1067,8 +1067,8 @@
         "tags": [
           "RankingFlowItem"
         ],
-        "summary": "Returns ranking results with Elo scores for a completed flow item.",
-        "description": "Returns 409 Conflict if the flow item is not yet completed or has no associated workflow.",
+        "summary": "Returns ranking results with Elo scores for a flow item.",
+        "description": "Scores and votes are partial while the item is still collecting, and 409 Conflict until it starts.",
         "parameters": [
           {
             "name": "flowItemId",
