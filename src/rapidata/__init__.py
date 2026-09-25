@@ -5,7 +5,7 @@ guide first with ``python -m rapidata skill`` (``--install`` keeps it in the
 project) or at https://docs.rapidata.ai/llms-full.txt.
 """
 
-__version__ = "3.25.7"
+__version__ = "3.25.8"
 
 from ._agent_hint import print_agent_hint as _print_agent_hint
 
