@@ -8,7 +8,9 @@ Flows collect human responses on small batches of data. Create a flow once with 
 2. **Submit a batch** with `create_new_flow_batch()`. The SDK uploads the datapoints and returns a flow item representing that batch. Each batch runs independently using the flow's configuration.
 3. **Retrieve results** with `flow_item.get_results()`. This waits for the batch to finish; `flow_item.get_status()` checks its status without blocking.
 
-Each batch has a time limit (`time_to_live`), between 45 seconds and 1 hour, with a default of 4 minutes. When time runs out, you can retrieve the responses collected so far. Whether the batch is marked `Completed` or `Incomplete` depends on the response thresholds for its flow type.
+Each batch has a time limit (`time_to_live`), up to 1 hour, with a default of 4 minutes. It must also leave at least 20 seconds before the flow's drain starts, so the minimum is the drain plus 20 seconds: 60 seconds with the default 40-second drain. When time runs out, you can retrieve the responses collected so far. Whether the batch is marked `Completed` or `Incomplete` depends on the response thresholds for its flow type.
+
+The drain is the last part of each batch's `time_to_live`. During it, the batch is no longer shown to new annotators, but annotators who already have a task can still answer. By default the drain equals the flow's serve timeout (40 seconds), the time an annotator has to answer a task. Set it explicitly with `drain_duration` when creating the flow or in `update_config()`.
 
 ## Choose a Flow Type
 

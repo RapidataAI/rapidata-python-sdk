@@ -88,9 +88,12 @@ class RapidataClassifyFlow(RapidataFlow):
 
             logger.debug("Updating config for flow '%s'", self.name)
 
+            update_input = UpdateSimpleFlowConfigEndpointInput()
+            # The field is nullable, so passing None would reset the drain to follow the serve timeout.
+            if drain_duration is not None:
+                update_input.drain_duration_seconds = drain_duration
+
             self._openapi_service.flow.simple_flow_api.flow_simple_flow_id_patch(
                 flow_id=self.id,
-                update_simple_flow_config_endpoint_input=UpdateSimpleFlowConfigEndpointInput(
-                    drainDurationSeconds=drain_duration,
-                ),
+                update_simple_flow_config_endpoint_input=update_input,
             )

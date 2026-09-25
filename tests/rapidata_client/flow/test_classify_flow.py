@@ -333,7 +333,7 @@ class TestCreateNewFlowBatch:
         )
 
     @pytest.mark.parametrize("flow_type", ["ranking", "simple"])
-    @pytest.mark.parametrize("time_to_live", [44, 3601])
+    @pytest.mark.parametrize("time_to_live", [19, 3601])
     def test_rejects_time_to_live_outside_bounds_before_uploading(
         self, flow_type, time_to_live
     ):
@@ -343,7 +343,7 @@ class TestCreateNewFlowBatch:
         )
         flow = flow_class("flw-1", "Flow", svc)
 
-        with pytest.raises(ValueError, match="between 45 seconds and 1 hour"):
+        with pytest.raises(ValueError, match="between 20 seconds and 1 hour"):
             flow.create_new_flow_batch(
                 datapoints=["https://example.com/a.jpg"], time_to_live=time_to_live
             )
@@ -386,6 +386,17 @@ class TestCreateNewFlowBatch:
         assert not hasattr(RapidataFlow, "update_config")
         assert not hasattr(RapidataFlow, "create_new_flow_batch")
         svc.flow.ranking_flow_api.flow_ranking_flow_id_patch.assert_not_called()
+
+    def test_update_config_without_a_drain_leaves_it_unchanged(self):
+        svc = _openapi_service()
+        flow = RapidataRankingFlow("flw-1", "Ranking", svc)
+
+        flow.update_config(instruction="Which is better?")
+
+        call = svc.flow.ranking_flow_api.flow_ranking_flow_id_patch.call_args
+        assert "drainDurationSeconds" not in call.kwargs[
+            "update_config_endpoint_input"
+        ].to_dict()
 
 
 class TestClassifyResults:

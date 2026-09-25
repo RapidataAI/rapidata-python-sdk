@@ -51338,7 +51338,7 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Duration in seconds for draining flow items. Defaults to 40.",
+            "description": "Seconds before an item's time to live at which it stops serving new users. Defaults to following the serve timeout.",
             "format": "int32",
             "nullable": true
           }
@@ -51381,7 +51381,7 @@
           },
           "timeToLiveInSeconds": {
             "type": "integer",
-            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 45 seconds and 1 hour, and must exceed the drain duration by at least 30 seconds; defaults to 4 minutes when omitted.",
+            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 20 seconds and 1 hour, and must exceed the drain duration by at least 20 seconds; defaults to 4 minutes when omitted.",
             "format": "int32",
             "nullable": true
           },
@@ -51524,7 +51524,7 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Duration in seconds for draining flow items. Defaults to 40.",
+            "description": "Seconds before an item's time to live at which it stops serving new users. Defaults to following the serve timeout.",
             "format": "int32",
             "nullable": true
           }
@@ -51554,7 +51554,7 @@
           },
           "timeToLiveInSeconds": {
             "type": "integer",
-            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 45 seconds and 1 hour, and must exceed the drain duration by at least 30 seconds; defaults to the flow's default when omitted.",
+            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 20 seconds and 1 hour, and must exceed the drain duration by at least 20 seconds; defaults to 4 minutes when omitted.",
             "format": "int32",
             "nullable": true
           },
@@ -52134,8 +52134,9 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Grace period in seconds after an item stops receiving new serves, allowing in-flight responses to complete.",
-            "format": "int32"
+            "description": "Seconds before an item's time to live at which it stops serving new users. Null follows the serve timeout.",
+            "format": "int32",
+            "nullable": true
           },
           "serveToResponseRatio": {
             "type": "number",
@@ -52383,8 +52384,9 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Grace period in seconds after an item stops receiving new serves, allowing in-flight responses to complete.",
-            "format": "int32"
+            "description": "Seconds before an item's time to live at which it stops serving new users. Null follows the serve timeout.",
+            "format": "int32",
+            "nullable": true
           },
           "serveToResponseRatio": {
             "type": "number",
@@ -52725,8 +52727,9 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Duration in seconds before an item's time to live at which it stops serving new users. Applies to items created after the update.",
-            "format": "int32"
+            "description": "Seconds before an item's time to live at which it stops serving new users. Set to null to follow the serve timeout. Applies to items created after the update.",
+            "format": "int32",
+            "nullable": true
           },
           "targetResponseCount": {
             "type": "integer",
@@ -52813,8 +52816,9 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Duration in seconds before an item's time to live at which it stops serving new users. Applies to items created after the update.",
-            "format": "int32"
+            "description": "Seconds before an item's time to live at which it stops serving new users. Set to null to follow the serve timeout. Applies to items created after the update.",
+            "format": "int32",
+            "nullable": true
           },
           "targetResponseCount": {
             "type": "integer",
