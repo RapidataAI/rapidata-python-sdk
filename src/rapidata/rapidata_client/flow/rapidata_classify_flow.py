@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal, TYPE_CHECKING
 
-from rapidata.rapidata_client.config import tracer
+from rapidata.rapidata_client.config import logger, tracer
 from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
 )
@@ -77,4 +77,20 @@ class RapidataClassifyFlow(RapidataFlow):
                 flow_id=self.id,
                 openapi_service=self._openapi_service,
                 flow_type=self._flow_type,
+            )
+
+    def update_config(self, drain_duration: int | None = None) -> None:
+        """Update the drain duration of this classify flow."""
+        with tracer.start_as_current_span("RapidataClassifyFlow.update_config"):
+            from rapidata.api_client.models.update_simple_flow_config_endpoint_input import (
+                UpdateSimpleFlowConfigEndpointInput,
+            )
+
+            logger.debug("Updating config for flow '%s'", self.name)
+
+            self._openapi_service.flow.simple_flow_api.flow_simple_flow_id_patch(
+                flow_id=self.id,
+                update_simple_flow_config_endpoint_input=UpdateSimpleFlowConfigEndpointInput(
+                    drainDurationSeconds=drain_duration,
+                ),
             )

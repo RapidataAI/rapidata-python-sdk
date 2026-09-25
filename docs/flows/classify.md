@@ -42,7 +42,15 @@ flow = client.flow.create_classify_flow(
 
 Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a six-item batch with the default maximum collects up to 15 × 6 = 90 responses.
 
-The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` is only available on `RapidataRankingFlow`, so create a new flow to change them.
+The instruction, categories, and response thresholds are fixed once the flow exists, so create a new flow to change them.
+
+The drain duration — the number of seconds before a batch's `time_to_live` at which it stops being shown to new annotators — defaults to 40. Set it with `create_classify_flow(drain_duration=...)` or change it later; the change applies to new batches only:
+
+```python
+flow.update_config(drain_duration=20)
+```
+
+It must leave at least 30 seconds of the default 4-minute `time_to_live`, so values up to 210 are accepted.
 
 ## 2. Add a Flow Batch
 

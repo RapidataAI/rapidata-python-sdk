@@ -133,8 +133,11 @@ You can update the configuration of a ranking flow at any time:
 ```python
 flow.update_config(
     instruction="Which image has higher visual quality?",
+    drain_duration=20,
 )
 ```
+
+`drain_duration` is the number of seconds before a flow item's `time_to_live` at which it stops being shown to new annotators, so in-progress responses can still come in. It defaults to 40 and can also be set with `create_ranking_flow(drain_duration=...)`.
 
 !!! note
     This config will only affect new flow items and not modify existing ones.
