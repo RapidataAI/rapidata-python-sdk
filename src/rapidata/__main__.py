@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from importlib import resources
 from pathlib import Path
 
 import requests
@@ -20,6 +21,8 @@ from rapidata._agent_hint import (
     SKILL_INSTALL_PATHS,
     SKILL_RAW_URL,
     mark_skill_read,
+    record_live_skill,
+    stamp_skill,
 )
 
 
@@ -29,10 +32,22 @@ def fetch_skill(timeout: float = 10) -> str:
     return response.text
 
 
+def bundled_skill() -> str | None:
+    """The copy of the skill refreshed into the wheel at release time, for when GitHub is unreachable."""
+    try:
+        return (
+            resources.files("rapidata")
+            .joinpath("_skill/SKILL.md")
+            .read_text(encoding="utf-8")
+        )
+    except (OSError, ModuleNotFoundError):
+        return None
+
+
 def install_skill(root: Path, agent: str, content: str) -> Path:
     target = root / SKILL_INSTALL_PATHS[agent]
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(content, encoding="utf-8")
+    target.write_text(stamp_skill(content), encoding="utf-8")
     return target
 
 
@@ -75,13 +90,22 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         content = fetch_skill()
+        record_live_skill(content)
     except requests.RequestException as e:
-        print(f"Could not fetch the skill ({e}).", file=sys.stderr)
+        bundled = bundled_skill()
+        if bundled is None:
+            print(f"Could not fetch the skill ({e}).", file=sys.stderr)
+            print(
+                f"Read it online instead: {SKILL_RAW_URL} or {LLMS_FULL_URL}",
+                file=sys.stderr,
+            )
+            return 1
         print(
-            f"Read it online instead: {SKILL_RAW_URL} or {LLMS_FULL_URL}",
+            f"Could not fetch the latest skill ({e}); using the copy bundled with "
+            f"rapidata {__version__}. Latest: {SKILL_RAW_URL}",
             file=sys.stderr,
         )
-        return 1
+        content = bundled
 
     mark_skill_read()
     if args.install:

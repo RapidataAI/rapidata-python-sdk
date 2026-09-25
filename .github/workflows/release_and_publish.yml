@@ -142,9 +142,12 @@ jobs:
                 f.write(f'__version__ = "{version}"\n')
         EOF
     
+    - name: Refresh bundled agent skill
+      run: curl -fsSL https://raw.githubusercontent.com/RapidataAI/skills/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md -o src/rapidata/_skill/SKILL.md
+
     - name: Commit and push changes
       run: |
-        git add pyproject.toml src/rapidata/__init__.py
+        git add pyproject.toml src/rapidata/__init__.py src/rapidata/_skill/SKILL.md
         git commit -m "Bump version from ${{ steps.update_version.outputs.old_version }} to ${{ steps.update_version.outputs.new_version }}"
         git push origin ${{ github.event.inputs.branch }}
     
