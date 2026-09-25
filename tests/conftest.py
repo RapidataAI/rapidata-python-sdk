@@ -13,9 +13,42 @@ imported the package during collection first.
 """
 
 import os
+import sys
+from pathlib import Path
 
 os.environ["RAPIDATA_DISABLE_OTLP"] = "1"
 
 from rapidata.rapidata_client.config import rapidata_config  # noqa: E402
 
 rapidata_config.logging.enable_otlp = False
+
+
+import pytest  # noqa: E402
+
+from rapidata import _agent_hint  # noqa: E402
+
+_AGENT_VARS = (
+    *_agent_hint._AGENT_ENV_VARS,
+    *_agent_hint._SESSION_ENV_VARS,
+    "RAPIDATA_AGENT_HINT",
+    "CLAUDE_CONFIG_DIR",
+)
+
+
+@pytest.fixture
+def agent_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
+    """An empty home and project with no agent env, no hint state and no network."""
+    for var in _AGENT_VARS:
+        monkeypatch.delenv(var, raising=False)
+    home, project = tmp_path / "home", tmp_path / "project"
+    home.mkdir()
+    project.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.chdir(project)
+    monkeypatch.setattr(
+        _agent_hint, "STATE_FILE", home / ".config/rapidata/agent-state.json"
+    )
+    monkeypatch.setattr(_agent_hint, "FALLBACK_STATE_FILE", tmp_path / "tmp-state.json")
+    monkeypatch.setattr(_agent_hint, "_fetch_live_digest", lambda: None)
+    monkeypatch.setattr(sys, "orig_argv", ["python", "-c", "import rapidata"])
+    return project
