@@ -34,7 +34,7 @@ class UpdateSimpleFlowConfigEndpointInput(LazyValidatedModel):
     max_responses: Optional[StrictInt] = Field(default=None, description="The number of accepted responses per image after which the image stops collecting. At least MinResponses.", alias="maxResponses")
     min_responses: Optional[StrictInt] = Field(default=None, description="The minimum average number of accepted responses per image for an item ending by time-to-live or stop to count as completed. At least 1.", alias="minResponses")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Duration in seconds before an item's time to live at which it stops serving new users. Applies to items created after the update.", alias="drainDurationSeconds")
+    drain_duration_seconds: Optional[StrictInt] = Field(default=None, description="Seconds before an item's time to live at which it stops serving new users. Set to null to follow the serve timeout. Applies to items created after the update.", alias="drainDurationSeconds")
     target_response_count: Optional[StrictInt] = Field(default=None, description="Target average response count per completed item. Set to null to disable PID control.", alias="targetResponseCount")
     pid_proportional_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID proportional gain.", alias="pidProportionalGain")
     pid_integral_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID integral gain.", alias="pidIntegralGain")
@@ -94,6 +94,11 @@ class UpdateSimpleFlowConfigEndpointInput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.audience_id is None and "audience_id" in self.model_fields_set:
             _dict['audienceId'] = None
+
+        # set to None if drain_duration_seconds (nullable) is None
+        # and model_fields_set contains the field
+        if self.drain_duration_seconds is None and "drain_duration_seconds" in self.model_fields_set:
+            _dict['drainDurationSeconds'] = None
 
         # set to None if target_response_count (nullable) is None
         # and model_fields_set contains the field

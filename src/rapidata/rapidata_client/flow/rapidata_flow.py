@@ -30,8 +30,8 @@ class RapidataFlow:
 
     @staticmethod
     def _validate_time_to_live(time_to_live: int | None) -> None:
-        if time_to_live is not None and not 45 <= time_to_live <= 3600:
-            raise ValueError("Time to live must be between 45 seconds and 1 hour.")
+        if time_to_live is not None and not 20 <= time_to_live <= 3600:
+            raise ValueError("Time to live must be between 20 seconds and 1 hour.")
 
     def _upload_dataset(
         self,
