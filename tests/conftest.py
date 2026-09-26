@@ -14,8 +14,17 @@ imported the package during collection first.
 
 import os
 
+import pytest
+
 os.environ["RAPIDATA_DISABLE_OTLP"] = "1"
 
 from rapidata.rapidata_client.config import rapidata_config  # noqa: E402
 
 rapidata_config.logging.enable_otlp = False
+
+
+@pytest.fixture(autouse=True)
+def _keep_otlp_disabled():
+    yield
+    if rapidata_config.logging.enable_otlp:
+        rapidata_config.logging.enable_otlp = False
