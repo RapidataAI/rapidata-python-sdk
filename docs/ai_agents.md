@@ -115,3 +115,11 @@ Or update every skill you've installed at once:
 ```bash
 npx skills update
 ```
+
+Copies written by `python -m rapidata skill --install` carry a stamp of the version they were made from. When a coding agent imports the SDK, it checks that stamp against the live skill at most once a day and, if it is out of date, tells the agent to run `python -m rapidata skill --install` again.
+
+## The import-time hint
+
+When the SDK is imported by a coding agent (Claude Code, Codex, Cursor, Gemini CLI) that has no copy of the skill installed, it prints a short pointer to `python -m rapidata skill` on stderr. It shows once per agent session and stops as soon as that session reads the guide. Humans running the SDK directly never see it.
+
+Processes an agent merely started — a dev server, a script whose stderr is parsed — inherit its environment and would show the hint too. Set `RAPIDATA_AGENT_HINT=0` for those.
