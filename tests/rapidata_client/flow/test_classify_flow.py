@@ -285,7 +285,7 @@ class TestCreateNewFlowBatch:
             flow,
             datapoints=["https://example.com/a.jpg"],
             context="Model X",
-            time_to_live=60,
+            time_to_live=90,
         )
 
         call = svc.flow.ranking_flow_item_api.flow_ranking_flow_id_item_post.call_args
@@ -294,7 +294,7 @@ class TestCreateNewFlowBatch:
         assert _without_none(payload) == {
             "datasetId": "ds-1",
             "context": "Model X",
-            "timeToLiveInSeconds": 60,
+            "timeToLiveInSeconds": 90,
         }
         svc.flow.simple_flow_item_api.flow_simple_flow_id_item_post.assert_not_called()
         assert (item.id, item._flow_type) == ("fli-ranking", "ranking")
@@ -333,7 +333,7 @@ class TestCreateNewFlowBatch:
         )
 
     @pytest.mark.parametrize("flow_type", ["ranking", "simple"])
-    @pytest.mark.parametrize("time_to_live", [44, 3601])
+    @pytest.mark.parametrize("time_to_live", [69, 3601])
     def test_rejects_time_to_live_outside_bounds_before_uploading(
         self, flow_type, time_to_live
     ):
@@ -343,7 +343,7 @@ class TestCreateNewFlowBatch:
         )
         flow = flow_class("flw-1", "Flow", svc)
 
-        with pytest.raises(ValueError, match="between 45 seconds and 1 hour"):
+        with pytest.raises(ValueError, match="between 70 seconds and 1 hour"):
             flow.create_new_flow_batch(
                 datapoints=["https://example.com/a.jpg"], time_to_live=time_to_live
             )
@@ -562,7 +562,7 @@ class TestSeparatedFlows:
                     ["hello"],
                     data_type="text",
                     accept_failed_uploads=True,
-                    time_to_live=45,
+                    time_to_live=70,
                 )
                 assert item.flow_id == flow.id
             else:

@@ -8,7 +8,7 @@ Flows collect human responses on small batches of data. Create a flow once with 
 2. **Submit a batch** with `create_new_flow_batch()`. The SDK uploads the datapoints and returns a flow item representing that batch. Each batch runs independently using the flow's configuration.
 3. **Retrieve results** with `flow_item.get_results()`. This waits for the batch to finish; `flow_item.get_status()` checks its status without blocking.
 
-Each batch has a time limit (`time_to_live`), between 45 seconds and 1 hour, with a default of 4 minutes. When time runs out, you can retrieve the responses collected so far. Whether the batch is marked `Completed` or `Incomplete` depends on the response thresholds for its flow type.
+Each batch has a time limit (`time_to_live`), between 70 seconds and 1 hour, with a default of 4 minutes. When time runs out, you can retrieve the responses collected so far. Whether the batch is marked `Completed` or `Incomplete` depends on the response thresholds for its flow type.
 
 ## Choose a Flow Type
 
