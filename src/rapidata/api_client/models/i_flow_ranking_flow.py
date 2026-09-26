@@ -44,7 +44,7 @@ class IFlowRankingFlow(LazyValidatedModel):
     pid_max_sessions_per_minute: StrictInt = Field(description="Maximum sessions per minute the PID controller can set. Prevents the rate from exceeding infrastructure capacity.", alias="pidMaxSessionsPerMinute")
     pid_batch_mode: PidBatchMode = Field(description="How the PID output maps to the campaign rate. Total: used directly. PerBatch: multiplied by active item count. PerBatchTimeWeighted: multiplied by time-weighted active item count based on remaining TTL.", alias="pidBatchMode")
     serve_timeout_seconds: Optional[StrictInt] = Field(description="Maximum time in seconds a user has to submit an answer after loading the task. Null uses the system-wide default.", alias="serveTimeoutSeconds")
-    drain_duration_seconds: StrictInt = Field(description="Grace period in seconds after an item stops receiving new serves, allowing in-flight responses to complete.", alias="drainDurationSeconds")
+    drain_duration_seconds: Optional[StrictInt] = Field(description="Seconds before an item\\'s time to live at which it stops serving new users. Null follows the serve timeout.", alias="drainDurationSeconds")
     serve_to_response_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(description="Ratio of serves to responses used to calculate how many tasks to serve per expected response.", alias="serveToResponseRatio")
     criteria: Optional[StrictStr] = Field(description="The comparison instruction shown to annotators during ranking tasks (e.g. \"Which image is sharper?\").")
     starting_elo: StrictInt = Field(description="The initial Elo rating assigned to new items entering the ranking. Standard default is 1200.", alias="startingElo")
@@ -116,6 +116,11 @@ class IFlowRankingFlow(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.serve_timeout_seconds is None and "serve_timeout_seconds" in self.model_fields_set:
             _dict['serveTimeoutSeconds'] = None
+
+        # set to None if drain_duration_seconds (nullable) is None
+        # and model_fields_set contains the field
+        if self.drain_duration_seconds is None and "drain_duration_seconds" in self.model_fields_set:
+            _dict['drainDurationSeconds'] = None
 
         # set to None if serve_to_response_ratio (nullable) is None
         # and model_fields_set contains the field

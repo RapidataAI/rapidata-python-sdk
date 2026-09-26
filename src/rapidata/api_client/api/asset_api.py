@@ -378,6 +378,7 @@ class AssetApi:
     ) -> UploadFileEndpointOutput:
         """Uploads a file to our system and returns the new file name used internally.
 
+        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.
 
         :param file: (required)
         :type file: bytes
@@ -459,6 +460,7 @@ class AssetApi:
     ) -> ApiResponse[UploadFileEndpointOutput]:
         """Uploads a file to our system and returns the new file name used internally.
 
+        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.
 
         :param file: (required)
         :type file: bytes
@@ -540,6 +542,7 @@ class AssetApi:
     ) -> RESTResponseType:
         """Uploads a file to our system and returns the new file name used internally.
 
+        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.
 
         :param file: (required)
         :type file: bytes
@@ -709,6 +712,7 @@ class AssetApi:
     ) -> UploadFileFromUrlEndpointOutput:
         """Downloads a file from the provided URL, stores it in our system and returns the new file name used internally.
 
+        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.
 
         :param url: The url of the file to upload. (required)
         :type url: str
@@ -790,6 +794,7 @@ class AssetApi:
     ) -> ApiResponse[UploadFileFromUrlEndpointOutput]:
         """Downloads a file from the provided URL, stores it in our system and returns the new file name used internally.
 
+        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.
 
         :param url: The url of the file to upload. (required)
         :type url: str
@@ -871,6 +876,7 @@ class AssetApi:
     ) -> RESTResponseType:
         """Downloads a file from the provided URL, stores it in our system and returns the new file name used internally.
 
+        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.
 
         :param url: The url of the file to upload. (required)
         :type url: str

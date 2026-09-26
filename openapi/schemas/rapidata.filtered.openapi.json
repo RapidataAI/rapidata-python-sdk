@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.24.1846-0d510e2"
+    "version": "2026.09.25.1743-4cba489"
   },
   "servers": [
     {
@@ -345,6 +345,7 @@
           "Asset"
         ],
         "summary": "Uploads a file to our system and returns the new file name used internally.",
+        "description": "Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.",
         "parameters": [
           {
             "name": "compress",
@@ -439,6 +440,7 @@
           "Asset"
         ],
         "summary": "Downloads a file from the provided URL, stores it in our system and returns the new file name used internally.",
+        "description": "Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.",
         "parameters": [
           {
             "name": "url",
@@ -21458,7 +21460,7 @@
           "Leaderboard"
         ],
         "summary": "Creates a new leaderboard.",
-        "description": "displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back\n to instruction when null. It never affects run creation, vote recording or ranking.",
+        "description": "displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back\n to instruction when null. It never affects run creation, vote recording or ranking, and supplying it requires platform-admin.",
         "requestBody": {
           "description": "The payload describing the leaderboard to create.",
           "content": {
@@ -21625,7 +21627,7 @@
           "Leaderboard"
         ],
         "summary": "Updates a leaderboard using patch semantics.",
-        "description": "displayInstruction is presentation-only and never affects run creation, vote recording or ranking. A supplied\n featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.",
+        "description": "displayInstruction is presentation-only and never affects run creation, vote recording or ranking; setting or clearing it requires platform-admin. A supplied\n featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -46723,7 +46725,7 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Duration in seconds for draining flow items. Defaults to 40.",
+            "description": "Seconds before an item's time to live at which it stops serving new users. Defaults to following the serve timeout.",
             "format": "int32",
             "nullable": true
           }
@@ -46766,7 +46768,7 @@
           },
           "timeToLiveInSeconds": {
             "type": "integer",
-            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 45 seconds and 1 hour, and must exceed the drain duration by at least 30 seconds; defaults to 4 minutes when omitted.",
+            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 20 seconds and 1 hour, and must exceed the drain duration by at least 20 seconds; defaults to 4 minutes when omitted.",
             "format": "int32",
             "nullable": true
           },
@@ -46909,7 +46911,7 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Duration in seconds for draining flow items. Defaults to 40.",
+            "description": "Seconds before an item's time to live at which it stops serving new users. Defaults to following the serve timeout.",
             "format": "int32",
             "nullable": true
           }
@@ -46939,7 +46941,7 @@
           },
           "timeToLiveInSeconds": {
             "type": "integer",
-            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 45 seconds and 1 hour, and must exceed the drain duration by at least 30 seconds; defaults to the flow's default when omitted.",
+            "description": "Optional time-to-live in seconds before the flow item expires. Must be between 20 seconds and 1 hour, and must exceed the drain duration by at least 20 seconds; defaults to 4 minutes when omitted.",
             "format": "int32",
             "nullable": true
           },
@@ -47510,8 +47512,9 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Grace period in seconds after an item stops receiving new serves, allowing in-flight responses to complete.",
-            "format": "int32"
+            "description": "Seconds before an item\\'s time to live at which it stops serving new users. Null follows the serve timeout.",
+            "format": "int32",
+            "nullable": true
           },
           "serveToResponseRatio": {
             "type": "number",
@@ -47721,8 +47724,9 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Grace period in seconds after an item stops receiving new serves, allowing in-flight responses to complete.",
-            "format": "int32"
+            "description": "Seconds before an item\\'s time to live at which it stops serving new users. Null follows the serve timeout.",
+            "format": "int32",
+            "nullable": true
           },
           "serveToResponseRatio": {
             "type": "number",
@@ -48057,8 +48061,9 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Duration in seconds before an item's time to live at which it stops serving new users. Applies to items created after the update.",
-            "format": "int32"
+            "description": "Seconds before an item's time to live at which it stops serving new users. Set to null to follow the serve timeout. Applies to items created after the update.",
+            "format": "int32",
+            "nullable": true
           },
           "targetResponseCount": {
             "type": "integer",
@@ -48145,8 +48150,9 @@
           },
           "drainDurationSeconds": {
             "type": "integer",
-            "description": "Duration in seconds before an item's time to live at which it stops serving new users. Applies to items created after the update.",
-            "format": "int32"
+            "description": "Seconds before an item's time to live at which it stops serving new users. Set to null to follow the serve timeout. Applies to items created after the update.",
+            "format": "int32",
+            "nullable": true
           },
           "targetResponseCount": {
             "type": "integer",
@@ -48276,7 +48282,8 @@
           "ManagedImageFaucet",
           "RequestFeatures",
           "RunExperiments",
-          "ManagedForgeFaucet"
+          "ManagedForgeFaucet",
+          "UploadLongMedia"
         ],
         "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
       },
