@@ -51,3 +51,11 @@ def agent_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
     monkeypatch.setattr(sys, "orig_argv", ["python", "-c", "import rapidata"])
     monkeypatch.setattr(sys, "argv", ["-c"])
     return project
+
+
+@pytest.fixture(autouse=True)
+def _resync_tracer_to_global_config():
+    yield
+    # Constructing any LoggingConfig broadcasts to the global tracer, so a test that
+    # builds one with enable_otlp=True would re-enable export for every later test.
+    rapidata_config.logging._notify_handlers()
