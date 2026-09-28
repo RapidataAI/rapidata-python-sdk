@@ -65,7 +65,7 @@ flow_item = flow.create_new_flow_batch(
 ```
 
 1. Shown alongside the instruction for each comparison.
-2. Stops the flow item after this many seconds and returns the responses collected so far. Between 70 seconds and 1 hour; defaults to 4 minutes when omitted.
+2. Stops the flow item after this many seconds and returns the responses collected so far. Up to 1 hour, and at least 60 seconds with the default flow settings; defaults to 4 minutes when omitted.
 
 ## 3. Get Results
 
@@ -133,11 +133,8 @@ You can update the configuration of a ranking flow at any time:
 ```python
 flow.update_config(
     instruction="Which image has higher visual quality?",
-    drain_duration=20,
 )
 ```
-
-`drain_duration` is the number of seconds before a flow item's `time_to_live` at which it stops being shown to new annotators, so in-progress responses can still come in. It defaults to 40 and can also be set with `create_ranking_flow(drain_duration=...)`.
 
 !!! note
     This config will only affect new flow items and not modify existing ones.

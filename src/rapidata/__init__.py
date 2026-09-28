@@ -6,7 +6,7 @@ project) or at https://docs.rapidata.ai/llms-full.txt. Check authentication with
 ``python -m rapidata status`` and log the user in with ``python -m rapidata login``.
 """
 
-__version__ = "3.25.8"
+__version__ = "3.25.9"
 
 from ._agent_hint import print_agent_hint as _print_agent_hint
 

@@ -30,9 +30,8 @@ class RapidataFlow:
 
     @staticmethod
     def _validate_time_to_live(time_to_live: int | None) -> None:
-        # The backend reserves a 40s drain at the end of each batch and needs 30s of serving before it.
-        if time_to_live is not None and not 70 <= time_to_live <= 3600:
-            raise ValueError("Time to live must be between 70 seconds and 1 hour.")
+        if time_to_live is not None and not 10 <= time_to_live <= 3600:
+            raise ValueError("Time to live must be between 10 seconds and 1 hour.")
 
     def _upload_dataset(
         self,

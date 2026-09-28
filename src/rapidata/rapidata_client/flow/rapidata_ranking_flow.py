@@ -74,6 +74,7 @@ class RapidataRankingFlow(RapidataFlow):
         min_responses: int | None = None,
         max_responses: int | None = None,
         drain_duration: int | None = None,
+        serve_timeout: int | None = None,
     ) -> None:
         """Update the instruction and response thresholds of this ranking flow."""
         with tracer.start_as_current_span("RapidataFlow.update_config"):
@@ -83,13 +84,19 @@ class RapidataRankingFlow(RapidataFlow):
 
             logger.debug("Updating config for flow '%s'", self.name)
 
+            update_input = UpdateConfigEndpointInput(
+                criteria=instruction,
+                startingElo=starting_elo,
+                minResponses=min_responses,
+                maxResponses=max_responses,
+            )
+            # Both fields are nullable, so passing None would reset them to their defaults.
+            if drain_duration is not None:
+                update_input.drain_duration_seconds = drain_duration
+            if serve_timeout is not None:
+                update_input.serve_timeout_seconds = serve_timeout
+
             self._openapi_service.flow.ranking_flow_api.flow_ranking_flow_id_patch(
                 flow_id=self.id,
-                update_config_endpoint_input=UpdateConfigEndpointInput(
-                    criteria=instruction,
-                    startingElo=starting_elo,
-                    minResponses=min_responses,
-                    maxResponses=max_responses,
-                    drainDurationSeconds=drain_duration,
-                ),
+                update_config_endpoint_input=update_input,
             )
