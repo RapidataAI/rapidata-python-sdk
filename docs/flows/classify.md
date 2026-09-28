@@ -44,14 +44,6 @@ Each response is billed. A batch collects up to `max_responses_per_datapoint` re
 
 The instruction, categories, and response thresholds are fixed once the flow exists, so create a new flow to change them.
 
-The drain duration — the number of seconds before a batch's `time_to_live` at which it stops being shown to new annotators — defaults to 40. Set it with `create_classify_flow(drain_duration=...)` or change it later; the change applies to new batches only:
-
-```python
-flow.update_config(drain_duration=20)
-```
-
-It must leave at least 30 seconds of the default 4-minute `time_to_live`, so values up to 210 are accepted.
-
 ## 2. Add a Flow Batch
 
 Submit the items to classify. Every item is classified independently with the flow's instruction and categories:
@@ -90,7 +82,7 @@ flow_item = flow.create_new_flow_batch(
 ```
 
 1. One text context per datapoint, shown together with that datapoint. `context_assets` takes one list of image, video, or audio paths/URLs per datapoint.
-2. Stops the flow item after this many seconds and returns the responses collected so far. Between 70 seconds and 1 hour; defaults to 4 minutes when omitted.
+2. Stops the flow item after this many seconds and returns the responses collected so far. Up to 1 hour, and at least 60 seconds with the default flow settings; defaults to 4 minutes when omitted.
 
 Each `context_assets` entry is a list, even when it contains only one asset. Omit `contexts` or `context_assets` when it is not needed.
 
