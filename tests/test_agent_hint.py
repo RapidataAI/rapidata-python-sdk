@@ -9,15 +9,14 @@ from pathlib import Path
 
 import pytest
 
-from rapidata import _agent_hint
+from rapidata import __version__, _agent_hint
 from rapidata._agent_hint import (
     AGENT_HINT,
     agent_hint,
     detected_coding_agent,
+    installed_version,
     mark_skill_read,
-    record_live_skill,
     running_under_coding_agent,
-    skill_digest,
     stamp_skill,
 )
 
@@ -174,78 +173,70 @@ def test_an_unrelated_agents_md_does_not_count_as_installed(
 
 
 @pytest.mark.parametrize("where", ["project", "home"])
-def test_silent_when_an_installed_copy_is_current(
+def test_silent_when_an_installed_copy_matches_this_version(
     monkeypatch: pytest.MonkeyPatch, sandbox: Path, where: str
 ):
     _agent(monkeypatch)
     _install(sandbox if where == "project" else Path.home(), stamp_skill(SKILL))
-    record_live_skill(SKILL)
     assert agent_hint() is None
 
 
-def test_stale_installed_copy_asks_for_a_reinstall(
+def test_a_copy_from_another_version_asks_for_a_reinstall(
     monkeypatch: pytest.MonkeyPatch, sandbox: Path
 ):
     _agent(monkeypatch)
-    path = _install(sandbox, stamp_skill(SKILL))
-    record_live_skill(SKILL + "new gotcha\n")
+    path = _install(sandbox, stamp_skill(SKILL, version="3.0.0"))
+    mark_skill_read()
     hint = agent_hint()
     assert hint is not None and str(path) in hint
+    assert "3.0.0" in hint and __version__ in hint
     assert hint.endswith("python -m rapidata skill --install")
 
 
-def test_stale_user_level_copy_names_its_dir(monkeypatch: pytest.MonkeyPatch):
+def test_outdated_user_level_copy_names_its_dir(monkeypatch: pytest.MonkeyPatch):
     _agent(monkeypatch)
-    _install(Path.home(), stamp_skill(SKILL), ".codex/skills/rapidata/SKILL.md")
-    record_live_skill(SKILL + "new\n")
+    _install(
+        Path.home(),
+        stamp_skill(SKILL, version="3.0.0"),
+        ".codex/skills/rapidata/SKILL.md",
+    )
     hint = agent_hint()
     assert hint is not None
     assert hint.endswith(f"--install --agent codex --dir {Path.home()}")
 
 
-def test_unstamped_copy_from_an_older_install_is_compared_verbatim(
+def test_an_unstamped_copy_does_not_count_as_installed(
     monkeypatch: pytest.MonkeyPatch, sandbox: Path
 ):
     _agent(monkeypatch)
     _install(sandbox, SKILL)
-    record_live_skill(SKILL)
-    assert agent_hint() is None
-    record_live_skill(SKILL + "new\n")
-    assert agent_hint() is not None
+    assert agent_hint() == AGENT_HINT
 
 
-def test_freshness_is_checked_at_most_once_a_day(
-    monkeypatch: pytest.MonkeyPatch, sandbox: Path
-):
+def test_silent_while_running_the_console_script(monkeypatch: pytest.MonkeyPatch):
     _agent(monkeypatch)
-    _install(sandbox, stamp_skill(SKILL))
-    calls: list[int] = []
-
-    def fetch() -> str:
-        calls.append(1)
-        return skill_digest(SKILL)
-
-    monkeypatch.setattr(_agent_hint, "_fetch_live_digest", fetch)
-    assert agent_hint() is None
-    assert agent_hint() is None
-    assert len(calls) == 1
-    _after(monkeypatch, _agent_hint.FRESHNESS_TTL + 1)
-    agent_hint()
-    assert len(calls) == 2
-
-
-def test_offline_freshness_check_stays_silent(
-    monkeypatch: pytest.MonkeyPatch, sandbox: Path
-):
-    _agent(monkeypatch)
-    _install(sandbox, stamp_skill(SKILL))
+    monkeypatch.setattr(sys, "orig_argv", ["python", "/venv/bin/rapidata", "skill"])
+    monkeypatch.setattr(sys, "argv", ["/venv/bin/rapidata", "skill"])
     assert agent_hint() is None
 
 
 def test_stamp_goes_after_the_front_matter():
     stamped = stamp_skill(SKILL)
     assert stamped.startswith("---\nname: rapidata\n")
-    assert f"sha256={skill_digest(SKILL)}" in stamped.split("---\n")[2]
+    assert f"version={__version__}" in stamped.split("---\n")[2]
+    assert installed_version(stamped) == __version__
+
+
+def test_hint_needs_no_network(monkeypatch: pytest.MonkeyPatch, sandbox: Path):
+    import socket
+
+    def no_network(*args, **kwargs):
+        raise AssertionError("the import hint must not touch the network")
+
+    monkeypatch.setattr(socket, "create_connection", no_network)
+    _agent(monkeypatch)
+    _install(sandbox, stamp_skill(SKILL, version="3.0.0"))
+    assert agent_hint() is not None
 
 
 def test_import_prints_the_hint_to_stderr(tmp_path: Path):

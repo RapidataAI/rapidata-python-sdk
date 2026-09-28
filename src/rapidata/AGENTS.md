@@ -1,15 +1,18 @@
 # Rapidata SDK — for coding agents
 
 Do not infer how to use this SDK from the source files next to this document.
-The maintained guide covers job types, audiences, validation sets, result
-fields and the mistakes agents make most often.
+The guide that ships with this version covers job types, audiences, validation
+sets, result fields and the mistakes agents make most often.
 
 Read it first:
 
 ```bash
-python -m rapidata skill            # print the guide
+python -m rapidata skill            # print the guide (also: rapidata skill)
 python -m rapidata skill --install  # install it into the current project
 ```
+
+The guide's source is `_skill/SKILL.md` in this package, edited only in the
+RapidataAI/rapidata-python-sdk repository.
 
 ## Logging in
 

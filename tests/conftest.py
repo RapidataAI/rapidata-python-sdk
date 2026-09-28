@@ -37,7 +37,7 @@ _AGENT_VARS = (
 
 @pytest.fixture
 def agent_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
-    """An empty home and project with no agent env, no hint state and no network."""
+    """An empty home and project with no agent env and no hint state."""
     for var in _AGENT_VARS:
         monkeypatch.delenv(var, raising=False)
     home, project = tmp_path / "home", tmp_path / "project"
@@ -49,6 +49,6 @@ def agent_sandbox(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
         _agent_hint, "STATE_FILE", home / ".config/rapidata/agent-state.json"
     )
     monkeypatch.setattr(_agent_hint, "FALLBACK_STATE_FILE", tmp_path / "tmp-state.json")
-    monkeypatch.setattr(_agent_hint, "_fetch_live_digest", lambda: None)
     monkeypatch.setattr(sys, "orig_argv", ["python", "-c", "import rapidata"])
+    monkeypatch.setattr(sys, "argv", ["-c"])
     return project

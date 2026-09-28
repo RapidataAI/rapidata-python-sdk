@@ -1,4 +1,4 @@
-"""Point a coding agent at the maintained SDK guide when it imports ``rapidata``.
+"""Point a coding agent at the guide bundled with this SDK when it imports ``rapidata``.
 
 Agents explore a freshly installed SDK with ``import rapidata`` / ``dir()`` /
 ``inspect`` before they write a script, and they read stderr but not
@@ -8,33 +8,27 @@ docstrings, so the pointer is printed at import time:
   ``python -m rapidata skill``. Sessions are told apart by the id the runtime
   exports (:data:`_SESSION_ENV_VARS`); runtimes without one get a read that
   expires after :data:`ANON_READ_TTL`.
-- Never while a copy of the skill the agent loads on its own is installed
-  (project, user level or the Claude Code plugin), unless a copy written by
-  ``--install`` no longer matches the live skill. That is checked at most once
-  per :data:`FRESHNESS_TTL` with a :data:`FRESHNESS_TIMEOUT` request, and then
-  the pointer asks for a reinstall instead.
+- Never while the Claude Code plugin is installed, or while a copy written by
+  ``python -m rapidata skill --install`` (project or user level) carries this
+  SDK's version stamp. A copy stamped with another version asks for a
+  reinstall instead. Nothing here touches the network.
 
 ``RAPIDATA_AGENT_HINT=0`` switches it off for processes an agent merely started.
 State lives in :data:`STATE_FILE`, falling back to the temp dir when a sandbox
-makes the home directory read-only. Kept free of SDK imports:
+makes the home directory read-only. Kept free of client imports:
 ``rapidata/__init__.py`` calls it before loading the client.
 """
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import re
 import sys
 import tempfile
 import time
-import urllib.request
-from datetime import datetime, timezone
 from pathlib import Path
 
-SKILL_RAW_URL = "https://raw.githubusercontent.com/RapidataAI/skills/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md"
-LLMS_FULL_URL = "https://docs.rapidata.ai/llms-full.txt"
 AGENT_DOCS_URL = "https://docs.rapidata.ai/ai_agents/"
 PLUGIN_NAME = "rapidata-sdk-plugin"
 
@@ -56,8 +50,6 @@ STATE_FILE = Path.home() / ".config" / "rapidata" / "agent-state.json"
 FALLBACK_STATE_FILE = Path(tempfile.gettempdir()) / "rapidata-agent-state.json"
 
 ANON_READ_TTL = 12 * 3600
-FRESHNESS_TTL = 24 * 3600
-FRESHNESS_TIMEOUT = 1.0
 _PRUNE_AFTER = 7 * 24 * 3600
 
 # Env var each agent runtime exports -> the name reported in traces. Specific
@@ -73,14 +65,13 @@ _AGENT_ENV_VARS: dict[str, str] = {
 
 _SESSION_ENV_VARS = ("CLAUDE_CODE_SESSION_ID", "CODEX_THREAD_ID", "CODEX_SESSION_ID")
 
-_STAMP_RE = re.compile(r"<!-- rapidata-skill sha256=([0-9a-f]{64}) fetched=(\S+) -->\n")
+_STAMP_RE = re.compile(r"<!-- rapidata-skill version=(\S+) -->\n")
 
 AGENT_HINT = (
-    "rapidata: coding agent detected. Read the maintained SDK guide before exploring "
+    "rapidata: coding agent detected. Read the SDK guide for this version before exploring "
     "the installed source (skip if this session already read it):\n"
     "  python -m rapidata skill            # print the guide\n"
     "  python -m rapidata skill --install  # keep it in this project\n"
-    f"  {LLMS_FULL_URL}\n"
     "Before the first RapidataClient(), run `python -m rapidata status`. If it reports not logged in,\n"
     "run `python -m rapidata login` and show the user the URL it prints (it waits up to 5 minutes)."
 )
@@ -103,16 +94,16 @@ def running_under_coding_agent() -> bool:
     return detected_coding_agent() is not None
 
 
-def skill_digest(content: str) -> str:
-    return hashlib.sha256(content.encode("utf-8")).hexdigest()
+def _sdk_version() -> str:
+    # Lazy: rapidata/__init__.py imports this module while the package is still loading.
+    from rapidata import __version__
+
+    return __version__
 
 
-def stamp_skill(content: str, now: datetime | None = None) -> str:
-    """Return ``content`` with a provenance line after its front matter, so staleness can be checked later."""
-    fetched = (now or datetime.now(timezone.utc)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    stamp = (
-        f"<!-- rapidata-skill sha256={skill_digest(content)} fetched={fetched} -->\n"
-    )
+def stamp_skill(content: str, version: str | None = None) -> str:
+    """Return ``content`` with a version line after its front matter, so a copy made by another SDK version can be told apart."""
+    stamp = f"<!-- rapidata-skill version={version or _sdk_version()} -->\n"
     if content.startswith("---\n"):
         end = content.find("\n---\n", 4)
         if end != -1:
@@ -121,15 +112,10 @@ def stamp_skill(content: str, now: datetime | None = None) -> str:
     return stamp + content
 
 
-def _installed_digest(text: str) -> str | None:
-    """Digest of the live skill this installed copy was made from, or None when it is not the Rapidata skill."""
+def installed_version(text: str) -> str | None:
+    """SDK version an ``--install``ed copy was written by, or None when ``text`` carries no stamp."""
     match = _STAMP_RE.search(text)
-    if match:
-        return match.group(1)
-    # Copies written by --install before stamping existed are verbatim.
-    if text.startswith("---\nname: rapidata\n"):
-        return skill_digest(text)
-    return None
+    return match.group(1) if match else None
 
 
 def _load_state() -> dict:
@@ -187,14 +173,6 @@ def mark_skill_read() -> None:
     _save_state(state)
 
 
-def record_live_skill(content: str) -> None:
-    """Remember the live skill's digest so the next freshness check can skip the network."""
-    state = _load_state()
-    state["live_sha"] = skill_digest(content)
-    state["live_checked_at"] = time.time()
-    _save_state(state)
-
-
 def _plugin_installed() -> bool:
     config_dir = Path(os.environ.get("CLAUDE_CONFIG_DIR") or Path.home() / ".claude")
     try:
@@ -209,7 +187,7 @@ def _plugin_installed() -> bool:
 
 
 def installed_copies(root: Path | None = None) -> list[tuple[str, Path, Path, str]]:
-    """Return ``(agent, install_root, path, digest)`` for each Rapidata skill file in the project ``root`` or the home directory."""
+    """Return ``(agent, install_root, path, version)`` for each stamped skill file in the project ``root`` or the home directory."""
     root = root or Path.cwd()
     candidates = [(a, root, rel) for a, rel in SKILL_INSTALL_PATHS.items()]
     candidates += [(a, Path.home(), rel) for a, rel in USER_SKILL_PATHS.items()]
@@ -217,49 +195,35 @@ def installed_copies(root: Path | None = None) -> list[tuple[str, Path, Path, st
     for agent, base, rel in candidates:
         path = base / rel
         try:
-            digest = _installed_digest(path.read_text(encoding="utf-8"))
+            version = installed_version(path.read_text(encoding="utf-8"))
         except (OSError, UnicodeDecodeError):
             continue
-        if digest:
-            copies.append((agent, base, path, digest))
+        if version:
+            copies.append((agent, base, path, version))
     return copies
 
 
-def _fetch_live_digest() -> str | None:
-    try:
-        with urllib.request.urlopen(SKILL_RAW_URL, timeout=FRESHNESS_TIMEOUT) as resp:
-            return skill_digest(resp.read().decode("utf-8"))
-    except Exception:
-        return None
-
-
-def _live_digest(state: dict) -> str | None:
-    if time.time() - state.get("live_checked_at", 0) < FRESHNESS_TTL:
-        return state.get("live_sha")
-    live = _fetch_live_digest()
-    # Recorded on failure too, so an offline machine pays the timeout once a day, not per import.
-    state["live_checked_at"] = time.time()
-    if live:
-        state["live_sha"] = live
-    _save_state(state)
-    return state.get("live_sha")
-
-
-def _stale_hint(agent: str, base: Path, path: Path) -> str:
+def _stale_hint(agent: str, base: Path, path: Path, version: str) -> str:
     cmd = "python -m rapidata skill --install"
     if agent != "claude":
         cmd += f" --agent {agent}"
     if base != Path.cwd():
         cmd += f" --dir {base}"
-    return f"rapidata: the installed Rapidata skill at {path} is outdated. Update it with: {cmd}"
+    return (
+        f"rapidata: the Rapidata skill at {path} was installed by rapidata {version}, "
+        f"but {_sdk_version()} is installed. Update it with: {cmd}"
+    )
 
 
 def _running_the_cli() -> bool:
     argv = getattr(sys, "orig_argv", [])
-    return any(
+    if any(
         a == "-m" and i + 1 < len(argv) and argv[i + 1] == "rapidata"
         for i, a in enumerate(argv)
-    )
+    ):
+        return True
+    # The `rapidata` console script imports the package before main() runs.
+    return bool(sys.argv) and Path(sys.argv[0]).stem == "rapidata"
 
 
 def agent_hint() -> str | None:
@@ -267,15 +231,12 @@ def agent_hint() -> str | None:
     try:
         if not running_under_coding_agent() or _running_the_cli():
             return None
-        state = _load_state()
         copies = installed_copies()
-        if copies:
-            live = _live_digest(state)
-            for agent, base, path, digest in copies:
-                if live and digest != live:
-                    return _stale_hint(agent, base, path)
-            return None
-        if _plugin_installed() or _read_this_session(state):
+        current = _sdk_version()
+        for agent, base, path, version in copies:
+            if version != current:
+                return _stale_hint(agent, base, path, version)
+        if copies or _plugin_installed() or _read_this_session(_load_state()):
             return None
         return AGENT_HINT
     except Exception:

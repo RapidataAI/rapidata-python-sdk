@@ -1,0 +1,53 @@
+name: Agent Skill
+
+# The agent skill in src/rapidata/_skill/ ships in every wheel and is edited only
+# here. A PR that leaves it untouched needs a reviewer to confirm, with the ack
+# label, that nothing the skill documents changed.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+env:
+  ACK_LABEL: skill-unchanged-approved
+  STATUS_CONTEXT: Agent Skill
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  statuses: write
+
+jobs:
+  check:
+    name: Check skill update
+    if: ${{ github.event.action != 'labeled' && github.event.action != 'unlabeled' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+      - name: Evaluate
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const run = require('./.github/scripts/agent-skill-check.js');
+            await run({ github, context, core, ackLabel: process.env.ACK_LABEL, statusContext: process.env.STATUS_CONTEXT });
+
+  ack:
+    name: Acknowledge label change
+    if: >-
+      (github.event.action == 'labeled' || github.event.action == 'unlabeled')
+      && github.event.label.name == 'skill-unchanged-approved'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+      - name: Re-evaluate
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const run = require('./.github/scripts/agent-skill-check.js');
+            await run({ github, context, core, ackLabel: process.env.ACK_LABEL, statusContext: process.env.STATUS_CONTEXT });
