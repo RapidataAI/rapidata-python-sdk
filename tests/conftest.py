@@ -31,7 +31,6 @@ _AGENT_VARS = (
     *_agent_hint._AGENT_ENV_VARS,
     *_agent_hint._SESSION_ENV_VARS,
     "RAPIDATA_AGENT_HINT",
-    "CLAUDE_CONFIG_DIR",
 )
 
 

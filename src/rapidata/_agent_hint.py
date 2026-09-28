@@ -8,10 +8,10 @@ docstrings, so the pointer is printed at import time:
   ``python -m rapidata skill``. Sessions are told apart by the id the runtime
   exports (:data:`_SESSION_ENV_VARS`); runtimes without one get a read that
   expires after :data:`ANON_READ_TTL`.
-- Never while the Claude Code plugin is installed, or while a copy written by
-  ``python -m rapidata skill --install`` (project or user level) carries this
-  SDK's version in its front matter. A copy from another version asks for a
-  reinstall instead. Nothing here touches the network.
+- Never while a copy written by ``python -m rapidata skill --install``
+  (project or user level) carries this SDK's version in its front matter. A
+  copy from another version asks for a reinstall instead. Nothing here touches
+  the network.
 
 ``RAPIDATA_AGENT_HINT=0`` switches it off for processes an agent merely started.
 State lives in :data:`STATE_FILE`, falling back to the temp dir when a sandbox
@@ -30,7 +30,6 @@ import time
 from pathlib import Path
 
 AGENT_DOCS_URL = "https://docs.rapidata.ai/ai_agents/"
-PLUGIN_NAME = "rapidata-sdk-plugin"
 
 # Where each agent picks up a project-local skill file, relative to the project root.
 SKILL_INSTALL_PATHS: dict[str, str] = {
@@ -201,19 +200,6 @@ def mark_skill_read() -> None:
     _save_state(state)
 
 
-def _plugin_installed() -> bool:
-    config_dir = Path(os.environ.get("CLAUDE_CONFIG_DIR") or Path.home() / ".claude")
-    try:
-        plugins = json.loads(
-            (config_dir / "plugins" / "installed_plugins.json").read_text(
-                encoding="utf-8"
-            )
-        ).get("plugins", {})
-    except (OSError, ValueError, AttributeError):
-        return False
-    return any(name.split("@", 1)[0] == PLUGIN_NAME for name in plugins)
-
-
 def installed_copies(root: Path | None = None) -> list[tuple[str, Path, Path, str]]:
     """Return ``(agent, install_root, path, version)`` for each stamped skill file in the project ``root`` or the home directory."""
     root = root or Path.cwd()
@@ -260,7 +246,7 @@ def agent_hint() -> str | None:
         for agent, base, path, version in copies:
             if version != current:
                 return _stale_hint(agent, base, path, version)
-        if copies or _plugin_installed() or _read_this_session(_load_state()):
+        if copies or _read_this_session(_load_state()):
             return None
         return AGENT_HINT
     except Exception:

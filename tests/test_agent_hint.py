@@ -151,19 +151,6 @@ def test_silent_while_running_the_skill_cli(monkeypatch: pytest.MonkeyPatch):
     assert agent_hint() is None
 
 
-def test_silent_when_the_plugin_is_installed(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-):
-    _agent(monkeypatch)
-    config = tmp_path / "claude-config"
-    (config / "plugins").mkdir(parents=True)
-    (config / "plugins/installed_plugins.json").write_text(
-        json.dumps({"plugins": {"rapidata-sdk-plugin@rapidata-sdk-marketplace": []}})
-    )
-    monkeypatch.setenv("CLAUDE_CONFIG_DIR", str(config))
-    assert agent_hint() is None
-
-
 def test_an_unrelated_agents_md_does_not_count_as_installed(
     monkeypatch: pytest.MonkeyPatch, sandbox: Path
 ):
