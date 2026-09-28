@@ -1743,7 +1743,7 @@
 <li><strong>Submit a batch</strong> with <code>create_new_flow_batch()</code>. The SDK uploads the datapoints and returns a flow item representing that batch. Each batch runs independently using the flow's configuration.</li>
 <li><strong>Retrieve results</strong> with <code>flow_item.get_results()</code>. This waits for the batch to finish; <code>flow_item.get_status()</code> checks its status without blocking.</li>
 </ol>
-<p>Each batch has a time limit (<code>time_to_live</code>), between 45 seconds and 1 hour, with a default of 4 minutes. When time runs out, you can retrieve the responses collected so far. Whether the batch is marked <code>Completed</code> or <code>Incomplete</code> depends on the response thresholds for its flow type.</p>
+<p>Each batch has a time limit (<code>time_to_live</code>), up to 1 hour, with a default of 4 minutes. With the default flow settings the minimum is 60 seconds. When time runs out, you can retrieve the responses collected so far. Whether the batch is marked <code>Completed</code> or <code>Incomplete</code> depends on the response thresholds for its flow type.</p>
 <h2 id="choose-a-flow-type">Choose a Flow Type<a class="headerlink" href="#choose-a-flow-type" title="Permanent link">#</a></h2>
 <table>
 <thead>

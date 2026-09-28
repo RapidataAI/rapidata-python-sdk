@@ -1669,7 +1669,7 @@
 <li>The minimum average responses per image. If the batch's <code>time_to_live</code> expires with the item's total responses below this times the number of images, it's marked <strong>Incomplete</strong>; otherwise <strong>Completed</strong>.</li>
 </ol>
 <p>Each response is billed. A batch collects up to <code>max_responses_per_datapoint</code> responses for each of its items, so a six-item batch with the default maximum collects up to 15 × 6 = 90 responses.</p>
-<p>The instruction, categories, and response thresholds are fixed once the flow exists: <code>update_config()</code> is only available on <code>RapidataRankingFlow</code>, so create a new flow to change them.</p>
+<p>The instruction, categories, and response thresholds are fixed once the flow exists, so create a new flow to change them.</p>
 <h2 id="2-add-a-flow-batch">2. Add a Flow Batch<a class="headerlink" href="#2-add-a-flow-batch" title="Permanent link">#</a></h2>
 <p>Submit the items to classify. Every item is classified independently with the flow's instruction and categories:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">flow_item</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">create_new_flow_batch</span><span class="p">(</span>
@@ -1702,7 +1702,7 @@
 </span></code></pre></div>
 <ol>
 <li>One text context per datapoint, shown together with that datapoint. <code>context_assets</code> takes one list of image, video, or audio paths/URLs per datapoint.</li>
-<li>Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.</li>
+<li>Stops the flow item after this many seconds and returns the responses collected so far. Up to 1 hour, and at least 60 seconds with the default flow settings; defaults to 4 minutes when omitted.</li>
 </ol>
 <p>Each <code>context_assets</code> entry is a list, even when it contains only one asset. Omit <code>contexts</code> or <code>context_assets</code> when it is not needed.</p>
 <h2 id="3-get-results">3. Get Results<a class="headerlink" href="#3-get-results" title="Permanent link">#</a></h2>

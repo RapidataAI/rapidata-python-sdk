@@ -40,6 +40,17 @@ python -m rapidata skill --install --agent cursor   # or cursor, codex, generic 
     ```
 
 
+## Logging in
+
+The first `RapidataClient()` on a machine opens a browser login and waits for you. An agent can check and trigger it on its own:
+
+```bash
+python -m rapidata status   # is this machine authenticated? (no login started)
+python -m rapidata login    # opens the browser and prints the login URL
+```
+
+If the browser doesn't open, the agent shows you the printed URL. You log in once; later runs reuse the saved credentials.
+
 ## Usage
 
 ### Automatic

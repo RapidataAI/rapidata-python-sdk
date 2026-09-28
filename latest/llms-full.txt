@@ -4337,7 +4337,7 @@ Flows collect human responses on small batches of data. Create a flow once with 
 2. **Submit a batch** with `create_new_flow_batch()`. The SDK uploads the datapoints and returns a flow item representing that batch. Each batch runs independently using the flow's configuration.
 3. **Retrieve results** with `flow_item.get_results()`. This waits for the batch to finish; `flow_item.get_status()` checks its status without blocking.
 
-Each batch has a time limit (`time_to_live`), between 45 seconds and 1 hour, with a default of 4 minutes. When time runs out, you can retrieve the responses collected so far. Whether the batch is marked `Completed` or `Incomplete` depends on the response thresholds for its flow type.
+Each batch has a time limit (`time_to_live`), up to 1 hour, with a default of 4 minutes. With the default flow settings the minimum is 60 seconds. When time runs out, you can retrieve the responses collected so far. Whether the batch is marked `Completed` or `Incomplete` depends on the response thresholds for its flow type.
 
 ## Choose a Flow Type
 
@@ -4454,7 +4454,7 @@ flow = client.flow.create_classify_flow(
 
 Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a six-item batch with the default maximum collects up to 15 × 6 = 90 responses.
 
-The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` is only available on `RapidataRankingFlow`, so create a new flow to change them.
+The instruction, categories, and response thresholds are fixed once the flow exists, so create a new flow to change them.
 
 ## 2. Add a Flow Batch
 
@@ -4494,7 +4494,7 @@ flow_item = flow.create_new_flow_batch(
 ```
 
 1. One text context per datapoint, shown together with that datapoint. `context_assets` takes one list of image, video, or audio paths/URLs per datapoint.
-2. Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.
+2. Stops the flow item after this many seconds and returns the responses collected so far. Up to 1 hour, and at least 60 seconds with the default flow settings; defaults to 4 minutes when omitted.
 
 Each `context_assets` entry is a list, even when it contains only one asset. Omit `contexts` or `context_assets` when it is not needed.
 
@@ -4610,7 +4610,7 @@ flow_item = flow.create_new_flow_batch(
 ```
 
 1. Shown alongside the instruction for each comparison.
-2. Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.
+2. Stops the flow item after this many seconds and returns the responses collected so far. Up to 1 hour, and at least 60 seconds with the default flow settings; defaults to 4 minutes when omitted.
 
 ## 3. Get Results
 
@@ -4857,6 +4857,17 @@ python -m rapidata skill --install --agent cursor   # or cursor, codex, generic 
     https://raw.githubusercontent.com/RapidataAI/skills/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md
     ```
 
+
+## Logging in
+
+The first `RapidataClient()` on a machine opens a browser login and waits for you. An agent can check and trigger it on its own:
+
+```bash
+python -m rapidata status   # is this machine authenticated? (no login started)
+python -m rapidata login    # opens the browser and prints the login URL
+```
+
+If the browser doesn't open, the agent shows you the printed URL. You log in once; later runs reuse the saved credentials.
 
 ## Usage
 

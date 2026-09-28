@@ -1710,7 +1710,7 @@
 </span></code></pre></div>
 <ol>
 <li>Shown alongside the instruction for each comparison.</li>
-<li>Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.</li>
+<li>Stops the flow item after this many seconds and returns the responses collected so far. Up to 1 hour, and at least 60 seconds with the default flow settings; defaults to 4 minutes when omitted.</li>
 </ol>
 <h2 id="3-get-results">3. Get Results<a class="headerlink" href="#3-get-results" title="Permanent link">#</a></h2>
 <p>Call <code>get_results()</code> on a flow item to retrieve the ranking results. If the flow item is still processing, this will automatically wait until it completes (or becomes incomplete due to <code>time_to_live</code>):</p>

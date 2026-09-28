@@ -42,7 +42,7 @@ flow = client.flow.create_classify_flow(
 
 Each response is billed. A batch collects up to `max_responses_per_datapoint` responses for each of its items, so a six-item batch with the default maximum collects up to 15 × 6 = 90 responses.
 
-The instruction, categories, and response thresholds are fixed once the flow exists: `update_config()` is only available on `RapidataRankingFlow`, so create a new flow to change them.
+The instruction, categories, and response thresholds are fixed once the flow exists, so create a new flow to change them.
 
 ## 2. Add a Flow Batch
 
@@ -82,7 +82,7 @@ flow_item = flow.create_new_flow_batch(
 ```
 
 1. One text context per datapoint, shown together with that datapoint. `context_assets` takes one list of image, video, or audio paths/URLs per datapoint.
-2. Stops the flow item after this many seconds and returns the responses collected so far. Between 45 seconds and 1 hour; defaults to 4 minutes when omitted.
+2. Stops the flow item after this many seconds and returns the responses collected so far. Up to 1 hour, and at least 60 seconds with the default flow settings; defaults to 4 minutes when omitted.
 
 Each `context_assets` entry is a list, even when it contains only one asset. Omit `contexts` or `context_assets` when it is not needed.
 
