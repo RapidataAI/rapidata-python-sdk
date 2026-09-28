@@ -3,11 +3,16 @@
 ``python -m rapidata skill`` prints the maintained agent skill for this SDK;
 ``--install`` writes it into the current project so a coding agent loads it on
 every session instead of reading the installed source.
+
+``python -m rapidata status`` reports whether this machine can authenticate
+without starting a login; ``python -m rapidata login`` runs the browser login
+and saves the credentials that ``RapidataClient()`` reuses.
 """
 
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -34,6 +39,61 @@ def install_skill(root: Path, agent: str, content: str) -> Path:
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(content, encoding="utf-8")
     return target
+
+
+def _environment(arg: str | None) -> str:
+    return arg or os.environ.get("RAPIDATA_ENVIRONMENT") or "rapidata.ai"
+
+
+def _credential_manager(environment: str):
+    from rapidata.service.credential_manager import CredentialManager
+    from rapidata.service.openapi_service import _get_local_certificate
+
+    cert_path = _get_local_certificate() if environment == "rapidata.dev" else None
+    return CredentialManager(
+        endpoint=f"https://auth.{environment}", cert_path=cert_path
+    )
+
+
+def _auth_source(environment: str) -> str | None:
+    if os.environ.get("RAPIDATA_TOKEN_FILE"):
+        return f"the token file in RAPIDATA_TOKEN_FILE ({os.environ['RAPIDATA_TOKEN_FILE']})"
+    if os.environ.get("RAPIDATA_CLIENT_ID") and os.environ.get(
+        "RAPIDATA_CLIENT_SECRET"
+    ):
+        return "RAPIDATA_CLIENT_ID / RAPIDATA_CLIENT_SECRET"
+    credential = _credential_manager(environment).stored_credential()
+    if credential:
+        return f"saved credentials ({credential.get_display_string()})"
+    return None
+
+
+def status(environment: str) -> int:
+    source = _auth_source(environment)
+    if source:
+        print(f"Authenticated for {environment} via {source}.")
+        return 0
+    print(
+        f"Not logged in to {environment}. Run `python -m rapidata login` to log in "
+        "in the browser, or set RAPIDATA_CLIENT_ID and RAPIDATA_CLIENT_SECRET."
+    )
+    return 1
+
+
+def login(environment: str) -> int:
+    source = _auth_source(environment)
+    if source:
+        print(f"Already authenticated for {environment} via {source}.")
+        return 0
+    credential = _credential_manager(environment).get_client_credentials()
+    if not credential:
+        print(
+            "Login did not complete. Run `python -m rapidata login` again.",
+            file=sys.stderr,
+        )
+        return 1
+    print(f"Logged in to {environment}. RapidataClient() now reuses these credentials.")
+    return 0
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -63,12 +123,28 @@ def _build_parser() -> argparse.ArgumentParser:
         default=Path.cwd(),
         help="project root to install into (default: current directory)",
     )
+    for name, help_text in (
+        (
+            "login",
+            "log in through the browser and save credentials for RapidataClient()",
+        ),
+        ("status", "report whether this machine can authenticate, without logging in"),
+    ):
+        auth = sub.add_parser(name, help=help_text)
+        auth.add_argument(
+            "--environment",
+            help="Rapidata environment (default: RAPIDATA_ENVIRONMENT, else rapidata.ai)",
+        )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
+    if args.command == "login":
+        return login(_environment(args.environment))
+    if args.command == "status":
+        return status(_environment(args.environment))
     if args.command != "skill":
         parser.print_help()
         return 0

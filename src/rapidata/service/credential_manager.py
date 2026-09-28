@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import time
 import urllib.parse
 import webbrowser
@@ -11,7 +12,8 @@ from typing import Dict, List, Optional, Tuple
 import requests
 from colorama import Fore
 from pydantic import BaseModel
-from rapidata.rapidata_client.config import logger, managed_print
+from rapidata._agent_hint import detected_coding_agent
+from rapidata.rapidata_client.config import logger
 
 
 class ClientCredential(BaseModel):
@@ -147,6 +149,10 @@ class CredentialManager:
 
         return max(credentials, key=lambda c: c.last_used)
 
+    def stored_credential(self) -> Optional[ClientCredential]:
+        """Return the credential saved for this endpoint without starting a login."""
+        return self._select_credential(self._read_credentials().get(self.endpoint, []))
+
     def get_client_credentials(self) -> Optional[ClientCredential]:
         """Gets stored client credentials or create new ones via browser auth."""
         credentials = self._read_credentials()
@@ -207,6 +213,23 @@ class CredentialManager:
                 e,
             )
             return None
+
+    def _print_login_prompt(self, auth_url: str, opened_browser: bool) -> None:
+        """Print the login URL, flushed to stderr and ignoring silent mode, so a coding agent can relay it."""
+        encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")
+        lead = (
+            "Log in to Rapidata in the browser window that just opened, or open this URL:"
+            if opened_browser
+            else "Open this URL in your browser to log in to Rapidata:"
+        )
+        lines = [Fore.RED + lead + Fore.RESET, f"  {encoded_url}"]
+        if detected_coding_agent():
+            lines.append(
+                f"Coding agent: show this URL to the user and ask them to log in. "
+                f"This call waits up to {self.poll_timeout // 60} minutes; once they "
+                f"are logged in, later runs reuse the saved credentials."
+            )
+        print("\n".join(lines), file=sys.stderr, flush=True)
 
     def _poll_read_key(self, read_key: str) -> Optional[str]:
         """Poll the read key endpoint until we get an access token."""
@@ -270,14 +293,7 @@ class CredentialManager:
 
         auth_url = f"{self.endpoint}/connect/authorize/external?clientId=rapidata-cli&scope=openid profile email api&writeKey={bridge_endpoint.write_key}"
         could_open_browser = webbrowser.open(auth_url)
-
-        if not could_open_browser:
-            encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")
-            managed_print(
-                Fore.RED
-                + f'Please open the following URL in your browser to log in: "{encoded_url}"'
-                + Fore.RESET
-            )
+        self._print_login_prompt(auth_url, could_open_browser)
 
         access_token = self._poll_read_key(bridge_endpoint.read_key)
         if not access_token:

@@ -89,7 +89,9 @@ class RapidataClient:
         """Initialize the RapidataClient.
 
         Coding agents: ``python -m rapidata skill`` prints the maintained
-        usage guide; read it before inferring usage from this source.
+        usage guide; read it before inferring usage from this source. Run
+        ``python -m rapidata status`` first: without saved credentials this
+        constructor blocks on a browser login, which ``python -m rapidata login`` starts.
 
         Credentials are resolved in the following order:
 
