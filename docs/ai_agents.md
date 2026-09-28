@@ -80,7 +80,7 @@ pip install -U rapidata   # or: uv add -U rapidata
 
 The installed skill from the table above only points the agent at `python -m rapidata skill`, so it rarely needs an update. Pull one anyway with `claude plugin marketplace update` (Claude Code) or `npx skills update rapidata` (everything else).
 
-Copies written by `rapidata skill --install` carry the SDK version that wrote them. After an SDK upgrade, the next import by a coding agent tells it to run `rapidata skill --install` again. This check is local and needs no network.
+Copies written by `rapidata skill --install` record the SDK version that wrote them in their front matter (`metadata.rapidata-sdk-version`) and open with a short check. That check tells the agent to compare the recorded version with `rapidata.__version__` and reinstall on a mismatch. After an SDK upgrade, the next import by a coding agent also prints the reinstall command. Both checks are local and need no network.
 
 ## Editing the skill
 

@@ -46,7 +46,8 @@ def bundled_skill(guide: str = "main") -> str:
 def install_skill(root: Path, agent: str, content: str) -> Path:
     target = root / SKILL_INSTALL_PATHS[agent]
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(stamp_skill(content), encoding="utf-8")
+    user_level = root.expanduser().resolve() == Path.home().resolve()
+    target.write_text(stamp_skill(content, agent, user_level), encoding="utf-8")
     return target
 
 

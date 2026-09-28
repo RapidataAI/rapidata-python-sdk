@@ -10,7 +10,7 @@ docstrings, so the pointer is printed at import time:
   expires after :data:`ANON_READ_TTL`.
 - Never while the Claude Code plugin is installed, or while a copy written by
   ``python -m rapidata skill --install`` (project or user level) carries this
-  SDK's version stamp. A copy stamped with another version asks for a
+  SDK's version in its front matter. A copy from another version asks for a
   reinstall instead. Nothing here touches the network.
 
 ``RAPIDATA_AGENT_HINT=0`` switches it off for processes an agent merely started.
@@ -65,7 +65,7 @@ _AGENT_ENV_VARS: dict[str, str] = {
 
 _SESSION_ENV_VARS = ("CLAUDE_CODE_SESSION_ID", "CODEX_THREAD_ID", "CODEX_SESSION_ID")
 
-_STAMP_RE = re.compile(r"<!-- rapidata-skill version=(\S+) -->\n")
+_STAMP_RE = re.compile(r'^  rapidata-sdk-version: "([^"]+)"$', re.MULTILINE)
 
 AGENT_HINT = (
     "rapidata: coding agent detected. Read the SDK guide for this version before exploring "
@@ -101,20 +101,48 @@ def _sdk_version() -> str:
     return __version__
 
 
-def stamp_skill(content: str, version: str | None = None) -> str:
-    """Return ``content`` with a version line after its front matter, so a copy made by another SDK version can be told apart."""
-    stamp = f"<!-- rapidata-skill version={version or _sdk_version()} -->\n"
+def _install_command(agent: str, directory: str | None = None) -> str:
+    cmd = "python -m rapidata skill --install"
+    if agent != "claude":
+        cmd += f" --agent {agent}"
+    if directory:
+        cmd += f" --dir {directory}"
+    return cmd
+
+
+def stamp_skill(
+    content: str,
+    agent: str = "claude",
+    user_level: bool = False,
+    version: str | None = None,
+) -> str:
+    """Return ``content`` with the SDK version in its front matter and a version check as its first lines.
+
+    The front matter field is what :func:`installed_version` reads on import;
+    the check lets an agent that loads the copy without importing the SDK
+    notice that it drifted from the installed version.
+    """
+    version = version or _sdk_version()
+    where = "" if user_level else " from the project root"
+    cmd = _install_command(agent, "~" if user_level else None)
+    check = (
+        f"> **Installed copy, written by rapidata {version}.** Before relying on it, run\n"
+        f'> `python -c "import rapidata; print(rapidata.__version__)"`. If that does not print\n'
+        f"> `{version}`, run `{cmd}`{where} to update this file, then read it again.\n"
+    )
+    field = f'metadata:\n  rapidata-sdk-version: "{version}"\n'
     if content.startswith("---\n"):
         end = content.find("\n---\n", 4)
         if end != -1:
             cut = end + len("\n---\n")
-            return content[:cut] + stamp + content[cut:]
-    return stamp + content
+            return content[: end + 1] + field + "---\n" + check + content[cut:]
+    return f"---\n{field}---\n{check}{content}"
 
 
 def installed_version(text: str) -> str | None:
-    """SDK version an ``--install``ed copy was written by, or None when ``text`` carries no stamp."""
-    match = _STAMP_RE.search(text)
+    """SDK version an ``--install``ed copy was written by, or None when its front matter carries no stamp."""
+    end = text.find("\n---\n", 4) if text.startswith("---\n") else -1
+    match = _STAMP_RE.search(text[:end]) if end != -1 else None
     return match.group(1) if match else None
 
 
@@ -204,11 +232,7 @@ def installed_copies(root: Path | None = None) -> list[tuple[str, Path, Path, st
 
 
 def _stale_hint(agent: str, base: Path, path: Path, version: str) -> str:
-    cmd = "python -m rapidata skill --install"
-    if agent != "claude":
-        cmd += f" --agent {agent}"
-    if base != Path.cwd():
-        cmd += f" --dir {base}"
+    cmd = _install_command(agent, None if base == Path.cwd() else str(base))
     return (
         f"rapidata: the Rapidata skill at {path} was installed by rapidata {version}, "
         f"but {_sdk_version()} is installed. Update it with: {cmd}"

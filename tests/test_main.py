@@ -63,11 +63,8 @@ def test_skill_install_writes_a_version_stamped_copy_to_the_claude_path(
     assert cli.main(["skill", "--install", "--dir", str(tmp_path)]) == 0
     installed = (tmp_path / ".claude/skills/rapidata/SKILL.md").read_text()
     assert installed.startswith("---\nname: rapidata\n")
-    assert f"<!-- rapidata-skill version={__version__} -->" in installed
-    assert (
-        installed.replace(f"<!-- rapidata-skill version={__version__} -->\n", "")
-        == cli.bundled_skill()
-    )
+    assert _agent_hint.installed_version(installed) == __version__
+    assert installed.endswith(cli.bundled_skill().split("\n---\n", 1)[1])
 
 
 def test_skill_install_honours_agent(tmp_path: Path):

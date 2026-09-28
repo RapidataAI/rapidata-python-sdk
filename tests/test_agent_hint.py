@@ -220,11 +220,23 @@ def test_silent_while_running_the_console_script(monkeypatch: pytest.MonkeyPatch
     assert agent_hint() is None
 
 
-def test_stamp_goes_after_the_front_matter():
+def test_stamp_puts_the_version_in_the_front_matter():
     stamped = stamp_skill(SKILL)
-    assert stamped.startswith("---\nname: rapidata\n")
-    assert f"version={__version__}" in stamped.split("---\n")[2]
+    front_matter, body = stamped.split("---\n")[1:3]
+    assert front_matter.startswith("name: rapidata\n")
+    assert f'rapidata-sdk-version: "{__version__}"' in front_matter
     assert installed_version(stamped) == __version__
+    assert body.startswith(f"> **Installed copy, written by rapidata {__version__}.**")
+
+
+def test_stamp_tells_the_agent_how_to_update_the_copy():
+    body = stamp_skill(SKILL, agent="codex", user_level=True).split("---\n")[2]
+    assert "rapidata.__version__" in body
+    assert "python -m rapidata skill --install --agent codex --dir ~" in body
+
+
+def test_a_stamp_in_the_body_is_not_read_as_the_version():
+    assert installed_version(SKILL + '  rapidata-sdk-version: "1.0"\n') is None
 
 
 def test_hint_needs_no_network(monkeypatch: pytest.MonkeyPatch, sandbox: Path):
