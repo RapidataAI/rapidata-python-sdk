@@ -1,8 +1,9 @@
 """``python -m rapidata`` — utilities that do not need an authenticated client.
 
-``python -m rapidata skill`` prints the maintained agent skill for this SDK;
-``--install`` writes it into the current project so a coding agent loads it on
-every session instead of reading the installed source.
+``python -m rapidata skill`` (or ``rapidata skill``) prints the agent skill
+bundled with this SDK version; ``rapidata/_skill/`` is its source, edited only
+in this repository. ``--install`` writes it into the current project so a coding
+agent loads it on every session instead of reading the installed source.
 
 ``python -m rapidata status`` reports whether this machine can authenticate
 without starting a login; ``python -m rapidata login`` runs the browser login
@@ -14,30 +15,39 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from importlib import resources
 from pathlib import Path
-
-import requests
 
 from rapidata import __version__
 from rapidata._agent_hint import (
     AGENT_DOCS_URL,
-    LLMS_FULL_URL,
     SKILL_INSTALL_PATHS,
-    SKILL_RAW_URL,
     mark_skill_read,
+    stamp_skill,
 )
 
+# `python -m rapidata skill <guide>` -> file in rapidata/_skill/.
+SKILL_GUIDES: dict[str, str] = {
+    "main": "SKILL.md",
+    "reference": "reference.md",
+    "examples": "examples.md",
+    "flows-for-preference-data": "flows-for-preference-data.md",
+}
 
-def fetch_skill(timeout: float = 10) -> str:
-    response = requests.get(SKILL_RAW_URL, timeout=timeout)
-    response.raise_for_status()
-    return response.text
+
+def bundled_skill(guide: str = "main") -> str:
+    return (
+        resources.files("rapidata")
+        .joinpath(f"_skill/{SKILL_GUIDES[guide]}")
+        .read_text(encoding="utf-8")
+    )
 
 
 def install_skill(root: Path, agent: str, content: str) -> Path:
     target = root / SKILL_INSTALL_PATHS[agent]
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(content, encoding="utf-8")
+    user_level = root.expanduser().resolve() == Path.home().resolve()
+    target.write_text(stamp_skill(content, agent, user_level), encoding="utf-8")
     return target
 
 
@@ -98,7 +108,7 @@ def login(environment: str) -> int:
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="python -m rapidata",
+        prog="rapidata",
         description=f"Rapidata SDK {__version__}. Agent guide: {AGENT_DOCS_URL}",
     )
     sub = parser.add_subparsers(dest="command")
@@ -107,9 +117,16 @@ def _build_parser() -> argparse.ArgumentParser:
         help="print the agent skill for this SDK, or install it into the project",
     )
     skill.add_argument(
+        "guide",
+        nargs="?",
+        choices=list(SKILL_GUIDES),
+        default="main",
+        help="which guide to print (default: main, which links the others)",
+    )
+    skill.add_argument(
         "--install",
         action="store_true",
-        help="write the skill into the current project instead of printing it",
+        help="write the main guide into the current project instead of printing it",
     )
     skill.add_argument(
         "--agent",
@@ -149,23 +166,23 @@ def main(argv: list[str] | None = None) -> int:
         parser.print_help()
         return 0
 
-    try:
-        content = fetch_skill()
-    except requests.RequestException as e:
-        print(f"Could not fetch the skill ({e}).", file=sys.stderr)
-        print(
-            f"Read it online instead: {SKILL_RAW_URL} or {LLMS_FULL_URL}",
-            file=sys.stderr,
-        )
-        return 1
-
-    mark_skill_read()
     if args.install:
-        target = install_skill(args.dir, args.agent, content)
+        if args.guide != "main":
+            parser.error("--install writes the main guide; drop the guide name")
+        mark_skill_read()
+        target = install_skill(args.dir, args.agent, bundled_skill())
         print(f"Installed the Rapidata skill to {target}")
         return 0
 
-    print(content)
+    content = bundled_skill(args.guide)
+    if args.guide == "main":
+        mark_skill_read()
+    try:
+        print(content)
+        sys.stdout.flush()
+    except BrokenPipeError:
+        # `rapidata skill | head` closes the pipe early; the flush at exit would raise again.
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
     return 0
 
 

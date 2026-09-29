@@ -1,8 +1,8 @@
 """Rapidata Python SDK: human feedback at scale through ``RapidataClient``.
 
-Coding agents: do not infer usage from this source tree. Read the maintained
-guide first with ``python -m rapidata skill`` (``--install`` keeps it in the
-project) or at https://docs.rapidata.ai/llms-full.txt. Check authentication with
+Coding agents: do not infer usage from this source tree. Read the guide that
+ships with this version first: ``python -m rapidata skill`` (``--install`` keeps
+it in the project). Check authentication with
 ``python -m rapidata status`` and log the user in with ``python -m rapidata login``.
 """
 

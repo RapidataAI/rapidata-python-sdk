@@ -1,0 +1,37 @@
+This Project is a Python SDK for the Rapidata API.
+
+It is built around the RapidataClient class which is the main entry point for interacting with the Rapidata API.
+
+As a customer you can use the RapidataClient class to access the following:
+- JobDefinitionCreation
+- AudienceCreation (including filtered audiences via `.filter()` for country/language/demographic targeting)
+- ValidationSetCreation
+- FlowCreation
+- BenchmarkCreation / MRI Creation (including participant metadata such as `participant.rename()` and `participant.set_price()` for the score-vs-cost chart)
+
+Orders were removed from the SDK entirely (v3.21.0) — do not add, document, or reference order creation.
+
+The whole authentication and backend communication is handled by the OpenAPIService class. It works in combination with the AUTO GENERATED API CLIENT that is used to make the actual API calls.
+
+Note that if there are any changes that have to be made in those files you MUST also update the mustache files under openapi/templates.
+
+please note that there is the RapidataApiClient that wraps every api call to handel backend tracing and error handling.
+
+The backend errors follow a specific format that you can see in the RapidataError class.
+
+when doing type annotations use the "from __future__ import annotations" statement and TYPE_CHECKING to check the types - that way you can eliminate the quotation marks around the types.
+
+## Documentation
+When building the docs make sure you use 'uv run --group docs mkdocs build' - otherwise check out the pyproject.toml file for the dependencies.
+
+When writing documentation, make sure to keep focused, easy to understand, and not repeat information. it should highlight the capabilities while not overexaggerating or falling into hyperbole.
+
+
+## General rules
+at the end of your edits make sure to run 'pyright src/rapidata/rapidata_client' and make sure there are no errors.
+when updating any interfaces make sure you update the docs and examples.
+before every commit make sure to format everything under src/rapidata/rapidata_client with black ('uv run black src/rapidata/rapidata_client').
+
+## Agent skill
+`src/rapidata/_skill/` is the agent skill that ships in every release and that coding agents read through `python -m rapidata skill`. It is edited only here.
+With every change, review whether `SKILL.md` or its companions (`reference.md`, `examples.md`, `flows-for-preference-data.md`) need updating: a new or renamed method, a changed parameter, default or result field, or a new pitfall all do. Update them in the same PR. If nothing the skill documents changed, say so in the PR body, so the reviewer can apply the `skill-unchanged-approved` label that the `Agent Skill` check waits for.

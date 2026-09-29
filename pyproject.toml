@@ -27,6 +27,9 @@ dependencies = [
     "qrcode>=8.0,<9",
 ]
 
+[project.scripts]
+rapidata = "rapidata.__main__:main"
+
 [dependency-groups]
 dev = [
     "python-dotenv>=1.0.1,<2",
