@@ -1192,7 +1192,7 @@ class ExperimentApi:
     ) -> Experiment:
         """Creates an experiment in the draft state and returns the full document.
 
-        The split salt is generated server-side. Returns 400 when an attached-scope experiment sets  campaign predicates.
+        The split salt is generated server-side.
 
         :param create_experiment_endpoint_input: The experiment to create. (required)
         :type create_experiment_endpoint_input: CreateExperimentEndpointInput
@@ -1262,7 +1262,7 @@ class ExperimentApi:
     ) -> ApiResponse[Experiment]:
         """Creates an experiment in the draft state and returns the full document.
 
-        The split salt is generated server-side. Returns 400 when an attached-scope experiment sets  campaign predicates.
+        The split salt is generated server-side.
 
         :param create_experiment_endpoint_input: The experiment to create. (required)
         :type create_experiment_endpoint_input: CreateExperimentEndpointInput
@@ -1332,7 +1332,7 @@ class ExperimentApi:
     ) -> RESTResponseType:
         """Creates an experiment in the draft state and returns the full document.
 
-        The split salt is generated server-side. Returns 400 when an attached-scope experiment sets  campaign predicates.
+        The split salt is generated server-side.
 
         :param create_experiment_endpoint_input: The experiment to create. (required)
         :type create_experiment_endpoint_input: CreateExperimentEndpointInput

@@ -18,11 +18,8 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.experiment_eligibility import ExperimentEligibility
-from rapidata.api_client.models.experiment_scope import ExperimentScope
 from rapidata.api_client.models.experiment_split import ExperimentSplit
 from rapidata.api_client.models.experiment_state import ExperimentState
-from rapidata.api_client.models.experiment_user_enrollment import ExperimentUserEnrollment
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -31,23 +28,20 @@ from typing_extensions import Self
 
 class Experiment(LazyValidatedModel):
     """
-    A serve-time A/B experiment. Every eligible session records its experiment id, name and arm;  treatment sessions additionally receive the experiment's feature flags.
+    A serve-time A/B experiment. Every session it serves records its experiment id, name and arm;  treatment sessions additionally receive the experiment's feature flags.
     """ # noqa: E501
     id: StrictStr = Field(description="The unique id of the experiment document.")
     name: StrictStr = Field(description="Human-readable name.")
     description: StrictStr = Field(description="Human-readable description of the hypothesis.")
     state: ExperimentState = Field(description="The lifecycle state.")
-    scope: ExperimentScope = Field(description="Whether the experiment is evaluated for any matching campaign or only for campaigns attached to it.")
     flags: List[FeatureFlag]
-    eligibility: ExperimentEligibility = Field(description="The predicates deciding which sessions are part of the population.")
-    user_enrollment: ExperimentUserEnrollment = Field(description="How users enter and leave the population.", alias="userEnrollment")
     split: ExperimentSplit = Field(description="The traffic split and its server-generated salt.")
     start_at: Optional[datetime] = Field(default=None, description="Outside the [startAt, endAt) window the experiment is treated as inactive.", alias="startAt")
     end_at: Optional[datetime] = Field(default=None, description="End of the experiment window; the experiment auto-completes afterwards.", alias="endAt")
     created_by: StrictStr = Field(description="The email of the admin who created the experiment.", alias="createdBy")
     created_at: datetime = Field(description="When the experiment was created.", alias="createdAt")
     updated_at: datetime = Field(description="When the experiment was last changed.", alias="updatedAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "state", "scope", "flags", "eligibility", "userEnrollment", "split", "startAt", "endAt", "createdBy", "createdAt", "updatedAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "state", "flags", "split", "startAt", "endAt", "createdBy", "createdAt", "updatedAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -91,9 +85,6 @@ class Experiment(LazyValidatedModel):
                 if _item_flags:
                     _items.append(_item_flags.to_dict())
             _dict['flags'] = _items
-        # override the default output from pydantic by calling `to_dict()` of eligibility
-        if self.eligibility:
-            _dict['eligibility'] = self.eligibility.to_dict()
         # override the default output from pydantic by calling `to_dict()` of split
         if self.split:
             _dict['split'] = self.split.to_dict()
@@ -123,10 +114,7 @@ class Experiment(LazyValidatedModel):
             "name": obj.get("name"),
             "description": obj.get("description"),
             "state": obj.get("state"),
-            "scope": obj.get("scope"),
             "flags": [FeatureFlag.from_dict(_item) for _item in obj["flags"]] if obj.get("flags") is not None else None,
-            "eligibility": ExperimentEligibility.from_dict(obj["eligibility"]) if obj.get("eligibility") is not None else None,
-            "userEnrollment": obj.get("userEnrollment"),
             "split": ExperimentSplit.from_dict(obj["split"]) if obj.get("split") is not None else None,
             "startAt": obj.get("startAt"),
             "endAt": obj.get("endAt"),

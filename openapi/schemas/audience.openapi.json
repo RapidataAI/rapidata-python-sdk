@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.09.27.1857-67e65da"
+    "version": "2026.09.29.1117-e0b6f6d"
   },
   "servers": [
     {
@@ -1719,6 +1719,36 @@
           },
           "required": true
         },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/audience/republish-user-states": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Enqueues a background job that republishes every externally synced audience member's current state.",
+        "description": "Safe to repeat: each call restarts the run, and every event carries the member's absolute state.",
         "responses": {
           "204": {
             "description": "No Content"

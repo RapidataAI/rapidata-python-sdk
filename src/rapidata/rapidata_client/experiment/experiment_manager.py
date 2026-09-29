@@ -4,9 +4,6 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from rapidata.rapidata_client.config import logger, tracer
-from rapidata.api_client.models.experiment_user_enrollment import (
-    ExperimentUserEnrollment,
-)
 
 if TYPE_CHECKING:
     from rapidata.service.openapi_service import OpenAPIService
@@ -27,7 +24,7 @@ class Experiment:
 
 
 class ExperimentManager:
-    """Internal: creates attached-scope experiments and launches jobs under them.
+    """Internal: creates experiments and launches jobs under them.
 
     Not part of the public SDK surface — Rapidata-internal, undocumented.
     """
@@ -42,10 +39,9 @@ class ExperimentManager:
         name: str,
         treatment_bps: int = 5000,
         flags: list[FeatureFlag] | None = None,
-        user_enrollment: ExperimentUserEnrollment = ExperimentUserEnrollment.STICKY,
         description: str = "",
     ) -> Experiment:
-        """Creates and activates an attached-scope experiment.
+        """Creates and activates an experiment.
 
         The experiment is created in the draft state and immediately activated, so
         it is already serving by the time this returns — meant to be paired with
@@ -65,16 +61,13 @@ class ExperimentManager:
             from rapidata.api_client.models.change_experiment_state_endpoint_state_action import (
                 ChangeExperimentStateEndpointStateAction,
             )
-            from rapidata.api_client.models.experiment_scope import ExperimentScope
 
             api = self._openapi_service.campaign.experiment_api
             created = api.campaign_experiments_post(
                 create_experiment_endpoint_input=CreateExperimentEndpointInput(
                     name=name,
                     description=description,
-                    scope=ExperimentScope.ATTACHED,
                     flags=flags or [],
-                    userEnrollment=user_enrollment,
                     split=CreateExperimentEndpointSplit(treatmentBps=treatment_bps),
                 )
             )

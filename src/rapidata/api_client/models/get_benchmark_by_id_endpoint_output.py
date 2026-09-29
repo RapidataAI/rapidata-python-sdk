@@ -35,6 +35,7 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
     description: Optional[StrictStr] = Field(description="Optional plain-text credit for the people or sources behind the benchmark; null when none was supplied.")
     is_public: StrictBool = Field(description="Whether the benchmark is public.", alias="isPublic")
     is_published: StrictBool = Field(description="Whether the benchmark is published to the public benchmark repository.", alias="isPublished")
+    publication_date: Optional[datetime] = Field(default=None, description="Public access starts at this instant; null means private.", alias="publicationDate")
     created_at: datetime = Field(description="The timestamp when the benchmark was created.", alias="createdAt")
     owner_id: Optional[UUID] = Field(default=None, description="The benchmark's owner; null unless the caller is platform staff or in the owning organization.", alias="ownerId")
     owner_mail: Optional[StrictStr] = Field(default=None, description="The owner's mail; null unless the caller is platform staff or in the owning organization.", alias="ownerMail")
@@ -45,7 +46,7 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
     fork_status: BenchmarkForkStatus = Field(description="Whether the copy behind a forked benchmark has finished. Always Ready for a benchmark that was  not forked; a fork is Forking until its job completes and Failed when the job gave up.", alias="forkStatus")
     last_updated_at: Optional[datetime] = Field(description="When the benchmark's rankings last changed — the latest vote recording across the leaderboards contributing to its  overall; null when none ever received votes.", alias="lastUpdatedAt")
     prompt_structure: List[PromptSegmentDefinition] = Field(alias="promptStructure")
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "isPublic", "isPublished", "createdAt", "ownerId", "ownerMail", "organizationId", "initialBoostLevel", "scoreShift", "scoreScale", "forkStatus", "lastUpdatedAt", "promptStructure"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "isPublic", "isPublished", "publicationDate", "createdAt", "ownerId", "ownerMail", "organizationId", "initialBoostLevel", "scoreShift", "scoreScale", "forkStatus", "lastUpdatedAt", "promptStructure"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -94,6 +95,11 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
         if self.description is None and "description" in self.model_fields_set:
             _dict['description'] = None
 
+        # set to None if publication_date (nullable) is None
+        # and model_fields_set contains the field
+        if self.publication_date is None and "publication_date" in self.model_fields_set:
+            _dict['publicationDate'] = None
+
         # set to None if owner_id (nullable) is None
         # and model_fields_set contains the field
         if self.owner_id is None and "owner_id" in self.model_fields_set:
@@ -136,6 +142,7 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
             "description": obj.get("description"),
             "isPublic": obj.get("isPublic"),
             "isPublished": obj.get("isPublished"),
+            "publicationDate": obj.get("publicationDate"),
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),

@@ -13480,6 +13480,8 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        publication_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by publication_date.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -13509,6 +13511,10 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param publication_date: Filter by publication_date.
+        :type publication_date: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -13543,6 +13549,8 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             name=name,
+            is_public=is_public,
+            publication_date=publication_date,
             owner_mail=owner_mail,
             created_at=created_at,
             logic=logic,
@@ -13577,6 +13585,8 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        publication_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by publication_date.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -13606,6 +13616,10 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param publication_date: Filter by publication_date.
+        :type publication_date: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -13640,6 +13654,8 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             name=name,
+            is_public=is_public,
+            publication_date=publication_date,
             owner_mail=owner_mail,
             created_at=created_at,
             logic=logic,
@@ -13674,6 +13690,8 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        publication_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by publication_date.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -13703,6 +13721,10 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param publication_date: Filter by publication_date.
+        :type publication_date: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -13737,6 +13759,8 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             name=name,
+            is_public=is_public,
+            publication_date=publication_date,
             owner_mail=owner_mail,
             created_at=created_at,
             logic=logic,
@@ -13766,6 +13790,8 @@ class BenchmarkApi:
         sort,
         id,
         name,
+        is_public,
+        publication_date,
         owner_mail,
         created_at,
         logic,
@@ -13834,6 +13860,36 @@ class BenchmarkApi:
                             _query_params.append(('name[' + _k + ']', _item))
                     else:
                         _query_params.append(('name[' + _k + ']', _v))
+        if is_public is not None:
+            _param_val = is_public
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('is_public[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('is_public[' + _k + ']', _v))
+        if publication_date is not None:
+            _param_val = publication_date
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('publication_date[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('publication_date[' + _k + ']', _v))
         if owner_mail is not None:
             _param_val = owner_mail
             if hasattr(_param_val, 'to_dict'):
@@ -13913,6 +13969,8 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        publication_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by publication_date.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -13942,6 +14000,10 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param publication_date: Filter by publication_date.
+        :type publication_date: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -13976,6 +14038,8 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             name=name,
+            is_public=is_public,
+            publication_date=publication_date,
             owner_mail=owner_mail,
             created_at=created_at,
             logic=logic,
@@ -14010,6 +14074,8 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        publication_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by publication_date.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -14039,6 +14105,10 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param publication_date: Filter by publication_date.
+        :type publication_date: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -14073,6 +14143,8 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             name=name,
+            is_public=is_public,
+            publication_date=publication_date,
             owner_mail=owner_mail,
             created_at=created_at,
             logic=logic,
@@ -14107,6 +14179,8 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        publication_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by publication_date.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -14136,6 +14210,10 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param publication_date: Filter by publication_date.
+        :type publication_date: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -14170,6 +14248,8 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             name=name,
+            is_public=is_public,
+            publication_date=publication_date,
             owner_mail=owner_mail,
             created_at=created_at,
             logic=logic,
@@ -14199,6 +14279,8 @@ class BenchmarkApi:
         sort,
         id,
         name,
+        is_public,
+        publication_date,
         owner_mail,
         created_at,
         logic,
@@ -14267,6 +14349,36 @@ class BenchmarkApi:
                             _query_params.append(('name[' + _k + ']', _item))
                     else:
                         _query_params.append(('name[' + _k + ']', _v))
+        if is_public is not None:
+            _param_val = is_public
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('is_public[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('is_public[' + _k + ']', _v))
+        if publication_date is not None:
+            _param_val = publication_date
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('publication_date[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('publication_date[' + _k + ']', _v))
         if owner_mail is not None:
             _param_val = owner_mail
             if hasattr(_param_val, 'to_dict'):
@@ -14346,6 +14458,8 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        publication_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by publication_date.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -14375,6 +14489,10 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param publication_date: Filter by publication_date.
+        :type publication_date: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -14409,6 +14527,8 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             name=name,
+            is_public=is_public,
+            publication_date=publication_date,
             owner_mail=owner_mail,
             created_at=created_at,
             logic=logic,
@@ -14443,6 +14563,8 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        publication_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by publication_date.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -14472,6 +14594,10 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param publication_date: Filter by publication_date.
+        :type publication_date: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -14506,6 +14632,8 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             name=name,
+            is_public=is_public,
+            publication_date=publication_date,
             owner_mail=owner_mail,
             created_at=created_at,
             logic=logic,
@@ -14540,6 +14668,8 @@ class BenchmarkApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
+        is_public: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_public.")] = None,
+        publication_date: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by publication_date.")] = None,
         owner_mail: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by owner_mail.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -14569,6 +14699,10 @@ class BenchmarkApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param name: Filter by name.
         :type name: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_public: Filter by is_public.
+        :type is_public: AudienceAudienceIdJobsGetJobIdParameter
+        :param publication_date: Filter by publication_date.
+        :type publication_date: AudienceAudienceIdJobsGetJobIdParameter
         :param owner_mail: Filter by owner_mail.
         :type owner_mail: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -14603,6 +14737,8 @@ class BenchmarkApi:
             sort=sort,
             id=id,
             name=name,
+            is_public=is_public,
+            publication_date=publication_date,
             owner_mail=owner_mail,
             created_at=created_at,
             logic=logic,
@@ -14632,6 +14768,8 @@ class BenchmarkApi:
         sort,
         id,
         name,
+        is_public,
+        publication_date,
         owner_mail,
         created_at,
         logic,
@@ -14700,6 +14838,36 @@ class BenchmarkApi:
                             _query_params.append(('name[' + _k + ']', _item))
                     else:
                         _query_params.append(('name[' + _k + ']', _v))
+        if is_public is not None:
+            _param_val = is_public
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('is_public[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('is_public[' + _k + ']', _v))
+        if publication_date is not None:
+            _param_val = publication_date
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('publication_date[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('publication_date[' + _k + ']', _v))
         if owner_mail is not None:
             _param_val = owner_mail
             if hasattr(_param_val, 'to_dict'):

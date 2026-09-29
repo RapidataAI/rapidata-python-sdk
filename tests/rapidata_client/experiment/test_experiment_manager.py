@@ -1,6 +1,6 @@
 """Tests for the internal ExperimentManager: create() and run_experiment().
 
-create() must post scope=attached and then activate the returned id.
+create() must post the split and then activate the returned id.
 run_experiment() must reject an empty experiment_id and otherwise delegate to
 the audience's job creation, passing the experiment id through.
 """
@@ -25,7 +25,7 @@ def _make_manager() -> tuple[ExperimentManager, MagicMock]:
     return manager, openapi_service
 
 
-def test_create_posts_attached_scope_then_activates_by_id():
+def test_create_posts_split_then_activates_by_id():
     manager, openapi_service = _make_manager()
     api = openapi_service.campaign.experiment_api
 
@@ -40,7 +40,6 @@ def test_create_posts_attached_scope_then_activates_by_id():
 
     post_kwargs = api.campaign_experiments_post.call_args.kwargs
     posted_input = post_kwargs["create_experiment_endpoint_input"]
-    assert posted_input.scope == "attached"
     assert posted_input.split.treatment_bps == 3000
 
     state_args = api.campaign_experiments_experiment_id_state_post.call_args.args

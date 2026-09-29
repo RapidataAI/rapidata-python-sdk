@@ -32,11 +32,12 @@ class QueryPublishedBenchmarksEndpointOutput(LazyValidatedModel):
     is_managed: StrictBool = Field(description="Whether the benchmark is managed.", alias="isManaged")
     is_public: StrictBool = Field(description="Whether the benchmark is public.", alias="isPublic")
     is_published: StrictBool = Field(description="Whether the benchmark is published to the public benchmark repository.", alias="isPublished")
+    publication_date: Optional[datetime] = Field(default=None, description="Public access starts at this instant; null means private.", alias="publicationDate")
     created_at: datetime = Field(description="The timestamp when the benchmark was created.", alias="createdAt")
     owner_mail: Optional[StrictStr] = Field(default=None, description="The owner's mail; null unless the caller is platform staff or in the owning organization.", alias="ownerMail")
     organization_id: Optional[StrictStr] = Field(default=None, description="The owner's organization; null unless the caller is platform staff or in the owning organization.", alias="organizationId")
     last_updated_at: Optional[datetime] = Field(description="When the benchmark's rankings last changed — the latest vote recording across the leaderboards contributing to its  overall; null when none ever received votes.", alias="lastUpdatedAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "isManaged", "isPublic", "isPublished", "createdAt", "ownerMail", "organizationId", "lastUpdatedAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "isManaged", "isPublic", "isPublished", "publicationDate", "createdAt", "ownerMail", "organizationId", "lastUpdatedAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -73,6 +74,11 @@ class QueryPublishedBenchmarksEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if publication_date (nullable) is None
+        # and model_fields_set contains the field
+        if self.publication_date is None and "publication_date" in self.model_fields_set:
+            _dict['publicationDate'] = None
+
         # set to None if owner_mail (nullable) is None
         # and model_fields_set contains the field
         if self.owner_mail is None and "owner_mail" in self.model_fields_set:
@@ -105,6 +111,7 @@ class QueryPublishedBenchmarksEndpointOutput(LazyValidatedModel):
             "isManaged": obj.get("isManaged"),
             "isPublic": obj.get("isPublic"),
             "isPublished": obj.get("isPublished"),
+            "publicationDate": obj.get("publicationDate"),
             "createdAt": obj.get("createdAt"),
             "ownerMail": obj.get("ownerMail"),
             "organizationId": obj.get("organizationId"),
