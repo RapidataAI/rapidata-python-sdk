@@ -7670,6 +7670,7 @@ class JobApi:
         states: Annotated[Optional[List[RapidState]], Field(description="Optional rapid states to filter by (rapid-card results only).")] = None,
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7695,6 +7696,8 @@ class JobApi:
         :type page: int
         :param page_size: The number of items per page.
         :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7722,6 +7725,7 @@ class JobApi:
             states=states,
             page=page,
             page_size=page_size,
+            sort=sort,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7752,6 +7756,7 @@ class JobApi:
         states: Annotated[Optional[List[RapidState]], Field(description="Optional rapid states to filter by (rapid-card results only).")] = None,
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7777,6 +7782,8 @@ class JobApi:
         :type page: int
         :param page_size: The number of items per page.
         :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7804,6 +7811,7 @@ class JobApi:
             states=states,
             page=page,
             page_size=page_size,
+            sort=sort,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7834,6 +7842,7 @@ class JobApi:
         states: Annotated[Optional[List[RapidState]], Field(description="Optional rapid states to filter by (rapid-card results only).")] = None,
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7859,6 +7868,8 @@ class JobApi:
         :type page: int
         :param page_size: The number of items per page.
         :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7886,6 +7897,7 @@ class JobApi:
             states=states,
             page=page,
             page_size=page_size,
+            sort=sort,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7911,6 +7923,7 @@ class JobApi:
         states,
         page,
         page_size,
+        sort,
         _request_auth,
         _content_type,
         _headers,
@@ -7921,6 +7934,7 @@ class JobApi:
 
         _collection_formats: Dict[str, str] = {
             'states': 'multi',
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -7947,6 +7961,10 @@ class JobApi:
         if page_size is not None:
             
             _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
             
         # process the header parameters
         # process the form parameters

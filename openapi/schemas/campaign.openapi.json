@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.09.27.1857-67e65da"
+    "version": "2026.09.29.1117-e0b6f6d"
   },
   "servers": [
     {
@@ -965,6 +965,36 @@
         }
       }
     },
+    "/campaign/republish-user-campaign-sessions": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Starts a background run that republishes the session count of every user and campaign.",
+        "description": "Restarts a run already in progress from the beginning; republished counts never override a newer update.",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/campaign/{campaignId}/resume": {
       "post": {
         "tags": [
@@ -1162,7 +1192,7 @@
           "Experiment"
         ],
         "summary": "Creates an experiment in the draft state and returns the full document.",
-        "description": "The split salt is generated server-side. Returns 400 when an attached-scope experiment sets\n campaign predicates.",
+        "description": "The split salt is generated server-side.",
         "requestBody": {
           "description": "The experiment to create.",
           "content": {
@@ -2022,14 +2052,6 @@
             "type": "string",
             "description": "Human-readable description of the hypothesis."
           },
-          "scope": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentScope"
-              }
-            ],
-            "description": "Defaults to global. Attached experiments must omit every campaign predicate (campaignTypes, excludedCampaignIds, organizationIds, excludedOrganizationIds)."
-          },
           "flags": {
             "allOf": [
               {
@@ -2040,24 +2062,6 @@
               }
             ],
             "description": "Feature flags stamped on treatment sessions only."
-          },
-          "eligibility": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentEligibility"
-              }
-            ],
-            "description": "Eligibility predicates. Omitted predicates match anything."
-          },
-          "userEnrollment": {
-            "type": "string",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentUserEnrollment"
-              }
-            ],
-            "description": "Defaults to perSession.",
-            "nullable": true
           },
           "split": {
             "allOf": [
@@ -2201,10 +2205,7 @@
           "name",
           "description",
           "state",
-          "scope",
           "flags",
-          "eligibility",
-          "userEnrollment",
           "split",
           "createdBy",
           "createdAt",
@@ -2232,14 +2233,6 @@
             ],
             "description": "The lifecycle state."
           },
-          "scope": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentScope"
-              }
-            ],
-            "description": "Whether the experiment is evaluated for any matching campaign or only for campaigns attached to it."
-          },
           "flags": {
             "allOf": [
               {
@@ -2250,22 +2243,6 @@
               }
             ],
             "description": "Feature flags stamped on treatment sessions only."
-          },
-          "eligibility": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentEligibility"
-              }
-            ],
-            "description": "The predicates deciding which sessions are part of the population."
-          },
-          "userEnrollment": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentUserEnrollment"
-              }
-            ],
-            "description": "How users enter and leave the population."
           },
           "split": {
             "allOf": [
@@ -2302,137 +2279,7 @@
             "format": "date-time"
           }
         },
-        "description": "A serve-time A/B experiment. Every eligible session records its experiment id, name and arm;\n treatment sessions additionally receive the experiment's feature flags."
-      },
-      "ExperimentAssetKind": {
-        "enum": [
-          "image",
-          "video",
-          "audio",
-          "text",
-          "multi"
-        ]
-      },
-      "ExperimentCampaignType": {
-        "enum": [
-          "Routed",
-          "Program"
-        ]
-      },
-      "ExperimentContextRequirement": {
-        "enum": [
-          "required",
-          "absent",
-          null
-        ]
-      },
-      "ExperimentEligibility": {
-        "type": "object",
-        "properties": {
-          "rapidTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExperimentRapidType"
-            },
-            "nullable": true
-          },
-          "assetKinds": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExperimentAssetKind"
-            },
-            "nullable": true
-          },
-          "mediaContext": {
-            "type": "string",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentContextRequirement"
-              }
-            ],
-            "nullable": true
-          },
-          "textContext": {
-            "type": "string",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentContextRequirement"
-              }
-            ],
-            "nullable": true
-          },
-          "campaignTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExperimentCampaignType"
-            },
-            "nullable": true
-          },
-          "excludedCampaignIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "organizationIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "excludedOrganizationIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "countries": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "languages": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "user": {
-            "type": "object",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentUserEligibility"
-              }
-            ],
-            "nullable": true
-          }
-        }
-      },
-      "ExperimentRapidType": {
-        "enum": [
-          "BoundingBox",
-          "Classify",
-          "Compare",
-          "FreeText",
-          "Line",
-          "Locate",
-          "NamedEntity",
-          "Polygon",
-          "Scrub",
-          "Transcription"
-        ]
-      },
-      "ExperimentScope": {
-        "enum": [
-          "global",
-          "attached"
-        ]
+        "description": "A serve-time A/B experiment. Every session it serves records its experiment id, name and arm;\n treatment sessions additionally receive the experiment's feature flags."
       },
       "ExperimentSplit": {
         "required": [
@@ -2456,49 +2303,6 @@
           "active",
           "paused",
           "completed"
-        ]
-      },
-      "ExperimentUserEligibility": {
-        "type": "object",
-        "properties": {
-          "minScore": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "maxScore": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "newUsers": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "deviceTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DeviceType"
-            },
-            "nullable": true
-          },
-          "dspNames": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "globalAudienceGraduate": {
-            "type": "boolean",
-            "nullable": true
-          }
-        }
-      },
-      "ExperimentUserEnrollment": {
-        "enum": [
-          "perSession",
-          "sticky"
         ]
       },
       "FeatureFlag": {
@@ -3412,6 +3216,10 @@
           },
           "cooldown": {
             "$ref": "#/components/schemas/ICooldownDuration"
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -4820,14 +4628,6 @@
             "type": "string",
             "description": "Human-readable description of the hypothesis.",
             "nullable": true
-          },
-          "eligibility": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentEligibility"
-              }
-            ],
-            "description": "Replaces the whole eligibility object when provided."
           },
           "treatmentBps": {
             "type": "integer",

@@ -18,7 +18,6 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.experiment_eligibility import ExperimentEligibility
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -30,11 +29,10 @@ class UpdateExperimentEndpointInput(LazyValidatedModel):
     UpdateExperimentEndpointInput
     """ # noqa: E501
     description: Optional[StrictStr] = Field(default=None, description="Human-readable description of the hypothesis.")
-    eligibility: Optional[ExperimentEligibility] = Field(default=None, description="Replaces the whole eligibility object when provided.")
     treatment_bps: Optional[StrictInt] = Field(default=None, description="Treatment share in basis points (0–10000).", alias="treatmentBps")
     end_at: Optional[datetime] = Field(default=None, description="End of the experiment window.", alias="endAt")
     flags: Optional[List[FeatureFlag]] = None
-    __properties: ClassVar[List[str]] = ["description", "eligibility", "treatmentBps", "endAt", "flags"]
+    __properties: ClassVar[List[str]] = ["description", "treatmentBps", "endAt", "flags"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -71,9 +69,6 @@ class UpdateExperimentEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of eligibility
-        if self.eligibility:
-            _dict['eligibility'] = self.eligibility.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in flags (list)
         _items = []
         if self.flags:
@@ -114,7 +109,6 @@ class UpdateExperimentEndpointInput(LazyValidatedModel):
 
         _data = {
             "description": obj.get("description"),
-            "eligibility": ExperimentEligibility.from_dict(obj["eligibility"]) if obj.get("eligibility") is not None else None,
             "treatmentBps": obj.get("treatmentBps"),
             "endAt": obj.get("endAt"),
             "flags": [FeatureFlag.from_dict(_item) for _item in obj["flags"]] if obj.get("flags") is not None else None

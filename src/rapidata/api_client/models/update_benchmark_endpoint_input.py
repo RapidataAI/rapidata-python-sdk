@@ -15,6 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from pydantic import ValidationError
@@ -28,13 +29,14 @@ class UpdateBenchmarkEndpointInput(LazyValidatedModel):
     """ # noqa: E501
     name: Optional[StrictStr] = Field(default=None, description="The new name of the benchmark.")
     description: Optional[StrictStr] = Field(default=None, description="Optional plain-text credit for the people or sources behind the benchmark. Limited to 2000 characters; send null  to clear it, omit to leave it unchanged.")
-    is_public: Optional[StrictBool] = Field(default=None, description="Whether the benchmark should be public.", alias="isPublic")
+    is_public: Optional[StrictBool] = Field(default=None, description="True makes public now; false makes private. Do not combine with publicationDate.", alias="isPublic")
     is_published: Optional[StrictBool] = Field(default=None, description="Whether the benchmark should be surfaced in the public benchmark repository.", alias="isPublished")
+    publication_date: Optional[datetime] = Field(default=None, description="Public access starts at this instant; null makes private, omission leaves it unchanged. Do not combine with isPublic.", alias="publicationDate")
     initial_boost_level: Optional[StrictInt] = Field(default=None, description="Initial boost level applied to the campaign of every run created from this benchmark. Pass null to clear the  override and fall back to the benchmark default.", alias="initialBoostLevel")
     min_assets_per_prompt: Optional[StrictInt] = Field(default=None, description="Optional submission quality gate. Set to at least 2 to warn on submit for prompts with  1..N-1 samples; pass null to clear the gate; omit to leave it unchanged.", alias="minAssetsPerPrompt")
     score_shift: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Additive offset applied to displayed scores on the benchmark's overall scoreboard.", alias="scoreShift")
     score_scale: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Multiplicative factor applied to displayed scores (relative to the Bradley-Terry  center) on the overall scoreboard of this benchmark. Must be strictly positive.", alias="scoreScale")
-    __properties: ClassVar[List[str]] = ["name", "description", "isPublic", "isPublished", "initialBoostLevel", "minAssetsPerPrompt", "scoreShift", "scoreScale"]
+    __properties: ClassVar[List[str]] = ["name", "description", "isPublic", "isPublished", "publicationDate", "initialBoostLevel", "minAssetsPerPrompt", "scoreShift", "scoreScale"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -71,6 +73,11 @@ class UpdateBenchmarkEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if publication_date (nullable) is None
+        # and model_fields_set contains the field
+        if self.publication_date is None and "publication_date" in self.model_fields_set:
+            _dict['publicationDate'] = None
+
         # set to None if initial_boost_level (nullable) is None
         # and model_fields_set contains the field
         if self.initial_boost_level is None and "initial_boost_level" in self.model_fields_set:
@@ -97,6 +104,7 @@ class UpdateBenchmarkEndpointInput(LazyValidatedModel):
             "description": obj.get("description"),
             "isPublic": obj.get("isPublic"),
             "isPublished": obj.get("isPublished"),
+            "publicationDate": obj.get("publicationDate"),
             "initialBoostLevel": obj.get("initialBoostLevel"),
             "minAssetsPerPrompt": obj.get("minAssetsPerPrompt"),
             "scoreShift": obj.get("scoreShift"),

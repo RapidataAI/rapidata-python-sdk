@@ -27,9 +27,9 @@ class IRefereeInfoNaiveRefereeInfo(LazyValidatedModel):
     IRefereeInfoNaiveRefereeInfo
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    response_amount_threshold: Optional[StrictInt] = Field(default=None, alias="responseAmountThreshold")
-    serve_threshold: Optional[StrictInt] = Field(default=None, alias="serveThreshold")
-    __properties: ClassVar[List[str]] = ["_t", "responseAmountThreshold", "serveThreshold"]
+    acceptance_limit: Optional[StrictInt] = Field(default=None, alias="acceptanceLimit")
+    completion_threshold: Optional[StrictInt] = Field(default=None, alias="completionThreshold")
+    __properties: ClassVar[List[str]] = ["_t", "acceptanceLimit", "completionThreshold"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -73,10 +73,10 @@ class IRefereeInfoNaiveRefereeInfo(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if serve_threshold (nullable) is None
+        # set to None if completion_threshold (nullable) is None
         # and model_fields_set contains the field
-        if self.serve_threshold is None and "serve_threshold" in self.model_fields_set:
-            _dict['serveThreshold'] = None
+        if self.completion_threshold is None and "completion_threshold" in self.model_fields_set:
+            _dict['completionThreshold'] = None
 
         return _dict
 
@@ -91,8 +91,8 @@ class IRefereeInfoNaiveRefereeInfo(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "responseAmountThreshold": obj.get("responseAmountThreshold"),
-            "serveThreshold": obj.get("serveThreshold")
+            "acceptanceLimit": obj.get("acceptanceLimit"),
+            "completionThreshold": obj.get("completionThreshold")
         }
         try:
             _obj = cls.model_validate(_data)

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.27.1857-67e65da"
+    "version": "2026.09.29.1117-e0b6f6d"
   },
   "servers": [
     {
@@ -2741,6 +2741,47 @@
         ]
       }
     },
+    "/audience/republish-user-states": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Enqueues a background job that republishes every externally synced audience member's current state.",
+        "description": "Safe to repeat: each call restarts the run, and every event carries the member's absolute state.",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/audience/{audienceId}/resume-distillation": {
       "post": {
         "tags": [
@@ -4554,6 +4595,47 @@
         ]
       }
     },
+    "/campaign/republish-user-campaign-sessions": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Starts a background run that republishes the session count of every user and campaign.",
+        "description": "Restarts a run already in progress from the beginning; republished counts never override a newer update.",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/campaign/{campaignId}/resume": {
       "post": {
         "tags": [
@@ -4795,7 +4877,7 @@
           "Experiment"
         ],
         "summary": "Creates an experiment in the draft state and returns the full document.",
-        "description": "The split salt is generated server-side. Returns 400 when an attached-scope experiment sets\n campaign predicates.",
+        "description": "The split salt is generated server-side.",
         "requestBody": {
           "description": "The experiment to create.",
           "content": {
@@ -16896,6 +16978,10 @@
                   "-id",
                   "name",
                   "-name",
+                  "is_public",
+                  "-is_public",
+                  "publication_date",
+                  "-publication_date",
                   "created_at",
                   "-created_at"
                 ],
@@ -16957,6 +17043,104 @@
             "name": "name",
             "in": "query",
             "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_public",
+            "in": "query",
+            "description": "Filter by is_public.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "publication_date",
+            "in": "query",
+            "description": "Filter by publication_date.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -18640,6 +18824,10 @@
                   "-id",
                   "name",
                   "-name",
+                  "is_public",
+                  "-is_public",
+                  "publication_date",
+                  "-publication_date",
                   "created_at",
                   "-created_at"
                 ],
@@ -18701,6 +18889,104 @@
             "name": "name",
             "in": "query",
             "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_public",
+            "in": "query",
+            "description": "Filter by is_public.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "publication_date",
+            "in": "query",
+            "description": "Filter by publication_date.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -21133,6 +21419,10 @@
                   "-id",
                   "name",
                   "-name",
+                  "is_public",
+                  "-is_public",
+                  "publication_date",
+                  "-publication_date",
                   "created_at",
                   "-created_at"
                 ],
@@ -21194,6 +21484,104 @@
             "name": "name",
             "in": "query",
             "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_public",
+            "in": "query",
+            "description": "Filter by is_public.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "publication_date",
+            "in": "query",
+            "description": "Filter by publication_date.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -30942,6 +31330,30 @@
               "type": "integer"
             },
             "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "state",
+                  "-state",
+                  "decisiveness",
+                  "-decisiveness",
+                  "accepted_response_count",
+                  "-accepted_response_count",
+                  "has_responses",
+                  "-has_responses"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
           }
         ],
         "responses": {
@@ -40379,6 +40791,47 @@
         ]
       }
     },
+    "/rapid/republish-response-counts": {
+      "post": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Starts a fresh background run that republishes every stored user response count.",
+        "description": "Calling it again restarts the run from the beginning.",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/rapid/response": {
       "post": {
         "tags": [
@@ -47830,14 +48283,6 @@
             "type": "string",
             "description": "Human-readable description of the hypothesis."
           },
-          "scope": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentScope"
-              }
-            ],
-            "description": "Defaults to global. Attached experiments must omit every campaign predicate (campaignTypes, excludedCampaignIds, organizationIds, excludedOrganizationIds)."
-          },
           "flags": {
             "allOf": [
               {
@@ -47848,24 +48293,6 @@
               }
             ],
             "description": "Feature flags stamped on treatment sessions only."
-          },
-          "eligibility": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentEligibility"
-              }
-            ],
-            "description": "Eligibility predicates. Omitted predicates match anything."
-          },
-          "userEnrollment": {
-            "type": "string",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentUserEnrollment"
-              }
-            ],
-            "description": "Defaults to perSession.",
-            "nullable": true
           },
           "split": {
             "allOf": [
@@ -48002,10 +48429,7 @@
           "name",
           "description",
           "state",
-          "scope",
           "flags",
-          "eligibility",
-          "userEnrollment",
           "split",
           "createdBy",
           "createdAt",
@@ -48033,14 +48457,6 @@
             ],
             "description": "The lifecycle state."
           },
-          "scope": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentScope"
-              }
-            ],
-            "description": "Whether the experiment is evaluated for any matching campaign or only for campaigns attached to it."
-          },
           "flags": {
             "allOf": [
               {
@@ -48051,22 +48467,6 @@
               }
             ],
             "description": "Feature flags stamped on treatment sessions only."
-          },
-          "eligibility": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentEligibility"
-              }
-            ],
-            "description": "The predicates deciding which sessions are part of the population."
-          },
-          "userEnrollment": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentUserEnrollment"
-              }
-            ],
-            "description": "How users enter and leave the population."
           },
           "split": {
             "allOf": [
@@ -48103,137 +48503,7 @@
             "format": "date-time"
           }
         },
-        "description": "A serve-time A/B experiment. Every eligible session records its experiment id, name and arm;\n treatment sessions additionally receive the experiment's feature flags."
-      },
-      "ExperimentAssetKind": {
-        "enum": [
-          "image",
-          "video",
-          "audio",
-          "text",
-          "multi"
-        ]
-      },
-      "ExperimentCampaignType": {
-        "enum": [
-          "Routed",
-          "Program"
-        ]
-      },
-      "ExperimentContextRequirement": {
-        "enum": [
-          "required",
-          "absent",
-          null
-        ]
-      },
-      "ExperimentEligibility": {
-        "type": "object",
-        "properties": {
-          "rapidTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExperimentRapidType"
-            },
-            "nullable": true
-          },
-          "assetKinds": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExperimentAssetKind"
-            },
-            "nullable": true
-          },
-          "mediaContext": {
-            "type": "string",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentContextRequirement"
-              }
-            ],
-            "nullable": true
-          },
-          "textContext": {
-            "type": "string",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentContextRequirement"
-              }
-            ],
-            "nullable": true
-          },
-          "campaignTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExperimentCampaignType"
-            },
-            "nullable": true
-          },
-          "excludedCampaignIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "organizationIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "excludedOrganizationIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "countries": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "languages": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "user": {
-            "type": "object",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentUserEligibility"
-              }
-            ],
-            "nullable": true
-          }
-        }
-      },
-      "ExperimentRapidType": {
-        "enum": [
-          "BoundingBox",
-          "Classify",
-          "Compare",
-          "FreeText",
-          "Line",
-          "Locate",
-          "NamedEntity",
-          "Polygon",
-          "Scrub",
-          "Transcription"
-        ]
-      },
-      "ExperimentScope": {
-        "enum": [
-          "global",
-          "attached"
-        ]
+        "description": "A serve-time A/B experiment. Every session it serves records its experiment id, name and arm;\n treatment sessions additionally receive the experiment's feature flags."
       },
       "ExperimentSplit": {
         "required": [
@@ -48257,49 +48527,6 @@
           "active",
           "paused",
           "completed"
-        ]
-      },
-      "ExperimentUserEligibility": {
-        "type": "object",
-        "properties": {
-          "minScore": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "maxScore": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "newUsers": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "deviceTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DeviceType"
-            },
-            "nullable": true
-          },
-          "dspNames": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "globalAudienceGraduate": {
-            "type": "boolean",
-            "nullable": true
-          }
-        }
-      },
-      "ExperimentUserEnrollment": {
-        "enum": [
-          "perSession",
-          "sticky"
         ]
       },
       "GetBoostInsightsEndpoint_AudienceOutput": {
@@ -49198,6 +49425,10 @@
           },
           "cooldown": {
             "$ref": "#/components/schemas/ICooldownDuration"
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -50599,14 +50830,6 @@
             "type": "string",
             "description": "Human-readable description of the hypothesis.",
             "nullable": true
-          },
-          "eligibility": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentEligibility"
-              }
-            ],
-            "description": "Replaces the whole eligibility object when provided."
           },
           "treatmentBps": {
             "type": "integer",
@@ -55410,6 +55633,12 @@
             "type": "boolean",
             "description": "Whether the benchmark is published to the public benchmark repository."
           },
+          "publicationDate": {
+            "type": "string",
+            "description": "Public access starts at this instant; null means private.",
+            "format": "date-time",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "The timestamp when the benchmark was created.",
@@ -58515,6 +58744,12 @@
             "type": "boolean",
             "description": "Whether the benchmark is published to the public benchmark repository."
           },
+          "publicationDate": {
+            "type": "string",
+            "description": "Public access starts at this instant; null means private.",
+            "format": "date-time",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "The timestamp when the benchmark was created.",
@@ -59512,6 +59747,12 @@
             "type": "boolean",
             "description": "Whether the benchmark is published to the public benchmark repository."
           },
+          "publicationDate": {
+            "type": "string",
+            "description": "Public access starts at this instant; null means private.",
+            "format": "date-time",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "The timestamp when the benchmark was created.",
@@ -60326,6 +60567,12 @@
           "isPublished": {
             "type": "boolean",
             "description": "Whether the benchmark is published to the public benchmark repository."
+          },
+          "publicationDate": {
+            "type": "string",
+            "description": "Public access starts at this instant; null means private.",
+            "format": "date-time",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -61493,11 +61740,17 @@
           },
           "isPublic": {
             "type": "boolean",
-            "description": "Whether the benchmark should be public."
+            "description": "True makes public now; false makes private. Do not combine with publicationDate."
           },
           "isPublished": {
             "type": "boolean",
             "description": "Whether the benchmark should be surfaced in the public benchmark repository."
+          },
+          "publicationDate": {
+            "type": "string",
+            "description": "Public access starts at this instant; null makes private, omission leaves it unchanged. Do not combine with isPublic.",
+            "format": "date-time",
+            "nullable": true
           },
           "initialBoostLevel": {
             "type": "integer",
@@ -71261,14 +71514,25 @@
             ],
             "type": "string"
           },
-          "responseAmountThreshold": {
+          "acceptanceLimit": {
             "type": "integer",
             "format": "int32"
+          },
+          "completionThreshold": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "responseAmountThreshold": {
+            "type": "integer",
+            "format": "int32",
+            "deprecated": true
           },
           "serveThreshold": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "guessAmountThreshold": {
             "type": "integer",

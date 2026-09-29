@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.09.27.1857-67e65da"
+    "version": "2026.09.29.1117-e0b6f6d"
   },
   "servers": [
     {
@@ -5210,6 +5210,10 @@
                   "-id",
                   "name",
                   "-name",
+                  "is_public",
+                  "-is_public",
+                  "publication_date",
+                  "-publication_date",
                   "created_at",
                   "-created_at"
                 ],
@@ -5271,6 +5275,104 @@
             "name": "name",
             "in": "query",
             "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_public",
+            "in": "query",
+            "description": "Filter by is_public.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "publication_date",
+            "in": "query",
+            "description": "Filter by publication_date.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -6910,6 +7012,10 @@
                   "-id",
                   "name",
                   "-name",
+                  "is_public",
+                  "-is_public",
+                  "publication_date",
+                  "-publication_date",
                   "created_at",
                   "-created_at"
                 ],
@@ -6971,6 +7077,104 @@
             "name": "name",
             "in": "query",
             "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_public",
+            "in": "query",
+            "description": "Filter by is_public.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "publication_date",
+            "in": "query",
+            "description": "Filter by publication_date.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -9359,6 +9563,10 @@
                   "-id",
                   "name",
                   "-name",
+                  "is_public",
+                  "-is_public",
+                  "publication_date",
+                  "-publication_date",
                   "created_at",
                   "-created_at"
                 ],
@@ -9420,6 +9628,104 @@
             "name": "name",
             "in": "query",
             "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "is_public",
+            "in": "query",
+            "description": "Filter by is_public.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "publication_date",
+            "in": "query",
+            "description": "Filter by publication_date.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -17841,6 +18147,12 @@
             "type": "boolean",
             "description": "Whether the benchmark is published to the public benchmark repository."
           },
+          "publicationDate": {
+            "type": "string",
+            "description": "Public access starts at this instant; null means private.",
+            "format": "date-time",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "The timestamp when the benchmark was created.",
@@ -21501,6 +21813,12 @@
             "type": "boolean",
             "description": "Whether the benchmark is published to the public benchmark repository."
           },
+          "publicationDate": {
+            "type": "string",
+            "description": "Public access starts at this instant; null means private.",
+            "format": "date-time",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "The timestamp when the benchmark was created.",
@@ -22498,6 +22816,12 @@
             "type": "boolean",
             "description": "Whether the benchmark is published to the public benchmark repository."
           },
+          "publicationDate": {
+            "type": "string",
+            "description": "Public access starts at this instant; null means private.",
+            "format": "date-time",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "description": "The timestamp when the benchmark was created.",
@@ -23312,6 +23636,12 @@
           "isPublished": {
             "type": "boolean",
             "description": "Whether the benchmark is published to the public benchmark repository."
+          },
+          "publicationDate": {
+            "type": "string",
+            "description": "Public access starts at this instant; null means private.",
+            "format": "date-time",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -24479,11 +24809,17 @@
           },
           "isPublic": {
             "type": "boolean",
-            "description": "Whether the benchmark should be public."
+            "description": "True makes public now; false makes private. Do not combine with publicationDate."
           },
           "isPublished": {
             "type": "boolean",
             "description": "Whether the benchmark should be surfaced in the public benchmark repository."
+          },
+          "publicationDate": {
+            "type": "string",
+            "description": "Public access starts at this instant; null makes private, omission leaves it unchanged. Do not combine with isPublic.",
+            "format": "date-time",
+            "nullable": true
           },
           "initialBoostLevel": {
             "type": "integer",

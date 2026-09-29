@@ -16,7 +16,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.i_cooldown_duration import ICooldownDuration
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -29,7 +29,8 @@ class ICampaignFilterCampaignCooldownFilter(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     cooldown: ICooldownDuration
-    __properties: ClassVar[List[str]] = ["_t", "cooldown"]
+    key: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["_t", "cooldown", "key"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -76,6 +77,11 @@ class ICampaignFilterCampaignCooldownFilter(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of cooldown
         if self.cooldown:
             _dict['cooldown'] = self.cooldown.to_dict()
+        # set to None if key (nullable) is None
+        # and model_fields_set contains the field
+        if self.key is None and "key" in self.model_fields_set:
+            _dict['key'] = None
+
         return _dict
 
     @classmethod
@@ -89,7 +95,8 @@ class ICampaignFilterCampaignCooldownFilter(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "cooldown": ICooldownDuration.from_dict(obj["cooldown"]) if obj.get("cooldown") is not None else None
+            "cooldown": ICooldownDuration.from_dict(obj["cooldown"]) if obj.get("cooldown") is not None else None,
+            "key": obj.get("key")
         }
         try:
             _obj = cls.model_validate(_data)
