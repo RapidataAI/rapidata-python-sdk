@@ -13,10 +13,10 @@ pip install -U rapidata   # or: uv add rapidata
 When a coding agent imports `rapidata`, the SDK points it at the guide. To read it yourself, or to keep a copy in the project so your agent loads it in every session:
 
 ```bash
-rapidata skill                                # print the guide (same as python -m rapidata skill)
-rapidata skill reference                      # companion guides: reference, examples, flows-for-preference-data
-rapidata skill --install                      # write it to .claude/skills/rapidata/SKILL.md
-rapidata skill --install --agent cursor       # or codex, generic (AGENTS.md)
+python -m rapidata skill                             # print the guide
+python -m rapidata skill reference                   # companion guides: reference, examples, flows-for-preference-data
+python -m rapidata skill --install                   # write it to .claude/skills/rapidata/SKILL.md
+python -m rapidata skill --install --agent cursor    # or codex, generic (AGENTS.md)
 ```
 
 The guide is versioned with the SDK, so it always describes the version you have installed.
@@ -68,7 +68,7 @@ The full guide ships inside the SDK, so upgrading the SDK upgrades the guide:
 pip install -U rapidata   # or: uv lock --upgrade-package rapidata
 ```
 
-Copies written by `rapidata skill --install` record the SDK version that wrote them in their front matter (`metadata.rapidata-sdk-version`) and open with a short check. That check tells the agent to compare the recorded version with `rapidata.__version__` and reinstall on a mismatch. After an SDK upgrade, the next import by a coding agent also prints the reinstall command. Both checks are local and need no network.
+Copies written by `python -m rapidata skill --install` record the SDK version that wrote them in their front matter (`metadata.rapidata-sdk-version`) and open with a short check. That check tells the agent to compare the recorded version with `rapidata.__version__` and reinstall on a mismatch. After an SDK upgrade, the next import by a coding agent also prints the reinstall command. Both checks are local and need no network.
 
 ## Editing the skill
 

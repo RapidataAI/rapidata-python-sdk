@@ -9,7 +9,7 @@ Rapidata connects you with distributed human labelers worldwide for fast, high-q
 
 ## This guide ships with the SDK
 
-`python -m rapidata skill` (or `rapidata skill`) prints the copy bundled with the installed `rapidata` package, so it describes exactly that version. After `pip install -U rapidata`, run it again: an upgrade can change what is documented here.
+`python -m rapidata skill` prints the copy bundled with the installed `rapidata` package, so it describes exactly that version. After `pip install -U rapidata`, run it again: an upgrade can change what is documented here.
 
 The three companion guides linked at the end print the same way: `python -m rapidata skill reference`, `python -m rapidata skill examples`, `python -m rapidata skill flows-for-preference-data`.
 
