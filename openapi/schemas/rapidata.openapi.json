@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.09.29.1117-e0b6f6d"
+    "version": "2026.09.29.1426-4342439"
   },
   "servers": [
     {
@@ -63298,7 +63298,8 @@
           "completionPercentage",
           "total",
           "completed",
-          "state"
+          "state",
+          "responseCount"
         ],
         "type": "object",
         "properties": {
@@ -63324,6 +63325,11 @@
               }
             ],
             "description": "The state of the job's labelling."
+          },
+          "responseCount": {
+            "type": "integer",
+            "description": "The number of accepted responses collected so far.",
+            "format": "int64"
           }
         }
       },
