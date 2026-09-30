@@ -31,7 +31,8 @@ class GetJobProgressEndpointOutput(LazyValidatedModel):
     total: StrictInt = Field(description="The total number of rapids.")
     completed: StrictInt = Field(description="The number of completed rapids.")
     state: LabelingState = Field(description="The state of the job's labelling.")
-    __properties: ClassVar[List[str]] = ["completionPercentage", "total", "completed", "state"]
+    response_count: StrictInt = Field(description="The number of accepted responses collected so far.", alias="responseCount")
+    __properties: ClassVar[List[str]] = ["completionPercentage", "total", "completed", "state", "responseCount"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -83,7 +84,8 @@ class GetJobProgressEndpointOutput(LazyValidatedModel):
             "completionPercentage": obj.get("completionPercentage"),
             "total": obj.get("total"),
             "completed": obj.get("completed"),
-            "state": obj.get("state")
+            "state": obj.get("state"),
+            "responseCount": obj.get("responseCount")
         }
         try:
             _obj = cls.model_validate(_data)
