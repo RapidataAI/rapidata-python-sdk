@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.09.29.1426-4342439"
+    "version": "2026.09.30.1542-c2fc954"
   },
   "servers": [
     {
@@ -3126,6 +3126,9 @@
             "$ref": "#/components/schemas/ICampaignFilterResponseCountFilter"
           },
           {
+            "$ref": "#/components/schemas/ICampaignFilterSourceFilter"
+          },
+          {
             "$ref": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter"
           },
           {
@@ -3149,6 +3152,7 @@
             "NotFilter": "#/components/schemas/ICampaignFilterNotFilter",
             "OrFilter": "#/components/schemas/ICampaignFilterOrFilter",
             "ResponseCountFilter": "#/components/schemas/ICampaignFilterResponseCountFilter",
+            "SourceFilter": "#/components/schemas/ICampaignFilterSourceFilter",
             "UserActionRestrictionFilter": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter",
             "UserScoreFilter": "#/components/schemas/ICampaignFilterUserScoreFilter"
           }
@@ -3442,6 +3446,26 @@
           },
           "operator": {
             "$ref": "#/components/schemas/ComparisonOperator"
+          }
+        }
+      },
+      "ICampaignFilterSourceFilter": {
+        "required": [
+          "validSources",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SourceFilter"
+            ],
+            "type": "string"
+          },
+          "validSources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
