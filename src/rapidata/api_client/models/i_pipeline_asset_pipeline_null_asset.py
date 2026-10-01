@@ -15,21 +15,28 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.i_pipeline_metadata import IPipelineMetadata
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PipelineEloRankingConfig(LazyValidatedModel):
+class IPipelineAssetPipelineNullAsset(LazyValidatedModel):
     """
-    PipelineEloRankingConfig
+    IPipelineAssetPipelineNullAsset
     """ # noqa: E501
-    starting_elo: StrictInt = Field(alias="startingElo")
-    k_factor: StrictInt = Field(alias="kFactor")
-    scaling_factor: StrictInt = Field(alias="scalingFactor")
-    __properties: ClassVar[List[str]] = ["startingElo", "kFactor", "scalingFactor"]
+    t: StrictStr = Field(alias="_t")
+    metadata: Dict[str, IPipelineMetadata]
+    __properties: ClassVar[List[str]] = ["_t", "metadata"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['NullAsset']):
+            raise ValueError("must be one of enum values ('NullAsset')")
+        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -45,7 +52,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a JSON string"""
+        """Create an instance of IPipelineAssetPipelineNullAsset from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -66,11 +73,18 @@ class PipelineEloRankingConfig(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key_metadata in self.metadata:
+                if self.metadata[_key_metadata]:
+                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
+            _dict['metadata'] = _field_dict
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a dict"""
+        """Create an instance of IPipelineAssetPipelineNullAsset from a dict"""
         if obj is None:
             return None
 
@@ -78,9 +92,13 @@ class PipelineEloRankingConfig(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor")
+            "_t": obj.get("_t"),
+            "metadata": dict(
+                (_k, IPipelineMetadata.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None
         }
         try:
             _obj = cls.model_validate(_data)

@@ -54,6 +54,7 @@ asset
 audience
 order
 dataset
+pipeline
 identity
 rapid
 campaign

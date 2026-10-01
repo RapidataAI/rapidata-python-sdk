@@ -15,21 +15,38 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PipelineEloRankingConfig(LazyValidatedModel):
+class IPipelineMetadataPipelineStreamsMetadata(LazyValidatedModel):
     """
-    PipelineEloRankingConfig
+    IPipelineMetadataPipelineStreamsMetadata
     """ # noqa: E501
-    starting_elo: StrictInt = Field(alias="startingElo")
-    k_factor: StrictInt = Field(alias="kFactor")
-    scaling_factor: StrictInt = Field(alias="scalingFactor")
-    __properties: ClassVar[List[str]] = ["startingElo", "kFactor", "scalingFactor"]
+    t: StrictStr = Field(alias="_t")
+    has_audio: Optional[StrictBool] = Field(default=None, alias="hasAudio")
+    has_video: Optional[StrictBool] = Field(default=None, alias="hasVideo")
+    has_subtitles: Optional[StrictBool] = Field(default=None, alias="hasSubtitles")
+    visibilities: List[StrictStr]
+    __properties: ClassVar[List[str]] = ["_t", "hasAudio", "hasVideo", "hasSubtitles", "visibilities"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['StreamsMetadata']):
+            raise ValueError("must be one of enum values ('StreamsMetadata')")
+        return value
+
+    @field_validator('visibilities')
+    def visibilities_validate_enum(cls, value):
+        """Validates the enum"""
+        for i in value:
+            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
+                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
+        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -45,7 +62,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a JSON string"""
+        """Create an instance of IPipelineMetadataPipelineStreamsMetadata from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,7 +87,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a dict"""
+        """Create an instance of IPipelineMetadataPipelineStreamsMetadata from a dict"""
         if obj is None:
             return None
 
@@ -78,9 +95,11 @@ class PipelineEloRankingConfig(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor")
+            "_t": obj.get("_t"),
+            "hasAudio": obj.get("hasAudio"),
+            "hasVideo": obj.get("hasVideo"),
+            "hasSubtitles": obj.get("hasSubtitles"),
+            "visibilities": obj.get("visibilities")
         }
         try:
             _obj = cls.model_validate(_data)

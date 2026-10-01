@@ -15,21 +15,44 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from typing_extensions import Annotated
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PipelineEloRankingConfig(LazyValidatedModel):
+class IPipelineMetadataPipelineDurationMetadata(LazyValidatedModel):
     """
-    PipelineEloRankingConfig
+    IPipelineMetadataPipelineDurationMetadata
     """ # noqa: E501
-    starting_elo: StrictInt = Field(alias="startingElo")
-    k_factor: StrictInt = Field(alias="kFactor")
-    scaling_factor: StrictInt = Field(alias="scalingFactor")
-    __properties: ClassVar[List[str]] = ["startingElo", "kFactor", "scalingFactor"]
+    t: StrictStr = Field(alias="_t")
+    duration: Annotated[str, Field(strict=True)]
+    visibilities: List[StrictStr]
+    __properties: ClassVar[List[str]] = ["_t", "duration", "visibilities"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['DurationMetadata']):
+            raise ValueError("must be one of enum values ('DurationMetadata')")
+        return value
+
+    @field_validator('duration')
+    def duration_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not re.match(r"^-?(\d+\.)?\d{2}:\d{2}:\d{2}(\.\d{1,7})?$", value):
+            raise ValueError(r"must validate the regular expression /^-?(\d+\.)?\d{2}:\d{2}:\d{2}(\.\d{1,7})?$/")
+        return value
+
+    @field_validator('visibilities')
+    def visibilities_validate_enum(cls, value):
+        """Validates the enum"""
+        for i in value:
+            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
+                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
+        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -45,7 +68,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a JSON string"""
+        """Create an instance of IPipelineMetadataPipelineDurationMetadata from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,7 +93,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a dict"""
+        """Create an instance of IPipelineMetadataPipelineDurationMetadata from a dict"""
         if obj is None:
             return None
 
@@ -78,9 +101,9 @@ class PipelineEloRankingConfig(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor")
+            "_t": obj.get("_t"),
+            "duration": obj.get("duration"),
+            "visibilities": obj.get("visibilities")
         }
         try:
             _obj = cls.model_validate(_data)

@@ -413,6 +413,7 @@ A labeler's `demographics` may be empty when no demographic data was collected f
 
 ```python
 results = job.get_results()              # RapidataResults — a dict subclass holding the raw JSON
+snapshot = job.get_results(preliminary_results=True)  # unfinished job: responses so far, no waiting
 df = results.to_pandas()                  # one row per datapoint; compare results get A_/B_ columns
 df = results.to_pandas(split_details=True)  # one row per individual response
 results.to_json("results.json")           # writes the file (default "./results.json"); returns None
@@ -663,7 +664,7 @@ Collected from both single-asset and batch upload paths, de-duplicated on `(item
 
 `assign_job` never blocks on funds: the job is always created. If its estimated cost exceeds your account balance, `assign_job` logs a warning with the estimate, your balance, and the expected shortfall — the job still runs, but may pause partway until you top up.
 
-Some jobs don't go straight to running. A job can enter manual review (`ManualApproval`) or, once out of funds mid-run, become spend-limited (`SpendLimited`). Neither state completes on its own, so `get_results()` raises an informative error naming the state (and the review reason, when available) instead of blocking indefinitely — top up or wait for a reviewer, then call it again.
+Some jobs don't go straight to running. A job can enter manual review (`ManualApproval`) or, once out of funds mid-run, become spend-limited (`SpendLimited`); a job you paused with `job.pause()` sits in `Paused`. None of these completes on its own, so `get_results()` raises an informative error naming the state (and the review reason, when available) instead of blocking indefinitely — top up, wait for a reviewer or call `job.resume()`, then call it again.
 
 ### Jobs on an audience that can never respond
 
@@ -753,6 +754,10 @@ client.flow.preheat()
 all_flows = client.flow.find_flows(name="", amount=10, page=1)
 flow = client.flow.get_flow_by_id("flow_id")
 flow.delete()
+
+# Pause / resume a job (both return the job)
+job.pause()
+job.resume()
 
 # Delete other resources
 job_def.delete()   # Deletes the job definition and all its revisions

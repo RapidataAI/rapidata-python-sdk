@@ -147,9 +147,10 @@ you top up.
 
 Some jobs don't go straight to running. A job can enter manual review
 (`ManualApproval`) or, once out of funds mid-run, become spend-limited
-(`SpendLimited`). Neither state completes on its own, so `get_results()` raises an
-informative error naming the state (and the review reason, when available) instead of
-blocking indefinitely — top up or wait for a reviewer, then call it again.
+(`SpendLimited`), and a job paused with `job.pause()` sits in `Paused`. None of these
+completes on its own, so `get_results()` raises an informative error naming the state
+(and the review reason, when available) instead of blocking indefinitely — top up, wait
+for a reviewer or call `job.resume()`, then call it again.
 
 ### Queueing a job behind another
 

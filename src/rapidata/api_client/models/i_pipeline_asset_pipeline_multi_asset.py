@@ -15,21 +15,29 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.i_pipeline_metadata import IPipelineMetadata
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PipelineEloRankingConfig(LazyValidatedModel):
+class IPipelineAssetPipelineMultiAsset(LazyValidatedModel):
     """
-    PipelineEloRankingConfig
+    IPipelineAssetPipelineMultiAsset
     """ # noqa: E501
-    starting_elo: StrictInt = Field(alias="startingElo")
-    k_factor: StrictInt = Field(alias="kFactor")
-    scaling_factor: StrictInt = Field(alias="scalingFactor")
-    __properties: ClassVar[List[str]] = ["startingElo", "kFactor", "scalingFactor"]
+    t: StrictStr = Field(alias="_t")
+    assets: List[IPipelineAsset]
+    metadata: Dict[str, IPipelineMetadata]
+    __properties: ClassVar[List[str]] = ["_t", "assets", "metadata"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['MultiAsset']):
+            raise ValueError("must be one of enum values ('MultiAsset')")
+        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -45,7 +53,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a JSON string"""
+        """Create an instance of IPipelineAssetPipelineMultiAsset from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -66,11 +74,25 @@ class PipelineEloRankingConfig(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in assets (list)
+        _items = []
+        if self.assets:
+            for _item_assets in self.assets:
+                if _item_assets:
+                    _items.append(_item_assets.to_dict())
+            _dict['assets'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key_metadata in self.metadata:
+                if self.metadata[_key_metadata]:
+                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
+            _dict['metadata'] = _field_dict
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a dict"""
+        """Create an instance of IPipelineAssetPipelineMultiAsset from a dict"""
         if obj is None:
             return None
 
@@ -78,9 +100,14 @@ class PipelineEloRankingConfig(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor")
+            "_t": obj.get("_t"),
+            "assets": [IPipelineAsset.from_dict(_item) for _item in obj["assets"]] if obj.get("assets") is not None else None,
+            "metadata": dict(
+                (_k, IPipelineMetadata.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None
         }
         try:
             _obj = cls.model_validate(_data)
@@ -88,4 +115,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
             _obj = cls._lazy_construct(_data, _val_error)
         return _obj
 
+from rapidata.api_client.models.i_pipeline_asset import IPipelineAsset
+# TODO: Rewrite to not use raise_errors
+IPipelineAssetPipelineMultiAsset.model_rebuild(raise_errors=False)
 
