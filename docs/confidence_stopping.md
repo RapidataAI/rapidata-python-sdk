@@ -112,73 +112,74 @@ Example:
 {
     "info": {
         "createdAt": "2099-12-30T00:00:00.000000+00:00",
-        "version": "3.0.0"
+        "version": "3.0.0",
+        "type": "Classify"
     },
-    "results": {
-        "globalAggregatedData": {
-            "Dog": 4,
-            "Cat": 0
-        },
-        "data": [
-            {
-                "originalFileName": "dog.jpeg",
-                "aggregatedResults": {
-                    "Dog": 4,
-                    "Cat": 0
-                },
-                "aggregatedResultsRatios": {
-                    "Dog": 1.0,
-                    "Cat": 0.0
-                },
-                "summedUserScores": {
-                    "Dog": 2.0865,
-                    "Cat": 0.0
-                },
-                "summedUserScoresRatios": {
-                    "Dog": 1.0,
-                    "Cat": 0.0
-                },
-                # this only appears when using early stopping
-                "confidencePerCategory": {
-                    "Dog": 0.9943,
-                    "Cat": 0.0057
-                },
-                "detailedResults": [
-                    {
-                        "selectedCategory": "Dog",
-                        "userDetails": {
-                            "country": "PT",
-                            "language": "pt",
-                            "userScore": 0.3
-                        }
-                    },
-                    {
-                        "selectedCategory": "Dog",
-                        "userDetails": {
-                            "country": "RS",
-                            "language": "sr",
-                            "userScore": 0.8486
-                        }
-                    },
-                    {
-                        "selectedCategory": "Dog",
-                        "userDetails": {
-                            "country": "SG",
-                            "language": "en",
-                            "userScore": 0.4469
-                        }
-                    },
-                    {
-                        "selectedCategory": "Dog",
-                        "userDetails": {
-                            "country": "IN",
-                            "language": "en",
-                            "userScore": 0.4911
-                        }
+    "results": [
+        {
+            "identifier": "dog.jpeg",
+            "originalFileName": "dog.jpeg",
+            "assetUrl": "https://assets.rapidata.ai/<random-uuid>.jpeg",
+            "aggregatedResults": {
+                "Dog": 4,
+                "Cat": 0
+            },
+            "aggregatedResultsRatios": {
+                "Dog": 1.0,
+                "Cat": 0.0
+            },
+            "summedUserScores": {
+                "Dog": 2.0865,
+                "Cat": 0.0
+            },
+            "summedUserScoresRatios": {
+                "Dog": 1.0,
+                "Cat": 0.0
+            },
+            # this only appears when using early stopping
+            "confidencePerCategory": {
+                "Dog": 0.9943,
+                "Cat": 0.0057
+            },
+            "detailedResults": [
+                {
+                    "selectedCategory": "Dog",
+                    "userDetails": {
+                        "country": "PT",
+                        "language": "pt",
+                        "userScores": { "global": 0.3 }
                     }
-                ]
-            }
-        ]
+                },
+                {
+                    "selectedCategory": "Dog",
+                    "userDetails": {
+                        "country": "RS",
+                        "language": "sr",
+                        "userScores": { "global": 0.8486 }
+                    }
+                },
+                {
+                    "selectedCategory": "Dog",
+                    "userDetails": {
+                        "country": "SG",
+                        "language": "en",
+                        "userScores": { "global": 0.4469 }
+                    }
+                },
+                {
+                    "selectedCategory": "Dog",
+                    "userDetails": {
+                        "country": "IN",
+                        "language": "en",
+                        "userScores": { "global": 0.4911 }
+                    }
+                }
+            ]
+        }
+    ],
+    "summary": {
+        "Dog": 4,
+        "Cat": 0
     }
 }
 ```
