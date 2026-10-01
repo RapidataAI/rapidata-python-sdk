@@ -650,7 +650,7 @@ class AssetWarning(Generic[T]):
 
 Collected from both single-asset and batch upload paths, de-duplicated on `(item, message)`, and logged once at the end of an upload as `Upload warning for '<item>': <message>`. They never fail the upload.
 
-**Recovery docs:** https://docs.rapidata.ai/3.x/error_handling/
+**Recovery docs:** https://docs.rapidata.ai/error_handling/
 
 ### Jobs under review or out of funds
 

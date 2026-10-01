@@ -165,7 +165,7 @@ class FailedUploadException(Exception):
                 "the OS limit (e.g. 'ulimit -n 8192') or lower the SDK's footprint via the "
                 "'RAPIDATA_cacheShards' (default 32) and 'RAPIDATA_maxWorkers' (default 25) "
                 "environment variables. See "
-                "https://docs.rapidata.ai/3.x/config/#upload-configuration-options"
+                "https://docs.rapidata.ai/config/#upload-configuration-options"
             )
         if self.machine is not None:
             failed_upload_message += (
@@ -177,5 +177,5 @@ class FailedUploadException(Exception):
         if self.job_definition:
             failed_upload_message += f"\n\nTo run the job definition without the failed datapoints, call: \n\taudience.assign_job(rapidata_client.job.get_job_definition_by_id('{self.job_definition.id}'))"
 
-        failed_upload_message += f"\n\nFor recovery strategies, see: https://docs.rapidata.ai/3.x/error_handling/"
+        failed_upload_message += f"\n\nFor recovery strategies, see: https://docs.rapidata.ai/error_handling/"
         return failed_upload_message
