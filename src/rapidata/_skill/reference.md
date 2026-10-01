@@ -329,20 +329,27 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 
 ```json
 {
-  "results": {
-    "globalAggregatedData": { "Cat": 15, "Dog": 8 },
-    "data": [
-      {
-        "originalFileName": "image1.jpg",
-        "aggregatedResults": { "Cat": 15, "Dog": 8 },
-        "summedUserScores": { "Cat": 9.5, "Dog": 4.2 },
-        "confidencePerCategory": { "Cat": 0.989, "Dog": 0.011 },
-        "detailedResults": [...]
-      }
-    ]
-  }
+  "info": { "type": "Classify", "version": "3.0.0" },
+  "results": [
+    {
+      "identifier": "image1.jpg",
+      "originalFileName": "image1.jpg",
+      "assetUrl": "https://assets.rapidata.ai/<random-uuid>.jpg",
+      "aggregatedResults": { "Cat": 15, "Dog": 8 },
+      "aggregatedResultsRatios": { "Cat": 0.6522, "Dog": 0.3478 },
+      "summedUserScores": { "Cat": 9.5, "Dog": 4.2 },
+      "summedUserScoresRatios": { "Cat": 0.6934, "Dog": 0.3066 },
+      "confidencePerCategory": { "Cat": 0.989, "Dog": 0.011 },
+      "detailedResults": [
+        { "selectedCategory": "Cat", "userDetails": { "country": "US", "language": "en", "userScores": { "global": 0.75 } } }
+      ]
+    }
+  ],
+  "summary": { "Cat": 15, "Dog": 8 }
 }
 ```
+
+`identifier` is the source URL, the original file name, or the text of the datapoint; `summary` is the category counts summed over all datapoints. `confidencePerCategory` appears only with `confidence_threshold`.
 
 ### Comparison Results
 
