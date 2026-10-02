@@ -177,3 +177,64 @@ def test_get_results_happy_path_returns_results():
     openapi_service.order.job_api.job_job_id_download_results_get.assert_called_once_with(
         job_id="job-1"
     )
+
+
+def test_get_results_raises_on_paused():
+    job, _ = _make_job(_job_get("Paused"))
+
+    with pytest.raises(Exception) as excinfo:
+        job.get_results()
+
+    message = str(excinfo.value)
+    assert "paused" in message
+    assert "resume()" in message
+
+
+def test_pause_and_resume_call_endpoints_and_chain():
+    job, openapi_service = _make_job(_job_get("Running"))
+
+    assert job.pause() is job
+    openapi_service.order.job_api.job_job_id_pause_post.assert_called_once_with(
+        "job-1"
+    )
+
+    assert job.resume() is job
+    openapi_service.order.job_api.job_job_id_resume_post.assert_called_once_with(
+        "job-1"
+    )
+
+
+def test_get_results_preliminary_returns_snapshot_while_running():
+    job_get = _job_get("Running")
+    job_get.pipeline_id = "pip-1"
+    job, openapi_service = _make_job(job_get)
+    pipeline_api = openapi_service.pipeline.pipeline_api
+    pipeline_api.pipeline_pipeline_id_preliminary_download_post.return_value.download_id = (
+        "dl-1"
+    )
+    response = pipeline_api.pipeline_preliminary_download_preliminary_download_id_get_with_http_info.return_value
+    response.status_code = 200
+    response.raw_data = json.dumps({"info": {}, "results": [1]}).encode()
+
+    results = job.get_results(preliminary_results=True)
+
+    assert results == {"info": {}, "results": [1]}
+    assert (
+        pipeline_api.pipeline_pipeline_id_preliminary_download_post.call_args.args[0]
+        == "pip-1"
+    )
+    pipeline_api.pipeline_preliminary_download_preliminary_download_id_get_with_http_info.assert_called_once_with(
+        preliminary_download_id="dl-1"
+    )
+    openapi_service.order.job_api.job_job_id_download_results_get.assert_not_called()
+
+
+def test_get_results_preliminary_returns_final_results_when_completed():
+    job, openapi_service = _make_job(_job_get("Completed"))
+    openapi_service.order.job_api.job_job_id_download_results_get.return_value = (
+        json.dumps({"info": {}, "results": []})
+    )
+
+    job.get_results(preliminary_results=True)
+
+    openapi_service.pipeline.pipeline_api.pipeline_pipeline_id_preliminary_download_post.assert_not_called()

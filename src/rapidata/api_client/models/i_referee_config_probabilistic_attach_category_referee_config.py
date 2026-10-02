@@ -15,21 +15,28 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Union
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PipelineEloRankingConfig(LazyValidatedModel):
+class IRefereeConfigProbabilisticAttachCategoryRefereeConfig(LazyValidatedModel):
     """
-    PipelineEloRankingConfig
+    IRefereeConfigProbabilisticAttachCategoryRefereeConfig
     """ # noqa: E501
-    starting_elo: StrictInt = Field(alias="startingElo")
-    k_factor: StrictInt = Field(alias="kFactor")
-    scaling_factor: StrictInt = Field(alias="scalingFactor")
-    __properties: ClassVar[List[str]] = ["startingElo", "kFactor", "scalingFactor"]
+    t: StrictStr = Field(alias="_t")
+    threshold: Union[StrictFloat, StrictInt]
+    max_votes: StrictInt = Field(alias="maxVotes")
+    __properties: ClassVar[List[str]] = ["_t", "threshold", "maxVotes"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['ProbabilisticAttachCategoryRefereeConfig']):
+            raise ValueError("must be one of enum values ('ProbabilisticAttachCategoryRefereeConfig')")
+        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -45,7 +52,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a JSON string"""
+        """Create an instance of IRefereeConfigProbabilisticAttachCategoryRefereeConfig from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,7 +77,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a dict"""
+        """Create an instance of IRefereeConfigProbabilisticAttachCategoryRefereeConfig from a dict"""
         if obj is None:
             return None
 
@@ -78,9 +85,9 @@ class PipelineEloRankingConfig(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor")
+            "_t": obj.get("_t"),
+            "threshold": obj.get("threshold"),
+            "maxVotes": obj.get("maxVotes")
         }
         try:
             _obj = cls.model_validate(_data)

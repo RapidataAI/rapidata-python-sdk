@@ -64,6 +64,7 @@ _API_IMPORTS = {
     "OwnerTierOverrideApi": "rapidata.api_client.api.owner_tier_override_api",
     "ParticipantApi": "rapidata.api_client.api.participant_api",
     "PaymentApi": "rapidata.api_client.api.payment_api",
+    "PipelineApi": "rapidata.api_client.api.pipeline_api",
     "PlatformApi": "rapidata.api_client.api.platform_api",
     "PromptApi": "rapidata.api_client.api.prompt_api",
     "PromptEmbeddingMapApi": "rapidata.api_client.api.prompt_embedding_map_api",

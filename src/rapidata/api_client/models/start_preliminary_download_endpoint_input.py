@@ -15,21 +15,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PipelineEloRankingConfig(LazyValidatedModel):
+class StartPreliminaryDownloadEndpointInput(LazyValidatedModel):
     """
-    PipelineEloRankingConfig
+    StartPreliminaryDownloadEndpointInput
     """ # noqa: E501
-    starting_elo: StrictInt = Field(alias="startingElo")
-    k_factor: StrictInt = Field(alias="kFactor")
-    scaling_factor: StrictInt = Field(alias="scalingFactor")
-    __properties: ClassVar[List[str]] = ["startingElo", "kFactor", "scalingFactor"]
+    send_email: Optional[StrictBool] = Field(default=None, description="Whether to email the user when the download is ready.", alias="sendEmail")
+    __properties: ClassVar[List[str]] = ["sendEmail"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -45,7 +43,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a JSON string"""
+        """Create an instance of StartPreliminaryDownloadEndpointInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,7 +68,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a dict"""
+        """Create an instance of StartPreliminaryDownloadEndpointInput from a dict"""
         if obj is None:
             return None
 
@@ -78,9 +76,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor")
+            "sendEmail": obj.get("sendEmail")
         }
         try:
             _obj = cls.model_validate(_data)

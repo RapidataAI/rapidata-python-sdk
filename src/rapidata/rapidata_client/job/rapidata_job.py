@@ -80,13 +80,12 @@ class RapidataJob:
         self.job_details_page = f"https://app.{self._openapi_service.environment}/audiences/{self.audience_id}/job/{self.id}"
         logger.debug("RapidataJob initialized")
 
-    # States a job can settle into that will never progress to Completed/Failed on
-    # their own: ManualApproval needs a Rapidata reviewer to act, SpendLimited needs
-    # an account top-up. Waiting on either (e.g. from get_results) would hang the
-    # caller forever, so we surface them as informative errors instead.
+    # States that never reach Completed/Failed on their own; waiting on them would hang
+    # the caller, so they raise instead.
     _BLOCKING_STATUSES = (
         AudienceJobState.MANUALAPPROVAL,
         AudienceJobState.SPENDLIMITED,
+        AudienceJobState.PAUSED,
     )
 
     def _fetch_job(self) -> GetJobByIdEndpointOutput:
@@ -109,6 +108,12 @@ class RapidataJob:
                 f"Job '{self}' is spend-limited: the account ran out of funds while "
                 f"running, so it stopped collecting responses. Partial results remain "
                 f"available; top up the account to resume and let the job finish."
+            )
+
+        if job.state == AudienceJobState.PAUSED:
+            raise Exception(
+                f"Job '{self}' is paused, so it is not collecting responses. Partial "
+                f"results remain available; call resume() to let the job finish."
             )
 
         # ManualApproval — reviewReason is optional; a job can legitimately be under
@@ -223,7 +228,7 @@ class RapidataJob:
 
         Raises:
             Exception: If the job enters a state it can't progress out of on its own
-                (``ManualApproval`` or ``SpendLimited``) while a different status is
+                (``ManualApproval``, ``SpendLimited`` or ``Paused``) while a different status is
                 being awaited — with the review reason when the API provides one.
         """
         self._raise_if_audience_cannot_produce_responses()
@@ -352,7 +357,7 @@ class RapidataJob:
         )
         self._openapi_service.order.job_api.job_job_id_retry_post(self.id)
 
-    def get_results(self) -> RapidataResults:
+    def get_results(self, preliminary_results: bool = False) -> RapidataResults:
         """
         Gets the results of the job.
 
@@ -361,13 +366,19 @@ class RapidataJob:
         If the job's results have gone stale, regeneration is triggered automatically
         and this method blocks until the fresh results are ready.
 
+        Args:
+            preliminary_results: If True and the job is not completed yet, returns a
+                snapshot of the responses collected so far instead of waiting. These
+                results are not final and may not contain every datapoint. Defaults
+                to False.
+
         Returns:
             RapidataResults: The results of the job.
 
         Raises:
             Exception: If failed to get job results, or if the job cannot complete
                 without intervention — it is in manual review (``ManualApproval``),
-                spend-limited (``SpendLimited``), or assigned to an audience that can
+                spend-limited (``SpendLimited``), paused (``Paused``), or assigned to an audience that can
                 never graduate annotators (recruiting never started, or its pool is
                 empty).
         """
@@ -378,6 +389,11 @@ class RapidataJob:
             )
 
             logger.info("Getting results for job '%s'...", self)
+
+            if preliminary_results:
+                if self.get_status() != AudienceJobState.COMPLETED.value:
+                    return self._get_preliminary_results()
+                managed_print("Job is already completed. Returning final results.")
 
             # Stale results have no downloadable file until the pipeline is re-run;
             # trigger that automatically before waiting for the re-completion.
@@ -399,6 +415,35 @@ class RapidataJob:
             except (ApiException, json.JSONDecodeError) as e:
                 raise Exception(f"Failed to get job results: {str(e)}") from e
 
+    def _get_preliminary_results(self) -> RapidataResults:
+        """Fetches a snapshot of the results of an in-progress job."""
+        from rapidata.api_client.models.start_preliminary_download_endpoint_input import (
+            StartPreliminaryDownloadEndpointInput,
+        )
+        from rapidata.api_client.exceptions import ApiException
+        from rapidata.rapidata_client.results.rapidata_results import RapidataResults
+
+        pipeline_api = self._openapi_service.pipeline.pipeline_api
+        try:
+            download_id = pipeline_api.pipeline_pipeline_id_preliminary_download_post(
+                self.pipeline_id, StartPreliminaryDownloadEndpointInput(sendEmail=False)
+            ).download_id
+
+            # Parse raw_data: the deserialized `.data` is a Python repr of the JSON, not JSON.
+            def check_results() -> RapidataResults:
+                response = pipeline_api.pipeline_preliminary_download_preliminary_download_id_get_with_http_info(
+                    preliminary_download_id=download_id
+                )
+                if response.status_code != 200:
+                    raise Exception(
+                        f"Preliminary download not ready (HTTP {response.status_code})"
+                    )
+                return RapidataResults(json.loads(response.raw_data))
+
+            return self._retry_operation(check_results, max_retries=60, retry_delay=1)
+        except (ApiException, json.JSONDecodeError) as e:
+            raise Exception(f"Failed to get preliminary results: {str(e)}") from e
+
     def display_progress_bar(self, refresh_rate: int = 5) -> None:
         """
         Displays a progress bar for the job processing using tqdm.
@@ -409,7 +454,7 @@ class RapidataJob:
         Raises:
             ValueError: If refresh_rate is less than 1.
             Exception: If the job has failed, or can't progress on its own — it is
-                in ``ManualApproval`` or ``SpendLimited``, or assigned to an audience
+                in ``ManualApproval``, ``SpendLimited`` or ``Paused``, or assigned to an audience
                 that can never graduate annotators (recruiting never started, or its
                 pool is empty).
         """
@@ -478,6 +523,30 @@ class RapidataJob:
                 )
         except Exception:
             return None
+
+    def pause(self) -> RapidataJob:
+        """Pauses the job. It stops collecting responses until :py:meth:`resume` is called.
+
+        Returns:
+            RapidataJob: ``self`` for chaining.
+        """
+        with tracer.start_as_current_span("RapidataJob.pause"):
+            logger.info("Pausing job '%s'", self)
+            self._openapi_service.order.job_api.job_job_id_pause_post(self.id)
+            managed_print(f"Job '{self}' has been paused.")
+            return self
+
+    def resume(self) -> RapidataJob:
+        """Resumes a paused job so it continues collecting responses.
+
+        Returns:
+            RapidataJob: ``self`` for chaining.
+        """
+        with tracer.start_as_current_span("RapidataJob.resume"):
+            logger.info("Resuming job '%s'", self)
+            self._openapi_service.order.job_api.job_job_id_resume_post(self.id)
+            managed_print(f"Job '{self}' has been resumed.")
+            return self
 
     def delete(self) -> None:
         """Deletes the job."""

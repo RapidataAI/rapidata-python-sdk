@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from rapidata.service.services.signal_service import SignalService
     from rapidata.service.services.translation_service import TranslationService
     from rapidata.service.services.payment_service import PaymentService
+    from rapidata.service.services.pipeline_service import PipelineService
 
 
 class OpenAPIService:
@@ -79,6 +80,7 @@ class OpenAPIService:
         self._signal: SignalService | None = None
         self._translation: TranslationService | None = None
         self._payment: PaymentService | None = None
+        self._pipeline: PipelineService | None = None
 
         if token or token_file:
             if token is None:
@@ -227,6 +229,13 @@ class OpenAPIService:
             from rapidata.service.services.payment_service import PaymentService
             self._payment = PaymentService(self.api_client)
         return self._payment
+
+    @property
+    def pipeline(self) -> PipelineService:
+        if self._pipeline is None:
+            from rapidata.service.services.pipeline_service import PipelineService
+            self._pipeline = PipelineService(self.api_client)
+        return self._pipeline
 
     def _get_rapidata_package_version(self):
         """

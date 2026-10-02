@@ -15,21 +15,29 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.i_workflow_config import IWorkflowConfig
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PipelineEloRankingConfig(LazyValidatedModel):
+class IArtifactWorkflowConfigArtifact(LazyValidatedModel):
     """
-    PipelineEloRankingConfig
+    IArtifactWorkflowConfigArtifact
     """ # noqa: E501
-    starting_elo: StrictInt = Field(alias="startingElo")
-    k_factor: StrictInt = Field(alias="kFactor")
-    scaling_factor: StrictInt = Field(alias="scalingFactor")
-    __properties: ClassVar[List[str]] = ["startingElo", "kFactor", "scalingFactor"]
+    t: StrictStr = Field(alias="_t")
+    workflow_config: IWorkflowConfig = Field(alias="workflowConfig")
+    identifier: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "workflowConfig", "identifier"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['WorkflowConfigArtifactModel']):
+            raise ValueError("must be one of enum values ('WorkflowConfigArtifactModel')")
+        return value
 
     # model_config is inherited from LazyValidatedModel
 
@@ -45,7 +53,7 @@ class PipelineEloRankingConfig(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a JSON string"""
+        """Create an instance of IArtifactWorkflowConfigArtifact from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -66,11 +74,14 @@ class PipelineEloRankingConfig(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of workflow_config
+        if self.workflow_config:
+            _dict['workflowConfig'] = self.workflow_config.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PipelineEloRankingConfig from a dict"""
+        """Create an instance of IArtifactWorkflowConfigArtifact from a dict"""
         if obj is None:
             return None
 
@@ -78,9 +89,9 @@ class PipelineEloRankingConfig(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor")
+            "_t": obj.get("_t"),
+            "workflowConfig": IWorkflowConfig.from_dict(obj["workflowConfig"]) if obj.get("workflowConfig") is not None else None,
+            "identifier": obj.get("identifier")
         }
         try:
             _obj = cls.model_validate(_data)
