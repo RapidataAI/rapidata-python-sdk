@@ -34,7 +34,8 @@ class ListOrgMembersEndpointOutputMember(LazyValidatedModel):
     role: OrgRole
     status: MembershipStatus
     is_active_organization_for_member: StrictBool = Field(alias="isActiveOrganizationForMember")
-    __properties: ClassVar[List[str]] = ["customerId", "email", "role", "status", "isActiveOrganizationForMember"]
+    is_banned: StrictBool = Field(alias="isBanned")
+    __properties: ClassVar[List[str]] = ["customerId", "email", "role", "status", "isActiveOrganizationForMember", "isBanned"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -92,7 +93,8 @@ class ListOrgMembersEndpointOutputMember(LazyValidatedModel):
             "email": obj.get("email"),
             "role": obj.get("role"),
             "status": obj.get("status"),
-            "isActiveOrganizationForMember": obj.get("isActiveOrganizationForMember")
+            "isActiveOrganizationForMember": obj.get("isActiveOrganizationForMember"),
+            "isBanned": obj.get("isBanned")
         }
         try:
             _obj = cls.model_validate(_data)

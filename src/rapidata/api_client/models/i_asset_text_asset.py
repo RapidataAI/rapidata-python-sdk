@@ -16,8 +16,9 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.i_metadata import IMetadata
+from rapidata.api_client.models.translated_string import TranslatedString
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,9 +30,10 @@ class IAssetTextAsset(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     text: StrictStr
+    translated_text: Optional[TranslatedString] = Field(default=None, alias="translatedText")
     metadata: Dict[str, IMetadata]
     identifier: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "text", "metadata", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "text", "translatedText", "metadata", "identifier"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -75,6 +77,9 @@ class IAssetTextAsset(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of translated_text
+        if self.translated_text:
+            _dict['translatedText'] = self.translated_text.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
         _field_dict = {}
         if self.metadata:
@@ -82,6 +87,11 @@ class IAssetTextAsset(LazyValidatedModel):
                 if self.metadata[_key_metadata]:
                     _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
             _dict['metadata'] = _field_dict
+        # set to None if translated_text (nullable) is None
+        # and model_fields_set contains the field
+        if self.translated_text is None and "translated_text" in self.model_fields_set:
+            _dict['translatedText'] = None
+
         return _dict
 
     @classmethod
@@ -96,6 +106,7 @@ class IAssetTextAsset(LazyValidatedModel):
         _data = {
             "_t": obj.get("_t"),
             "text": obj.get("text"),
+            "translatedText": TranslatedString.from_dict(obj["translatedText"]) if obj.get("translatedText") is not None else None,
             "metadata": dict(
                 (_k, IMetadata.from_dict(_v))
                 for _k, _v in obj["metadata"].items()

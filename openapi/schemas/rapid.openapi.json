@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Rapid API",
     "description": "The API for the Rapidata Rapid service",
-    "version": "2026.10.01.1926-dcc6c84"
+    "version": "2026.10.02.1512-7addf5f"
   },
   "servers": [
     {
@@ -2981,6 +2981,15 @@
           },
           "text": {
             "type": "string"
+          },
+          "translatedText": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ],
+            "nullable": true
           },
           "metadata": {
             "$ref": "#/components/schemas/MetadataModelCollection"
