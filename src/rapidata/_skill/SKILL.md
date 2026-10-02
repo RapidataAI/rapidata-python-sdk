@@ -146,7 +146,7 @@ job_def = client.job.create_classification_job_definition(
     instruction="What animal is in this image?",
     answer_options=["Cat", "Dog", "Bird", "Other"],
     datapoints=["img1.jpg", "img2.jpg"],
-    data_type="media",              # "media" (default) or "text" — text assets are NOT translated
+    data_type="media",              # "media" (default) or "text" — text assets are NOT translated unless TranslateTextAssetsSetting is added
     responses_per_datapoint=10,
     contexts=["Optional text context per datapoint"],
     media_contexts=[["optional_reference.jpg"]],
@@ -456,7 +456,7 @@ from rapidata import (
     NoInstructionDisplaySetting, KeyboardNumericSetting,
     LocateMaxPointsSetting, LocateMinPointsSetting,
     ComparePanoramaSetting, CompareEquirectangularSetting,
-    ClassifyEquirectangularSetting,
+    ClassifyEquirectangularSetting, TranslateTextAssetsSetting,
     CustomSetting,
 )
 
@@ -468,7 +468,7 @@ settings=[FreeTextMinimumCharactersSetting(50)]           # Min text length for 
 settings=[FreeTextMaxCharactersSetting(500)]              # Max text length for free-text tasks (default 1024) (use with caution — see note below)
 settings=[SwapContextInstructionSetting()]                # Swap the positions of context and instruction
 settings=[PlayPercentageVideoSetting(percentage=95)]      # Require labelers to watch N% of video before answering (0-95)
-settings=[OriginalLanguageOnlySetting()]                  # Do not translate the task (text assets are never translated anyway)
+settings=[OriginalLanguageOnlySetting()]                  # Do not translate the task (overrides TranslateTextAssetsSetting)
 settings=[NoMistakeOptionSetting()]                       # Add a "No mistakes" button so labelers can confirm the media has no errors
 settings=[DisableAutoloopSetting()]                       # Disable automatic looping of videos
 settings=[NoInstructionDisplaySetting()]                  # Hide instruction on the task screen (hides the context instead if combined with SwapContextInstructionSetting)
@@ -478,6 +478,7 @@ settings=[LocateMinPointsSetting(1)]                      # Locate task: min num
 settings=[ComparePanoramaSetting()]                       # Render comparison media in a panoramic viewer
 settings=[CompareEquirectangularSetting()]                # Render comparison media as equirectangular 360° view
 settings=[ClassifyEquirectangularSetting()]               # Render classification media as equirectangular 360° view
+settings=[TranslateTextAssetsSetting()]                   # Translate text assets (options + context) into the labeler's language; source assumed English
 settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (target="rapids", default); target="campaign" for campaign-level
 ```
 
@@ -497,7 +498,7 @@ settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (ta
 9. **Preview link printed on job creation** — creating a job definition prints a dashboard preview link; suppress prints with `rapidata_config.logging.silent_mode = True`
 10. **Context length limit is 400 characters** — the backend rejects contexts longer than 400 characters, so an over-long context is **always** shortened against the task instruction before upload (not optional; a warning reports how many were shortened). Set `rapidata_config.upload.contextShortening = True` to shorten *every* context, or use `client.context.shorten_context()` / `client.context.shorten_contexts()` to shorten manually.
 11. **Jobs can pause for manual review or funds** — `assign_job` always creates the job, but if its estimated cost exceeds your account balance it logs a cost warning and the job may pause until you top up. A job can also enter manual review (`ManualApproval`) or become spend-limited (`SpendLimited`) mid-run; since neither state completes on its own, `get_results()` raises an informative error naming the state instead of blocking — top up or wait for a reviewer, then retry.
-12. **Text assets are NOT translated** — datapoints uploaded with `data_type="text"` are shown to labelers exactly as supplied, in their original language, whatever language the labeler views the task in. Only the surrounding task UI may be translated; `OriginalLanguageOnlySetting` does not change this. If labelers must read the text, target speakers of its language with `LanguageFilter` / `CountryFilter`, or supply the text already in the labelers' language.
+12. **Text assets are NOT translated by default** — datapoints uploaded with `data_type="text"` (and text contexts) are shown to labelers exactly as supplied unless you add `TranslateTextAssetsSetting()`, which translates them into each labeler's language. That setting **always treats the source text as English** — for non-English text, leave it off and target speakers of the text's language with `LanguageFilter` / `CountryFilter`. Results keep referencing the original text. `OriginalLanguageOnlySetting` wins over it.
 
 ## Flows (Continuous Response Collection)
 

@@ -36,6 +36,9 @@ from rapidata.rapidata_client.settings.compare_equirectangular import (
 from rapidata.rapidata_client.settings.classify_equirectangular import (
     ClassifyEquirectangularSetting,
 )
+from rapidata.rapidata_client.settings.translate_text_assets import (
+    TranslateTextAssetsSetting,
+)
 
 
 class RapidataSettings:
@@ -63,6 +66,7 @@ class RapidataSettings:
         ComparePanorama (ComparePanoramaSetting): Enables panorama comparison mode for compare tasks. Renders a special panoramic image viewer instead of the standard comparison view.
         CompareEquirectangular (CompareEquirectangularSetting): Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.
         ClassifyEquirectangular (ClassifyEquirectangularSetting): Enables equirectangular (360-degree) image mode for classify tasks. Renders a single spherical viewer instead of the standard image view.
+        TranslateTextAssets (TranslateTextAssetsSetting): Translates text assets, both options and context (such as the two text options of a compare task), into the annotator's language. Off unless this setting is added: text assets are shown exactly as provided.
 
     Example:
         ```python
@@ -91,3 +95,4 @@ class RapidataSettings:
     ComparePanorama = ComparePanoramaSetting
     CompareEquirectangular = CompareEquirectangularSetting
     ClassifyEquirectangular = ClassifyEquirectangularSetting
+    TranslateTextAssets = TranslateTextAssetsSetting
