@@ -843,6 +843,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#preliminary-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preliminary Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pausing-a-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pausing a Job
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1615,6 +1637,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#preliminary-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preliminary Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pausing-a-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pausing a Job
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1713,6 +1757,21 @@
 <p class="admonition-title">Note</p>
 <p>Only custom audiences recruit their own pool. For curated audiences, <code>job.get_progress().recruiting</code> is <code>None</code>, and <code>audience.get_recruiting_metrics()</code> returns all zeros.</p>
 </div>
+<h2 id="preliminary-results">Preliminary Results<a class="headerlink" href="#preliminary-results" title="Permanent link">#</a></h2>
+<p>To look at the responses collected so far without waiting for the job to finish, pass <code>preliminary_results=True</code>:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">snapshot</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">(</span><span class="n">preliminary_results</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">df</span> <span class="o">=</span> <span class="n">snapshot</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</span></code></pre></div>
+<p>The snapshot is not final and may not include every datapoint. If the job has already completed, the final results are returned instead.</p>
+<h2 id="pausing-a-job">Pausing a Job<a class="headerlink" href="#pausing-a-job" title="Permanent link">#</a></h2>
+<p><code>job.pause()</code> stops a job from collecting responses; <code>job.resume()</code> lets it continue. Responses gathered before the pause are kept.</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">job</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">get_job_by_id</span><span class="p">(</span><span class="s2">"..."</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">job</span><span class="o">.</span><span class="n">pause</span><span class="p">()</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">get_status</span><span class="p">())</span>  <span class="c1"># Paused</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">job</span><span class="o">.</span><span class="n">resume</span><span class="p">()</span>
+</span></code></pre></div>
+<p>While a job is <code>Paused</code>, <code>get_results()</code> and <code>display_progress_bar()</code> raise an error instead of waiting, since the job will not complete until it is resumed.</p>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>
         </div>

@@ -4,41 +4,22 @@ Let your coding agent write the Rapidata integration for you. The official Rapid
 
 ## Install
 
-Pick your agent. One command. Done.
-
-| Agent | Install |
-|-------|---------|
-| **Claude Code** | `claude plugin marketplace add RapidataAI/skills && claude plugin install rapidata-sdk-plugin@rapidata-sdk-marketplace` |
-| **Cursor** | `npx skills add RapidataAI/skills -a cursor` |
-| **Windsurf** | `npx skills add RapidataAI/skills -a windsurf` |
-| **Copilot** | `npx skills add RapidataAI/skills -a github-copilot` |
-| **Cline** | `npx skills add RapidataAI/skills -a cline` |
-| **Codex** | `npx skills add RapidataAI/skills -a codex` |
-| **Gemini CLI** | `npx skills add RapidataAI/skills -a gemini-cli` |
-| **Any other** | `npx skills add RapidataAI/skills` |
-
-Install once. Works in every session after that. That's it.
-
-Already have the SDK installed? It carries the same skill:
+The skill ships inside the SDK, so installing the SDK is all it takes:
 
 ```bash
-python -m rapidata skill                    # print it
-python -m rapidata skill --install          # write it to .claude/skills/rapidata/SKILL.md
-python -m rapidata skill --install --agent cursor   # or cursor, codex, generic (AGENTS.md)
+pip install -U rapidata   # or: uv add rapidata
 ```
 
-??? note "No install — just the raw SKILL.md"
+When a coding agent imports `rapidata`, the SDK points it at the guide. To read it yourself, or to keep a copy in the project so your agent loads it in every session:
 
-    If your framework doesn't match any of the above, drop the raw file into your agent's context:
+```bash
+python -m rapidata skill                             # print the guide
+python -m rapidata skill reference                   # companion guides: reference, examples, flows-for-preference-data
+python -m rapidata skill --install                   # write it to .claude/skills/rapidata/SKILL.md
+python -m rapidata skill --install --agent cursor    # or codex, generic (AGENTS.md)
+```
 
-    [**SKILL.md on GitHub**](https://github.com/RapidataAI/skills/blob/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md)
-
-    Raw URL for fetching:
-
-    ```
-    https://raw.githubusercontent.com/RapidataAI/skills/main/plugins/rapidata-sdk-plugin/skills/rapidata/SKILL.md
-    ```
-
+The guide is versioned with the SDK, so it always describes the version you have installed.
 
 ## Logging in
 
@@ -55,7 +36,7 @@ If the browser doesn't open, the agent shows you the printed URL. You log in onc
 
 ### Automatic
 
-The agent loads the skill when it sees Rapidata-related work. Just ask naturally:
+With the skill installed into the project, the agent loads it when it sees Rapidata-related work. Just ask naturally:
 
 ```
 Create a comparison job that evaluates image quality between two models
@@ -67,7 +48,7 @@ Set up a custom audience with 3 qualification examples for prompt adherence
 
 ### Manual
 
-On Claude Code, invoke the skill directly:
+On Claude Code, invoke an installed skill directly:
 
 ```
 /rapidata
@@ -81,48 +62,20 @@ Other agents follow their own conventions — Cursor rules, Copilot instructions
 
 ## Keeping the skill up to date
 
-The Rapidata SDK evolves constantly — new task types, new audience features, better defaults. A skill that lags behind the SDK will describe methods that have changed, so either let Claude Code update it for you or pull it yourself.
-
-### Automatic — Claude Code
-
-Claude Code refreshes marketplaces and updates their installed plugins in the background shortly after a session starts. This is off by default for marketplaces outside Anthropic's own, so switch it on once:
-
-`/plugin` → **Marketplaces** → `rapidata-sdk-marketplace` → **Enable auto-update**
-
-To set it for everyone on a project, commit it to `.claude/settings.json` — the same block works in your personal `~/.claude/settings.json`:
-
-```json
-{
-  "extraKnownMarketplaces": {
-    "rapidata-sdk-marketplace": {
-      "source": { "source": "github", "repo": "RapidataAI/skills" },
-      "autoUpdate": true
-    }
-  },
-  "enabledPlugins": {
-    "rapidata-sdk-plugin@rapidata-sdk-marketplace": true
-  }
-}
-```
-
-When an update lands mid-session, Claude Code asks you to run `/reload-plugins`. Otherwise it takes effect on your next launch.
-
-### Manual
-
-Claude Code:
+The full guide ships inside the SDK, so upgrading the SDK upgrades the guide:
 
 ```bash
-claude plugin marketplace update
+pip install -U rapidata   # or: uv lock --upgrade-package rapidata
 ```
 
-Everything else — the `skills` CLI updates only when you ask it to:
+Copies written by `python -m rapidata skill --install` record the SDK version that wrote them in their front matter (`metadata.rapidata-sdk-version`) and open with a short check. That check tells the agent to compare the recorded version with `rapidata.__version__` and reinstall on a mismatch. After an SDK upgrade, the next import by a coding agent also prints the reinstall command. Both checks are local and need no network.
 
-```bash
-npx skills update rapidata
-```
+## Editing the skill
 
-Or update every skill you've installed at once:
+The guide lives in the SDK repository at [`src/rapidata/_skill/`](https://github.com/RapidataAI/rapidata-python-sdk/tree/main/src/rapidata/_skill) and is edited only there. A pull request that changes SDK behaviour updates it in the same change; the `Agent Skill` check asks the reviewer to confirm when it does not.
 
-```bash
-npx skills update
-```
+## The import-time hint
+
+When the SDK is imported by a coding agent (Claude Code, Codex, Cursor, Gemini CLI) that has not read the guide yet, it prints a short pointer to `python -m rapidata skill` on stderr. It shows once per agent session and stops as soon as that session reads the guide. Humans running the SDK directly never see it.
+
+Processes an agent merely started — a dev server, a script whose stderr is parsed — inherit its environment and would show the hint too. Set `RAPIDATA_AGENT_HINT=0` for those.

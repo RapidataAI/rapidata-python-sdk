@@ -53,3 +53,28 @@ print(audience.get_recruiting_metrics())
 
 !!! note
     Only custom audiences recruit their own pool. For curated audiences, `job.get_progress().recruiting` is `None`, and `audience.get_recruiting_metrics()` returns all zeros.
+
+## Preliminary Results
+
+To look at the responses collected so far without waiting for the job to finish, pass `preliminary_results=True`:
+
+```py
+snapshot = job.get_results(preliminary_results=True)
+df = snapshot.to_pandas()
+```
+
+The snapshot is not final and may not include every datapoint. If the job has already completed, the final results are returned instead.
+
+## Pausing a Job
+
+`job.pause()` stops a job from collecting responses; `job.resume()` lets it continue. Responses gathered before the pause are kept.
+
+```py
+job = client.job.get_job_by_id("...")
+job.pause()
+print(job.get_status())  # Paused
+
+job.resume()
+```
+
+While a job is `Paused`, `get_results()` and `display_progress_bar()` raise an error instead of waiting, since the job will not complete until it is resumed.

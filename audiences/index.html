@@ -2152,9 +2152,10 @@ balance, and the expected shortfall — the job still runs, but may pause partwa
 you top up.</p>
 <p>Some jobs don't go straight to running. A job can enter manual review
 (<code>ManualApproval</code>) or, once out of funds mid-run, become spend-limited
-(<code>SpendLimited</code>). Neither state completes on its own, so <code>get_results()</code> raises an
-informative error naming the state (and the review reason, when available) instead of
-blocking indefinitely — top up or wait for a reviewer, then call it again.</p>
+(<code>SpendLimited</code>), and a job paused with <code>job.pause()</code> sits in <code>Paused</code>. None of these
+completes on its own, so <code>get_results()</code> raises an informative error naming the state
+(and the review reason, when available) instead of blocking indefinitely — top up, wait
+for a reviewer or call <code>job.resume()</code>, then call it again.</p>
 <h3 id="queueing-a-job-behind-another">Queueing a job behind another<a class="headerlink" href="#queueing-a-job-behind-another" title="Permanent link">#</a></h3>
 <p>Pass <code>run_after</code> to hold a job until an earlier one is done. The queued job is created
 immediately in the <code>Queued</code> state and starts as soon as the preceding job completes or
