@@ -23,9 +23,9 @@ jobs:
 
       - name: Fetch settings.json from frontend repo
         run: |
-          curl -s -H "Authorization: token ${{ steps.generate-token.outputs.token }}" \
+          curl -sf -H "Authorization: token ${{ steps.generate-token.outputs.token }}" \
             -H "Accept: application/vnd.github.raw+json" \
-            "https://api.github.com/repos/RapidataAI/rapids-frontend/contents/settings.json" \
+            "https://api.github.com/repos/RapidataAI/rapids-frontend/contents/apps/rapids-frontend/settings.json" \
             -o settings.json
 
       - name: Install uv
