@@ -68,6 +68,7 @@ from .rapidata_client import (
     ComparePanoramaSetting,
     CompareEquirectangularSetting,
     ClassifyEquirectangularSetting,
+    TranslateTextAssetsSetting,
     # --- GENERATED SETTINGS IMPORTS END ---
     CountryFilter,
     LanguageFilter,

@@ -71,6 +71,7 @@ from .settings import (
     ComparePanoramaSetting,
     CompareEquirectangularSetting,
     ClassifyEquirectangularSetting,
+    TranslateTextAssetsSetting,
 )
 
 # --- GENERATED SETTINGS IMPORTS END ---

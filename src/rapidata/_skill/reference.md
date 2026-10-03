@@ -11,7 +11,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `name` | str | Job identifier (not shown to labelers) |
 | `instruction` | str | Task description shown to labelers (max 250 characters — longer raises `ValueError`) |
 | `datapoints` | list | Data to label (URLs or local paths) |
-| `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** — labelers see them verbatim in their original language |
+| `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
 | `responses_per_datapoint` | int | Responses per item (default 10) |
 | `contexts` | list[str] \| None | Text context per datapoint (max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually) |
 | `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of image URLs/paths (one inner list per datapoint) |
@@ -577,7 +577,7 @@ Most settings only apply to specific task types. If you add a setting that the j
 | `FreeTextMaxCharactersSetting` | `(value: int = 1024)` — must be ≥ 1 | Max chars for free-text tasks. Use with caution — see note below the table |
 | `SwapContextInstructionSetting` | `(value: bool = True)` | Swap positions of context and instruction |
 | `PlayPercentageVideoSetting` | `(percentage: int = 95)` — 0–95 | Require labelers to watch N% of video |
-| `OriginalLanguageOnlySetting` | `(value: bool = True)` | Skip translation; show task in original language. Text assets (`data_type="text"`) are never translated, with or without this setting |
+| `OriginalLanguageOnlySetting` | `(value: bool = True)` | Skip translation; show task in original language. Also overrides `TranslateTextAssetsSetting` |
 | `NoMistakeOptionSetting` | `(value: bool = True)` | Hide the "mark as mistake" option |
 | `DisableAutoloopSetting` | `(value: bool = True)` | Disable automatic media looping |
 | `NoInstructionDisplaySetting` | `(value: bool = True)` | Hide instruction from task screen |
@@ -587,6 +587,7 @@ Most settings only apply to specific task types. If you add a setting that the j
 | `ComparePanoramaSetting` | `(value: bool = True)` | Render comparison media as 360° panorama |
 | `CompareEquirectangularSetting` | `(value: bool = True)` | Render comparison media as equirectangular VR |
 | `ClassifyEquirectangularSetting` | `(value: bool = True)` | Render classification media as equirectangular 360° view |
+| `TranslateTextAssetsSetting` | `(value: bool = True)` | Translate text assets (datapoints and text contexts) into the labeler's language. Off unless added; source text is always assumed to be English; results still reference the original text |
 | `CustomSetting` | `(key: str, value: str, target: "rapids" \| "campaign" = "rapids")` | Pass a custom key/value through to the backend; `target` controls whether the flag is applied at the rapid level (`"rapids"`) or campaign level (`"campaign"`) |
 
 **Note on `FreeTextMinimumCharactersSetting` / `FreeTextMaxCharactersSetting`:** use these with caution. Free-text responses already pass through a reasonableness check by default, so tightening the bounds is usually unnecessary and will reject otherwise valid answers. Only set them when the question genuinely demands a specific length (e.g. a single word, or a full paragraph).
