@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Validation API",
     "description": "The API for the Rapidata Validation service",
-    "version": "2026.10.01.1926-dcc6c84"
+    "version": "2026.10.02.1512-7addf5f"
   },
   "servers": [
     {
@@ -2148,6 +2148,15 @@
           "text": {
             "type": "string"
           },
+          "translatedText": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ],
+            "nullable": true
+          },
           "metadata": {
             "$ref": "#/components/schemas/MetadataModelCollection"
           },
@@ -3298,6 +3307,28 @@
           "wordIndex": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "TranslatedString": {
+        "required": [
+          "englishText",
+          "text",
+          "targetLanguage"
+        ],
+        "type": "object",
+        "properties": {
+          "wasTranslated": {
+            "type": "boolean"
+          },
+          "englishText": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "targetLanguage": {
+            "type": "string"
           }
         }
       },

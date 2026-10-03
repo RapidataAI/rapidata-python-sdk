@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from pydantic import ValidationError
@@ -31,7 +31,8 @@ class QueryCustomersEndpointOutput(LazyValidatedModel):
     email: Optional[StrictStr] = Field(description="The email address of the customer.")
     organization_name: Optional[StrictStr] = Field(description="The name of the organization this customer belongs to, if any.", alias="organizationName")
     organization_id: Optional[StrictStr] = Field(description="The identifier of the organization this customer belongs to, if any.", alias="organizationId")
-    __properties: ClassVar[List[str]] = ["id", "email", "organizationName", "organizationId"]
+    is_banned: StrictBool = Field(description="Whether the customer is banned.", alias="isBanned")
+    __properties: ClassVar[List[str]] = ["id", "email", "organizationName", "organizationId", "isBanned"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -98,7 +99,8 @@ class QueryCustomersEndpointOutput(LazyValidatedModel):
             "id": obj.get("id"),
             "email": obj.get("email"),
             "organizationName": obj.get("organizationName"),
-            "organizationId": obj.get("organizationId")
+            "organizationId": obj.get("organizationId"),
+            "isBanned": obj.get("isBanned")
         }
         try:
             _obj = cls.model_validate(_data)
