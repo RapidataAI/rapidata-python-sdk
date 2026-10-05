@@ -25,7 +25,5 @@ class LocateMinPointsSetting(RapidataSetting):
 
     def __init__(self, value: int = 1):
         if value < 1:
-            raise ValueError(
-                "The minimum number of points must be at least 1."
-            )
+            raise ValueError("The minimum number of points must be at least 1.")
         super().__init__(key="locate_min_points", value=value)
