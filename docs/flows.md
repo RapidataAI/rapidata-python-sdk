@@ -1,7 +1,5 @@
 # Flows
 
-![Flows supply human feedback as the reward signal for GRPO training of a flow matching text-to-image model](media/flows_grpo.svg)
-
 Flows collect human responses on small batches of data. Create a flow once with an instruction and evaluation settings, then reuse it for new batches without creating a full job each time. Flows support images, videos, audio, and text.
 
 ## How a Flow Works
