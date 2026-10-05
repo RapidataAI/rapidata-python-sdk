@@ -25,6 +25,16 @@ class {{classname}}({{vendorExtensions.x-py-enum-type}}, Enum):
         """Create an instance of {{classname}} from a JSON string"""
         return cls(json.loads(json_str))
 
+    # The backend adds values before clients upgrade; a strict enum would fail the whole response.
+    @classmethod
+    def _missing_(cls, value):
+        if not isinstance(value, {{vendorExtensions.x-py-enum-type}}):
+            return None
+        member = {{vendorExtensions.x-py-enum-type}}.__new__(cls, value)
+        member._name_ = str(value).upper()
+        member._value_ = value
+        return member
+
     {{#defaultValue}}
 
     #

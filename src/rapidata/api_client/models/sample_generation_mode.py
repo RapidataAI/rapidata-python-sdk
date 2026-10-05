@@ -32,3 +32,13 @@ class SampleGenerationMode(str, Enum):
         """Create an instance of SampleGenerationMode from a JSON string"""
         return cls(json.loads(json_str))
 
+    # The backend adds values before clients upgrade; a strict enum would fail the whole response.
+    @classmethod
+    def _missing_(cls, value):
+        if not isinstance(value, str):
+            return None
+        member = str.__new__(cls, value)
+        member._name_ = str(value).upper()
+        member._value_ = value
+        return member
+
