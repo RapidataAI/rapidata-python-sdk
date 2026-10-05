@@ -1332,6 +1332,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#human-rewards-for-grpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Human Rewards for GRPO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-create-a-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1594,6 +1605,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#human-rewards-for-grpo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Human Rewards for GRPO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-create-a-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1660,6 +1682,9 @@
 <h1 id="ranking-flows">Ranking Flows<a class="headerlink" href="#ranking-flows" title="Permanent link">#</a></h1>
 <p>Use a ranking flow to compare the items in each batch and collect a score for every item. <code>create_ranking_flow()</code> returns a <code>RapidataRankingFlow</code>.</p>
 <p>For the shared lifecycle and flow management methods, see the <a href="../">flow overview</a>.</p>
+<h2 id="human-rewards-for-grpo">Human Rewards for GRPO<a class="headerlink" href="#human-rewards-for-grpo" title="Permanent link">#</a></h2>
+<p>A ranking batch returns one score per item, which is the group reward that GRPO needs. Submit the G samples generated for a prompt as one batch, and use the scores in place of a learned reward model.</p>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../../media/flows_grpo.svg" data-desc-position="bottom"><img alt="Ranking flows supply human feedback as the reward signal for GRPO training of a flow matching text-to-image model" src="../../media/flows_grpo.svg"></a></p>
 <h2 id="1-create-a-flow">1. Create a Flow<a class="headerlink" href="#1-create-a-flow" title="Permanent link">#</a></h2>
 <p>Start by creating a ranking flow with an instruction that will be shown to evaluators for each comparison:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
