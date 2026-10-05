@@ -4,38 +4,23 @@
 
 from rapidata.rapidata_client.settings.no_shuffle import NoShuffleSetting
 from rapidata.rapidata_client.settings.mute_video import MuteVideoSetting
-from rapidata.rapidata_client.settings.free_text_minimum_characters import (
-    FreeTextMinimumCharactersSetting,
-)
-from rapidata.rapidata_client.settings.free_text_max_characters import (
-    FreeTextMaxCharactersSetting,
-)
-from rapidata.rapidata_client.settings.swap_context_instruction import (
-    SwapContextInstructionSetting,
-)
-from rapidata.rapidata_client.settings.play_percentage_video import (
-    PlayPercentageVideoSetting,
-)
+from rapidata.rapidata_client.settings.free_text_minimum_characters import FreeTextMinimumCharactersSetting
+from rapidata.rapidata_client.settings.free_text_max_characters import FreeTextMaxCharactersSetting
+from rapidata.rapidata_client.settings.swap_context_instruction import SwapContextInstructionSetting
+from rapidata.rapidata_client.settings.play_percentage_video import PlayPercentageVideoSetting
 from rapidata.rapidata_client.settings.markdown import MarkdownSetting
 from rapidata.rapidata_client.settings.allow_neither_both import AllowNeitherBothSetting
-from rapidata.rapidata_client.settings.original_language_only import (
-    OriginalLanguageOnlySetting,
-)
+from rapidata.rapidata_client.settings.original_language_only import OriginalLanguageOnlySetting
 from rapidata.rapidata_client.settings.no_mistake_option import NoMistakeOptionSetting
 from rapidata.rapidata_client.settings.disable_autoloop import DisableAutoloopSetting
-from rapidata.rapidata_client.settings.no_instruction_display import (
-    NoInstructionDisplaySetting,
-)
+from rapidata.rapidata_client.settings.no_instruction_display import NoInstructionDisplaySetting
 from rapidata.rapidata_client.settings.keyboard_numeric import KeyboardNumericSetting
 from rapidata.rapidata_client.settings.locate_max_points import LocateMaxPointsSetting
 from rapidata.rapidata_client.settings.locate_min_points import LocateMinPointsSetting
 from rapidata.rapidata_client.settings.compare_panorama import ComparePanoramaSetting
-from rapidata.rapidata_client.settings.compare_equirectangular import (
-    CompareEquirectangularSetting,
-)
-from rapidata.rapidata_client.settings.classify_equirectangular import (
-    ClassifyEquirectangularSetting,
-)
+from rapidata.rapidata_client.settings.compare_equirectangular import CompareEquirectangularSetting
+from rapidata.rapidata_client.settings.classify_equirectangular import ClassifyEquirectangularSetting
+from rapidata.rapidata_client.settings.translate_text_assets import TranslateTextAssetsSetting
 
 
 class RapidataSettings:
@@ -63,6 +48,7 @@ class RapidataSettings:
         ComparePanorama (ComparePanoramaSetting): Enables panorama comparison mode for compare tasks. Renders a special panoramic image viewer instead of the standard comparison view.
         CompareEquirectangular (CompareEquirectangularSetting): Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.
         ClassifyEquirectangular (ClassifyEquirectangularSetting): Enables equirectangular (360-degree) image mode for classify tasks. Renders a single spherical viewer instead of the standard image view.
+        TranslateTextAssets (TranslateTextAssetsSetting): Translates text assets, both options and context (such as the two text options of a compare task), into the annotator's language. Off unless this setting is added: text assets are shown exactly as provided.
 
     Example:
         ```python
@@ -91,3 +77,4 @@ class RapidataSettings:
     ComparePanorama = ComparePanoramaSetting
     CompareEquirectangular = CompareEquirectangularSetting
     ClassifyEquirectangular = ClassifyEquirectangularSetting
+    TranslateTextAssets = TranslateTextAssetsSetting
