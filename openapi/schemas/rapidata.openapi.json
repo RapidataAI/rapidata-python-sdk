@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.10.02.1512-7addf5f"
+    "version": "2026.10.05.1742-6726a0a"
   },
   "servers": [
     {
@@ -210,6 +210,10 @@
     {
       "name": "Invoice",
       "x-displayName": "Invoice"
+    },
+    {
+      "name": "InvoiceRecipient",
+      "x-displayName": "InvoiceRecipient"
     },
     {
       "name": "Payment",
@@ -28011,6 +28015,58 @@
         ]
       }
     },
+    "/participant-sample/{sampleId}/exclude-votes": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Excludes a participant sample's votes from the benchmark's scores.",
+        "description": "Every matchup the sample took part in stops counting; the sample is kept, and repeating the call changes nothing.",
+        "parameters": [
+          {
+            "name": "sampleId",
+            "in": "path",
+            "description": "The id of the sample.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/participant/{participantId}/faucet": {
       "delete": {
         "tags": [
@@ -28112,6 +28168,58 @@
           }
         },
         "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/participant-sample/{sampleId}/restore-votes": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Restores a participant sample's votes to the benchmark's scores.",
+        "description": "Every matchup the sample took part in counts again; restoring votes never excluded changes nothing.",
+        "parameters": [
+          {
+            "name": "sampleId",
+            "in": "path",
+            "description": "The id of the sample.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
         "security": [
           {
             "OpenIdConnect": [
@@ -39309,6 +39417,125 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/billing/organization/{organizationId}/invoice-recipient": {
+      "get": {
+        "tags": [
+          "InvoiceRecipient"
+        ],
+        "summary": "Gets the email address the organization's invoices are sent to.",
+        "description": "If Rapidata support configured a separate billing email, invoices go there and this address is ignored.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The organization whose invoice recipient to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceRecipient"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "InvoiceRecipient"
+        ],
+        "summary": "Sets the email address the organization's invoices are sent to.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The organization whose invoice recipient to set.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new invoice recipient.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceRecipientInput"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "204": {
             "description": "No Content"
@@ -57749,6 +57976,10 @@
             "description": "The timestamp when the sample was created.",
             "format": "date-time"
           },
+          "votesExcluded": {
+            "type": "boolean",
+            "description": "Whether the sample's matchups are excluded from the benchmark's scores."
+          },
           "ownerId": {
             "type": "string",
             "description": "The sample's owner; null unless the caller is platform staff or in the owning organization.",
@@ -58179,6 +58410,9 @@
             "type": "string",
             "format": "date-time"
           },
+          "votesExcluded": {
+            "type": "boolean"
+          },
           "ownerId": {
             "type": "string",
             "format": "uuid",
@@ -58268,6 +58502,10 @@
             "type": "string",
             "description": "The timestamp when the sample was created.",
             "format": "date-time"
+          },
+          "votesExcluded": {
+            "type": "boolean",
+            "description": "Whether the sample's matchups are excluded from the benchmark's scores."
           },
           "ownerId": {
             "type": "string",
@@ -58466,6 +58704,10 @@
             "type": "string",
             "description": "The timestamp when the sample was created.",
             "format": "date-time"
+          },
+          "votesExcluded": {
+            "type": "boolean",
+            "description": "Whether the sample's matchups are excluded from the benchmark's scores."
           },
           "ownerId": {
             "type": "string",
@@ -69903,6 +70145,33 @@
           }
         }
       },
+      "InvoiceRecipient": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The invoice recipient email, or null when the organization has not been billed yet.",
+            "nullable": true
+          }
+        },
+        "description": "The address an organization's invoices are emailed to."
+      },
+      "InvoiceRecipientInput": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The invoice recipient email."
+          }
+        },
+        "description": "The new address an organization's invoices are emailed to."
+      },
       "InvoiceStatus": {
         "enum": [
           "Generating",
@@ -75411,6 +75680,7 @@
         "VolumeDiscount",
         "BillingAccount",
         "Invoice",
+        "InvoiceRecipient",
         "Payment"
       ]
     },
