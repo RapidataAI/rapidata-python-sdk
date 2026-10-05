@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.10.01.1926-dcc6c84"
+    "version": "2026.10.02.1512-7addf5f"
   },
   "servers": [
     {
@@ -815,6 +815,48 @@
         }
       }
     },
+    "/customers/{customerId}/ban": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Permanently locks the customer out: they can no longer sign in or obtain new tokens.",
+        "description": "Idempotent; 400 for your own account. Earlier access tokens stay valid until expiry, at most 1 hour.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the customer to ban.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/customers/{customerId}": {
       "delete": {
         "tags": [
@@ -1120,6 +1162,48 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/unban": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Lifts the customer's ban so they can sign in again.",
+        "description": "Unbanning a customer who is not banned succeeds and changes nothing.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the customer to unban.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -3998,7 +4082,8 @@
           "email",
           "role",
           "status",
-          "isActiveOrganizationForMember"
+          "isActiveOrganizationForMember",
+          "isBanned"
         ],
         "type": "object",
         "properties": {
@@ -4017,6 +4102,9 @@
             "$ref": "#/components/schemas/MembershipStatus"
           },
           "isActiveOrganizationForMember": {
+            "type": "boolean"
+          },
+          "isBanned": {
             "type": "boolean"
           }
         }
@@ -4179,7 +4267,8 @@
           "id",
           "email",
           "organizationName",
-          "organizationId"
+          "organizationId",
+          "isBanned"
         ],
         "type": "object",
         "properties": {
@@ -4202,6 +4291,10 @@
             "type": "string",
             "description": "The identifier of the organization this customer belongs to, if any.",
             "nullable": true
+          },
+          "isBanned": {
+            "type": "boolean",
+            "description": "Whether the customer is banned."
           }
         }
       },
