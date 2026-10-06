@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.10.05.1742-6726a0a"
+    "version": "2026.10.06.1019-eeaa520"
   },
   "servers": [
     {
@@ -1127,71 +1127,12 @@
         }
       }
     },
-    "/campaign/experiments/{experimentId}/state": {
-      "post": {
-        "tags": [
-          "Experiment"
-        ],
-        "summary": "Applies a lifecycle transition to an experiment and returns the full updated document.",
-        "description": "Valid transitions: draft/paused → active, active → paused, active/paused → completed;\n anything else is 409 with code invalid_transition. Activation additionally guards\n against flag keys owned by another running experiment (flag_key_in_use), an\n already-elapsed end date\n (invalid_window), and sticky enrollment without a leavable user predicate\n (invalid_enrollment_mode).",
-        "parameters": [
-          {
-            "name": "experimentId",
-            "in": "path",
-            "description": "The experiment id.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The transition to apply.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeExperimentStateEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Experiment"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
     "/campaign/experiments": {
       "post": {
         "tags": [
           "Experiment"
         ],
-        "summary": "Creates an experiment in the draft state and returns the full document.",
+        "summary": "Creates an immutable experiment that applies to every campaign referencing it.",
         "description": "The split salt is generated server-side.",
         "requestBody": {
           "description": "The experiment to create.",
@@ -1237,17 +1178,7 @@
         "tags": [
           "Experiment"
         ],
-        "summary": "Returns all experiments, optionally restricted to one state.",
-        "parameters": [
-          {
-            "name": "state",
-            "in": "query",
-            "description": "The state to filter by; omit to list every experiment.",
-            "schema": {
-              "$ref": "#/components/schemas/ExperimentState"
-            }
-          }
-        ],
+        "summary": "Returns all experiments, newest first.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1298,63 +1229,6 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Experiment"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Experiment"
-        ],
-        "summary": "Updates the provided fields of an experiment and returns the full updated document.",
-        "description": "Omitted fields are left untouched. Name and salt are never updatable; flags are updatable\n only while the experiment is a draft — afterwards the response is 409 with code\n immutable_field.",
-        "parameters": [
-          {
-            "name": "experimentId",
-            "in": "path",
-            "description": "The experiment id.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The fields to update.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateExperimentEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK",
@@ -2002,29 +1876,6 @@
           }
         }
       },
-      "ChangeExperimentStateEndpoint_Input": {
-        "required": [
-          "action"
-        ],
-        "type": "object",
-        "properties": {
-          "action": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ChangeExperimentStateEndpoint_StateAction"
-              }
-            ],
-            "description": "The lifecycle transition to apply."
-          }
-        }
-      },
-      "ChangeExperimentStateEndpoint_StateAction": {
-        "enum": [
-          "activate",
-          "pause",
-          "complete"
-        ]
-      },
       "ComparisonOperator": {
         "enum": [
           "Equal",
@@ -2070,18 +1921,6 @@
               }
             ],
             "description": "The traffic split; the salt is generated server-side."
-          },
-          "startAt": {
-            "type": "string",
-            "description": "Start of the experiment window.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "endAt": {
-            "type": "string",
-            "description": "End of the experiment window.",
-            "format": "date-time",
-            "nullable": true
           }
         }
       },
@@ -2204,12 +2043,10 @@
           "id",
           "name",
           "description",
-          "state",
           "flags",
           "split",
           "createdBy",
-          "createdAt",
-          "updatedAt"
+          "createdAt"
         ],
         "type": "object",
         "properties": {
@@ -2224,14 +2061,6 @@
           "description": {
             "type": "string",
             "description": "Human-readable description of the hypothesis."
-          },
-          "state": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentState"
-              }
-            ],
-            "description": "The lifecycle state."
           },
           "flags": {
             "allOf": [
@@ -2252,18 +2081,6 @@
             ],
             "description": "The traffic split and its server-generated salt."
           },
-          "startAt": {
-            "type": "string",
-            "description": "Outside the [startAt, endAt) window the experiment is treated as inactive.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "endAt": {
-            "type": "string",
-            "description": "End of the experiment window; the experiment auto-completes afterwards.",
-            "format": "date-time",
-            "nullable": true
-          },
           "createdBy": {
             "type": "string",
             "description": "The email of the admin who created the experiment."
@@ -2271,11 +2088,6 @@
           "createdAt": {
             "type": "string",
             "description": "When the experiment was created.",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "description": "When the experiment was last changed.",
             "format": "date-time"
           }
         },
@@ -2296,14 +2108,6 @@
             "type": "string"
           }
         }
-      },
-      "ExperimentState": {
-        "enum": [
-          "draft",
-          "active",
-          "paused",
-          "completed"
-        ]
       },
       "FeatureFlag": {
         "required": [
@@ -4642,40 +4446,6 @@
               }
             ],
             "description": "The feature flags for the campaign."
-          }
-        }
-      },
-      "UpdateExperimentEndpoint_Input": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string",
-            "description": "Human-readable description of the hypothesis.",
-            "nullable": true
-          },
-          "treatmentBps": {
-            "type": "integer",
-            "description": "Treatment share in basis points (0–10000).",
-            "format": "int32",
-            "nullable": true
-          },
-          "endAt": {
-            "type": "string",
-            "description": "End of the experiment window.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "flags": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/FeatureFlag"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "Only updatable while the experiment is a draft."
           }
         }
       },

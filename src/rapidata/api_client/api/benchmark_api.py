@@ -9336,7 +9336,7 @@ class BenchmarkApi:
     ) -> CreateSampleGenerationEndpointOutput:
         """Starts an asynchronous sample generation run.
 
-        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.
+        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark whose participants should run their faucets. (required)
         :type benchmark_id: str
@@ -9410,7 +9410,7 @@ class BenchmarkApi:
     ) -> ApiResponse[CreateSampleGenerationEndpointOutput]:
         """Starts an asynchronous sample generation run.
 
-        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.
+        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark whose participants should run their faucets. (required)
         :type benchmark_id: str
@@ -9484,7 +9484,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Starts an asynchronous sample generation run.
 
-        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.
+        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark whose participants should run their faucets. (required)
         :type benchmark_id: str
@@ -9634,7 +9634,7 @@ class BenchmarkApi:
     ) -> PreviewSampleGenerationEndpointOutput:
         """Reports how many samples the given configuration would generate, and for which participants.
 
-        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.
+        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark the configuration would run against. (required)
         :type benchmark_id: str
@@ -9708,7 +9708,7 @@ class BenchmarkApi:
     ) -> ApiResponse[PreviewSampleGenerationEndpointOutput]:
         """Reports how many samples the given configuration would generate, and for which participants.
 
-        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.
+        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark the configuration would run against. (required)
         :type benchmark_id: str
@@ -9782,7 +9782,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Reports how many samples the given configuration would generate, and for which participants.
 
-        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.
+        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark the configuration would run against. (required)
         :type benchmark_id: str
