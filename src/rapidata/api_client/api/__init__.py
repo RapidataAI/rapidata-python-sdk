@@ -31,6 +31,7 @@ from rapidata.api_client.api.global_text_api import GlobalTextApi
 from rapidata.api_client.api.hugging_face_sync_api import HuggingFaceSyncApi
 from rapidata.api_client.api.identity_api import IdentityApi
 from rapidata.api_client.api.invoice_api import InvoiceApi
+from rapidata.api_client.api.invoice_recipient_api import InvoiceRecipientApi
 from rapidata.api_client.api.job_api import JobApi
 from rapidata.api_client.api.leaderboard_api import LeaderboardApi
 from rapidata.api_client.api.newsletter_api import NewsletterApi

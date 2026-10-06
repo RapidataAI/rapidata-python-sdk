@@ -16,7 +16,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from rapidata.api_client.models.i_asset import IAsset
@@ -39,10 +39,11 @@ class GetSampleNavigationEndpointSample(LazyValidatedModel):
     prompt_asset: Optional[IAsset] = Field(default=None, alias="promptAsset")
     tags: List[StrictStr]
     created_at: Optional[datetime] = Field(default=None, alias="createdAt")
+    votes_excluded: Optional[StrictBool] = Field(default=None, alias="votesExcluded")
     owner_id: Optional[UUID] = Field(default=None, alias="ownerId")
     owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
     organization_id: Optional[StrictStr] = Field(default=None, alias="organizationId")
-    __properties: ClassVar[List[str]] = ["id", "identifier", "participantId", "participantName", "asset", "englishPrompt", "originalPrompt", "promptAsset", "tags", "createdAt", "ownerId", "ownerMail", "organizationId"]
+    __properties: ClassVar[List[str]] = ["id", "identifier", "participantId", "participantName", "asset", "englishPrompt", "originalPrompt", "promptAsset", "tags", "createdAt", "votesExcluded", "ownerId", "ownerMail", "organizationId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -137,6 +138,7 @@ class GetSampleNavigationEndpointSample(LazyValidatedModel):
             "promptAsset": IAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
             "tags": obj.get("tags"),
             "createdAt": obj.get("createdAt"),
+            "votesExcluded": obj.get("votesExcluded"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
             "organizationId": obj.get("organizationId")
