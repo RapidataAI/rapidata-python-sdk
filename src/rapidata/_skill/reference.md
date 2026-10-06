@@ -665,7 +665,7 @@ Collected from both single-asset and batch upload paths, de-duplicated on `(item
 
 `assign_job` never blocks on funds: the job is always created. If its estimated cost exceeds your account balance, `assign_job` logs a warning with the estimate, your balance, and the expected shortfall — the job still runs, but may pause partway until you top up.
 
-Some jobs don't go straight to running. A job can enter manual review (`ManualApproval`) or, once out of funds mid-run, become spend-limited (`SpendLimited`); a job you paused with `job.pause()` sits in `Paused`. None of these completes on its own, so `get_results()` raises an informative error naming the state (and the review reason, when available) instead of blocking indefinitely — top up, wait for a reviewer or call `job.resume()`, then call it again.
+Some jobs don't go straight to running. A job can enter manual review (`ManualApproval`) or, once out of funds mid-run, become spend-limited (`SpendLimited`); a job you paused with `job.pause()` sits in `Paused`; a job with a flagged rapid sits in `Blocked` until that rapid is inspected and unflagged on the job's page in the app (`job.job_details_page`). None of these completes on its own, so `get_results()` raises an informative error naming the state (and the review reason, when available) instead of blocking indefinitely — top up, wait for a reviewer, call `job.resume()` or unflag the rapid, then call it again.
 
 ### Jobs on an audience that can never respond
 

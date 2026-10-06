@@ -33,6 +33,7 @@ class AudienceJobState(str, Enum):
     PAUSED = 'Paused'
     STALERESULTS = 'StaleResults'
     SPENDLIMITED = 'SpendLimited'
+    BLOCKED = 'Blocked'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

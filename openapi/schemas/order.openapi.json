@@ -5204,7 +5204,8 @@
           "Queued",
           "Paused",
           "StaleResults",
-          "SpendLimited"
+          "SpendLimited",
+          "Blocked"
         ]
       },
       "BoundingBoxResult_Box": {

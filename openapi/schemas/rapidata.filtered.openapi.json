@@ -41187,7 +41187,8 @@
           "Queued",
           "Paused",
           "StaleResults",
-          "SpendLimited"
+          "SpendLimited",
+          "Blocked"
         ]
       },
       "AudienceScope": {
