@@ -57,6 +57,7 @@ _API_IMPORTS = {
     "HuggingFaceSyncApi": "rapidata.api_client.api.hugging_face_sync_api",
     "IdentityApi": "rapidata.api_client.api.identity_api",
     "InvoiceApi": "rapidata.api_client.api.invoice_api",
+    "InvoiceRecipientApi": "rapidata.api_client.api.invoice_recipient_api",
     "JobApi": "rapidata.api_client.api.job_api",
     "LeaderboardApi": "rapidata.api_client.api.leaderboard_api",
     "NewsletterApi": "rapidata.api_client.api.newsletter_api",
