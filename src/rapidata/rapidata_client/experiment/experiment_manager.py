@@ -16,11 +16,10 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class Experiment:
-    """A created, activated experiment."""
+    """A created experiment."""
 
     id: str
     name: str
-    state: str
 
 
 class ExperimentManager:
@@ -41,12 +40,10 @@ class ExperimentManager:
         flags: list[FeatureFlag] | None = None,
         description: str = "",
     ) -> Experiment:
-        """Creates and activates an experiment.
+        """Creates an experiment.
 
-        The experiment is created in the draft state and immediately activated, so
-        it is already serving by the time this returns — meant to be paired with
-        :py:meth:`run_experiment`, which attaches it to the job's campaign before
-        that campaign can serve.
+        It is live as soon as a campaign references it — meant to be paired with
+        :py:meth:`run_experiment`, which attaches it to the job's campaign.
         """
         with tracer.start_as_current_span("ExperimentManager.create"):
             from rapidata.api_client.models.create_experiment_endpoint_input import (
@@ -54,12 +51,6 @@ class ExperimentManager:
             )
             from rapidata.api_client.models.create_experiment_endpoint_split import (
                 CreateExperimentEndpointSplit,
-            )
-            from rapidata.api_client.models.change_experiment_state_endpoint_input import (
-                ChangeExperimentStateEndpointInput,
-            )
-            from rapidata.api_client.models.change_experiment_state_endpoint_state_action import (
-                ChangeExperimentStateEndpointStateAction,
             )
 
             api = self._openapi_service.campaign.experiment_api
@@ -71,14 +62,8 @@ class ExperimentManager:
                     split=CreateExperimentEndpointSplit(treatmentBps=treatment_bps),
                 )
             )
-            activated = api.campaign_experiments_experiment_id_state_post(
-                created.id,
-                ChangeExperimentStateEndpointInput(
-                    action=ChangeExperimentStateEndpointStateAction.ACTIVATE
-                ),
-            )
-            logger.info("Created and activated experiment '%s'", activated.id)
-            return Experiment(id=activated.id, name=activated.name, state="active")
+            logger.info("Created experiment '%s'", created.id)
+            return Experiment(id=created.id, name=created.name)
 
     def run_experiment(self, config: ExperimentConfig) -> RapidataJob:
         """Launches ``config.job_definition`` on ``config.audience`` under the experiment.
