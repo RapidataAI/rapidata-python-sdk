@@ -15,9 +15,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.create_experiment_endpoint_split import CreateExperimentEndpointSplit
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from pydantic import ValidationError
@@ -33,9 +32,7 @@ class CreateExperimentEndpointInput(LazyValidatedModel):
     description: StrictStr = Field(description="Human-readable description of the hypothesis.")
     flags: List[FeatureFlag]
     split: CreateExperimentEndpointSplit = Field(description="The traffic split; the salt is generated server-side.")
-    start_at: Optional[datetime] = Field(default=None, description="Start of the experiment window.", alias="startAt")
-    end_at: Optional[datetime] = Field(default=None, description="End of the experiment window.", alias="endAt")
-    __properties: ClassVar[List[str]] = ["name", "description", "flags", "split", "startAt", "endAt"]
+    __properties: ClassVar[List[str]] = ["name", "description", "flags", "split"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -82,16 +79,6 @@ class CreateExperimentEndpointInput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of split
         if self.split:
             _dict['split'] = self.split.to_dict()
-        # set to None if start_at (nullable) is None
-        # and model_fields_set contains the field
-        if self.start_at is None and "start_at" in self.model_fields_set:
-            _dict['startAt'] = None
-
-        # set to None if end_at (nullable) is None
-        # and model_fields_set contains the field
-        if self.end_at is None and "end_at" in self.model_fields_set:
-            _dict['endAt'] = None
-
         return _dict
 
     @classmethod
@@ -107,9 +94,7 @@ class CreateExperimentEndpointInput(LazyValidatedModel):
             "name": obj.get("name"),
             "description": obj.get("description"),
             "flags": [FeatureFlag.from_dict(_item) for _item in obj["flags"]] if obj.get("flags") is not None else None,
-            "split": CreateExperimentEndpointSplit.from_dict(obj["split"]) if obj.get("split") is not None else None,
-            "startAt": obj.get("startAt"),
-            "endAt": obj.get("endAt")
+            "split": CreateExperimentEndpointSplit.from_dict(obj["split"]) if obj.get("split") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

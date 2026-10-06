@@ -15,13 +15,10 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
-from typing import List, Optional
+from typing import List
 from typing_extensions import Annotated
-from rapidata.api_client.models.change_experiment_state_endpoint_input import ChangeExperimentStateEndpointInput
 from rapidata.api_client.models.create_experiment_endpoint_input import CreateExperimentEndpointInput
 from rapidata.api_client.models.experiment import Experiment
-from rapidata.api_client.models.experiment_state import ExperimentState
-from rapidata.api_client.models.update_experiment_endpoint_input import UpdateExperimentEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -309,605 +306,8 @@ class ExperimentApi:
 
 
     @validate_call
-    def campaign_experiments_experiment_id_patch(
-        self,
-        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
-        update_experiment_endpoint_input: Annotated[UpdateExperimentEndpointInput, Field(description="The fields to update.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Experiment:
-        """Updates the provided fields of an experiment and returns the full updated document.
-
-        Omitted fields are left untouched. Name and salt are never updatable; flags are updatable  only while the experiment is a draft — afterwards the response is 409 with code  immutable_field.
-
-        :param experiment_id: The experiment id. (required)
-        :type experiment_id: str
-        :param update_experiment_endpoint_input: The fields to update. (required)
-        :type update_experiment_endpoint_input: UpdateExperimentEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._campaign_experiments_experiment_id_patch_serialize(
-            experiment_id=experiment_id,
-            update_experiment_endpoint_input=update_experiment_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Experiment",
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def campaign_experiments_experiment_id_patch_with_http_info(
-        self,
-        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
-        update_experiment_endpoint_input: Annotated[UpdateExperimentEndpointInput, Field(description="The fields to update.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Experiment]:
-        """Updates the provided fields of an experiment and returns the full updated document.
-
-        Omitted fields are left untouched. Name and salt are never updatable; flags are updatable  only while the experiment is a draft — afterwards the response is 409 with code  immutable_field.
-
-        :param experiment_id: The experiment id. (required)
-        :type experiment_id: str
-        :param update_experiment_endpoint_input: The fields to update. (required)
-        :type update_experiment_endpoint_input: UpdateExperimentEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._campaign_experiments_experiment_id_patch_serialize(
-            experiment_id=experiment_id,
-            update_experiment_endpoint_input=update_experiment_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Experiment",
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def campaign_experiments_experiment_id_patch_without_preload_content(
-        self,
-        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
-        update_experiment_endpoint_input: Annotated[UpdateExperimentEndpointInput, Field(description="The fields to update.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates the provided fields of an experiment and returns the full updated document.
-
-        Omitted fields are left untouched. Name and salt are never updatable; flags are updatable  only while the experiment is a draft — afterwards the response is 409 with code  immutable_field.
-
-        :param experiment_id: The experiment id. (required)
-        :type experiment_id: str
-        :param update_experiment_endpoint_input: The fields to update. (required)
-        :type update_experiment_endpoint_input: UpdateExperimentEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._campaign_experiments_experiment_id_patch_serialize(
-            experiment_id=experiment_id,
-            update_experiment_endpoint_input=update_experiment_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Experiment",
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _campaign_experiments_experiment_id_patch_serialize(
-        self,
-        experiment_id,
-        update_experiment_endpoint_input,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if experiment_id is not None:
-            _path_params['experimentId'] = experiment_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if update_experiment_endpoint_input is not None:
-            _body_params = update_experiment_endpoint_input
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OpenIdConnect'
-        ]
-
-        return self.api_client.param_serialize(
-            method='PATCH',
-            resource_path='/campaign/experiments/{experimentId}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def campaign_experiments_experiment_id_state_post(
-        self,
-        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
-        change_experiment_state_endpoint_input: Annotated[ChangeExperimentStateEndpointInput, Field(description="The transition to apply.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Experiment:
-        """Applies a lifecycle transition to an experiment and returns the full updated document.
-
-        Valid transitions: draft/paused → active, active → paused, active/paused → completed;  anything else is 409 with code invalid_transition. Activation additionally guards  against flag keys owned by another running experiment (flag_key_in_use), an  already-elapsed end date  (invalid_window), and sticky enrollment without a leavable user predicate  (invalid_enrollment_mode).
-
-        :param experiment_id: The experiment id. (required)
-        :type experiment_id: str
-        :param change_experiment_state_endpoint_input: The transition to apply. (required)
-        :type change_experiment_state_endpoint_input: ChangeExperimentStateEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._campaign_experiments_experiment_id_state_post_serialize(
-            experiment_id=experiment_id,
-            change_experiment_state_endpoint_input=change_experiment_state_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Experiment",
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def campaign_experiments_experiment_id_state_post_with_http_info(
-        self,
-        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
-        change_experiment_state_endpoint_input: Annotated[ChangeExperimentStateEndpointInput, Field(description="The transition to apply.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Experiment]:
-        """Applies a lifecycle transition to an experiment and returns the full updated document.
-
-        Valid transitions: draft/paused → active, active → paused, active/paused → completed;  anything else is 409 with code invalid_transition. Activation additionally guards  against flag keys owned by another running experiment (flag_key_in_use), an  already-elapsed end date  (invalid_window), and sticky enrollment without a leavable user predicate  (invalid_enrollment_mode).
-
-        :param experiment_id: The experiment id. (required)
-        :type experiment_id: str
-        :param change_experiment_state_endpoint_input: The transition to apply. (required)
-        :type change_experiment_state_endpoint_input: ChangeExperimentStateEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._campaign_experiments_experiment_id_state_post_serialize(
-            experiment_id=experiment_id,
-            change_experiment_state_endpoint_input=change_experiment_state_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Experiment",
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def campaign_experiments_experiment_id_state_post_without_preload_content(
-        self,
-        experiment_id: Annotated[StrictStr, Field(description="The experiment id.")],
-        change_experiment_state_endpoint_input: Annotated[ChangeExperimentStateEndpointInput, Field(description="The transition to apply.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Applies a lifecycle transition to an experiment and returns the full updated document.
-
-        Valid transitions: draft/paused → active, active → paused, active/paused → completed;  anything else is 409 with code invalid_transition. Activation additionally guards  against flag keys owned by another running experiment (flag_key_in_use), an  already-elapsed end date  (invalid_window), and sticky enrollment without a leavable user predicate  (invalid_enrollment_mode).
-
-        :param experiment_id: The experiment id. (required)
-        :type experiment_id: str
-        :param change_experiment_state_endpoint_input: The transition to apply. (required)
-        :type change_experiment_state_endpoint_input: ChangeExperimentStateEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._campaign_experiments_experiment_id_state_post_serialize(
-            experiment_id=experiment_id,
-            change_experiment_state_endpoint_input=change_experiment_state_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Experiment",
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _campaign_experiments_experiment_id_state_post_serialize(
-        self,
-        experiment_id,
-        change_experiment_state_endpoint_input,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if experiment_id is not None:
-            _path_params['experimentId'] = experiment_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if change_experiment_state_endpoint_input is not None:
-            _body_params = change_experiment_state_endpoint_input
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OpenIdConnect'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/campaign/experiments/{experimentId}/state',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     def campaign_experiments_get(
         self,
-        state: Annotated[Optional[ExperimentState], Field(description="The state to filter by; omit to list every experiment.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -921,11 +321,9 @@ class ExperimentApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> List[Experiment]:
-        """Returns all experiments, optionally restricted to one state.
+        """Returns all experiments, newest first.
 
 
-        :param state: The state to filter by; omit to list every experiment.
-        :type state: ExperimentState
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -949,7 +347,6 @@ class ExperimentApi:
         """ # noqa: E501
 
         _param = self._campaign_experiments_get_serialize(
-            state=state,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -976,7 +373,6 @@ class ExperimentApi:
     @validate_call
     def campaign_experiments_get_with_http_info(
         self,
-        state: Annotated[Optional[ExperimentState], Field(description="The state to filter by; omit to list every experiment.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -990,11 +386,9 @@ class ExperimentApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[List[Experiment]]:
-        """Returns all experiments, optionally restricted to one state.
+        """Returns all experiments, newest first.
 
 
-        :param state: The state to filter by; omit to list every experiment.
-        :type state: ExperimentState
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1018,7 +412,6 @@ class ExperimentApi:
         """ # noqa: E501
 
         _param = self._campaign_experiments_get_serialize(
-            state=state,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1045,7 +438,6 @@ class ExperimentApi:
     @validate_call
     def campaign_experiments_get_without_preload_content(
         self,
-        state: Annotated[Optional[ExperimentState], Field(description="The state to filter by; omit to list every experiment.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1059,11 +451,9 @@ class ExperimentApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Returns all experiments, optionally restricted to one state.
+        """Returns all experiments, newest first.
 
 
-        :param state: The state to filter by; omit to list every experiment.
-        :type state: ExperimentState
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1087,7 +477,6 @@ class ExperimentApi:
         """ # noqa: E501
 
         _param = self._campaign_experiments_get_serialize(
-            state=state,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1109,7 +498,6 @@ class ExperimentApi:
 
     def _campaign_experiments_get_serialize(
         self,
-        state,
         _request_auth,
         _content_type,
         _headers,
@@ -1132,10 +520,6 @@ class ExperimentApi:
 
         # process the path parameters
         # process the query parameters
-        if state is not None:
-            
-            _query_params.append(('state', state.value))
-            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -1190,7 +574,7 @@ class ExperimentApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> Experiment:
-        """Creates an experiment in the draft state and returns the full document.
+        """Creates an immutable experiment that applies to every campaign referencing it.
 
         The split salt is generated server-side.
 
@@ -1260,7 +644,7 @@ class ExperimentApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[Experiment]:
-        """Creates an experiment in the draft state and returns the full document.
+        """Creates an immutable experiment that applies to every campaign referencing it.
 
         The split salt is generated server-side.
 
@@ -1330,7 +714,7 @@ class ExperimentApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates an experiment in the draft state and returns the full document.
+        """Creates an immutable experiment that applies to every campaign referencing it.
 
         The split salt is generated server-side.
 

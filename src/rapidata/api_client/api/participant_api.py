@@ -1421,6 +1421,7 @@ class ParticipantApi:
     ) -> None:
         """Updates a participant using patch semantics.
 
+        Setting a faucet returns 403 unless the caller's organization has been granted the  Faucets capability.
 
         :param participant_id: The id of the participant to update. (required)
         :type participant_id: str
@@ -1494,6 +1495,7 @@ class ParticipantApi:
     ) -> ApiResponse[None]:
         """Updates a participant using patch semantics.
 
+        Setting a faucet returns 403 unless the caller's organization has been granted the  Faucets capability.
 
         :param participant_id: The id of the participant to update. (required)
         :type participant_id: str
@@ -1567,6 +1569,7 @@ class ParticipantApi:
     ) -> RESTResponseType:
         """Updates a participant using patch semantics.
 
+        Setting a faucet returns 403 unless the caller's organization has been granted the  Faucets capability.
 
         :param participant_id: The id of the participant to update. (required)
         :type participant_id: str

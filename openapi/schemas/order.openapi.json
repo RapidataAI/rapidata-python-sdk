@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.10.05.1742-6726a0a"
+    "version": "2026.10.06.1019-eeaa520"
   },
   "servers": [
     {
@@ -1353,6 +1353,28 @@
               "type": "boolean",
               "default": false
             }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "state",
+                  "-state",
+                  "decisiveness",
+                  "-decisiveness",
+                  "has_responses",
+                  "-has_responses"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
           }
         ],
         "responses": {

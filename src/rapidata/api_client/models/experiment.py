@@ -17,9 +17,8 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.experiment_split import ExperimentSplit
-from rapidata.api_client.models.experiment_state import ExperimentState
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -33,15 +32,11 @@ class Experiment(LazyValidatedModel):
     id: StrictStr = Field(description="The unique id of the experiment document.")
     name: StrictStr = Field(description="Human-readable name.")
     description: StrictStr = Field(description="Human-readable description of the hypothesis.")
-    state: ExperimentState = Field(description="The lifecycle state.")
     flags: List[FeatureFlag]
     split: ExperimentSplit = Field(description="The traffic split and its server-generated salt.")
-    start_at: Optional[datetime] = Field(default=None, description="Outside the [startAt, endAt) window the experiment is treated as inactive.", alias="startAt")
-    end_at: Optional[datetime] = Field(default=None, description="End of the experiment window; the experiment auto-completes afterwards.", alias="endAt")
     created_by: StrictStr = Field(description="The email of the admin who created the experiment.", alias="createdBy")
     created_at: datetime = Field(description="When the experiment was created.", alias="createdAt")
-    updated_at: datetime = Field(description="When the experiment was last changed.", alias="updatedAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "state", "flags", "split", "startAt", "endAt", "createdBy", "createdAt", "updatedAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "flags", "split", "createdBy", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -88,16 +83,6 @@ class Experiment(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of split
         if self.split:
             _dict['split'] = self.split.to_dict()
-        # set to None if start_at (nullable) is None
-        # and model_fields_set contains the field
-        if self.start_at is None and "start_at" in self.model_fields_set:
-            _dict['startAt'] = None
-
-        # set to None if end_at (nullable) is None
-        # and model_fields_set contains the field
-        if self.end_at is None and "end_at" in self.model_fields_set:
-            _dict['endAt'] = None
-
         return _dict
 
     @classmethod
@@ -113,14 +98,10 @@ class Experiment(LazyValidatedModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "description": obj.get("description"),
-            "state": obj.get("state"),
             "flags": [FeatureFlag.from_dict(_item) for _item in obj["flags"]] if obj.get("flags") is not None else None,
             "split": ExperimentSplit.from_dict(obj["split"]) if obj.get("split") is not None else None,
-            "startAt": obj.get("startAt"),
-            "endAt": obj.get("endAt"),
             "createdBy": obj.get("createdBy"),
-            "createdAt": obj.get("createdAt"),
-            "updatedAt": obj.get("updatedAt")
+            "createdAt": obj.get("createdAt")
         }
         try:
             _obj = cls.model_validate(_data)

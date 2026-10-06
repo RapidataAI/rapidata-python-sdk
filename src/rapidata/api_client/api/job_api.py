@@ -8331,6 +8331,7 @@ class JobApi:
         window: Annotated[Optional[StrictInt], Field(description="The number of neighbours to return on each side.")] = None,
         include_not_accepted: Annotated[Optional[StrictBool], Field(description="Whether to include not-yet-accepted rapids.")] = None,
         include_overflow: Annotated[Optional[StrictBool], Field(description="Whether to include overflow rapids.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8360,6 +8361,8 @@ class JobApi:
         :type include_not_accepted: bool
         :param include_overflow: Whether to include overflow rapids.
         :type include_overflow: bool
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8389,6 +8392,7 @@ class JobApi:
             window=window,
             include_not_accepted=include_not_accepted,
             include_overflow=include_overflow,
+            sort=sort,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -8421,6 +8425,7 @@ class JobApi:
         window: Annotated[Optional[StrictInt], Field(description="The number of neighbours to return on each side.")] = None,
         include_not_accepted: Annotated[Optional[StrictBool], Field(description="Whether to include not-yet-accepted rapids.")] = None,
         include_overflow: Annotated[Optional[StrictBool], Field(description="Whether to include overflow rapids.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8450,6 +8455,8 @@ class JobApi:
         :type include_not_accepted: bool
         :param include_overflow: Whether to include overflow rapids.
         :type include_overflow: bool
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8479,6 +8486,7 @@ class JobApi:
             window=window,
             include_not_accepted=include_not_accepted,
             include_overflow=include_overflow,
+            sort=sort,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -8511,6 +8519,7 @@ class JobApi:
         window: Annotated[Optional[StrictInt], Field(description="The number of neighbours to return on each side.")] = None,
         include_not_accepted: Annotated[Optional[StrictBool], Field(description="Whether to include not-yet-accepted rapids.")] = None,
         include_overflow: Annotated[Optional[StrictBool], Field(description="Whether to include overflow rapids.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8540,6 +8549,8 @@ class JobApi:
         :type include_not_accepted: bool
         :param include_overflow: Whether to include overflow rapids.
         :type include_overflow: bool
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8569,6 +8580,7 @@ class JobApi:
             window=window,
             include_not_accepted=include_not_accepted,
             include_overflow=include_overflow,
+            sort=sort,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -8596,6 +8608,7 @@ class JobApi:
         window,
         include_not_accepted,
         include_overflow,
+        sort,
         _request_auth,
         _content_type,
         _headers,
@@ -8606,6 +8619,7 @@ class JobApi:
 
         _collection_formats: Dict[str, str] = {
             'states': 'multi',
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -8638,6 +8652,10 @@ class JobApi:
         if include_overflow is not None:
             
             _query_params.append(('includeOverflow', include_overflow))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
             
         # process the header parameters
         # process the form parameters
