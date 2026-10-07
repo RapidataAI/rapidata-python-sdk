@@ -14,7 +14,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
 | `responses_per_datapoint` | int | Responses per item (default 10) |
 | `contexts` | list[str] \| None | Text context per datapoint (max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually) |
-| `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of image URLs/paths (one inner list per datapoint) |
+| `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths (one inner list per datapoint) |
 | `confidence_threshold` | float \| None | Confidence-based early stopping threshold (0-1); cannot combine with `quorum_threshold` |
 | `quorum_threshold` | int \| None | Quorum-based early stopping: stop when this many responses agree; cannot combine with `confidence_threshold` |
 | `settings` | `Sequence[RapidataSetting] \| None` | Display/behavior settings |
