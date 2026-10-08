@@ -143,13 +143,14 @@ job_def.update_dataset(    # replace the datapoints
 
 A task-specific audience is meant for that task and its repeated or scheduled runs — **not** for reuse on a different, unrelated task. The qualification examples encode what "good" means for the original task; once the task changes they no longer describe the work, so reusing the audience silently loses the quality it was built for. Create a new audience per distinct task. (The `global` audience is the exception: it's the generic baseline pool for tasks that need no special qualification.)
 
-**Three kinds:**
+**Four kinds:**
 
 | Kind | How to get it | When to use |
 |------|---------------|-------------|
 | global | `client.audience.get_audience_by_id("global")` | Instant, baseline quality, no setup |
 | curated | `client.audience.get_audience_by_id("aud_MU1GZYoESyO")` (alignment) | Pre-trained on a domain |
 | custom | `client.audience.create_audience(name=...)` + `add_*_example(...)` | You need labelers qualified on *your* task |
+| unlisted | `client.audience.create_unlisted_audience(name=...)`, share `audience.link` | The user's own people annotate, not Rapidata's labelers |
 
 **Lifecycle / management:**
 
@@ -478,7 +479,7 @@ A datapoint stops when:
 |-------|------|-------------|
 | `state` | str | Same value as `job.get_status()` |
 | `completion_percentage` | float | 0–100 |
-| `recruiting` | `RecruitingMetrics \| None` | Recruiting funnel of the job's audience; `None` for curated audiences |
+| `recruiting` | `RecruitingMetrics \| None` | Recruiting funnel of the job's audience; `None` for curated and unlisted audiences |
 
 ```python
 progress = job.get_progress()

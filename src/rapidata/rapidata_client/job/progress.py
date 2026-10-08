@@ -21,7 +21,7 @@ class JobProgress:
             :py:meth:`RapidataJob.get_status`.
         completion_percentage: How much of the requested labeling is done, from 0 to 100.
         recruiting: The recruiting-funnel snapshot for the job's audience, or ``None``
-            for curated audiences (which do not recruit their own pool).
+            for curated and unlisted audiences (which do not recruit their own pool).
     """
 
     state: str

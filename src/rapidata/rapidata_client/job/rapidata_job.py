@@ -149,6 +149,12 @@ class RapidataJob:
         from rapidata.rapidata_client.audience.recruiting import (
             audience_will_never_produce_responses,
         )
+        from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+            UNLISTED_AUDIENCE_PREFIX,
+        )
+
+        if self.audience_id.startswith(UNLISTED_AUDIENCE_PREFIX):
+            return
 
         metrics = self._get_recruiting_metrics()
         if metrics is not None and (metrics.graduated > 0 or metrics.distilling > 0):
@@ -331,8 +337,15 @@ class RapidataJob:
 
     def _get_recruiting_metrics(self) -> RecruitingMetrics | None:
         """Gets the recruiting funnel for the job's audience, or ``None`` for curated
-        audiences (which report no per-state users because they do not recruit)."""
+        and unlisted audiences (which report no per-state users because they do not recruit).
+        """
         from rapidata.rapidata_client.audience.recruiting import RecruitingMetrics
+        from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+            UNLISTED_AUDIENCE_PREFIX,
+        )
+
+        if self.audience_id.startswith(UNLISTED_AUDIENCE_PREFIX):
+            return None
 
         try:
             with suppress_rapidata_error_logging():

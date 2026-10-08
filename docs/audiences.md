@@ -364,6 +364,31 @@ leaderboard = benchmark.create_leaderboard(
 
 1. Accepts an id string, a `RapidataAudience`, or a `RapidataFilteredAudience`. Defaults to the global audience when omitted.
 
+## Unlisted Audiences
+
+An unlisted audience is annotated by your own people instead of Rapidata's
+labelers. Rapidata's labelers never see it: anyone you send its link to can
+open it in a browser, pick a running job and annotate it, without creating an
+account. Jobs, results and pricing work the same as on any other audience.
+
+```py
+team = client.audience.create_unlisted_audience(name="Radiology team")
+
+job = team.assign_job(job_definition)
+
+print(team.link)               # https://app.rapidata.ai/label/ula_...
+print(team.get_job_link(job))  # https://app.rapidata.ai/label/ula_.../job/...
+```
+
+- `team.link` opens a list of the audience's running jobs; `team.get_job_link(job)` opens one job directly.
+- Anyone with the link can annotate, so share it only with the people you want to label your data.
+- Each browser counts as one annotator and is never shown an item it has already answered.
+- There are no qualification examples, filters or recruiting: `assign_job` and `find_jobs` are the whole surface.
+- Retrieve it later with `client.audience.get_audience_by_id("ula_...")`.
+
+!!! note
+    Creating unlisted audiences must be enabled for your organization. Contact Rapidata to turn it on.
+
 ## Next Steps
 
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data

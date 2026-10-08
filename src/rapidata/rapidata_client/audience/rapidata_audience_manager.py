@@ -5,6 +5,9 @@ from rapidata.rapidata_client.config import logger
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.audience.rapidata_audience import RapidataAudience
+    from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+        RapidataUnlistedAudience,
+    )
     from rapidata.service.openapi_service import OpenAPIService
     from rapidata.rapidata_client.filter import RapidataFilter
     from rapidata.api_client.models.i_graduation_rule import IGraduationRule
@@ -141,16 +144,61 @@ class RapidataAudienceManager:
             )
             return audience
 
-    def get_audience_by_id(self, audience_id: str) -> RapidataAudience:
+    def create_unlisted_audience(self, name: str) -> RapidataUnlistedAudience:
+        """Create an unlisted audience: annotated only by the people you share its link with.
+
+        Rapidata's annotators never see an unlisted audience. Assign jobs to it as usual,
+        then share :py:attr:`RapidataUnlistedAudience.link` with your own annotators.
+        Requires the "Bring your own audience" capability on your organization.
+
+        Args:
+            name (str): The name of the audience.
+
+        Returns:
+            RapidataUnlistedAudience: The created audience instance.
+        """
+        with tracer.start_as_current_span(
+            "RapidataAudienceManager.create_unlisted_audience"
+        ):
+            from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+                RapidataUnlistedAudience,
+            )
+            from rapidata.api_client.models.create_unlisted_audience_endpoint_input import (
+                CreateUnlistedAudienceEndpointInput,
+            )
+
+            logger.debug(f"Creating unlisted audience: {name}")
+            response = self._openapi_service.audience.audience_api.audience_unlisted_post(
+                create_unlisted_audience_endpoint_input=CreateUnlistedAudienceEndpointInput(
+                    name=name,
+                ),
+            )
+            return RapidataUnlistedAudience(
+                id=response.audience_id,
+                name=name,
+                openapi_service=self._openapi_service,
+            )
+
+    def get_audience_by_id(
+        self, audience_id: str
+    ) -> RapidataAudience | RapidataUnlistedAudience:
         """Get an audience by its ID.
 
         Args:
             audience_id (str): The unique identifier of the audience.
 
         Returns:
-            RapidataAudience: The audience instance.
+            RapidataAudience | RapidataUnlistedAudience: The audience instance; a
+                ``RapidataUnlistedAudience`` for an ``ula_`` id.
         """
         with tracer.start_as_current_span("RapidataAudienceManager.get_audience_by_id"):
+            from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+                UNLISTED_AUDIENCE_PREFIX,
+            )
+
+            if audience_id.startswith(UNLISTED_AUDIENCE_PREFIX):
+                return self._get_unlisted_audience_by_id(audience_id)
+
             from rapidata.rapidata_client.filter._backend_filter_mapper import (
                 BackendFilterMapper,
             )
@@ -173,6 +221,23 @@ class RapidataAudienceManager:
                 ],
                 openapi_service=self._openapi_service,
             )
+
+    def _get_unlisted_audience_by_id(
+        self, audience_id: str
+    ) -> RapidataUnlistedAudience:
+        from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+            RapidataUnlistedAudience,
+        )
+
+        logger.debug(f"Getting unlisted audience by id: {audience_id}")
+        response = self._openapi_service.audience.audience_api.audience_unlisted_audience_id_get(
+            audience_id=audience_id,
+        )
+        return RapidataUnlistedAudience(
+            id=audience_id,
+            name=response.name,
+            openapi_service=self._openapi_service,
+        )
 
     def find_audiences(
         self, name: str = "", amount: int = 10, page: int = 1
