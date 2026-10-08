@@ -168,7 +168,7 @@ class RapidataAudienceManager:
             )
 
             logger.debug(f"Creating unlisted audience: {name}")
-            response = self._openapi_service.audience.audience_api.audience_unlisted_post(
+            response = self._openapi_service.audience.unlisted_audience_api.audience_unlisted_post(
                 create_unlisted_audience_endpoint_input=CreateUnlistedAudienceEndpointInput(
                     name=name,
                 ),
@@ -230,7 +230,7 @@ class RapidataAudienceManager:
         )
 
         logger.debug(f"Getting unlisted audience by id: {audience_id}")
-        response = self._openapi_service.audience.audience_api.audience_unlisted_audience_id_get(
+        response = self._openapi_service.audience.unlisted_audience_api.audience_unlisted_audience_id_get(
             audience_id=audience_id,
         )
         return RapidataUnlistedAudience(

@@ -41,14 +41,14 @@ def _make_audience() -> tuple[RapidataUnlistedAudience, MagicMock]:
 
 def test_create_unlisted_audience_posts_name_and_returns_audience():
     openapi_service = _make_service()
-    audience_api = openapi_service.audience.audience_api
-    audience_api.audience_unlisted_post.return_value.audience_id = "ula_abc"
+    unlisted_api = openapi_service.audience.unlisted_audience_api
+    unlisted_api.audience_unlisted_post.return_value.audience_id = "ula_abc"
 
     audience = RapidataAudienceManager(openapi_service).create_unlisted_audience(
         "My Team"
     )
 
-    sent = audience_api.audience_unlisted_post.call_args.kwargs[
+    sent = unlisted_api.audience_unlisted_post.call_args.kwargs[
         "create_unlisted_audience_endpoint_input"
     ]
     assert sent.name == "My Team"
@@ -59,15 +59,15 @@ def test_create_unlisted_audience_posts_name_and_returns_audience():
 
 def test_get_audience_by_id_dispatches_unlisted_ids():
     openapi_service = _make_service()
-    audience_api = openapi_service.audience.audience_api
-    audience_api.audience_unlisted_audience_id_get.return_value.name = "My Team"
+    unlisted_api = openapi_service.audience.unlisted_audience_api
+    unlisted_api.audience_unlisted_audience_id_get.return_value.name = "My Team"
 
     audience = RapidataAudienceManager(openapi_service).get_audience_by_id("ula_abc")
 
-    audience_api.audience_unlisted_audience_id_get.assert_called_once_with(
+    unlisted_api.audience_unlisted_audience_id_get.assert_called_once_with(
         audience_id="ula_abc"
     )
-    audience_api.audience_audience_id_get.assert_not_called()
+    openapi_service.audience.audience_api.audience_audience_id_get.assert_not_called()
     assert isinstance(audience, RapidataUnlistedAudience)
     assert audience.id == "ula_abc"
     assert audience.name == "My Team"
@@ -81,7 +81,7 @@ def test_get_audience_by_id_keeps_other_ids_on_the_audience_endpoint():
 
     audience = RapidataAudienceManager(openapi_service).get_audience_by_id("aud_abc")
 
-    audience_api.audience_unlisted_audience_id_get.assert_not_called()
+    openapi_service.audience.unlisted_audience_api.audience_unlisted_audience_id_get.assert_not_called()
     assert isinstance(audience, RapidataAudience)
 
 
