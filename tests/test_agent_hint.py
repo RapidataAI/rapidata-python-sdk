@@ -13,9 +13,11 @@ from rapidata import __version__, _agent_hint
 from rapidata._agent_hint import (
     AGENT_HINT,
     agent_hint,
+    agent_trace_attributes,
     detected_coding_agent,
     installed_version,
     mark_skill_read,
+    print_agent_hint,
     running_under_coding_agent,
     stamp_skill,
 )
@@ -255,3 +257,78 @@ def test_import_prints_the_hint_to_stderr(tmp_path: Path):
     )
     assert "python -m rapidata skill" in result.stderr
     assert result.stdout == ""
+
+
+@pytest.fixture
+def hint_not_shown(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(_agent_hint, "_hint_shown", False)
+
+
+def test_no_trace_attributes_outside_an_agent():
+    assert agent_trace_attributes() == {}
+
+
+def test_trace_reports_whether_this_session_read_the_skill(
+    monkeypatch: pytest.MonkeyPatch, hint_not_shown: None
+):
+    _agent(monkeypatch, "s1")
+    assert agent_trace_attributes()["agent.skill.read"] is False
+    mark_skill_read()
+    assert agent_trace_attributes()["agent.skill.read"] is True
+    _agent(monkeypatch, "s2")
+    assert agent_trace_attributes()["agent.skill.read"] is False
+
+
+def test_trace_session_id_is_shared_within_an_agent_session(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    monkeypatch.setenv("CODEX_THREAD_ID", "t1")
+    first = agent_trace_attributes()["agent.session.id"]
+    assert first == agent_trace_attributes()["agent.session.id"]
+    assert "t1" not in str(first)
+    monkeypatch.setenv("CODEX_THREAD_ID", "t2")
+    assert agent_trace_attributes()["agent.session.id"] != first
+
+
+def test_trace_has_no_session_id_when_the_runtime_exports_none(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    _agent(monkeypatch, session=None)
+    assert "agent.session.id" not in agent_trace_attributes()
+
+
+def test_trace_reports_the_installed_skill_version(
+    monkeypatch: pytest.MonkeyPatch, sandbox: Path
+):
+    _agent(monkeypatch)
+    assert "agent.skill.installed_version" not in agent_trace_attributes()
+    _install(sandbox, stamp_skill(SKILL, version="3.0.0"))
+    assert agent_trace_attributes()["agent.skill.installed_version"] == "3.0.0"
+
+
+def test_trace_reports_whether_the_hint_was_printed(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    hint_not_shown: None,
+):
+    _agent(monkeypatch, "s1")
+    mark_skill_read()
+    print_agent_hint()
+    assert capsys.readouterr().err == ""
+    assert agent_trace_attributes()["agent.hint.shown"] is False
+    _agent(monkeypatch, "s2")
+    print_agent_hint()
+    assert capsys.readouterr().err.strip() == AGENT_HINT
+    assert agent_trace_attributes()["agent.hint.shown"] is True
+
+
+def test_system_attributes_carry_the_agent_state(
+    monkeypatch: pytest.MonkeyPatch, hint_not_shown: None
+):
+    from rapidata.rapidata_client.config.tracer import get_system_attributes
+
+    _agent(monkeypatch, "s1")
+    attrs = get_system_attributes()
+    assert attrs["agent.name"] == "claude-code"
+    assert attrs["agent.skill.read"] is False
+    assert "agent.session.id" in attrs
