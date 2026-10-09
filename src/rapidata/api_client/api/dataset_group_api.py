@@ -56,6 +56,7 @@ class DatasetGroupApi:
     ) -> None:
         """Creates a new dataset group.
 
+        Send either segments or the legacy fields, which fill the default segments.  Returns 400 when the content does not fit the dataset's schema.
 
         :param dataset_id: The id of the dataset to create the group for. (required)
         :type dataset_id: str
@@ -129,6 +130,7 @@ class DatasetGroupApi:
     ) -> ApiResponse[None]:
         """Creates a new dataset group.
 
+        Send either segments or the legacy fields, which fill the default segments.  Returns 400 when the content does not fit the dataset's schema.
 
         :param dataset_id: The id of the dataset to create the group for. (required)
         :type dataset_id: str
@@ -202,6 +204,7 @@ class DatasetGroupApi:
     ) -> RESTResponseType:
         """Creates a new dataset group.
 
+        Send either segments or the legacy fields, which fill the default segments.  Returns 400 when the content does not fit the dataset's schema.
 
         :param dataset_id: The id of the dataset to create the group for. (required)
         :type dataset_id: str

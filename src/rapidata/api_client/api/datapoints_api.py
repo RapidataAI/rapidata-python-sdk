@@ -580,7 +580,7 @@ class DatapointsApi:
     def dataset_dataset_id_datapoint_post(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to create the datapoint in.")],
-        create_datapoint_endpoint_input: Annotated[CreateDatapointEndpointInput, Field(description="The datapoint model containing asset, metadata, and sort index.")],
+        create_datapoint_endpoint_input: Annotated[CreateDatapointEndpointInput, Field(description="The datapoint's content, metadata and sort index.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -596,10 +596,11 @@ class DatapointsApi:
     ) -> CreateDatapointEndpointOutput:
         """Creates a new datapoint in the specified dataset.
 
+        Send either segments or the legacy fields, which fill the default segments.  Returns 400 when the content does not fit the dataset's schema.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
-        :param create_datapoint_endpoint_input: The datapoint model containing asset, metadata, and sort index. (required)
+        :param create_datapoint_endpoint_input: The datapoint's content, metadata and sort index. (required)
         :type create_datapoint_endpoint_input: CreateDatapointEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -653,7 +654,7 @@ class DatapointsApi:
     def dataset_dataset_id_datapoint_post_with_http_info(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to create the datapoint in.")],
-        create_datapoint_endpoint_input: Annotated[CreateDatapointEndpointInput, Field(description="The datapoint model containing asset, metadata, and sort index.")],
+        create_datapoint_endpoint_input: Annotated[CreateDatapointEndpointInput, Field(description="The datapoint's content, metadata and sort index.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -669,10 +670,11 @@ class DatapointsApi:
     ) -> ApiResponse[CreateDatapointEndpointOutput]:
         """Creates a new datapoint in the specified dataset.
 
+        Send either segments or the legacy fields, which fill the default segments.  Returns 400 when the content does not fit the dataset's schema.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
-        :param create_datapoint_endpoint_input: The datapoint model containing asset, metadata, and sort index. (required)
+        :param create_datapoint_endpoint_input: The datapoint's content, metadata and sort index. (required)
         :type create_datapoint_endpoint_input: CreateDatapointEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -726,7 +728,7 @@ class DatapointsApi:
     def dataset_dataset_id_datapoint_post_without_preload_content(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to create the datapoint in.")],
-        create_datapoint_endpoint_input: Annotated[CreateDatapointEndpointInput, Field(description="The datapoint model containing asset, metadata, and sort index.")],
+        create_datapoint_endpoint_input: Annotated[CreateDatapointEndpointInput, Field(description="The datapoint's content, metadata and sort index.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -742,10 +744,11 @@ class DatapointsApi:
     ) -> RESTResponseType:
         """Creates a new datapoint in the specified dataset.
 
+        Send either segments or the legacy fields, which fill the default segments.  Returns 400 when the content does not fit the dataset's schema.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
-        :param create_datapoint_endpoint_input: The datapoint model containing asset, metadata, and sort index. (required)
+        :param create_datapoint_endpoint_input: The datapoint's content, metadata and sort index. (required)
         :type create_datapoint_endpoint_input: CreateDatapointEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

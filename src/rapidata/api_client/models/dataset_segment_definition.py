@@ -15,21 +15,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.dataset_segment_definition import DatasetSegmentDefinition
+from rapidata.api_client.models.dataset_segment_kind import DatasetSegmentKind
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateDatasetEndpointInput(LazyValidatedModel):
+class DatasetSegmentDefinition(LazyValidatedModel):
     """
-    The input for the create dataset endpoint.
+    DatasetSegmentDefinition
     """ # noqa: E501
-    name: StrictStr = Field(description="The name to give to the new dataset.")
-    var_schema: Optional[List[DatasetSegmentDefinition]] = Field(default=None, alias="schema")
-    __properties: ClassVar[List[str]] = ["name", "schema"]
+    key: StrictStr
+    kind: DatasetSegmentKind
+    label: Optional[StrictStr] = None
+    required: StrictBool
+    max_length: Optional[StrictInt] = Field(default=None, alias="maxLength")
+    __properties: ClassVar[List[str]] = ["key", "kind", "label", "required", "maxLength"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -45,7 +48,7 @@ class CreateDatasetEndpointInput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateDatasetEndpointInput from a JSON string"""
+        """Create an instance of DatasetSegmentDefinition from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -66,23 +69,21 @@ class CreateDatasetEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in var_schema (list)
-        _items = []
-        if self.var_schema:
-            for _item_var_schema in self.var_schema:
-                if _item_var_schema:
-                    _items.append(_item_var_schema.to_dict())
-            _dict['schema'] = _items
-        # set to None if var_schema (nullable) is None
+        # set to None if label (nullable) is None
         # and model_fields_set contains the field
-        if self.var_schema is None and "var_schema" in self.model_fields_set:
-            _dict['schema'] = None
+        if self.label is None and "label" in self.model_fields_set:
+            _dict['label'] = None
+
+        # set to None if max_length (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_length is None and "max_length" in self.model_fields_set:
+            _dict['maxLength'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateDatasetEndpointInput from a dict"""
+        """Create an instance of DatasetSegmentDefinition from a dict"""
         if obj is None:
             return None
 
@@ -90,8 +91,11 @@ class CreateDatasetEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "name": obj.get("name"),
-            "schema": [DatasetSegmentDefinition.from_dict(_item) for _item in obj["schema"]] if obj.get("schema") is not None else None
+            "key": obj.get("key"),
+            "kind": obj.get("kind"),
+            "label": obj.get("label"),
+            "required": obj.get("required"),
+            "maxLength": obj.get("maxLength")
         }
         try:
             _obj = cls.model_validate(_data)

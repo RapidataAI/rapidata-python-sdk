@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Dataset API",
     "description": "The API for the Rapidata Dataset service",
-    "version": "2026.10.08.1933-5a8a01a"
+    "version": "2026.10.09.1019-419eb07"
   },
   "servers": [
     {
@@ -65,6 +65,7 @@
           "Datapoints"
         ],
         "summary": "Creates a new datapoint in the specified dataset.",
+        "description": "Send either segments or the legacy fields, which fill the default segments.\n Returns 400 when the content does not fit the dataset's schema.",
         "parameters": [
           {
             "name": "datasetId",
@@ -77,7 +78,7 @@
           }
         ],
         "requestBody": {
-          "description": "The datapoint model containing asset, metadata, and sort index.",
+          "description": "The datapoint's content, metadata and sort index.",
           "content": {
             "application/json": {
               "schema": {
@@ -449,6 +450,7 @@
           "Dataset"
         ],
         "summary": "Creates a new empty dataset.",
+        "description": "Without a schema, the default one applies. A custom schema must keep asset as a\n required asset segment and give every segment a label.",
         "requestBody": {
           "description": "The dataset creation parameters.",
           "content": {
@@ -641,6 +643,7 @@
           "DatasetGroup"
         ],
         "summary": "Creates a new dataset group.",
+        "description": "Send either segments or the legacy fields, which fill the default segments.\n Returns 400 when the content does not fit the dataset's schema.",
         "parameters": [
           {
             "name": "datasetId",
@@ -690,23 +693,34 @@
   "components": {
     "schemas": {
       "CreateDatapointEndpoint_Input": {
-        "required": [
-          "asset"
-        ],
         "type": "object",
         "properties": {
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegmentInput"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The datapoint's values, keyed by the dataset's schema. Replaces the legacy fields below."
+          },
           "asset": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ],
-            "description": "The asset within the datapoint."
+            "description": "The asset within the datapoint. Required unless segments are sent.",
+            "deprecated": true
           },
           "context": {
             "type": "string",
             "description": "An additional context to show the users when solving the rapid.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "contextAsset": {
             "allOf": [
@@ -714,7 +728,8 @@
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ],
-            "description": "An optional asset context for the datapoint."
+            "description": "An optional asset context for the datapoint.",
+            "deprecated": true
           },
           "sortIndex": {
             "type": "integer",
@@ -730,7 +745,8 @@
           "transcription": {
             "type": "string",
             "description": "For audio or video assets, an optional transcription of the content.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "privateMetadata": {
             "allOf": [
@@ -768,6 +784,18 @@
           "name": {
             "type": "string",
             "description": "The name to give to the new dataset."
+          },
+          "schema": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegmentDefinition"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The segments every datapoint of the dataset may carry, in render order."
           }
         },
         "description": "The input for the create dataset endpoint."
@@ -795,10 +823,23 @@
             "type": "string",
             "description": "The name of the group."
           },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegmentInput"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The group's values, keyed by the dataset's schema. Replaces the legacy fields below."
+          },
           "context": {
             "type": "string",
             "description": "The optional text context for the group.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "contextAsset": {
             "allOf": [
@@ -806,7 +847,8 @@
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ],
-            "description": "The optional asset context for the group."
+            "description": "The optional asset context for the group.",
+            "deprecated": true
           }
         }
       },
@@ -816,6 +858,130 @@
           "Pending",
           "Failed"
         ]
+      },
+      "DatasetSegment": {
+        "required": [
+          "key",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/DatasetSegmentKind"
+          },
+          "originalText": {
+            "type": "string",
+            "nullable": true
+          },
+          "englishText": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetSegmentOption"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "DatasetSegmentDefinition": {
+        "required": [
+          "key",
+          "kind",
+          "required"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/DatasetSegmentKind"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "maxLength": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "DatasetSegmentInput": {
+        "required": [
+          "key",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/DatasetSegmentKind"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetSegmentOption"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "DatasetSegmentKind": {
+        "enum": [
+          "Text",
+          "Asset",
+          "OptionList"
+        ]
+      },
+      "DatasetSegmentOption": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
       },
       "FileType": {
         "enum": [
@@ -830,7 +996,7 @@
           "id",
           "datasetId",
           "state",
-          "asset",
+          "segments",
           "createdAt"
         ],
         "type": "object",
@@ -857,12 +1023,14 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The asset that will be displayed to the users."
+            "description": "The asset that will be displayed to the users.",
+            "deprecated": true
           },
           "context": {
             "type": "string",
             "description": "Optional context text shown to annotators alongside the datapoint.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "contextAsset": {
             "allOf": [
@@ -870,7 +1038,19 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "Optional context media (reference image/audio/video) shown alongside the datapoint."
+            "description": "Optional context media (reference image/audio/video) shown alongside the datapoint.",
+            "deprecated": true
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegment"
+                }
+              }
+            ],
+            "description": "Every value of the datapoint, keyed by its dataset's schema."
           },
           "sortIndex": {
             "type": "integer",
@@ -887,13 +1067,25 @@
       },
       "GetDatasetByIdEndpoint_Output": {
         "required": [
-          "name"
+          "name",
+          "schema"
         ],
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
             "description": "The name of the dataset."
+          },
+          "schema": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegmentDefinition"
+                }
+              }
+            ],
+            "description": "The segments every datapoint of the dataset may carry, in render order."
           }
         }
       },
@@ -1545,7 +1737,7 @@
         "required": [
           "id",
           "datasetId",
-          "asset"
+          "segments"
         ],
         "type": "object",
         "properties": {
@@ -1563,12 +1755,14 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The asset that will be displayed to the users."
+            "description": "The asset that will be displayed to the users.",
+            "deprecated": true
           },
           "context": {
             "type": "string",
             "description": "Optional context text shown to annotators alongside the datapoint.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "contextAsset": {
             "allOf": [
@@ -1576,7 +1770,19 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "Optional context media (reference image/audio/video) shown alongside the datapoint."
+            "description": "Optional context media (reference image/audio/video) shown alongside the datapoint.",
+            "deprecated": true
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegment"
+                }
+              }
+            ],
+            "description": "Every value of the datapoint, keyed by its dataset's schema."
           }
         }
       },

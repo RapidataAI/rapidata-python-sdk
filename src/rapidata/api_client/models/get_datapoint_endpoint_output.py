@@ -19,7 +19,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.datapoint_state import DatapointState
-from rapidata.api_client.models.i_asset import IAsset
+from rapidata.api_client.models.dataset_segment import DatasetSegment
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,12 +32,10 @@ class GetDatapointEndpointOutput(LazyValidatedModel):
     id: StrictStr = Field(description="The id of the datapoint.")
     dataset_id: StrictStr = Field(description="The id of the dataset this datapoint belongs to.", alias="datasetId")
     state: DatapointState = Field(description="The current state of the datapoint.")
-    asset: IAsset = Field(description="The asset that will be displayed to the users.")
-    context: Optional[StrictStr] = Field(default=None, description="Optional context text shown to annotators alongside the datapoint.")
-    context_asset: Optional[IAsset] = Field(default=None, description="Optional context media (reference image/audio/video) shown alongside the datapoint.", alias="contextAsset")
+    segments: List[DatasetSegment]
     sort_index: Optional[StrictInt] = Field(default=None, description="An optional upload index used to force a certain order.", alias="sortIndex")
     created_at: datetime = Field(description="The timestamp when the datapoint was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "datasetId", "state", "asset", "context", "contextAsset", "sortIndex", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "datasetId", "state", "segments", "sortIndex", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -74,17 +72,13 @@ class GetDatapointEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of context_asset
-        if self.context_asset:
-            _dict['contextAsset'] = self.context_asset.to_dict()
-        # set to None if context (nullable) is None
-        # and model_fields_set contains the field
-        if self.context is None and "context" in self.model_fields_set:
-            _dict['context'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in segments (list)
+        _items = []
+        if self.segments:
+            for _item_segments in self.segments:
+                if _item_segments:
+                    _items.append(_item_segments.to_dict())
+            _dict['segments'] = _items
         # set to None if sort_index (nullable) is None
         # and model_fields_set contains the field
         if self.sort_index is None and "sort_index" in self.model_fields_set:
@@ -105,9 +99,7 @@ class GetDatapointEndpointOutput(LazyValidatedModel):
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
             "state": obj.get("state"),
-            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "context": obj.get("context"),
-            "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
+            "segments": [DatasetSegment.from_dict(_item) for _item in obj["segments"]] if obj.get("segments") is not None else None,
             "sortIndex": obj.get("sortIndex"),
             "createdAt": obj.get("createdAt")
         }

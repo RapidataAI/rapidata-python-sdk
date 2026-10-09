@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.10.08.1933-5a8a01a"
+    "version": "2026.10.09.1019-419eb07"
   },
   "servers": [
     {
@@ -2265,6 +2265,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "flag_if_incorrect",
+            "in": "query",
+            "description": "Filter by flag_if_incorrect.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -2445,7 +2494,12 @@
           },
           "isCommonSense": {
             "type": "boolean",
-            "description": "Whether this example should be treated as commonsense validation.\n When true, incorrect answers are not accepted and the example affects global score.\n When null, AI auto-detection will determine if the example is common sense.",
+            "description": "Whether answers to this example count towards the annotator's global userscore; platform admins only.\n When null, AI auto-detection decides and may set this and flagIfIncorrect to true.",
+            "nullable": true
+          },
+          "flagIfIncorrect": {
+            "type": "boolean",
+            "description": "Whether an incorrect answer is rejected and shown to the annotator as wrong.",
             "nullable": true
           },
           "visibility": {
@@ -5016,7 +5070,12 @@
           },
           "isCommonSense": {
             "type": "boolean",
-            "description": "Whether this example is common sense.",
+            "description": "Whether answers to this example count towards the annotator's global userscore.",
+            "nullable": true
+          },
+          "flagIfIncorrect": {
+            "type": "boolean",
+            "description": "Whether an incorrect answer is rejected and shown to the annotator as wrong.",
             "nullable": true
           },
           "sortIndex": {
@@ -5345,7 +5404,12 @@
           },
           "isCommonSense": {
             "type": "boolean",
-            "description": "Whether this example should be treated as commonsense validation.",
+            "description": "Whether answers to this example count towards the annotator's global userscore; platform admins only.",
+            "nullable": true
+          },
+          "flagIfIncorrect": {
+            "type": "boolean",
+            "description": "Whether an incorrect answer is rejected and shown to the annotator as wrong.",
             "nullable": true
           },
           "sortIndex": {
