@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.retrieval_mode import RetrievalMode
 from pydantic import ValidationError
@@ -32,7 +32,8 @@ class ISelectionLabelingSelection(LazyValidatedModel):
     effort_budget: Optional[StrictInt] = Field(default=None, alias="effortBudget")
     retrieval_mode: Optional[RetrievalMode] = Field(default=None, alias="retrievalMode")
     max_iterations: Optional[StrictInt] = Field(default=None, alias="maxIterations")
-    __properties: ClassVar[List[str]] = ["_t", "amount", "effortBudget", "retrievalMode", "maxIterations"]
+    advance_on_view: Optional[StrictBool] = Field(default=None, alias="advanceOnView")
+    __properties: ClassVar[List[str]] = ["_t", "amount", "effortBudget", "retrievalMode", "maxIterations", "advanceOnView"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -102,7 +103,8 @@ class ISelectionLabelingSelection(LazyValidatedModel):
             "amount": obj.get("amount"),
             "effortBudget": obj.get("effortBudget"),
             "retrievalMode": obj.get("retrievalMode"),
-            "maxIterations": obj.get("maxIterations")
+            "maxIterations": obj.get("maxIterations"),
+            "advanceOnView": obj.get("advanceOnView")
         }
         try:
             _obj = cls.model_validate(_data)

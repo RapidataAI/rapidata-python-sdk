@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.10.09.1019-419eb07"
+    "version": "2026.10.09.1540-55e8eb4"
   },
   "servers": [
     {
@@ -26,6 +26,10 @@
     {
       "name": "Examples",
       "x-displayName": "Examples"
+    },
+    {
+      "name": "UnlistedAudience",
+      "x-displayName": "UnlistedAudience"
     },
     {
       "name": "Cache",
@@ -3502,6 +3506,318 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/audience/unlisted": {
+      "post": {
+        "tags": [
+          "UnlistedAudience"
+        ],
+        "summary": "Creates an unlisted audience owned by the caller's organization.",
+        "description": "Jobs run on it like on any other audience, but its tasks are only served through its link.",
+        "requestBody": {
+          "description": "The audience to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnlistedAudienceEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUnlistedAudienceEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/audience/unlisted/{audienceId}": {
+      "get": {
+        "tags": [
+          "UnlistedAudience"
+        ],
+        "summary": "Returns the unlisted audience with the specified id.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the unlisted audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUnlistedAudienceByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/audiences/unlisted": {
+      "get": {
+        "tags": [
+          "UnlistedAudience"
+        ],
+        "summary": "Queries the unlisted audiences of the caller's organization, newest first by default.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryUnlistedAudiencesEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -28315,7 +28631,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetJobDatapointsEndpoint_PagedResultOfOutput"
+                  "$ref": "#/components/schemas/GetJobDatapointsEndpoint_Output"
                 }
               }
             }
@@ -29029,6 +29345,65 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetJobRevisionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/jobs/unlisted/{audienceId}/active": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Returns the running jobs of the unlisted audience, newest first.",
+        "description": "Answers 404 when no unlisted audience has the given id.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the unlisted audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUnlistedAudienceActiveJobsEndpoint_Output"
                 }
               }
             }
@@ -36968,6 +37343,58 @@
         ]
       }
     },
+    "/rapid/viewed": {
+      "post": {
+        "tags": [
+          "UserRapid"
+        ],
+        "summary": "Records that the user was shown a rapid whose served model has `reportViewed` set.",
+        "description": "Records no response. Idempotent, and a no-op for rapids served without `reportViewed`.",
+        "requestBody": {
+          "description": "The id of the rapid that was shown.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkRapidViewedEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/rapid/{rapidId}/reports": {
       "get": {
         "tags": [
@@ -41285,6 +41712,30 @@
           }
         }
       },
+      "CreateUnlistedAudienceEndpoint_Input": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the audience."
+          }
+        }
+      },
+      "CreateUnlistedAudienceEndpoint_Output": {
+        "required": [
+          "audienceId"
+        ],
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string",
+            "description": "The id of the created audience. Use it in job creation."
+          }
+        }
+      },
       "DeleteAudienceExampleEndpoint_Output": {
         "type": "object",
         "properties": {
@@ -42054,6 +42505,45 @@
             "type": "string",
             "description": "When the recalculation was created.",
             "format": "date-time"
+          }
+        }
+      },
+      "GetUnlistedAudienceByIdEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "ownerId",
+          "ownerMail",
+          "organizationId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the audience."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the audience."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the audience was created.",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the customer who created the audience.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the customer who created the audience."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the audience."
           }
         }
       },
@@ -43620,6 +44110,78 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/QueryExamplesForAudienceEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryUnlistedAudiencesEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "ownerId",
+          "ownerMail",
+          "organizationId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the audience."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the audience."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the audience was created.",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the customer who created the audience.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the customer who created the audience."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the audience."
+          }
+        }
+      },
+      "QueryUnlistedAudiencesEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryUnlistedAudiencesEndpoint_Output"
             }
           },
           "totalPages": {
@@ -45700,6 +46262,9 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "advanceOnView": {
+            "type": "boolean"
           }
         }
       },
@@ -48931,7 +49496,8 @@
           "RequestFeatures",
           "RunExperiments",
           "UploadLongMedia",
-          "Faucets"
+          "Faucets",
+          "BringYourOwnAudience"
         ],
         "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
       },
@@ -58764,75 +59330,80 @@
         },
         "description": "The estimated cost of a job."
       },
-      "GetJobDatapointsEndpoint_Output": {
+      "GetJobDatapointsEndpoint_Datapoint": {
         "required": [
           "id",
           "datasetId",
-          "asset"
+          "segments"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "description": "The datapoint id."
+            "type": "string"
           },
           "datasetId": {
-            "type": "string",
-            "description": "The id of the dataset the datapoint belongs to."
+            "type": "string"
           },
-          "asset": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IAsset"
-              }
-            ],
-            "description": "The datapoint asset."
-          },
-          "context": {
-            "type": "string",
-            "description": "The optional textual context.",
-            "nullable": true
-          },
-          "contextAsset": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IAsset"
-              }
-            ],
-            "description": "The optional context asset."
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetSegment"
+            }
           }
         }
       },
-      "GetJobDatapointsEndpoint_PagedResultOfOutput": {
+      "GetJobDatapointsEndpoint_Output": {
         "required": [
           "total",
           "page",
           "pageSize",
-          "items"
+          "totalPages",
+          "items",
+          "schema"
         ],
         "type": "object",
         "properties": {
           "total": {
             "type": "integer",
+            "description": "The total number of datapoints.",
             "format": "int64"
           },
           "page": {
             "type": "integer",
+            "description": "The current page.",
             "format": "int32"
           },
           "pageSize": {
             "type": "integer",
+            "description": "The size of the page.",
             "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetJobDatapointsEndpoint_Output"
-            }
           },
           "totalPages": {
             "type": "integer",
+            "description": "The total number of pages.",
             "format": "int32"
+          },
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetJobDatapointsEndpoint_Datapoint"
+                }
+              }
+            ],
+            "description": "The datapoints on the current page."
+          },
+          "schema": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegmentDefinition"
+                }
+              }
+            ],
+            "description": "The segments every datapoint of the dataset may carry, in render order."
           }
         }
       },
@@ -59337,6 +59908,59 @@
               }
             ],
             "description": "The list of publicly available orders."
+          }
+        }
+      },
+      "GetUnlistedAudienceActiveJobsEndpoint_Output": {
+        "required": [
+          "audienceId",
+          "audienceName",
+          "jobs"
+        ],
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string",
+            "description": "The id of the audience."
+          },
+          "audienceName": {
+            "type": "string",
+            "description": "The name of the audience."
+          },
+          "jobs": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetUnlistedAudienceActiveJobsEndpoint_Output_Job"
+                }
+              }
+            ],
+            "description": "The running jobs, newest first."
+          }
+        }
+      },
+      "GetUnlistedAudienceActiveJobsEndpoint_Output_Job": {
+        "required": [
+          "jobId",
+          "campaignId",
+          "name",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "campaignId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -61309,6 +61933,9 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "advanceOnView": {
+            "type": "boolean"
           }
         }
       },
@@ -67694,6 +68321,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -67744,6 +68374,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -67794,6 +68427,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -67844,6 +68480,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -67894,6 +68533,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -67944,6 +68586,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -68001,6 +68646,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -68051,6 +68699,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -68074,6 +68725,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           },
           "context": {
             "type": "object",
@@ -68158,6 +68812,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -68625,6 +69282,18 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          }
+        }
+      },
+      "MarkRapidViewedEndpoint_Input": {
+        "required": [
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string",
+            "description": "The ID of the Rapid that was shown."
           }
         }
       },
@@ -70511,7 +71180,8 @@
       "name": "Rapidata Audience API",
       "tags": [
         "Audience",
-        "Examples"
+        "Examples",
+        "UnlistedAudience"
       ]
     },
     {

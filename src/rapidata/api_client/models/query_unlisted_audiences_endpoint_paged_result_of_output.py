@@ -16,25 +16,23 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.dataset_segment_definition import DatasetSegmentDefinition
-from rapidata.api_client.models.get_job_datapoints_endpoint_datapoint import GetJobDatapointsEndpointDatapoint
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.query_unlisted_audiences_endpoint_output import QueryUnlistedAudiencesEndpointOutput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetJobDatapointsEndpointOutput(LazyValidatedModel):
+class QueryUnlistedAudiencesEndpointPagedResultOfOutput(LazyValidatedModel):
     """
-    GetJobDatapointsEndpointOutput
+    QueryUnlistedAudiencesEndpointPagedResultOfOutput
     """ # noqa: E501
-    total: StrictInt = Field(description="The total number of datapoints.")
-    page: StrictInt = Field(description="The current page.")
-    page_size: StrictInt = Field(description="The size of the page.", alias="pageSize")
-    total_pages: StrictInt = Field(description="The total number of pages.", alias="totalPages")
-    items: List[GetJobDatapointsEndpointDatapoint]
-    var_schema: List[DatasetSegmentDefinition] = Field(alias="schema")
-    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "totalPages", "items", "schema"]
+    total: StrictInt
+    page: StrictInt
+    page_size: StrictInt = Field(alias="pageSize")
+    items: List[QueryUnlistedAudiencesEndpointOutput]
+    total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -50,7 +48,7 @@ class GetJobDatapointsEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetJobDatapointsEndpointOutput from a JSON string"""
+        """Create an instance of QueryUnlistedAudiencesEndpointPagedResultOfOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,18 +76,11 @@ class GetJobDatapointsEndpointOutput(LazyValidatedModel):
                 if _item_items:
                     _items.append(_item_items.to_dict())
             _dict['items'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in var_schema (list)
-        _items = []
-        if self.var_schema:
-            for _item_var_schema in self.var_schema:
-                if _item_var_schema:
-                    _items.append(_item_var_schema.to_dict())
-            _dict['schema'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetJobDatapointsEndpointOutput from a dict"""
+        """Create an instance of QueryUnlistedAudiencesEndpointPagedResultOfOutput from a dict"""
         if obj is None:
             return None
 
@@ -100,9 +91,8 @@ class GetJobDatapointsEndpointOutput(LazyValidatedModel):
             "total": obj.get("total"),
             "page": obj.get("page"),
             "pageSize": obj.get("pageSize"),
-            "totalPages": obj.get("totalPages"),
-            "items": [GetJobDatapointsEndpointDatapoint.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
-            "schema": [DatasetSegmentDefinition.from_dict(_item) for _item in obj["schema"]] if obj.get("schema") is not None else None
+            "items": [QueryUnlistedAudiencesEndpointOutput.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "totalPages": obj.get("totalPages")
         }
         try:
             _obj = cls.model_validate(_data)

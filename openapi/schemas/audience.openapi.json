@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.10.09.1019-419eb07"
+    "version": "2026.10.09.1540-55e8eb4"
   },
   "servers": [
     {
@@ -2415,6 +2415,285 @@
           }
         }
       }
+    },
+    "/audience/unlisted": {
+      "post": {
+        "tags": [
+          "UnlistedAudience"
+        ],
+        "summary": "Creates an unlisted audience owned by the caller's organization.",
+        "description": "Jobs run on it like on any other audience, but its tasks are only served through its link.",
+        "requestBody": {
+          "description": "The audience to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnlistedAudienceEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUnlistedAudienceEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/audience/unlisted/{audienceId}": {
+      "get": {
+        "tags": [
+          "UnlistedAudience"
+        ],
+        "summary": "Returns the unlisted audience with the specified id.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the unlisted audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUnlistedAudienceByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/audiences/unlisted": {
+      "get": {
+        "tags": [
+          "UnlistedAudience"
+        ],
+        "summary": "Queries the unlisted audiences of the caller's organization, newest first by default.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryUnlistedAudiencesEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2767,6 +3046,30 @@
           "audienceId": {
             "type": "string",
             "description": "The unique identifier of the filtered audience. Use this id in job creation."
+          }
+        }
+      },
+      "CreateUnlistedAudienceEndpoint_Input": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the audience."
+          }
+        }
+      },
+      "CreateUnlistedAudienceEndpoint_Output": {
+        "required": [
+          "audienceId"
+        ],
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string",
+            "description": "The id of the created audience. Use it in job creation."
           }
         }
       },
@@ -3539,6 +3842,45 @@
             "type": "string",
             "description": "When the recalculation was created.",
             "format": "date-time"
+          }
+        }
+      },
+      "GetUnlistedAudienceByIdEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "ownerId",
+          "ownerMail",
+          "organizationId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the audience."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the audience."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the audience was created.",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the customer who created the audience.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the customer who created the audience."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the audience."
           }
         }
       },
@@ -5118,6 +5460,78 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/QueryExamplesForAudienceEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryUnlistedAudiencesEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "ownerId",
+          "ownerMail",
+          "organizationId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the audience."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the audience."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the audience was created.",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the customer who created the audience.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the customer who created the audience."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the audience."
+          }
+        }
+      },
+      "QueryUnlistedAudiencesEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryUnlistedAudiencesEndpoint_Output"
             }
           },
           "totalPages": {

@@ -15,26 +15,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.dataset_segment_definition import DatasetSegmentDefinition
-from rapidata.api_client.models.get_job_datapoints_endpoint_datapoint import GetJobDatapointsEndpointDatapoint
+from rapidata.api_client.models.get_unlisted_audience_active_jobs_endpoint_output_job import GetUnlistedAudienceActiveJobsEndpointOutputJob
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetJobDatapointsEndpointOutput(LazyValidatedModel):
+class GetUnlistedAudienceActiveJobsEndpointOutput(LazyValidatedModel):
     """
-    GetJobDatapointsEndpointOutput
+    GetUnlistedAudienceActiveJobsEndpointOutput
     """ # noqa: E501
-    total: StrictInt = Field(description="The total number of datapoints.")
-    page: StrictInt = Field(description="The current page.")
-    page_size: StrictInt = Field(description="The size of the page.", alias="pageSize")
-    total_pages: StrictInt = Field(description="The total number of pages.", alias="totalPages")
-    items: List[GetJobDatapointsEndpointDatapoint]
-    var_schema: List[DatasetSegmentDefinition] = Field(alias="schema")
-    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "totalPages", "items", "schema"]
+    audience_id: StrictStr = Field(description="The id of the audience.", alias="audienceId")
+    audience_name: StrictStr = Field(description="The name of the audience.", alias="audienceName")
+    jobs: List[GetUnlistedAudienceActiveJobsEndpointOutputJob]
+    __properties: ClassVar[List[str]] = ["audienceId", "audienceName", "jobs"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -50,7 +46,7 @@ class GetJobDatapointsEndpointOutput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetJobDatapointsEndpointOutput from a JSON string"""
+        """Create an instance of GetUnlistedAudienceActiveJobsEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,25 +67,18 @@ class GetJobDatapointsEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in jobs (list)
         _items = []
-        if self.items:
-            for _item_items in self.items:
-                if _item_items:
-                    _items.append(_item_items.to_dict())
-            _dict['items'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in var_schema (list)
-        _items = []
-        if self.var_schema:
-            for _item_var_schema in self.var_schema:
-                if _item_var_schema:
-                    _items.append(_item_var_schema.to_dict())
-            _dict['schema'] = _items
+        if self.jobs:
+            for _item_jobs in self.jobs:
+                if _item_jobs:
+                    _items.append(_item_jobs.to_dict())
+            _dict['jobs'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetJobDatapointsEndpointOutput from a dict"""
+        """Create an instance of GetUnlistedAudienceActiveJobsEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -97,12 +86,9 @@ class GetJobDatapointsEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "total": obj.get("total"),
-            "page": obj.get("page"),
-            "pageSize": obj.get("pageSize"),
-            "totalPages": obj.get("totalPages"),
-            "items": [GetJobDatapointsEndpointDatapoint.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
-            "schema": [DatasetSegmentDefinition.from_dict(_item) for _item in obj["schema"]] if obj.get("schema") is not None else None
+            "audienceId": obj.get("audienceId"),
+            "audienceName": obj.get("audienceName"),
+            "jobs": [GetUnlistedAudienceActiveJobsEndpointOutputJob.from_dict(_item) for _item in obj["jobs"]] if obj.get("jobs") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)
