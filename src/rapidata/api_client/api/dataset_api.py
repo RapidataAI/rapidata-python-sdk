@@ -888,6 +888,7 @@ class DatasetApi:
     ) -> CreateDatasetEndpointOutput:
         """Creates a new empty dataset.
 
+        Without a schema, the default one applies. A custom schema must keep asset as a  required asset segment and give every segment a label.
 
         :param create_dataset_endpoint_input: The dataset creation parameters. (required)
         :type create_dataset_endpoint_input: CreateDatasetEndpointInput
@@ -957,6 +958,7 @@ class DatasetApi:
     ) -> ApiResponse[CreateDatasetEndpointOutput]:
         """Creates a new empty dataset.
 
+        Without a schema, the default one applies. A custom schema must keep asset as a  required asset segment and give every segment a label.
 
         :param create_dataset_endpoint_input: The dataset creation parameters. (required)
         :type create_dataset_endpoint_input: CreateDatasetEndpointInput
@@ -1026,6 +1028,7 @@ class DatasetApi:
     ) -> RESTResponseType:
         """Creates a new empty dataset.
 
+        Without a schema, the default one applies. A custom schema must keep asset as a  required asset segment and give every segment a label.
 
         :param create_dataset_endpoint_input: The dataset creation parameters. (required)
         :type create_dataset_endpoint_input: CreateDatasetEndpointInput

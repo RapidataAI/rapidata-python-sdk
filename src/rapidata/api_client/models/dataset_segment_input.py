@@ -15,23 +15,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.dataset_segment_input import DatasetSegmentInput
+from rapidata.api_client.models.dataset_segment_kind import DatasetSegmentKind
+from rapidata.api_client.models.dataset_segment_option import DatasetSegmentOption
+from rapidata.api_client.models.i_asset_input import IAssetInput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateDatapointEndpointInput(LazyValidatedModel):
+class DatasetSegmentInput(LazyValidatedModel):
     """
-    The body request for creating a new datapoint.
+    DatasetSegmentInput
     """ # noqa: E501
-    segments: Optional[List[DatasetSegmentInput]] = None
-    sort_index: Optional[StrictInt] = Field(default=None, description="The sort index represents the order of the datapoint in the dataset.", alias="sortIndex")
-    group: Optional[StrictStr] = Field(default=None, description="The group a datapoint belongs to.")
-    private_metadata: Optional[Dict[str, StrictStr]] = Field(default=None, description="Private metadata for internal tracking. Not displayed to users.", alias="privateMetadata")
-    __properties: ClassVar[List[str]] = ["segments", "sortIndex", "group", "privateMetadata"]
+    key: StrictStr
+    kind: DatasetSegmentKind
+    text: Optional[StrictStr] = None
+    asset: Optional[IAssetInput] = None
+    options: Optional[List[DatasetSegmentOption]] = None
+    __properties: ClassVar[List[str]] = ["key", "kind", "text", "asset", "options"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -47,7 +50,7 @@ class CreateDatapointEndpointInput(LazyValidatedModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateDatapointEndpointInput from a JSON string"""
+        """Create an instance of DatasetSegmentInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,38 +71,36 @@ class CreateDatapointEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in segments (list)
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in options (list)
         _items = []
-        if self.segments:
-            for _item_segments in self.segments:
-                if _item_segments:
-                    _items.append(_item_segments.to_dict())
-            _dict['segments'] = _items
-        # set to None if segments (nullable) is None
+        if self.options:
+            for _item_options in self.options:
+                if _item_options:
+                    _items.append(_item_options.to_dict())
+            _dict['options'] = _items
+        # set to None if text (nullable) is None
         # and model_fields_set contains the field
-        if self.segments is None and "segments" in self.model_fields_set:
-            _dict['segments'] = None
+        if self.text is None and "text" in self.model_fields_set:
+            _dict['text'] = None
 
-        # set to None if sort_index (nullable) is None
+        # set to None if asset (nullable) is None
         # and model_fields_set contains the field
-        if self.sort_index is None and "sort_index" in self.model_fields_set:
-            _dict['sortIndex'] = None
+        if self.asset is None and "asset" in self.model_fields_set:
+            _dict['asset'] = None
 
-        # set to None if group (nullable) is None
+        # set to None if options (nullable) is None
         # and model_fields_set contains the field
-        if self.group is None and "group" in self.model_fields_set:
-            _dict['group'] = None
-
-        # set to None if private_metadata (nullable) is None
-        # and model_fields_set contains the field
-        if self.private_metadata is None and "private_metadata" in self.model_fields_set:
-            _dict['privateMetadata'] = None
+        if self.options is None and "options" in self.model_fields_set:
+            _dict['options'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateDatapointEndpointInput from a dict"""
+        """Create an instance of DatasetSegmentInput from a dict"""
         if obj is None:
             return None
 
@@ -107,10 +108,11 @@ class CreateDatapointEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "segments": [DatasetSegmentInput.from_dict(_item) for _item in obj["segments"]] if obj.get("segments") is not None else None,
-            "sortIndex": obj.get("sortIndex"),
-            "group": obj.get("group"),
-            "privateMetadata": obj.get("privateMetadata")
+            "key": obj.get("key"),
+            "kind": obj.get("kind"),
+            "text": obj.get("text"),
+            "asset": IAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "options": [DatasetSegmentOption.from_dict(_item) for _item in obj["options"]] if obj.get("options") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)
