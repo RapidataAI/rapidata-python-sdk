@@ -361,8 +361,7 @@ job = audience.assign_job(job_def)
 
 **Managing audiences (`client.audience`):**
 - `client.audience.create_audience(name, filters=None, target_accuracy=None, min_tasks=None, max_tasks=None)` — create a custom audience. The last three set the admission bar for qualification: `target_accuracy` (0–1, server default `0.75`), `min_tasks` (server default `10`), `max_tasks` (no cap by default). Supplying only some of them is fine — the SDK fills in the defaults. Raises `ValueError` for an accuracy outside 0–1, `min_tasks < 1`, or `max_tasks < min_tasks`.
-- `client.audience.create_unlisted_audience(name)` — create a `RapidataUnlistedAudience` (id prefixed `ula_`) annotated only by people the user shares its link with; Rapidata's labelers never see it. Requires the organization's "Bring your own audience" capability (403 otherwise). See **Unlisted audiences** below.
-- `client.audience.get_audience_by_id(audience_id)` — fetch by id; pass `"global"` for the ready-to-go global audience. An `ula_` id returns a `RapidataUnlistedAudience`
+- `client.audience.get_audience_by_id(audience_id)` — fetch by id; pass `"global"` for the ready-to-go global audience
 - `client.audience.find_audiences(name="", amount=10, page=1)` — list your audiences (newest first), optionally filtered by name
 
 **Audience methods:**
@@ -381,17 +380,6 @@ second = audience.assign_job(other_job_def, run_after=first)   # or run_after="j
 - `audience.get_examples(amount=10, page=1)` — list qualification examples (returns DataFrame)
 - `audience.delete()` — delete the audience
 
-**Unlisted audiences (the user's own annotators):** use when the user wants their own people — colleagues, domain experts, a crowd they recruit themselves — to label instead of Rapidata's labelers.
-
-```python
-team = client.audience.create_unlisted_audience(name="Radiology team")
-job = team.assign_job(job_def)        # same jobs, results and pricing as any audience
-team.link                             # https://app.rapidata.ai/label/ula_... — lists running jobs
-team.get_job_link(job)                # https://app.rapidata.ai/label/ula_.../job/<job_id> — one job
-```
-
-Give the user the link — nothing gets annotated until they share it. Anyone with the link can annotate anonymously in a browser (no account); each browser is one annotator and never sees an item twice. A `RapidataUnlistedAudience` exposes only `assign_job`, `find_jobs`, `link`, `get_job_link` (plus `id`, `name`): no examples, filters, recruiting, `.filter()` or `delete`. Jobs on it never raise the "audience can never produce responses" error and `job.get_progress().recruiting` is `None`.
-
 **Audience-supported filters:** `CountryFilter`, `LanguageFilter`, `AgeFilter` (`AgeGroup`), `GenderFilter` (`Gender`), and `DeviceFilter` (`DeviceType`), plus the `AndFilter`/`OrFilter`/`NotFilter` combinators (also via `&` / `|` / `~`). `UserScoreFilter`, `CampaignFilter`, and `CustomFilter` are **not supported on audiences** and raise `NotImplementedError`.
 
 **Looking up existing jobs (`client.job`):** `get_job_definition_by_id(id)`, `find_job_definitions(name="", amount=10, page=1)`, `get_job_by_id(id)`, `find_jobs(name="", amount=10, page=1)`.
@@ -403,7 +391,7 @@ Give the user the link — nothing gets annotated until they share it. Anyone wi
 - `job_def.delete()` — delete a job definition and all its revisions
 - `job.display_progress_bar(refresh_rate=5)` — blocking progress bar
 - `job.get_status()` — current status string
-- `job.get_progress()` — non-blocking snapshot: a `JobProgress` with `state` (same value as `get_status()`), `completion_percentage` (0–100) and `recruiting` (a `RecruitingMetrics`, or `None` for curated and unlisted audiences)
+- `job.get_progress()` — non-blocking snapshot: a `JobProgress` with `state` (same value as `get_status()`), `completion_percentage` (0–100) and `recruiting` (a `RecruitingMetrics`, or `None` for curated audiences)
 - `job.get_results(preliminary_results=False)` — with `preliminary_results=True` on an unfinished job, returns a snapshot of the responses collected so far without waiting (not final, may miss datapoints); on a completed job it returns the final results. Otherwise blocks until Completed/Failed (auto-regenerates if `StaleResults`), returns `RapidataResults`. If the job needs manual review (`ManualApproval`), runs out of funds mid-run (`SpendLimited`), is paused (`Paused`) or is blocked by a flagged rapid (`Blocked`) — none of these completes on its own — it raises an informative error naming the state instead of blocking; top up, wait for a reviewer, `resume()` or unflag the rapid on `job.job_details_page`, then call it again. It also raises up front when the job's audience **can never produce responses** (nobody graduated *and* nobody is being recruited); an audience that is merely still distilling does not raise.
 - `job.pause()` / `job.resume()` — stop collecting responses / continue; both return the job. While `Paused`, `get_results()` and `display_progress_bar()` raise instead of blocking
 - `job.view()` — open the job's details page in the browser

@@ -149,7 +149,7 @@ class RapidataJob:
         from rapidata.rapidata_client.audience.recruiting import (
             audience_will_never_produce_responses,
         )
-        from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+        from rapidata.rapidata_client.audience._rapidata_unlisted_audience import (
             UNLISTED_AUDIENCE_PREFIX,
         )
 
@@ -340,7 +340,7 @@ class RapidataJob:
         and unlisted audiences (which report no per-state users because they do not recruit).
         """
         from rapidata.rapidata_client.audience.recruiting import RecruitingMetrics
-        from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+        from rapidata.rapidata_client.audience._rapidata_unlisted_audience import (
             UNLISTED_AUDIENCE_PREFIX,
         )
 

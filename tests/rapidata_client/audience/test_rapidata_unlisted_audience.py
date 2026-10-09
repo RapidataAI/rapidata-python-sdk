@@ -13,7 +13,7 @@ from rapidata.rapidata_client.audience.rapidata_audience import RapidataAudience
 from rapidata.rapidata_client.audience.rapidata_audience_manager import (
     RapidataAudienceManager,
 )
-from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+from rapidata.rapidata_client.audience._rapidata_unlisted_audience import (
     RapidataUnlistedAudience,
 )
 from rapidata.rapidata_client.job.rapidata_job import RapidataJob

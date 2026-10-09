@@ -5,7 +5,7 @@ from rapidata.rapidata_client.config import logger
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.audience.rapidata_audience import RapidataAudience
-    from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+    from rapidata.rapidata_client.audience._rapidata_unlisted_audience import (
         RapidataUnlistedAudience,
     )
     from rapidata.service.openapi_service import OpenAPIService
@@ -160,7 +160,7 @@ class RapidataAudienceManager:
         with tracer.start_as_current_span(
             "RapidataAudienceManager.create_unlisted_audience"
         ):
-            from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+            from rapidata.rapidata_client.audience._rapidata_unlisted_audience import (
                 RapidataUnlistedAudience,
             )
             from rapidata.api_client.models.create_unlisted_audience_endpoint_input import (
@@ -192,7 +192,7 @@ class RapidataAudienceManager:
                 ``RapidataUnlistedAudience`` for an ``ula_`` id.
         """
         with tracer.start_as_current_span("RapidataAudienceManager.get_audience_by_id"):
-            from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+            from rapidata.rapidata_client.audience._rapidata_unlisted_audience import (
                 UNLISTED_AUDIENCE_PREFIX,
             )
 
@@ -225,7 +225,7 @@ class RapidataAudienceManager:
     def _get_unlisted_audience_by_id(
         self, audience_id: str
     ) -> RapidataUnlistedAudience:
-        from rapidata.rapidata_client.audience.rapidata_unlisted_audience import (
+        from rapidata.rapidata_client.audience._rapidata_unlisted_audience import (
             RapidataUnlistedAudience,
         )
 
