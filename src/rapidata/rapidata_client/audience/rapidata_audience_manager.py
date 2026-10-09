@@ -188,8 +188,7 @@ class RapidataAudienceManager:
             audience_id (str): The unique identifier of the audience.
 
         Returns:
-            RapidataAudience | RapidataUnlistedAudience: The audience instance; a
-                ``RapidataUnlistedAudience`` for an ``ula_`` id.
+            RapidataAudience | RapidataUnlistedAudience: The audience instance.
         """
         with tracer.start_as_current_span("RapidataAudienceManager.get_audience_by_id"):
             from rapidata.rapidata_client.audience._rapidata_unlisted_audience import (
