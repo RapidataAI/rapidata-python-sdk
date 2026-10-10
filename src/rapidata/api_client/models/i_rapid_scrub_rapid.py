@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset import IAsset
@@ -32,11 +32,12 @@ class IRapidScrubRapid(LazyValidatedModel):
     t: StrictStr = Field(alias="_t")
     target: TranslatedString
     id: StrictStr
+    report_viewed: Optional[StrictBool] = Field(default=None, alias="reportViewed")
     context: Optional[TranslatedString] = None
     context_asset: Optional[IAsset] = Field(default=None, alias="contextAsset")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     asset: IAsset
-    __properties: ClassVar[List[str]] = ["_t", "target", "id", "context", "contextAsset", "featureFlags", "asset"]
+    __properties: ClassVar[List[str]] = ["_t", "target", "id", "reportViewed", "context", "contextAsset", "featureFlags", "asset"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -124,6 +125,7 @@ class IRapidScrubRapid(LazyValidatedModel):
             "_t": obj.get("_t"),
             "target": TranslatedString.from_dict(obj["target"]) if obj.get("target") is not None else None,
             "id": obj.get("id"),
+            "reportViewed": obj.get("reportViewed"),
             "context": TranslatedString.from_dict(obj["context"]) if obj.get("context") is not None else None,
             "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,

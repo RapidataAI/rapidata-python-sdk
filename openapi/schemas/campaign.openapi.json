@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.10.09.1019-419eb07"
+    "version": "2026.10.09.1540-55e8eb4"
   },
   "servers": [
     {
@@ -3567,6 +3567,9 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "advanceOnView": {
+            "type": "boolean"
           }
         }
       },

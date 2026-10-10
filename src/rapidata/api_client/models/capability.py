@@ -30,6 +30,7 @@ class Capability(str, Enum):
     RUNEXPERIMENTS = 'RunExperiments'
     UPLOADLONGMEDIA = 'UploadLongMedia'
     FAUCETS = 'Faucets'
+    BRINGYOUROWNAUDIENCE = 'BringYourOwnAudience'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

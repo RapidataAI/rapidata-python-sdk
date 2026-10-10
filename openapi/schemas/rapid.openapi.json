@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Rapid API",
     "description": "The API for the Rapidata Rapid service",
-    "version": "2026.10.09.1019-419eb07"
+    "version": "2026.10.09.1540-55e8eb4"
   },
   "servers": [
     {
@@ -1307,6 +1307,47 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/rapid/viewed": {
+      "post": {
+        "tags": [
+          "UserRapid"
+        ],
+        "summary": "Records that the user was shown a rapid whose served model has `reportViewed` set.",
+        "description": "Records no response. Idempotent, and a no-op for rapids served without `reportViewed`.",
+        "requestBody": {
+          "description": "The id of the rapid that was shown.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkRapidViewedEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -3363,6 +3404,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -3413,6 +3457,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -3463,6 +3510,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -3513,6 +3563,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -3563,6 +3616,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -3613,6 +3669,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -3670,6 +3729,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -3971,6 +4033,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -4303,6 +4368,9 @@
           "id": {
             "type": "string"
           },
+          "reportViewed": {
+            "type": "boolean"
+          },
           "context": {
             "type": "object",
             "oneOf": [
@@ -4386,6 +4454,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -4983,6 +5054,18 @@
           "y": {
             "type": "number",
             "format": "double"
+          }
+        }
+      },
+      "MarkRapidViewedEndpoint_Input": {
+        "required": [
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string",
+            "description": "The ID of the Rapid that was shown."
           }
         }
       },

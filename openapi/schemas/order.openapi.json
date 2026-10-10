@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.10.09.1019-419eb07"
+    "version": "2026.10.09.1540-55e8eb4"
   },
   "servers": [
     {
@@ -927,7 +927,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetJobDatapointsEndpoint_PagedResultOfOutput"
+                  "$ref": "#/components/schemas/GetJobDatapointsEndpoint_Output"
                 }
               }
             }
@@ -1542,6 +1542,54 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetJobRevisionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/jobs/unlisted/{audienceId}/active": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Returns the running jobs of the unlisted audience, newest first.",
+        "description": "Answers 404 when no unlisted audience has the given id.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the unlisted audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUnlistedAudienceActiveJobsEndpoint_Output"
                 }
               }
             }
@@ -5975,6 +6023,95 @@
           }
         }
       },
+      "DatasetSegment": {
+        "required": [
+          "key",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/DatasetSegmentKind"
+          },
+          "originalText": {
+            "type": "string",
+            "nullable": true
+          },
+          "englishText": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetSegmentOption"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "DatasetSegmentDefinition": {
+        "required": [
+          "key",
+          "kind",
+          "required"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/DatasetSegmentKind"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "maxLength": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "DatasetSegmentKind": {
+        "enum": [
+          "Text",
+          "Asset",
+          "OptionList"
+        ]
+      },
+      "DatasetSegmentOption": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
       "DefinitionType": {
         "enum": [
           "Unknown",
@@ -6257,21 +6394,19 @@
         },
         "description": "The estimated cost of a job."
       },
-      "GetJobDatapointsEndpoint_Output": {
+      "GetJobDatapointsEndpoint_Datapoint": {
         "required": [
           "id",
           "datasetId",
-          "asset"
+          "segments"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "description": "The datapoint id."
+            "type": "string"
           },
           "datasetId": {
-            "type": "string",
-            "description": "The id of the dataset the datapoint belongs to."
+            "type": "string"
           },
           "asset": {
             "allOf": [
@@ -6279,12 +6414,12 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The datapoint asset."
+            "deprecated": true
           },
           "context": {
             "type": "string",
-            "description": "The optional textual context.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "contextAsset": {
             "allOf": [
@@ -6292,40 +6427,68 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The optional context asset."
+            "deprecated": true
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetSegment"
+            }
           }
         }
       },
-      "GetJobDatapointsEndpoint_PagedResultOfOutput": {
+      "GetJobDatapointsEndpoint_Output": {
         "required": [
           "total",
           "page",
           "pageSize",
-          "items"
+          "totalPages",
+          "items",
+          "schema"
         ],
         "type": "object",
         "properties": {
           "total": {
             "type": "integer",
+            "description": "The total number of datapoints.",
             "format": "int64"
           },
           "page": {
             "type": "integer",
+            "description": "The current page.",
             "format": "int32"
           },
           "pageSize": {
             "type": "integer",
+            "description": "The size of the page.",
             "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetJobDatapointsEndpoint_Output"
-            }
           },
           "totalPages": {
             "type": "integer",
+            "description": "The total number of pages.",
             "format": "int32"
+          },
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetJobDatapointsEndpoint_Datapoint"
+                }
+              }
+            ],
+            "description": "The datapoints on the current page."
+          },
+          "schema": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegmentDefinition"
+                }
+              }
+            ],
+            "description": "The segments every datapoint of the dataset may carry, in render order."
           }
         }
       },
@@ -6830,6 +6993,59 @@
               }
             ],
             "description": "The list of publicly available orders."
+          }
+        }
+      },
+      "GetUnlistedAudienceActiveJobsEndpoint_Output": {
+        "required": [
+          "audienceId",
+          "audienceName",
+          "jobs"
+        ],
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string",
+            "description": "The id of the audience."
+          },
+          "audienceName": {
+            "type": "string",
+            "description": "The name of the audience."
+          },
+          "jobs": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetUnlistedAudienceActiveJobsEndpoint_Output_Job"
+                }
+              }
+            ],
+            "description": "The running jobs, newest first."
+          }
+        }
+      },
+      "GetUnlistedAudienceActiveJobsEndpoint_Output_Job": {
+        "required": [
+          "jobId",
+          "campaignId",
+          "name",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "campaignId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -9348,6 +9564,9 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "advanceOnView": {
+            "type": "boolean"
           }
         }
       },
