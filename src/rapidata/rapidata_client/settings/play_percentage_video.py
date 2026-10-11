@@ -19,11 +19,7 @@ class PlayPercentageVideoSetting(RapidataSetting):
 
     def __init__(self, percentage: int = 95):
         if percentage < 0:
-            raise ValueError(
-                "The percentage must be between 0 and 95."
-            )
+            raise ValueError("The percentage must be between 0 and 95.")
         if percentage > 95:
-            raise ValueError(
-                "The percentage must be between 0 and 95."
-            )
+            raise ValueError("The percentage must be between 0 and 95.")
         super().__init__(key="media_played_percentage", value=percentage)

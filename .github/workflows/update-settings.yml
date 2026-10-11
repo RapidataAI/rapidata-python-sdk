@@ -49,6 +49,9 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
           add-paths: |
             src/rapidata/rapidata_client/settings/
+            src/rapidata/rapidata_client/__init__.py
+            src/rapidata/__init__.py
+            src/rapidata/types/__init__.py
           reviewers: |
             kannwism
             LinoGiger
