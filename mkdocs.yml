@@ -38,7 +38,7 @@ plugins:
             show_signature_annotations: true
             signature_crossrefs: true
             members_order: source
-            filters: ["!^_"]
+            filters: ["!^_", "!(?i)unlisted"]
             docstring_options:
               ignore_init_summary: true
             merge_init_into_class: true

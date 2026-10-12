@@ -18,6 +18,7 @@ from .rapidata_client import (
     RapidataAudienceBase,
     RapidataAudienceManager,
     RapidataFilteredAudience,
+    RapidataUnlistedAudience,
     RecruitingMetrics,
     RapidataJob,
     RapidataJobDefinition,

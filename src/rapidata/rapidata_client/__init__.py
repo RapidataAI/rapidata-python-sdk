@@ -4,6 +4,7 @@ from .audience import (
     RapidataAudienceBase,
     RapidataAudienceManager,
     RapidataFilteredAudience,
+    RapidataUnlistedAudience,
     RecruitingMetrics,
 )
 from .job import (
