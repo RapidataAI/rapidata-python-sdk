@@ -311,6 +311,7 @@ Keeps answer options in the order you specified. By default, options are randomi
 from rapidata import NoShuffleSetting
 
 job_definition = client.job.create_classification_job_definition(
+    name="Image Quality Rating",
     instruction="Rate the quality of this image",
     answer_options=["1: Poor", "2: Fair", "3: Good", "4: Excellent"],
     datapoints=["image.jpg"],
