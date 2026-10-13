@@ -1,3 +1,0 @@
-openapi-client/*
-!openapi-client/openapi_client/
-spec/
