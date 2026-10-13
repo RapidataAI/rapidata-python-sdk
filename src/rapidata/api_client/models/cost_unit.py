@@ -27,6 +27,7 @@ class CostUnit(str, Enum):
     USDPERIMAGE = 'UsdPerImage'
     USDPERVIDEOSECOND = 'UsdPerVideoSecond'
     USDPERMILLIONTOKENS = 'UsdPerMillionTokens'
+    USDPERSAMPLE = 'UsdPerSample'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

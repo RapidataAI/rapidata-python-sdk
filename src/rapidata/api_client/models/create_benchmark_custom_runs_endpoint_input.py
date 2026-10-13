@@ -30,7 +30,8 @@ class CreateBenchmarkCustomRunsEndpointInput(LazyValidatedModel):
     name: StrictStr = Field(description="The display name given to every created run.")
     matchups: List[MatchupConfig]
     seed: Optional[StrictInt] = Field(default=None, description="Optional seed for deterministic matchup selection, applied to every created run. Omit to  have one generated, which still keeps the runs aligned with each other.")
-    __properties: ClassVar[List[str]] = ["name", "matchups", "seed"]
+    leaderboard_ids: Optional[List[StrictStr]] = Field(default=None, alias="leaderboardIds")
+    __properties: ClassVar[List[str]] = ["name", "matchups", "seed", "leaderboardIds"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -79,6 +80,11 @@ class CreateBenchmarkCustomRunsEndpointInput(LazyValidatedModel):
         if self.seed is None and "seed" in self.model_fields_set:
             _dict['seed'] = None
 
+        # set to None if leaderboard_ids (nullable) is None
+        # and model_fields_set contains the field
+        if self.leaderboard_ids is None and "leaderboard_ids" in self.model_fields_set:
+            _dict['leaderboardIds'] = None
+
         return _dict
 
     @classmethod
@@ -93,7 +99,8 @@ class CreateBenchmarkCustomRunsEndpointInput(LazyValidatedModel):
         _data = {
             "name": obj.get("name"),
             "matchups": [MatchupConfig.from_dict(_item) for _item in obj["matchups"]] if obj.get("matchups") is not None else None,
-            "seed": obj.get("seed")
+            "seed": obj.get("seed"),
+            "leaderboardIds": obj.get("leaderboardIds")
         }
         try:
             _obj = cls.model_validate(_data)
