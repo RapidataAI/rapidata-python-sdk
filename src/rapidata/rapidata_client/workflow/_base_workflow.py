@@ -66,6 +66,9 @@ class Workflow(ABC):
     def _format_datapoints(self, datapoints: list[Datapoint]) -> list[Datapoint]:
         return datapoints
 
+    def _needs_answer_options_segment(self) -> bool:
+        return False
+
     def __str__(self) -> str:
         return self._type
 

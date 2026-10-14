@@ -20,6 +20,11 @@ from rapidata.api_client.models.classify_payload_category import ClassifyPayload
 from rapidata.api_client.models.i_rapid_blueprint_attach_category_rapid_blueprint import (
     IRapidBlueprintAttachCategoryRapidBlueprint,
 )
+from rapidata.api_client.models.rapid_binding import RapidBinding
+from rapidata.api_client.models.rapid_bindings import RapidBindings
+from rapidata.rapidata_client.datapoints._default_segments import (
+    ANSWER_OPTIONS_SEGMENT_KEY,
+)
 
 
 class ClassifyWorkflow(Workflow):
@@ -30,18 +35,15 @@ class ClassifyWorkflow(Workflow):
     along with a list of possible options for classification.
 
     Args:
-        question (str): The classification question to be presented.
-        options (list[str]): A list of possible classification options.
-
-    Attributes:
-        _question (str): The classification question.
-        _options (list[str]): The list of classification options.
+        instruction (str): The classification question to be presented.
+        answer_options (list[str] | None): The options shown for every datapoint,
+            or None when each datapoint carries its own ``answer_options``.
     """
 
     modality = RapidModality.CLASSIFY
     task_type = "Classification"
 
-    def __init__(self, instruction: str, answer_options: list[str]):
+    def __init__(self, instruction: str, answer_options: list[str] | None):
         super().__init__(type="SimpleWorkflowConfig")
         self._validate_instruction(instruction)
         self._instruction = instruction
@@ -50,13 +52,16 @@ class ClassifyWorkflow(Workflow):
     def _get_instruction(self) -> str:
         return self._instruction
 
+    def _needs_answer_options_segment(self) -> bool:
+        return self._answer_options is None
+
     def _to_dict(self) -> dict[str, Any]:
         return {
             **super()._to_dict(),
             "blueprint": {
                 "_t": "ClassifyBlueprint",
                 "title": self._instruction,
-                "possibleCategories": self._answer_options,
+                "possibleCategories": self._answer_options or [],
             },
         }
 
@@ -66,7 +71,7 @@ class ClassifyWorkflow(Workflow):
             title=self._instruction,
             categories=[
                 AttachCategoryRapidBlueprintCategory(label=option, value=option)
-                for option in self._answer_options
+                for option in self._answer_options or []
             ],
         )
 
@@ -74,6 +79,17 @@ class ClassifyWorkflow(Workflow):
             actual_instance=IOrderWorkflowInputSimpleWorkflowInput(
                 _t="SimpleWorkflow",
                 blueprint=IRapidBlueprint(actual_instance=blueprint),
+                bindings=(
+                    RapidBindings(
+                        payload={
+                            "categories": RapidBinding(
+                                segment=ANSWER_OPTIONS_SEGMENT_KEY
+                            )
+                        }
+                    )
+                    if self._needs_answer_options_segment()
+                    else None
+                ),
             )
         )
 
@@ -83,7 +99,7 @@ class ClassifyWorkflow(Workflow):
                 _t="ClassifyPayload",
                 categories=[
                     ClassifyPayloadCategory(label=option, value=option)
-                    for option in self._answer_options
+                    for option in self._answer_options or datapoint.answer_options or []
                 ],
                 title=self._instruction,
             )

@@ -16,6 +16,7 @@ class DatapointsValidator:
         private_metadata: list[dict[str, str]] | None = None,
         groups: list[str] | None = None,
         multi_asset: bool = False,
+        answer_options: list[list[str]] | None = None,
     ) -> None:
         if multi_asset and any(isinstance(datapoint, str) for datapoint in datapoints):
             raise ValueError("Datapoints must be a list of lists of strings")
@@ -33,6 +34,22 @@ class DatapointsValidator:
             raise ValueError(
                 "Number of private metadata entries must match number of datapoints"
             )
+        if answer_options is not None:
+            if len(answer_options) != len(datapoints):
+                raise ValueError(
+                    "Number of answer option lists must match number of datapoints"
+                )
+            for index, options in enumerate(answer_options):
+                if not 2 <= len(options) <= 8:
+                    raise ValueError(
+                        f"Datapoint {index} must have between 2 and 8 answer options, got {len(options)}"
+                    )
+                if any(not option for option in options) or len(set(options)) != len(
+                    options
+                ):
+                    raise ValueError(
+                        f"Answer options of datapoint {index} must be non-empty and unique"
+                    )
         if groups and (
             len(groups) != len(datapoints) or len(groups) != len(set(groups))
         ):
@@ -50,6 +67,7 @@ class DatapointsValidator:
         groups: list[str] | None = None,
         data_type: Literal["text", "media"] = "media",
         multi_asset: bool = False,
+        answer_options: list[list[str]] | None = None,
     ) -> list[Datapoint]:
         DatapointsValidator.validate_datapoints(
             datapoints=datapoints,
@@ -59,13 +77,14 @@ class DatapointsValidator:
             private_metadata=private_metadata,
             groups=groups,
             multi_asset=multi_asset,
+            answer_options=answer_options,
         )
         # ``media_context`` may arrive as a ``str`` (legacy form, one media
         # context per datapoint) or as a ``list[str]``. The same
         # ``coerce_media_context`` helper that backs the Datapoint field
         # validator handles both — calling it here narrows the static type
         # so pyright is happy with the Datapoint constructor.
-        return [
+        datapoints_list = [
             Datapoint(
                 asset=asset,
                 data_type=data_type,
@@ -87,3 +106,6 @@ class DatapointsValidator:
                 ),
             )
         ]
+        for datapoint, options in zip(datapoints_list, answer_options or []):
+            datapoint.answer_options = options
+        return datapoints_list
