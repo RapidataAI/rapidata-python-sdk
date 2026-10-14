@@ -370,7 +370,7 @@ job_definition = client.job.create_compare_job_definition(
 
 #### `PinContextMediaSetting()`
 
-Shows the media context next to the task for the whole rapid, instead of inside the collapsible context drawer. Only use it when the task screen has enough space for the context next to the task; otherwise the context crowds out the datapoints. Inspect the preview carefully before assigning the job. A multi-asset media context is reduced to its first asset. Works with all task types.
+Shows the media context next to the task for the whole rapid, instead of inside the collapsible context drawer. Only use it when the task screen has enough space for the context next to the task. Inspect the preview carefully before assigning the job. A multi-asset media context is reduced to its first asset. Works with all task types.
 
 ```python
 from rapidata import PinContextMediaSetting
