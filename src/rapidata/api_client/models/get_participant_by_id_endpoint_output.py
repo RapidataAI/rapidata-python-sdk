@@ -39,11 +39,12 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
     lab: Optional[StrictStr] = Field(default=None, description="The lab that makes the model (e.g. \"OpenAI\", \"Black Forest Labs\"), or null if unset.")
     proprietary_name: Optional[StrictStr] = Field(default=None, description="The vendor-facing display name of the model, or null if unset.", alias="proprietaryName")
     license_type: Optional[ModelLicenseType] = Field(default=None, description="The license classification of the underlying model, or null if not classified yet.", alias="licenseType")
-    cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The price of one costUnit of the model in USD, or null if the price is unknown.")
+    cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The manually set price of one costUnit in USD, or null if none is set.")
     cost_unit: Optional[CostUnit] = Field(default=None, description="The unit cost is quoted in, or null if the price is unknown.", alias="costUnit")
+    calculated_cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Average measured cost of one sample in USD, or null if no sample has a cost. Standings show  it in place of cost while cost is null.", alias="calculatedCost")
     logo: Optional[StrictStr] = Field(default=None, description="The logo of the model, or null if unset.")
     faucet: Optional[IFaucetOutput] = Field(default=None, description="The faucet configured to auto-generate samples, or null if none is set.")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "status", "votesExcluded", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "faucet"]
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "status", "votesExcluded", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "calculatedCost", "logo", "faucet"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -113,6 +114,11 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
         if self.cost_unit is None and "cost_unit" in self.model_fields_set:
             _dict['costUnit'] = None
 
+        # set to None if calculated_cost (nullable) is None
+        # and model_fields_set contains the field
+        if self.calculated_cost is None and "calculated_cost" in self.model_fields_set:
+            _dict['calculatedCost'] = None
+
         # set to None if logo (nullable) is None
         # and model_fields_set contains the field
         if self.logo is None and "logo" in self.model_fields_set:
@@ -141,6 +147,7 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
             "licenseType": obj.get("licenseType"),
             "cost": obj.get("cost"),
             "costUnit": obj.get("costUnit"),
+            "calculatedCost": obj.get("calculatedCost"),
             "logo": obj.get("logo"),
             "faucet": IFaucetOutput.from_dict(obj["faucet"]) if obj.get("faucet") is not None else None
         }

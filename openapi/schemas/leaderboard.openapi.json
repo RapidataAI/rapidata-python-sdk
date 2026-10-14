@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.10.12.1547-6404d01"
+    "version": "2026.10.13.1613-0664ad5"
   },
   "servers": [
     {
@@ -75,8 +75,8 @@
         "tags": [
           "Benchmark"
         ],
-        "summary": "Creates one run per leaderboard of the benchmark, each evaluating the same explicit list of\n matchup configurations.",
-        "description": "Answers 202 with one entry per created run and the seed they all share, so every leaderboard\n evaluates identical image pairs; a seed is generated when none is supplied. Hidden\n leaderboards and leaderboards excluded from the benchmark overall are left out. See\n POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated\n and resolved.",
+        "summary": "Creates one run per targeted leaderboard of the benchmark, all evaluating the same matchups.",
+        "description": "Answers 202 with one entry per created run and the seed they all share, so every leaderboard\n evaluates identical image pairs; a seed is generated when none is supplied. Without\n leaderboardIds, hidden and excluded-from-overall leaderboards are left out; listed\n leaderboards run even when hidden or excluded, and ids not on the benchmark are a 400. See\n POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated\n and resolved.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -17359,6 +17359,7 @@
           "UsdPerImage",
           "UsdPerVideoSecond",
           "UsdPerMillionTokens",
+          "UsdPerSample",
           null
         ]
       },
@@ -17389,6 +17390,18 @@
             "description": "Optional seed for deterministic matchup selection, applied to every created run. Omit to\n have one generated, which still keeps the runs aligned with each other.",
             "format": "int64",
             "nullable": true
+          },
+          "leaderboardIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional leaderboards of the benchmark to run on, hidden or excluded ones included. Omit\n or leave empty to target every visible leaderboard included in the benchmark overall."
           }
         }
       },
@@ -17408,7 +17421,7 @@
                 }
               }
             ],
-            "description": "The created runs, one per leaderboard."
+            "description": "The created runs, one per targeted leaderboard."
           },
           "seed": {
             "type": "integer",
@@ -17961,6 +17974,12 @@
               }
             ],
             "description": "The asset input for the sample."
+          },
+          "cost": {
+            "type": "number",
+            "description": "What generating the sample cost in USD, or null if unknown. The participant's calculated\n cost is the average over its samples that carry one.",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -19548,7 +19567,7 @@
           },
           "cost": {
             "type": "number",
-            "description": "The price of one costUnit of the model in USD, or null if the price is unknown.",
+            "description": "The manually set price of one costUnit in USD, or null if none is set.",
             "format": "double",
             "nullable": true
           },
@@ -19560,6 +19579,12 @@
               }
             ],
             "description": "The unit cost is quoted in, or null if the price is unknown.",
+            "nullable": true
+          },
+          "calculatedCost": {
+            "type": "number",
+            "description": "Average measured cost of one sample in USD, or null if no sample has a cost. Standings show\n it in place of cost while cost is null.",
+            "format": "double",
             "nullable": true
           },
           "logo": {
