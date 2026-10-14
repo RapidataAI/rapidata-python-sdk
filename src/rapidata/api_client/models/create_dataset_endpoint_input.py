@@ -16,7 +16,8 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.dataset_segment_definition import DatasetSegmentDefinition
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -27,7 +28,8 @@ class CreateDatasetEndpointInput(LazyValidatedModel):
     The input for the create dataset endpoint.
     """ # noqa: E501
     name: StrictStr = Field(description="The name to give to the new dataset.")
-    __properties: ClassVar[List[str]] = ["name"]
+    var_schema: Optional[List[DatasetSegmentDefinition]] = Field(default=None, alias="schema")
+    __properties: ClassVar[List[str]] = ["name", "schema"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -64,6 +66,18 @@ class CreateDatasetEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in var_schema (list)
+        _items = []
+        if self.var_schema:
+            for _item_var_schema in self.var_schema:
+                if _item_var_schema:
+                    _items.append(_item_var_schema.to_dict())
+            _dict['schema'] = _items
+        # set to None if var_schema (nullable) is None
+        # and model_fields_set contains the field
+        if self.var_schema is None and "var_schema" in self.model_fields_set:
+            _dict['schema'] = None
+
         return _dict
 
     @classmethod
@@ -76,7 +90,8 @@ class CreateDatasetEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "name": obj.get("name")
+            "name": obj.get("name"),
+            "schema": [DatasetSegmentDefinition.from_dict(_item) for _item in obj["schema"]] if obj.get("schema") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

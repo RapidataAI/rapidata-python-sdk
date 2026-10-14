@@ -1,6 +1,6 @@
 """Tests for RapidataJob surfacing states it can't progress out of on its own.
 
-A job that enters ManualApproval or SpendLimited never reaches Completed/Failed,
+A job that enters ManualApproval, SpendLimited, Paused or Blocked never reaches Completed/Failed,
 so waiting on it (e.g. via get_results) must raise an informative error instead
 of blocking the caller forever.
 """
@@ -190,13 +190,32 @@ def test_get_results_raises_on_paused():
     assert "resume()" in message
 
 
+def test_get_results_raises_on_blocked_with_job_page():
+    job, _ = _make_job(_job_get("Blocked"))
+
+    with pytest.raises(Exception) as excinfo:
+        job.get_results()
+
+    message = str(excinfo.value)
+    assert "blocked" in message
+    assert "unflag" in message
+    assert job.job_details_page in message
+
+
+def test_display_progress_bar_raises_on_blocked():
+    job, _ = _make_job(_job_get("Blocked"))
+
+    with pytest.raises(Exception) as excinfo:
+        job.display_progress_bar()
+
+    assert "blocked" in str(excinfo.value)
+
+
 def test_pause_and_resume_call_endpoints_and_chain():
     job, openapi_service = _make_job(_job_get("Running"))
 
     assert job.pause() is job
-    openapi_service.order.job_api.job_job_id_pause_post.assert_called_once_with(
-        "job-1"
-    )
+    openapi_service.order.job_api.job_job_id_pause_post.assert_called_once_with("job-1")
 
     assert job.resume() is job
     openapi_service.order.job_api.job_job_id_resume_post.assert_called_once_with(
@@ -212,7 +231,9 @@ def test_get_results_preliminary_returns_snapshot_while_running():
     pipeline_api.pipeline_pipeline_id_preliminary_download_post.return_value.download_id = (
         "dl-1"
     )
-    response = pipeline_api.pipeline_preliminary_download_preliminary_download_id_get_with_http_info.return_value
+    response = (
+        pipeline_api.pipeline_preliminary_download_preliminary_download_id_get_with_http_info.return_value
+    )
     response.status_code = 200
     response.raw_data = json.dumps({"info": {}, "results": [1]}).encode()
 

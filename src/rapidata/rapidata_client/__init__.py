@@ -4,6 +4,7 @@ from .audience import (
     RapidataAudienceBase,
     RapidataAudienceManager,
     RapidataFilteredAudience,
+    RapidataUnlistedAudience,
     RecruitingMetrics,
 )
 from .job import (
@@ -72,6 +73,7 @@ from .settings import (
     CompareEquirectangularSetting,
     ClassifyEquirectangularSetting,
     TranslateTextAssetsSetting,
+    PinContextMediaSetting,
 )
 
 # --- GENERATED SETTINGS IMPORTS END ---

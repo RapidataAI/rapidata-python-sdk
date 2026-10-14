@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.10.02.1512-7addf5f"
+    "version": "2026.10.13.1613-0664ad5"
   },
   "servers": [
     {
@@ -3066,11 +3066,11 @@
         "enum": [
           "SkipContentCheck",
           "PreheatBoost",
-          "ManagedImageFaucet",
           "RequestFeatures",
           "RunExperiments",
-          "ManagedForgeFaucet",
-          "UploadLongMedia"
+          "UploadLongMedia",
+          "Faucets",
+          "BringYourOwnAudience"
         ],
         "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
       },

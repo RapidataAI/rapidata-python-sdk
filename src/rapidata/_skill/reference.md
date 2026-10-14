@@ -14,7 +14,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
 | `responses_per_datapoint` | int | Responses per item (default 10) |
 | `contexts` | list[str] \| None | Text context per datapoint (max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually) |
-| `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of image URLs/paths (one inner list per datapoint) |
+| `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview) |
 | `confidence_threshold` | float \| None | Confidence-based early stopping threshold (0-1); cannot combine with `quorum_threshold` |
 | `quorum_threshold` | int \| None | Quorum-based early stopping: stop when this many responses agree; cannot combine with `confidence_threshold` |
 | `settings` | `Sequence[RapidataSetting] \| None` | Display/behavior settings |
@@ -588,6 +588,7 @@ Most settings only apply to specific task types. If you add a setting that the j
 | `CompareEquirectangularSetting` | `(value: bool = True)` | Render comparison media as equirectangular VR |
 | `ClassifyEquirectangularSetting` | `(value: bool = True)` | Render classification media as equirectangular 360° view |
 | `TranslateTextAssetsSetting` | `(value: bool = True)` | Translate text assets (datapoints and text contexts) into the labeler's language. Off unless added; source text is always assumed to be English; results still reference the original text |
+| `PinContextMediaSetting` | `(value: bool = True)` | Show the context image or video next to the task for the whole rapid instead of inside the collapsible context drawer. Only use it when the task screen has enough space for the context next to the task — inspect `job_def.preview()` carefully before assigning. A multi-asset context is reduced to its first asset. All task types |
 | `CustomSetting` | `(key: str, value: str, target: "rapids" \| "campaign" = "rapids")` | Pass a custom key/value through to the backend; `target` controls whether the flag is applied at the rapid level (`"rapids"`) or campaign level (`"campaign"`) |
 
 **Note on `FreeTextMinimumCharactersSetting` / `FreeTextMaxCharactersSetting`:** use these with caution. Free-text responses already pass through a reasonableness check by default, so tightening the bounds is usually unnecessary and will reject otherwise valid answers. Only set them when the question genuinely demands a specific length (e.g. a single word, or a full paragraph).
@@ -665,7 +666,7 @@ Collected from both single-asset and batch upload paths, de-duplicated on `(item
 
 `assign_job` never blocks on funds: the job is always created. If its estimated cost exceeds your account balance, `assign_job` logs a warning with the estimate, your balance, and the expected shortfall — the job still runs, but may pause partway until you top up.
 
-Some jobs don't go straight to running. A job can enter manual review (`ManualApproval`) or, once out of funds mid-run, become spend-limited (`SpendLimited`); a job you paused with `job.pause()` sits in `Paused`. None of these completes on its own, so `get_results()` raises an informative error naming the state (and the review reason, when available) instead of blocking indefinitely — top up, wait for a reviewer or call `job.resume()`, then call it again.
+Some jobs don't go straight to running. A job can enter manual review (`ManualApproval`) or, once out of funds mid-run, become spend-limited (`SpendLimited`); a job you paused with `job.pause()` sits in `Paused`; a job with a flagged rapid sits in `Blocked` until that rapid is inspected and unflagged on the job's page in the app (`job.job_details_page`). None of these completes on its own, so `get_results()` raises an informative error naming the state (and the review reason, when available) instead of blocking indefinitely — top up, wait for a reviewer, call `job.resume()` or unflag the rapid, then call it again.
 
 ### Jobs on an audience that can never respond
 

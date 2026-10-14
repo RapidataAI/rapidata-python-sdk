@@ -31,6 +31,7 @@ from rapidata.api_client.api.global_text_api import GlobalTextApi
 from rapidata.api_client.api.hugging_face_sync_api import HuggingFaceSyncApi
 from rapidata.api_client.api.identity_api import IdentityApi
 from rapidata.api_client.api.invoice_api import InvoiceApi
+from rapidata.api_client.api.invoice_recipient_api import InvoiceRecipientApi
 from rapidata.api_client.api.job_api import JobApi
 from rapidata.api_client.api.leaderboard_api import LeaderboardApi
 from rapidata.api_client.api.newsletter_api import NewsletterApi
@@ -56,6 +57,7 @@ from rapidata.api_client.api.simple_flow_api import SimpleFlowApi
 from rapidata.api_client.api.simple_flow_item_api import SimpleFlowItemApi
 from rapidata.api_client.api.survey_api import SurveyApi
 from rapidata.api_client.api.translation_api import TranslationApi
+from rapidata.api_client.api.unlisted_audience_api import UnlistedAudienceApi
 from rapidata.api_client.api.user_rapid_api import UserRapidApi
 from rapidata.api_client.api.validation_feedback_api import ValidationFeedbackApi
 from rapidata.api_client.api.validation_set_api import ValidationSetApi

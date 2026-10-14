@@ -17,7 +17,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_asset_input import IAssetInput
+from rapidata.api_client.models.dataset_segment_input import DatasetSegmentInput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -27,14 +27,11 @@ class CreateDatapointEndpointInput(LazyValidatedModel):
     """
     The body request for creating a new datapoint.
     """ # noqa: E501
-    asset: IAssetInput = Field(description="The asset within the datapoint.")
-    context: Optional[StrictStr] = Field(default=None, description="An additional context to show the users when solving the rapid.")
-    context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset context for the datapoint.", alias="contextAsset")
+    segments: Optional[List[DatasetSegmentInput]] = None
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index represents the order of the datapoint in the dataset.", alias="sortIndex")
     group: Optional[StrictStr] = Field(default=None, description="The group a datapoint belongs to.")
-    transcription: Optional[StrictStr] = Field(default=None, description="For audio or video assets, an optional transcription of the content.")
     private_metadata: Optional[Dict[str, StrictStr]] = Field(default=None, description="Private metadata for internal tracking. Not displayed to users.", alias="privateMetadata")
-    __properties: ClassVar[List[str]] = ["asset", "context", "contextAsset", "sortIndex", "group", "transcription", "privateMetadata"]
+    __properties: ClassVar[List[str]] = ["segments", "sortIndex", "group", "privateMetadata"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -71,16 +68,17 @@ class CreateDatapointEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of context_asset
-        if self.context_asset:
-            _dict['contextAsset'] = self.context_asset.to_dict()
-        # set to None if context (nullable) is None
+        # override the default output from pydantic by calling `to_dict()` of each item in segments (list)
+        _items = []
+        if self.segments:
+            for _item_segments in self.segments:
+                if _item_segments:
+                    _items.append(_item_segments.to_dict())
+            _dict['segments'] = _items
+        # set to None if segments (nullable) is None
         # and model_fields_set contains the field
-        if self.context is None and "context" in self.model_fields_set:
-            _dict['context'] = None
+        if self.segments is None and "segments" in self.model_fields_set:
+            _dict['segments'] = None
 
         # set to None if sort_index (nullable) is None
         # and model_fields_set contains the field
@@ -91,11 +89,6 @@ class CreateDatapointEndpointInput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.group is None and "group" in self.model_fields_set:
             _dict['group'] = None
-
-        # set to None if transcription (nullable) is None
-        # and model_fields_set contains the field
-        if self.transcription is None and "transcription" in self.model_fields_set:
-            _dict['transcription'] = None
 
         # set to None if private_metadata (nullable) is None
         # and model_fields_set contains the field
@@ -114,12 +107,9 @@ class CreateDatapointEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "asset": IAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "context": obj.get("context"),
-            "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
+            "segments": [DatasetSegmentInput.from_dict(_item) for _item in obj["segments"]] if obj.get("segments") is not None else None,
             "sortIndex": obj.get("sortIndex"),
             "group": obj.get("group"),
-            "transcription": obj.get("transcription"),
             "privateMetadata": obj.get("privateMetadata")
         }
         try:

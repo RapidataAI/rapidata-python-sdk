@@ -1,6 +1,6 @@
 """Tests for the internal ExperimentManager: create() and run_experiment().
 
-create() must post the split and then activate the returned id.
+create() must only post the split; the experiment is live once a campaign references it.
 run_experiment() must reject an empty experiment_id and otherwise delegate to
 the audience's job creation, passing the experiment id through.
 """
@@ -25,16 +25,13 @@ def _make_manager() -> tuple[ExperimentManager, MagicMock]:
     return manager, openapi_service
 
 
-def test_create_posts_split_then_activates_by_id():
+def test_create_posts_split_without_changing_state():
     manager, openapi_service = _make_manager()
     api = openapi_service.campaign.experiment_api
 
     created = MagicMock(id="exp-1")
     created.name = "job-fast-ui"
-    activated = MagicMock(id="exp-1")
-    activated.name = "job-fast-ui"
     api.campaign_experiments_post.return_value = created
-    api.campaign_experiments_experiment_id_state_post.return_value = activated
 
     result = manager.create(name="job-fast-ui", treatment_bps=3000)
 
@@ -42,11 +39,9 @@ def test_create_posts_split_then_activates_by_id():
     posted_input = post_kwargs["create_experiment_endpoint_input"]
     assert posted_input.split.treatment_bps == 3000
 
-    state_args = api.campaign_experiments_experiment_id_state_post.call_args.args
-    assert state_args[0] == "exp-1"
-    assert state_args[1].action == "activate"
+    api.campaign_experiments_experiment_id_state_post.assert_not_called()
 
-    assert result == Experiment(id="exp-1", name="job-fast-ui", state="active")
+    assert result == Experiment(id="exp-1", name="job-fast-ui")
 
 
 def test_run_experiment_raises_on_empty_experiment_id():

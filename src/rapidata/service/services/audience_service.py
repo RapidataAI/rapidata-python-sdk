@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from rapidata.api_client.api.audience_api import AudienceApi
     from rapidata.api_client.api.examples_api import ExamplesApi
+    from rapidata.api_client.api.unlisted_audience_api import UnlistedAudienceApi
     from rapidata.rapidata_client.api.rapidata_api_client import RapidataApiClient
 
 
@@ -13,6 +14,7 @@ class AudienceService:
         self._api_client = api_client
         self._audience_api: AudienceApi | None = None
         self._examples_api: ExamplesApi | None = None
+        self._unlisted_audience_api: UnlistedAudienceApi | None = None
 
     @property
     def audience_api(self) -> AudienceApi:
@@ -27,3 +29,10 @@ class AudienceService:
             from rapidata.api_client.api.examples_api import ExamplesApi
             self._examples_api = ExamplesApi(self._api_client)
         return self._examples_api
+
+    @property
+    def unlisted_audience_api(self) -> UnlistedAudienceApi:
+        if self._unlisted_audience_api is None:
+            from rapidata.api_client.api.unlisted_audience_api import UnlistedAudienceApi
+            self._unlisted_audience_api = UnlistedAudienceApi(self._api_client)
+        return self._unlisted_audience_api

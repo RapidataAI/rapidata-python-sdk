@@ -47,7 +47,8 @@ class QueryStandingsByBenchmarkEndpointOutputItem(LazyValidatedModel):
     is_evaluating: StrictBool = Field(alias="isEvaluating")
     is_disabled: StrictBool = Field(alias="isDisabled")
     confidence_interval: Optional[ConfidenceInterval] = Field(default=None, alias="confidenceInterval")
-    __properties: ClassVar[List[str]] = ["id", "name", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "status", "score", "wins", "totalMatches", "responseCount", "isEvaluating", "isDisabled", "confidenceInterval"]
+    is_partially_evaluated: StrictBool = Field(alias="isPartiallyEvaluated")
+    __properties: ClassVar[List[str]] = ["id", "name", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "status", "score", "wins", "totalMatches", "responseCount", "isEvaluating", "isDisabled", "confidenceInterval", "isPartiallyEvaluated"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -160,7 +161,8 @@ class QueryStandingsByBenchmarkEndpointOutputItem(LazyValidatedModel):
             "responseCount": obj.get("responseCount"),
             "isEvaluating": obj.get("isEvaluating"),
             "isDisabled": obj.get("isDisabled"),
-            "confidenceInterval": ConfidenceInterval.from_dict(obj["confidenceInterval"]) if obj.get("confidenceInterval") is not None else None
+            "confidenceInterval": ConfidenceInterval.from_dict(obj["confidenceInterval"]) if obj.get("confidenceInterval") is not None else None,
+            "isPartiallyEvaluated": obj.get("isPartiallyEvaluated")
         }
         try:
             _obj = cls.model_validate(_data)

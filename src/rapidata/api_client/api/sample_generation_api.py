@@ -66,7 +66,7 @@ class SampleGenerationApi:
     ) -> CreateSampleGenerationEndpointOutput:
         """Starts an asynchronous sample generation run.
 
-        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.
+        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark whose participants should run their faucets. (required)
         :type benchmark_id: str
@@ -140,7 +140,7 @@ class SampleGenerationApi:
     ) -> ApiResponse[CreateSampleGenerationEndpointOutput]:
         """Starts an asynchronous sample generation run.
 
-        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.
+        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark whose participants should run their faucets. (required)
         :type benchmark_id: str
@@ -214,7 +214,7 @@ class SampleGenerationApi:
     ) -> RESTResponseType:
         """Starts an asynchronous sample generation run.
 
-        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.
+        In target mode the run queues only the samples that are missing, counting both what already  exists and what an earlier run has not finished producing yet. A repeat call over an  unchanged benchmark therefore queues nothing and completes immediately.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark whose participants should run their faucets. (required)
         :type benchmark_id: str
@@ -364,7 +364,7 @@ class SampleGenerationApi:
     ) -> PreviewSampleGenerationEndpointOutput:
         """Reports how many samples the given configuration would generate, and for which participants.
 
-        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.
+        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark the configuration would run against. (required)
         :type benchmark_id: str
@@ -438,7 +438,7 @@ class SampleGenerationApi:
     ) -> ApiResponse[PreviewSampleGenerationEndpointOutput]:
         """Reports how many samples the given configuration would generate, and for which participants.
 
-        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.
+        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark the configuration would run against. (required)
         :type benchmark_id: str
@@ -512,7 +512,7 @@ class SampleGenerationApi:
     ) -> RESTResponseType:
         """Reports how many samples the given configuration would generate, and for which participants.
 
-        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.
+        Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same  payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.  The numbers are a snapshot: in target mode they are measured against what exists and what is  still being generated, both of which move, so a run submitted later may differ.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param benchmark_id: The benchmark the configuration would run against. (required)
         :type benchmark_id: str
@@ -1772,7 +1772,7 @@ class SampleGenerationApi:
     ) -> RetrySampleGenerationEndpointOutput:
         """Re-queues failed items of a sample generation so they run again.
 
-        When no item ids are supplied, every failed item of the generation qualifies. Item ids that  do not belong to the generation or are not in a failed state are ignored. Returns the ids  that were re-queued; a generation with no failed items yields an empty result.  When no failure categories are supplied, the retry covers only the items whose failure a  re-run can plausibly fix, so items rejected for the request itself — an unknown model,  refused credentials, a content-policy or configuration rejection — are left alone rather than  re-run to collect the same rejection. Naming those categories explicitly retries them anyway;  combining categories with item ids intersects the two.
+        When no item ids are supplied, every failed item of the generation qualifies. Item ids that  do not belong to the generation or are not in a failed state are ignored. Returns the ids  that were re-queued; a generation with no failed items yields an empty result.  When no failure categories are supplied, the retry covers only the items whose failure a  re-run can plausibly fix, so items rejected for the request itself — an unknown model,  refused credentials, a content-policy or configuration rejection — are left alone rather than  re-run to collect the same rejection. Naming those categories explicitly retries them anyway;  combining categories with item ids intersects the two.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param sample_generation_id: The id of the sample generation request. (required)
         :type sample_generation_id: str
@@ -1846,7 +1846,7 @@ class SampleGenerationApi:
     ) -> ApiResponse[RetrySampleGenerationEndpointOutput]:
         """Re-queues failed items of a sample generation so they run again.
 
-        When no item ids are supplied, every failed item of the generation qualifies. Item ids that  do not belong to the generation or are not in a failed state are ignored. Returns the ids  that were re-queued; a generation with no failed items yields an empty result.  When no failure categories are supplied, the retry covers only the items whose failure a  re-run can plausibly fix, so items rejected for the request itself — an unknown model,  refused credentials, a content-policy or configuration rejection — are left alone rather than  re-run to collect the same rejection. Naming those categories explicitly retries them anyway;  combining categories with item ids intersects the two.
+        When no item ids are supplied, every failed item of the generation qualifies. Item ids that  do not belong to the generation or are not in a failed state are ignored. Returns the ids  that were re-queued; a generation with no failed items yields an empty result.  When no failure categories are supplied, the retry covers only the items whose failure a  re-run can plausibly fix, so items rejected for the request itself — an unknown model,  refused credentials, a content-policy or configuration rejection — are left alone rather than  re-run to collect the same rejection. Naming those categories explicitly retries them anyway;  combining categories with item ids intersects the two.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param sample_generation_id: The id of the sample generation request. (required)
         :type sample_generation_id: str
@@ -1920,7 +1920,7 @@ class SampleGenerationApi:
     ) -> RESTResponseType:
         """Re-queues failed items of a sample generation so they run again.
 
-        When no item ids are supplied, every failed item of the generation qualifies. Item ids that  do not belong to the generation or are not in a failed state are ignored. Returns the ids  that were re-queued; a generation with no failed items yields an empty result.  When no failure categories are supplied, the retry covers only the items whose failure a  re-run can plausibly fix, so items rejected for the request itself — an unknown model,  refused credentials, a content-policy or configuration rejection — are left alone rather than  re-run to collect the same rejection. Naming those categories explicitly retries them anyway;  combining categories with item ids intersects the two.
+        When no item ids are supplied, every failed item of the generation qualifies. Item ids that  do not belong to the generation or are not in a failed state are ignored. Returns the ids  that were re-queued; a generation with no failed items yields an empty result.  When no failure categories are supplied, the retry covers only the items whose failure a  re-run can plausibly fix, so items rejected for the request itself — an unknown model,  refused credentials, a content-policy or configuration rejection — are left alone rather than  re-run to collect the same rejection. Naming those categories explicitly retries them anyway;  combining categories with item ids intersects the two.  Returns 403 unless the caller's organization has been granted the Faucets capability.
 
         :param sample_generation_id: The id of the sample generation request. (required)
         :type sample_generation_id: str

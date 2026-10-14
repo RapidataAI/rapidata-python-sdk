@@ -86,6 +86,7 @@ class RapidataJob:
         AudienceJobState.MANUALAPPROVAL,
         AudienceJobState.SPENDLIMITED,
         AudienceJobState.PAUSED,
+        AudienceJobState.BLOCKED,
     )
 
     def _fetch_job(self) -> GetJobByIdEndpointOutput:
@@ -116,6 +117,13 @@ class RapidataJob:
                 f"results remain available; call resume() to let the job finish."
             )
 
+        if job.state == AudienceJobState.BLOCKED:
+            raise Exception(
+                f"Job '{self}' is blocked: a rapid in it was flagged, so the job can't "
+                f"complete until that rapid is reviewed. Inspect and unflag it on the "
+                f"job page ({self.job_details_page}), then call this again."
+            )
+
         # ManualApproval — reviewReason is optional; a job can legitimately be under
         # review with no customer-facing reason recorded yet.
         reason = job.review_reason
@@ -141,6 +149,12 @@ class RapidataJob:
         from rapidata.rapidata_client.audience.recruiting import (
             audience_will_never_produce_responses,
         )
+        from rapidata.rapidata_client.audience._rapidata_unlisted_audience import (
+            UNLISTED_AUDIENCE_PREFIX,
+        )
+
+        if self.audience_id.startswith(UNLISTED_AUDIENCE_PREFIX):
+            return
 
         metrics = self._get_recruiting_metrics()
         if metrics is not None and (metrics.graduated > 0 or metrics.distilling > 0):
@@ -228,7 +242,7 @@ class RapidataJob:
 
         Raises:
             Exception: If the job enters a state it can't progress out of on its own
-                (``ManualApproval``, ``SpendLimited`` or ``Paused``) while a different status is
+                (``ManualApproval``, ``SpendLimited``, ``Paused`` or ``Blocked``) while a different status is
                 being awaited — with the review reason when the API provides one.
         """
         self._raise_if_audience_cannot_produce_responses()
@@ -323,8 +337,15 @@ class RapidataJob:
 
     def _get_recruiting_metrics(self) -> RecruitingMetrics | None:
         """Gets the recruiting funnel for the job's audience, or ``None`` for curated
-        audiences (which report no per-state users because they do not recruit)."""
+        and unlisted audiences (which report no per-state users because they do not recruit).
+        """
         from rapidata.rapidata_client.audience.recruiting import RecruitingMetrics
+        from rapidata.rapidata_client.audience._rapidata_unlisted_audience import (
+            UNLISTED_AUDIENCE_PREFIX,
+        )
+
+        if self.audience_id.startswith(UNLISTED_AUDIENCE_PREFIX):
+            return None
 
         try:
             with suppress_rapidata_error_logging():
@@ -378,7 +399,8 @@ class RapidataJob:
         Raises:
             Exception: If failed to get job results, or if the job cannot complete
                 without intervention — it is in manual review (``ManualApproval``),
-                spend-limited (``SpendLimited``), paused (``Paused``), or assigned to an audience that can
+                spend-limited (``SpendLimited``), paused (``Paused``), blocked by a
+                flagged rapid (``Blocked``), or assigned to an audience that can
                 never graduate annotators (recruiting never started, or its pool is
                 empty).
         """
@@ -454,7 +476,7 @@ class RapidataJob:
         Raises:
             ValueError: If refresh_rate is less than 1.
             Exception: If the job has failed, or can't progress on its own — it is
-                in ``ManualApproval``, ``SpendLimited`` or ``Paused``, or assigned to an audience
+                in ``ManualApproval``, ``SpendLimited``, ``Paused`` or ``Blocked``, or assigned to an audience
                 that can never graduate annotators (recruiting never started, or its
                 pool is empty).
         """

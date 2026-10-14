@@ -16,7 +16,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from rapidata.api_client.models.i_asset import IAsset
@@ -38,10 +38,11 @@ class GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpoin
     prompt_asset: Optional[IAsset] = Field(default=None, description="An optional prompt asset associated with the sample.", alias="promptAsset")
     tags: List[StrictStr]
     created_at: Optional[datetime] = Field(default=None, description="The timestamp when the sample was created.", alias="createdAt")
+    votes_excluded: Optional[StrictBool] = Field(default=None, description="Whether the sample's matchups are excluded from the benchmark's scores.", alias="votesExcluded")
     owner_id: Optional[UUID] = Field(default=None, description="The sample's owner; null unless the caller is platform staff or in the owning organization.", alias="ownerId")
     owner_mail: Optional[StrictStr] = Field(default=None, description="The owner's mail; null unless the caller is platform staff or in the owning organization.", alias="ownerMail")
     organization_id: Optional[StrictStr] = Field(default=None, description="The owner's organization; null unless the caller is platform staff or in the owning organization.", alias="organizationId")
-    __properties: ClassVar[List[str]] = ["_t", "id", "identifier", "asset", "englishPrompt", "originalPrompt", "promptAsset", "tags", "createdAt", "ownerId", "ownerMail", "organizationId"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "identifier", "asset", "englishPrompt", "originalPrompt", "promptAsset", "tags", "createdAt", "votesExcluded", "ownerId", "ownerMail", "organizationId"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -137,6 +138,7 @@ class GetSamplesByParticipantEndpointISampleOutputGetSamplesByParticipantEndpoin
             "promptAsset": IAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
             "tags": obj.get("tags"),
             "createdAt": obj.get("createdAt"),
+            "votesExcluded": obj.get("votesExcluded"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
             "organizationId": obj.get("organizationId")

@@ -17,7 +17,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_asset_input import IAssetInput
+from rapidata.api_client.models.dataset_segment_input import DatasetSegmentInput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,9 +28,8 @@ class CreateDatasetGroupEndpointInput(LazyValidatedModel):
     CreateDatasetGroupEndpointInput
     """ # noqa: E501
     group: StrictStr = Field(description="The name of the group.")
-    context: Optional[StrictStr] = Field(default=None, description="The optional text context for the group.")
-    context_asset: Optional[IAssetInput] = Field(default=None, description="The optional asset context for the group.", alias="contextAsset")
-    __properties: ClassVar[List[str]] = ["group", "context", "contextAsset"]
+    segments: Optional[List[DatasetSegmentInput]] = None
+    __properties: ClassVar[List[str]] = ["group", "segments"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -67,13 +66,17 @@ class CreateDatasetGroupEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of context_asset
-        if self.context_asset:
-            _dict['contextAsset'] = self.context_asset.to_dict()
-        # set to None if context (nullable) is None
+        # override the default output from pydantic by calling `to_dict()` of each item in segments (list)
+        _items = []
+        if self.segments:
+            for _item_segments in self.segments:
+                if _item_segments:
+                    _items.append(_item_segments.to_dict())
+            _dict['segments'] = _items
+        # set to None if segments (nullable) is None
         # and model_fields_set contains the field
-        if self.context is None and "context" in self.model_fields_set:
-            _dict['context'] = None
+        if self.segments is None and "segments" in self.model_fields_set:
+            _dict['segments'] = None
 
         return _dict
 
@@ -88,8 +91,7 @@ class CreateDatasetGroupEndpointInput(LazyValidatedModel):
 
         _data = {
             "group": obj.get("group"),
-            "context": obj.get("context"),
-            "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None
+            "segments": [DatasetSegmentInput.from_dict(_item) for _item in obj["segments"]] if obj.get("segments") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

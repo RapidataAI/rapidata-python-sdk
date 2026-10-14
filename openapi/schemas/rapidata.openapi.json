@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.10.02.1512-7addf5f"
+    "version": "2026.10.13.1613-0664ad5"
   },
   "servers": [
     {
@@ -26,6 +26,10 @@
     {
       "name": "Examples",
       "x-displayName": "Examples"
+    },
+    {
+      "name": "UnlistedAudience",
+      "x-displayName": "UnlistedAudience"
     },
     {
       "name": "Cache",
@@ -210,6 +214,10 @@
     {
       "name": "Invoice",
       "x-displayName": "Invoice"
+    },
+    {
+      "name": "InvoiceRecipient",
+      "x-displayName": "InvoiceRecipient"
     },
     {
       "name": "Payment",
@@ -3356,6 +3364,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "flag_if_incorrect",
+            "in": "query",
+            "description": "Filter by flag_if_incorrect.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -3449,6 +3506,318 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/audience/unlisted": {
+      "post": {
+        "tags": [
+          "UnlistedAudience"
+        ],
+        "summary": "Creates an unlisted audience owned by the caller's organization.",
+        "description": "Jobs run on it like on any other audience, but its tasks are only served through its link.",
+        "requestBody": {
+          "description": "The audience to create.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnlistedAudienceEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUnlistedAudienceEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/audience/unlisted/{audienceId}": {
+      "get": {
+        "tags": [
+          "UnlistedAudience"
+        ],
+        "summary": "Returns the unlisted audience with the specified id.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the unlisted audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUnlistedAudienceByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/audiences/unlisted": {
+      "get": {
+        "tags": [
+          "UnlistedAudience"
+        ],
+        "summary": "Queries the unlisted audiences of the caller's organization, newest first by default.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filter by name.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "logic",
+            "in": "query",
+            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryUnlistedAudiencesEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -4805,82 +5174,12 @@
         ]
       }
     },
-    "/campaign/experiments/{experimentId}/state": {
-      "post": {
-        "tags": [
-          "Experiment"
-        ],
-        "summary": "Applies a lifecycle transition to an experiment and returns the full updated document.",
-        "description": "Valid transitions: draft/paused → active, active → paused, active/paused → completed;\n anything else is 409 with code invalid_transition. Activation additionally guards\n against flag keys owned by another running experiment (flag_key_in_use), an\n already-elapsed end date\n (invalid_window), and sticky enrollment without a leavable user predicate\n (invalid_enrollment_mode).",
-        "parameters": [
-          {
-            "name": "experimentId",
-            "in": "path",
-            "description": "The experiment id.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The transition to apply.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeExperimentStateEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Experiment"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
-              "api"
-            ]
-          }
-        ]
-      }
-    },
     "/campaign/experiments": {
       "post": {
         "tags": [
           "Experiment"
         ],
-        "summary": "Creates an experiment in the draft state and returns the full document.",
+        "summary": "Creates an immutable experiment that applies to every campaign referencing it.",
         "description": "The split salt is generated server-side.",
         "requestBody": {
           "description": "The experiment to create.",
@@ -4937,17 +5236,7 @@
         "tags": [
           "Experiment"
         ],
-        "summary": "Returns all experiments, optionally restricted to one state.",
-        "parameters": [
-          {
-            "name": "state",
-            "in": "query",
-            "description": "The state to filter by; omit to list every experiment.",
-            "schema": {
-              "$ref": "#/components/schemas/ExperimentState"
-            }
-          }
-        ],
+        "summary": "Returns all experiments, newest first.",
         "responses": {
           "200": {
             "description": "OK",
@@ -5009,74 +5298,6 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Experiment"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
-              "api"
-            ]
-          }
-        ]
-      },
-      "patch": {
-        "tags": [
-          "Experiment"
-        ],
-        "summary": "Updates the provided fields of an experiment and returns the full updated document.",
-        "description": "Omitted fields are left untouched. Name and salt are never updatable; flags are updatable\n only while the experiment is a draft — afterwards the response is 409 with code\n immutable_field.",
-        "parameters": [
-          {
-            "name": "experimentId",
-            "in": "path",
-            "description": "The experiment id.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The fields to update.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateExperimentEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK",
@@ -5747,6 +5968,7 @@
           "Datapoints"
         ],
         "summary": "Creates a new datapoint in the specified dataset.",
+        "description": "Send either segments or the legacy fields, which fill the default segments.\n Returns 400 when the content does not fit the dataset's schema.",
         "parameters": [
           {
             "name": "datasetId",
@@ -5759,7 +5981,7 @@
           }
         ],
         "requestBody": {
-          "description": "The datapoint model containing asset, metadata, and sort index.",
+          "description": "The datapoint's content, metadata and sort index.",
           "content": {
             "application/json": {
               "schema": {
@@ -6186,6 +6408,7 @@
           "Dataset"
         ],
         "summary": "Creates a new empty dataset.",
+        "description": "Without a schema, the default one applies. A custom schema must keep asset as a\n required asset segment and give every segment a label.",
         "requestBody": {
           "description": "The dataset creation parameters.",
           "content": {
@@ -6422,6 +6645,7 @@
           "DatasetGroup"
         ],
         "summary": "Creates a new dataset group.",
+        "description": "Send either segments or the legacy fields, which fill the default segments.\n Returns 400 when the content does not fit the dataset's schema.",
         "parameters": [
           {
             "name": "datasetId",
@@ -11667,8 +11891,8 @@
         "tags": [
           "Benchmark"
         ],
-        "summary": "Creates one run per leaderboard of the benchmark, each evaluating the same explicit list of\n matchup configurations.",
-        "description": "Answers 202 with one entry per created run and the seed they all share, so every leaderboard\n evaluates identical image pairs; a seed is generated when none is supplied. Hidden\n leaderboards and leaderboards excluded from the benchmark overall are left out. See\n POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated\n and resolved.",
+        "summary": "Creates one run per targeted leaderboard of the benchmark, all evaluating the same matchups.",
+        "description": "Answers 202 with one entry per created run and the seed they all share, so every leaderboard\n evaluates identical image pairs; a seed is generated when none is supplied. Without\n leaderboardIds, hidden and excluded-from-overall leaderboards are left out; listed\n leaderboards run even when hidden or excluded, and ids not on the benchmark are a 400. See\n POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated\n and resolved.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -22574,7 +22798,7 @@
           "SampleGeneration"
         ],
         "summary": "Starts an asynchronous sample generation run.",
-        "description": "In target mode the run queues only the samples that are missing, counting both what already\n exists and what an earlier run has not finished producing yet. A repeat call over an\n unchanged benchmark therefore queues nothing and completes immediately.",
+        "description": "In target mode the run queues only the samples that are missing, counting both what already\n exists and what an earlier run has not finished producing yet. A repeat call over an\n unchanged benchmark therefore queues nothing and completes immediately.\n Returns 403 unless the caller's organization has been granted the Faucets capability.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -22645,7 +22869,7 @@
           "SampleGeneration"
         ],
         "summary": "Reports how many samples the given configuration would generate, and for which participants.",
-        "description": "Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same\n payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.\n The numbers are a snapshot: in target mode they are measured against what exists and what is\n still being generated, both of which move, so a run submitted later may differ.",
+        "description": "Takes the same body as POST /benchmark/{benchmarkId}/sample-generation, so the same\n payload can be previewed and then submitted unchanged. Writes nothing and generates nothing.\n The numbers are a snapshot: in target mode they are measured against what exists and what is\n still being generated, both of which move, so a run submitted later may differ.\n Returns 403 unless the caller's organization has been granted the Faucets capability.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -27791,6 +28015,7 @@
           "Participant"
         ],
         "summary": "Updates a participant using patch semantics.",
+        "description": "Setting a faucet returns 403 unless the caller's organization has been granted the\n Faucets capability.",
         "parameters": [
           {
             "name": "participantId",
@@ -28011,6 +28236,58 @@
         ]
       }
     },
+    "/participant-sample/{sampleId}/exclude-votes": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Excludes a participant sample's votes from the benchmark's scores.",
+        "description": "Every matchup the sample took part in stops counting; the sample is kept, and repeating the call changes nothing.",
+        "parameters": [
+          {
+            "name": "sampleId",
+            "in": "path",
+            "description": "The id of the sample.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/participant/{participantId}/faucet": {
       "delete": {
         "tags": [
@@ -28068,6 +28345,7 @@
           "Faucet"
         ],
         "summary": "Sets the faucet used to auto-generate samples for a participant.",
+        "description": "Returns 403 unless the caller's organization has been granted the Faucets\n capability.",
         "parameters": [
           {
             "name": "participantId",
@@ -28112,6 +28390,58 @@
           }
         },
         "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/participant-sample/{sampleId}/restore-votes": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Restores a participant sample's votes to the benchmark's scores.",
+        "description": "Every matchup the sample took part in counts again; restoring votes never excluded changes nothing.",
+        "parameters": [
+          {
+            "name": "sampleId",
+            "in": "path",
+            "description": "The id of the sample.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
         "security": [
           {
             "OpenIdConnect": [
@@ -29666,7 +29996,7 @@
           "SampleGeneration"
         ],
         "summary": "Re-queues failed items of a sample generation so they run again.",
-        "description": "When no item ids are supplied, every failed item of the generation qualifies. Item ids that\n do not belong to the generation or are not in a failed state are ignored. Returns the ids\n that were re-queued; a generation with no failed items yields an empty result.\n When no failure categories are supplied, the retry covers only the items whose failure a\n re-run can plausibly fix, so items rejected for the request itself — an unknown model,\n refused credentials, a content-policy or configuration rejection — are left alone rather than\n re-run to collect the same rejection. Naming those categories explicitly retries them anyway;\n combining categories with item ids intersects the two.",
+        "description": "When no item ids are supplied, every failed item of the generation qualifies. Item ids that\n do not belong to the generation or are not in a failed state are ignored. Returns the ids\n that were re-queued; a generation with no failed items yields an empty result.\n When no failure categories are supplied, the retry covers only the items whose failure a\n re-run can plausibly fix, so items rejected for the request itself — an unknown model,\n refused credentials, a content-policy or configuration rejection — are left alone rather than\n re-run to collect the same rejection. Naming those categories explicitly retries them anyway;\n combining categories with item ids intersects the two.\n Returns 403 unless the caller's organization has been granted the Faucets capability.",
         "parameters": [
           {
             "name": "sampleGenerationId",
@@ -30849,7 +31179,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetJobDatapointsEndpoint_PagedResultOfOutput"
+                  "$ref": "#/components/schemas/GetJobDatapointsEndpoint_Output"
                 }
               }
             }
@@ -31352,6 +31682,28 @@
               "type": "boolean",
               "default": false
             }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "id",
+                  "-id",
+                  "state",
+                  "-state",
+                  "decisiveness",
+                  "-decisiveness",
+                  "has_responses",
+                  "-has_responses"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
           }
         ],
         "responses": {
@@ -31541,6 +31893,65 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetJobRevisionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/jobs/unlisted/{audienceId}/active": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Returns the running jobs of the unlisted audience, newest first.",
+        "description": "Answers 404 when no unlisted audience has the given id.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the unlisted audience.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUnlistedAudienceActiveJobsEndpoint_Output"
                 }
               }
             }
@@ -39343,6 +39754,125 @@
         ]
       }
     },
+    "/billing/organization/{organizationId}/invoice-recipient": {
+      "get": {
+        "tags": [
+          "InvoiceRecipient"
+        ],
+        "summary": "Gets the email address the organization's invoices are sent to.",
+        "description": "If Rapidata support configured a separate billing email, invoices go there and this address is ignored.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The organization whose invoice recipient to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceRecipient"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "InvoiceRecipient"
+        ],
+        "summary": "Sets the email address the organization's invoices are sent to.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The organization whose invoice recipient to set.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new invoice recipient.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceRecipientInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/payment/checkout": {
       "post": {
         "tags": [
@@ -41248,22 +41778,27 @@
         ]
       }
     },
-    "/rapid/rapid-bag/is-valid": {
-      "get": {
+    "/rapid/viewed": {
+      "post": {
         "tags": [
           "UserRapid"
         ],
-        "summary": "Returns whether the rapid bag associated with the current user is still valid.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IsRapidBagValidEndpoint_Output"
-                }
+        "summary": "Records that the user was shown a rapid whose served model has `reportViewed` set.",
+        "description": "Records no response. Idempotent, and a no-op for rapids served without `reportViewed`.",
+        "requestBody": {
+          "description": "The id of the rapid that was shown.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkRapidViewedEndpoint_Input"
               }
             }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -45496,7 +46031,12 @@
           },
           "isCommonSense": {
             "type": "boolean",
-            "description": "Whether this example should be treated as commonsense validation.\n When true, incorrect answers are not accepted and the example affects global score.\n When null, AI auto-detection will determine if the example is common sense.",
+            "description": "Whether answers to this example count towards the annotator's global userscore; platform admins only.\n When null, AI auto-detection decides and may set this and flagIfIncorrect to true.",
+            "nullable": true
+          },
+          "flagIfIncorrect": {
+            "type": "boolean",
+            "description": "Whether an incorrect answer is rejected and shown to the annotator as wrong.",
             "nullable": true
           },
           "visibility": {
@@ -45554,7 +46094,8 @@
           "Queued",
           "Paused",
           "StaleResults",
-          "SpendLimited"
+          "SpendLimited",
+          "Blocked"
         ]
       },
       "AudienceScope": {
@@ -45763,6 +46304,30 @@
           "audienceId": {
             "type": "string",
             "description": "The unique identifier of the filtered audience. Use this id in job creation."
+          }
+        }
+      },
+      "CreateUnlistedAudienceEndpoint_Input": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the audience."
+          }
+        }
+      },
+      "CreateUnlistedAudienceEndpoint_Output": {
+        "required": [
+          "audienceId"
+        ],
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string",
+            "description": "The id of the created audience. Use it in job creation."
           }
         }
       },
@@ -46535,6 +47100,45 @@
             "type": "string",
             "description": "When the recalculation was created.",
             "format": "date-time"
+          }
+        }
+      },
+      "GetUnlistedAudienceByIdEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "ownerId",
+          "ownerMail",
+          "organizationId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the audience."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the audience."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the audience was created.",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the customer who created the audience.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the customer who created the audience."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the audience."
           }
         }
       },
@@ -48062,7 +48666,12 @@
           },
           "isCommonSense": {
             "type": "boolean",
-            "description": "Whether this example is common sense.",
+            "description": "Whether answers to this example count towards the annotator's global userscore.",
+            "nullable": true
+          },
+          "flagIfIncorrect": {
+            "type": "boolean",
+            "description": "Whether an incorrect answer is rejected and shown to the annotator as wrong.",
             "nullable": true
           },
           "sortIndex": {
@@ -48105,6 +48714,78 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/QueryExamplesForAudienceEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryUnlistedAudiencesEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "ownerId",
+          "ownerMail",
+          "organizationId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The id of the audience."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the audience."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the audience was created.",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "description": "The id of the customer who created the audience.",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string",
+            "description": "The email of the customer who created the audience."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The id of the organization that owns the audience."
+          }
+        }
+      },
+      "QueryUnlistedAudiencesEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryUnlistedAudiencesEndpoint_Output"
             }
           },
           "totalPages": {
@@ -48391,7 +49072,12 @@
           },
           "isCommonSense": {
             "type": "boolean",
-            "description": "Whether this example should be treated as commonsense validation.",
+            "description": "Whether answers to this example count towards the annotator's global userscore; platform admins only.",
+            "nullable": true
+          },
+          "flagIfIncorrect": {
+            "type": "boolean",
+            "description": "Whether an incorrect answer is rejected and shown to the annotator as wrong.",
             "nullable": true
           },
           "sortIndex": {
@@ -48564,29 +49250,6 @@
           }
         }
       },
-      "ChangeExperimentStateEndpoint_Input": {
-        "required": [
-          "action"
-        ],
-        "type": "object",
-        "properties": {
-          "action": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ChangeExperimentStateEndpoint_StateAction"
-              }
-            ],
-            "description": "The lifecycle transition to apply."
-          }
-        }
-      },
-      "ChangeExperimentStateEndpoint_StateAction": {
-        "enum": [
-          "activate",
-          "pause",
-          "complete"
-        ]
-      },
       "ComparisonOperator": {
         "enum": [
           "Equal",
@@ -48632,18 +49295,6 @@
               }
             ],
             "description": "The traffic split; the salt is generated server-side."
-          },
-          "startAt": {
-            "type": "string",
-            "description": "Start of the experiment window.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "endAt": {
-            "type": "string",
-            "description": "End of the experiment window.",
-            "format": "date-time",
-            "nullable": true
           }
         }
       },
@@ -48759,12 +49410,10 @@
           "id",
           "name",
           "description",
-          "state",
           "flags",
           "split",
           "createdBy",
-          "createdAt",
-          "updatedAt"
+          "createdAt"
         ],
         "type": "object",
         "properties": {
@@ -48779,14 +49428,6 @@
           "description": {
             "type": "string",
             "description": "Human-readable description of the hypothesis."
-          },
-          "state": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ExperimentState"
-              }
-            ],
-            "description": "The lifecycle state."
           },
           "flags": {
             "allOf": [
@@ -48807,18 +49448,6 @@
             ],
             "description": "The traffic split and its server-generated salt."
           },
-          "startAt": {
-            "type": "string",
-            "description": "Outside the [startAt, endAt) window the experiment is treated as inactive.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "endAt": {
-            "type": "string",
-            "description": "End of the experiment window; the experiment auto-completes afterwards.",
-            "format": "date-time",
-            "nullable": true
-          },
           "createdBy": {
             "type": "string",
             "description": "The email of the admin who created the experiment."
@@ -48826,11 +49455,6 @@
           "createdAt": {
             "type": "string",
             "description": "When the experiment was created.",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "description": "When the experiment was last changed.",
             "format": "date-time"
           }
         },
@@ -48851,14 +49475,6 @@
             "type": "string"
           }
         }
-      },
-      "ExperimentState": {
-        "enum": [
-          "draft",
-          "active",
-          "paused",
-          "completed"
-        ]
       },
       "GetBoostInsightsEndpoint_AudienceOutput": {
         "required": [
@@ -50303,6 +50919,9 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "advanceOnView": {
+            "type": "boolean"
           }
         }
       },
@@ -51178,40 +51797,6 @@
           }
         }
       },
-      "UpdateExperimentEndpoint_Input": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string",
-            "description": "Human-readable description of the hypothesis.",
-            "nullable": true
-          },
-          "treatmentBps": {
-            "type": "integer",
-            "description": "Treatment share in basis points (0–10000).",
-            "format": "int32",
-            "nullable": true
-          },
-          "endAt": {
-            "type": "string",
-            "description": "End of the experiment window.",
-            "format": "date-time",
-            "nullable": true
-          },
-          "flags": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/FeatureFlag"
-                },
-                "nullable": true
-              }
-            ],
-            "description": "Only updatable while the experiment is a draft."
-          }
-        }
-      },
       "UpdateOwnerTierOverrideEndpoint_Input": {
         "required": [
           "organizationId"
@@ -51324,23 +51909,34 @@
         }
       },
       "CreateDatapointEndpoint_Input": {
-        "required": [
-          "asset"
-        ],
         "type": "object",
         "properties": {
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegmentInput"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The datapoint's values, keyed by the dataset's schema. Replaces the legacy fields below."
+          },
           "asset": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ],
-            "description": "The asset within the datapoint."
+            "description": "The asset within the datapoint. Required unless segments are sent.",
+            "deprecated": true
           },
           "context": {
             "type": "string",
             "description": "An additional context to show the users when solving the rapid.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "contextAsset": {
             "allOf": [
@@ -51348,7 +51944,8 @@
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ],
-            "description": "An optional asset context for the datapoint."
+            "description": "An optional asset context for the datapoint.",
+            "deprecated": true
           },
           "sortIndex": {
             "type": "integer",
@@ -51364,7 +51961,8 @@
           "transcription": {
             "type": "string",
             "description": "For audio or video assets, an optional transcription of the content.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "privateMetadata": {
             "allOf": [
@@ -51402,6 +52000,18 @@
           "name": {
             "type": "string",
             "description": "The name to give to the new dataset."
+          },
+          "schema": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegmentDefinition"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The segments every datapoint of the dataset may carry, in render order."
           }
         },
         "description": "The input for the create dataset endpoint."
@@ -51429,10 +52039,23 @@
             "type": "string",
             "description": "The name of the group."
           },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegmentInput"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The group's values, keyed by the dataset's schema. Replaces the legacy fields below."
+          },
           "context": {
             "type": "string",
             "description": "The optional text context for the group.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "contextAsset": {
             "allOf": [
@@ -51440,7 +52063,8 @@
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ],
-            "description": "The optional asset context for the group."
+            "description": "The optional asset context for the group.",
+            "deprecated": true
           }
         }
       },
@@ -51451,12 +52075,136 @@
           "Failed"
         ]
       },
+      "DatasetSegment": {
+        "required": [
+          "key",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/DatasetSegmentKind"
+          },
+          "originalText": {
+            "type": "string",
+            "nullable": true
+          },
+          "englishText": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetSegmentOption"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "DatasetSegmentDefinition": {
+        "required": [
+          "key",
+          "kind",
+          "required"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/DatasetSegmentKind"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "maxLength": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "DatasetSegmentInput": {
+        "required": [
+          "key",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/DatasetSegmentKind"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "nullable": true
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetSegmentOption"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "DatasetSegmentKind": {
+        "enum": [
+          "Text",
+          "Asset",
+          "OptionList"
+        ]
+      },
+      "DatasetSegmentOption": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
       "GetDatapointEndpoint_Output": {
         "required": [
           "id",
           "datasetId",
           "state",
-          "asset",
+          "segments",
           "createdAt"
         ],
         "type": "object",
@@ -51483,12 +52231,14 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The asset that will be displayed to the users."
+            "description": "The asset that will be displayed to the users.",
+            "deprecated": true
           },
           "context": {
             "type": "string",
             "description": "Optional context text shown to annotators alongside the datapoint.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "contextAsset": {
             "allOf": [
@@ -51496,7 +52246,19 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "Optional context media (reference image/audio/video) shown alongside the datapoint."
+            "description": "Optional context media (reference image/audio/video) shown alongside the datapoint.",
+            "deprecated": true
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegment"
+                }
+              }
+            ],
+            "description": "Every value of the datapoint, keyed by its dataset's schema."
           },
           "sortIndex": {
             "type": "integer",
@@ -51513,13 +52275,25 @@
       },
       "GetDatasetByIdEndpoint_Output": {
         "required": [
-          "name"
+          "name",
+          "schema"
         ],
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
             "description": "The name of the dataset."
+          },
+          "schema": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegmentDefinition"
+                }
+              }
+            ],
+            "description": "The segments every datapoint of the dataset may carry, in render order."
           }
         }
       },
@@ -51607,7 +52381,7 @@
         "required": [
           "id",
           "datasetId",
-          "asset"
+          "segments"
         ],
         "type": "object",
         "properties": {
@@ -51625,12 +52399,14 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The asset that will be displayed to the users."
+            "description": "The asset that will be displayed to the users.",
+            "deprecated": true
           },
           "context": {
             "type": "string",
             "description": "Optional context text shown to annotators alongside the datapoint.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "contextAsset": {
             "allOf": [
@@ -51638,7 +52414,19 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "Optional context media (reference image/audio/video) shown alongside the datapoint."
+            "description": "Optional context media (reference image/audio/video) shown alongside the datapoint.",
+            "deprecated": true
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegment"
+                }
+              }
+            ],
+            "description": "Every value of the datapoint, keyed by its dataset's schema."
           }
         }
       },
@@ -53525,11 +54313,11 @@
         "enum": [
           "SkipContentCheck",
           "PreheatBoost",
-          "ManagedImageFaucet",
           "RequestFeatures",
           "RunExperiments",
-          "ManagedForgeFaucet",
-          "UploadLongMedia"
+          "UploadLongMedia",
+          "Faucets",
+          "BringYourOwnAudience"
         ],
         "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
       },
@@ -55172,6 +55960,7 @@
           "UsdPerImage",
           "UsdPerVideoSecond",
           "UsdPerMillionTokens",
+          "UsdPerSample",
           null
         ]
       },
@@ -55202,6 +55991,18 @@
             "description": "Optional seed for deterministic matchup selection, applied to every created run. Omit to\n have one generated, which still keeps the runs aligned with each other.",
             "format": "int64",
             "nullable": true
+          },
+          "leaderboardIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional leaderboards of the benchmark to run on, hidden or excluded ones included. Omit\n or leave empty to target every visible leaderboard included in the benchmark overall."
           }
         }
       },
@@ -55221,7 +56022,7 @@
                 }
               }
             ],
-            "description": "The created runs, one per leaderboard."
+            "description": "The created runs, one per targeted leaderboard."
           },
           "seed": {
             "type": "integer",
@@ -55774,6 +56575,12 @@
               }
             ],
             "description": "The asset input for the sample."
+          },
+          "cost": {
+            "type": "number",
+            "description": "What generating the sample cost in USD, or null if unknown. The participant's calculated\n cost is the average over its samples that carry one.",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -57314,7 +58121,7 @@
           },
           "cost": {
             "type": "number",
-            "description": "The price of one costUnit of the model in USD, or null if the price is unknown.",
+            "description": "The manually set price of one costUnit in USD, or null if none is set.",
             "format": "double",
             "nullable": true
           },
@@ -57326,6 +58133,12 @@
               }
             ],
             "description": "The unit cost is quoted in, or null if the price is unknown.",
+            "nullable": true
+          },
+          "calculatedCost": {
+            "type": "number",
+            "description": "Average measured cost of one sample in USD, or null if no sample has a cost. Standings show\n it in place of cost while cost is null.",
+            "format": "double",
             "nullable": true
           },
           "logo": {
@@ -57748,6 +58561,10 @@
             "type": "string",
             "description": "The timestamp when the sample was created.",
             "format": "date-time"
+          },
+          "votesExcluded": {
+            "type": "boolean",
+            "description": "Whether the sample's matchups are excluded from the benchmark's scores."
           },
           "ownerId": {
             "type": "string",
@@ -58179,6 +58996,9 @@
             "type": "string",
             "format": "date-time"
           },
+          "votesExcluded": {
+            "type": "boolean"
+          },
           "ownerId": {
             "type": "string",
             "format": "uuid",
@@ -58268,6 +59088,10 @@
             "type": "string",
             "description": "The timestamp when the sample was created.",
             "format": "date-time"
+          },
+          "votesExcluded": {
+            "type": "boolean",
+            "description": "Whether the sample's matchups are excluded from the benchmark's scores."
           },
           "ownerId": {
             "type": "string",
@@ -58466,6 +59290,10 @@
             "type": "string",
             "description": "The timestamp when the sample was created.",
             "format": "date-time"
+          },
+          "votesExcluded": {
+            "type": "boolean",
+            "description": "Whether the sample's matchups are excluded from the benchmark's scores."
           },
           "ownerId": {
             "type": "string",
@@ -61180,7 +62008,8 @@
           "totalMatches",
           "responseCount",
           "isEvaluating",
-          "isDisabled"
+          "isDisabled",
+          "isPartiallyEvaluated"
         ],
         "type": "object",
         "properties": {
@@ -61263,6 +62092,9 @@
               }
             ],
             "nullable": true
+          },
+          "isPartiallyEvaluated": {
+            "type": "boolean"
           }
         }
       },
@@ -63473,21 +64305,19 @@
         },
         "description": "The estimated cost of a job."
       },
-      "GetJobDatapointsEndpoint_Output": {
+      "GetJobDatapointsEndpoint_Datapoint": {
         "required": [
           "id",
           "datasetId",
-          "asset"
+          "segments"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "description": "The datapoint id."
+            "type": "string"
           },
           "datasetId": {
-            "type": "string",
-            "description": "The id of the dataset the datapoint belongs to."
+            "type": "string"
           },
           "asset": {
             "allOf": [
@@ -63495,12 +64325,12 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The datapoint asset."
+            "deprecated": true
           },
           "context": {
             "type": "string",
-            "description": "The optional textual context.",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "contextAsset": {
             "allOf": [
@@ -63508,40 +64338,68 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The optional context asset."
+            "deprecated": true
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetSegment"
+            }
           }
         }
       },
-      "GetJobDatapointsEndpoint_PagedResultOfOutput": {
+      "GetJobDatapointsEndpoint_Output": {
         "required": [
           "total",
           "page",
           "pageSize",
-          "items"
+          "totalPages",
+          "items",
+          "schema"
         ],
         "type": "object",
         "properties": {
           "total": {
             "type": "integer",
+            "description": "The total number of datapoints.",
             "format": "int64"
           },
           "page": {
             "type": "integer",
+            "description": "The current page.",
             "format": "int32"
           },
           "pageSize": {
             "type": "integer",
+            "description": "The size of the page.",
             "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetJobDatapointsEndpoint_Output"
-            }
           },
           "totalPages": {
             "type": "integer",
+            "description": "The total number of pages.",
             "format": "int32"
+          },
+          "items": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetJobDatapointsEndpoint_Datapoint"
+                }
+              }
+            ],
+            "description": "The datapoints on the current page."
+          },
+          "schema": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/DatasetSegmentDefinition"
+                }
+              }
+            ],
+            "description": "The segments every datapoint of the dataset may carry, in render order."
           }
         }
       },
@@ -64046,6 +64904,59 @@
               }
             ],
             "description": "The list of publicly available orders."
+          }
+        }
+      },
+      "GetUnlistedAudienceActiveJobsEndpoint_Output": {
+        "required": [
+          "audienceId",
+          "audienceName",
+          "jobs"
+        ],
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string",
+            "description": "The id of the audience."
+          },
+          "audienceName": {
+            "type": "string",
+            "description": "The name of the audience."
+          },
+          "jobs": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetUnlistedAudienceActiveJobsEndpoint_Output_Job"
+                }
+              }
+            ],
+            "description": "The running jobs, newest first."
+          }
+        }
+      },
+      "GetUnlistedAudienceActiveJobsEndpoint_Output_Job": {
+        "required": [
+          "jobId",
+          "campaignId",
+          "name",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "campaignId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -66026,6 +66937,9 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "advanceOnView": {
+            "type": "boolean"
           }
         }
       },
@@ -69903,6 +70817,33 @@
           }
         }
       },
+      "InvoiceRecipient": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The invoice recipient email, or null when the organization has not been billed yet.",
+            "nullable": true
+          }
+        },
+        "description": "The address an organization's invoices are emailed to."
+      },
+      "InvoiceRecipientInput": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The invoice recipient email."
+          }
+        },
+        "description": "The new address an organization's invoices are emailed to."
+      },
       "InvoiceStatus": {
         "enum": [
           "Generating",
@@ -72484,6 +73425,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -72534,6 +73478,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -72584,6 +73531,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -72634,6 +73584,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -72684,6 +73637,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -72734,6 +73690,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -72791,6 +73750,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -72841,6 +73803,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -72864,6 +73829,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           },
           "context": {
             "type": "object",
@@ -72948,6 +73916,9 @@
           },
           "id": {
             "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
           }
         }
       },
@@ -73074,18 +74045,6 @@
           "threshold": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "IsRapidBagValidEndpoint_Output": {
-        "required": [
-          "isValid"
-        ],
-        "type": "object",
-        "properties": {
-          "isValid": {
-            "type": "boolean",
-            "description": "Whether the rapid bag is valid."
           }
         }
       },
@@ -73443,6 +74402,18 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          }
+        }
+      },
+      "MarkRapidViewedEndpoint_Input": {
+        "required": [
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string",
+            "description": "The ID of the Rapid that was shown."
           }
         }
       },
@@ -75329,7 +76300,8 @@
       "name": "Rapidata Audience API",
       "tags": [
         "Audience",
-        "Examples"
+        "Examples",
+        "UnlistedAudience"
       ]
     },
     {
@@ -75411,6 +76383,7 @@
         "VolumeDiscount",
         "BillingAccount",
         "Invoice",
+        "InvoiceRecipient",
         "Payment"
       ]
     },

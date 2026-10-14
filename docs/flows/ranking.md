@@ -4,6 +4,12 @@ Use a ranking flow to compare the items in each batch and collect a score for ev
 
 For the shared lifecycle and flow management methods, see the [flow overview](../flows.md).
 
+## Human Rewards for GRPO
+
+A ranking batch returns one score per item, which is the group reward that GRPO needs. Submit the G samples generated for a prompt as one batch, and use the scores in place of a learned reward model.
+
+![Ranking flows supply human feedback as the reward signal for GRPO training of a flow matching text-to-image model](../media/flows_grpo.svg)
+
 ## 1. Create a Flow
 
 Start by creating a ranking flow with an instruction that will be shown to evaluators for each comparison:

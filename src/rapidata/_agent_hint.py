@@ -21,6 +21,7 @@ makes the home directory read-only. Kept free of client imports:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -253,7 +254,35 @@ def agent_hint() -> str | None:
         return None
 
 
+_hint_shown = False
+
+
 def print_agent_hint() -> None:
+    global _hint_shown
     hint = agent_hint()
     if hint:
+        _hint_shown = True
         print(hint, file=sys.stderr)
+
+
+def agent_trace_attributes() -> dict[str, str | bool]:
+    """Return the agent session's hint and skill state for the SDK's trace resource, or ``{}`` outside an agent.
+
+    ``agent.session.id`` is shared by every SDK process the same agent session starts.
+    """
+    try:
+        if detected_coding_agent() is None:
+            return {}
+        attrs: dict[str, str | bool] = {
+            "agent.hint.shown": _hint_shown,
+            "agent.skill.read": _read_this_session(_load_state()),
+        }
+        key = _session_key()
+        if key:
+            attrs["agent.session.id"] = hashlib.sha256(key.encode()).hexdigest()[:16]
+        copies = installed_copies()
+        if copies:
+            attrs["agent.skill.installed_version"] = copies[0][3]
+        return attrs
+    except Exception:
+        return {}

@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.attach_category_rapid_category import AttachCategoryRapidCategory
 from rapidata.api_client.models.feature_flag import FeatureFlag
@@ -38,7 +38,8 @@ class IRapidAttachCategoryRapid(LazyValidatedModel):
     context_asset: Optional[IAsset] = Field(default=None, alias="contextAsset")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     id: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "categories", "title", "asset", "context", "contextAsset", "featureFlags", "id"]
+    report_viewed: Optional[StrictBool] = Field(default=None, alias="reportViewed")
+    __properties: ClassVar[List[str]] = ["_t", "categories", "title", "asset", "context", "contextAsset", "featureFlags", "id", "reportViewed"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -137,7 +138,8 @@ class IRapidAttachCategoryRapid(LazyValidatedModel):
             "context": TranslatedString.from_dict(obj["context"]) if obj.get("context") is not None else None,
             "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
-            "id": obj.get("id")
+            "id": obj.get("id"),
+            "reportViewed": obj.get("reportViewed")
         }
         try:
             _obj = cls.model_validate(_data)

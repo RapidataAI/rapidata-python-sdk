@@ -41,10 +41,11 @@ class QueryExamplesForAudienceEndpointOutput(LazyValidatedModel):
     context_asset: Optional[IAsset] = Field(default=None, description="The context asset for the example.", alias="contextAsset")
     explanation: Optional[StrictStr] = Field(default=None, description="The explanation for the example.")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability of a random correct answer.", alias="randomCorrectProbability")
-    is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this example is common sense.", alias="isCommonSense")
+    is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether answers to this example count towards the annotator's global userscore.", alias="isCommonSense")
+    flag_if_incorrect: Optional[StrictBool] = Field(default=None, description="Whether an incorrect answer is rejected and shown to the annotator as wrong.", alias="flagIfIncorrect")
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index that controls serving order.", alias="sortIndex")
     visibility: Optional[ExampleVisibility] = Field(default=None, description="The visibility of this example. Public examples are visible to all customers.")
-    __properties: ClassVar[List[str]] = ["id", "rapidId", "asset", "payload", "correctCount", "incorrectCount", "truth", "context", "contextAsset", "explanation", "randomCorrectProbability", "isCommonSense", "sortIndex", "visibility"]
+    __properties: ClassVar[List[str]] = ["id", "rapidId", "asset", "payload", "correctCount", "incorrectCount", "truth", "context", "contextAsset", "explanation", "randomCorrectProbability", "isCommonSense", "flagIfIncorrect", "sortIndex", "visibility"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -113,6 +114,11 @@ class QueryExamplesForAudienceEndpointOutput(LazyValidatedModel):
         if self.is_common_sense is None and "is_common_sense" in self.model_fields_set:
             _dict['isCommonSense'] = None
 
+        # set to None if flag_if_incorrect (nullable) is None
+        # and model_fields_set contains the field
+        if self.flag_if_incorrect is None and "flag_if_incorrect" in self.model_fields_set:
+            _dict['flagIfIncorrect'] = None
+
         return _dict
 
     @classmethod
@@ -137,6 +143,7 @@ class QueryExamplesForAudienceEndpointOutput(LazyValidatedModel):
             "explanation": obj.get("explanation"),
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "isCommonSense": obj.get("isCommonSense"),
+            "flagIfIncorrect": obj.get("flagIfIncorrect"),
             "sortIndex": obj.get("sortIndex"),
             "visibility": obj.get("visibility")
         }

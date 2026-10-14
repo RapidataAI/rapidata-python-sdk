@@ -39,6 +39,7 @@ from rapidata.rapidata_client.settings.classify_equirectangular import (
 from rapidata.rapidata_client.settings.translate_text_assets import (
     TranslateTextAssetsSetting,
 )
+from rapidata.rapidata_client.settings.pin_context_media import PinContextMediaSetting
 
 
 class RapidataSettings:
@@ -67,6 +68,7 @@ class RapidataSettings:
         CompareEquirectangular (CompareEquirectangularSetting): Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.
         ClassifyEquirectangular (ClassifyEquirectangularSetting): Enables equirectangular (360-degree) image mode for classify tasks. Renders a single spherical viewer instead of the standard image view.
         TranslateTextAssets (TranslateTextAssetsSetting): Translates text assets, both options and context (such as the two text options of a compare task), into the annotator's language. Off unless this setting is added: text assets are shown exactly as provided.
+        PinContextMedia (PinContextMediaSetting): Shows the context image or video next to the task for the whole rapid, instead of inside the collapsible context drawer.
 
     Example:
         ```python
@@ -96,3 +98,4 @@ class RapidataSettings:
     CompareEquirectangular = CompareEquirectangularSetting
     ClassifyEquirectangular = ClassifyEquirectangularSetting
     TranslateTextAssets = TranslateTextAssetsSetting
+    PinContextMedia = PinContextMediaSetting

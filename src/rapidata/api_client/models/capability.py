@@ -26,11 +26,11 @@ class Capability(str, Enum):
     """
     SKIPCONTENTCHECK = 'SkipContentCheck'
     PREHEATBOOST = 'PreheatBoost'
-    MANAGEDIMAGEFAUCET = 'ManagedImageFaucet'
     REQUESTFEATURES = 'RequestFeatures'
     RUNEXPERIMENTS = 'RunExperiments'
-    MANAGEDFORGEFAUCET = 'ManagedForgeFaucet'
     UPLOADLONGMEDIA = 'UploadLongMedia'
+    FAUCETS = 'Faucets'
+    BRINGYOUROWNAUDIENCE = 'BringYourOwnAudience'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

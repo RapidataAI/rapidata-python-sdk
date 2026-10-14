@@ -217,6 +217,8 @@ Image URLs shown as reference context alongside each datapoint. Useful when you 
 
 **Constraints:** If provided, must have the same length as `datapoints`. Each entry is itself a list of image URLs / paths. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
 
+Media contexts open in a collapsible drawer. If there is enough space next to the task, [`PinContextMediaSetting()`](#pincontextmediasetting) keeps the context visible instead.
+
 ```python
 # One reference image per datapoint (each inner list has one entry)
 datapoints=["edited1.jpg", "edited2.jpg"],
@@ -311,6 +313,7 @@ Keeps answer options in the order you specified. By default, options are randomi
 from rapidata import NoShuffleSetting
 
 job_definition = client.job.create_classification_job_definition(
+    name="Image Quality Rating",
     instruction="Rate the quality of this image",
     answer_options=["1: Poor", "2: Fair", "3: Good", "4: Excellent"],
     datapoints=["image.jpg"],
@@ -363,6 +366,23 @@ job_definition = client.job.create_compare_job_definition(
     data_type="text",
     settings=[RapidataSettings.TranslateTextAssets()]
 )
+```
+
+#### `PinContextMediaSetting()`
+
+Shows the media context next to the task for the whole rapid, instead of inside the collapsible context drawer. Only use it when the task screen has enough space for the context next to the task. Inspect the preview carefully before assigning the job. A multi-asset media context is reduced to its first asset. Works with all task types.
+
+```python
+from rapidata import PinContextMediaSetting
+
+job_definition = client.job.create_compare_job_definition(
+    name="Video Edit Faithfulness",
+    instruction="Which video stays closer to the reference?",
+    datapoints=[["edit_a.mp4", "edit_b.mp4"]],
+    media_contexts=[["reference.mp4"]],
+    settings=[PinContextMediaSetting()]
+)
+job_definition.preview()  # check the context fits next to the task
 ```
 
 ---

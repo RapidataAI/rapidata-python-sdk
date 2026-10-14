@@ -10,7 +10,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.resources import Resource
 from rapidata import __version__
-from rapidata._agent_hint import detected_coding_agent
+from rapidata._agent_hint import agent_trace_attributes, detected_coding_agent
 from .logging_config import LoggingConfig, register_config_handler
 from rapidata.rapidata_client.config import logger
 
@@ -29,6 +29,7 @@ def get_system_attributes() -> dict[str, str | int | bool | None]:
         attrs["agent.detected"] = agent is not None
         if agent:
             attrs["agent.name"] = agent
+            attrs.update(agent_trace_attributes())
         logger.debug(f"System attributes: {attrs}")
         return attrs
     except Exception:

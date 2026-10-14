@@ -15,9 +15,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_asset import IAsset
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.dataset_segment_definition import DatasetSegmentDefinition
+from rapidata.api_client.models.get_job_datapoints_endpoint_datapoint import GetJobDatapointsEndpointDatapoint
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -27,12 +28,13 @@ class GetJobDatapointsEndpointOutput(LazyValidatedModel):
     """
     GetJobDatapointsEndpointOutput
     """ # noqa: E501
-    id: StrictStr = Field(description="The datapoint id.")
-    dataset_id: StrictStr = Field(description="The id of the dataset the datapoint belongs to.", alias="datasetId")
-    asset: IAsset = Field(description="The datapoint asset.")
-    context: Optional[StrictStr] = Field(default=None, description="The optional textual context.")
-    context_asset: Optional[IAsset] = Field(default=None, description="The optional context asset.", alias="contextAsset")
-    __properties: ClassVar[List[str]] = ["id", "datasetId", "asset", "context", "contextAsset"]
+    total: StrictInt = Field(description="The total number of datapoints.")
+    page: StrictInt = Field(description="The current page.")
+    page_size: StrictInt = Field(description="The size of the page.", alias="pageSize")
+    total_pages: StrictInt = Field(description="The total number of pages.", alias="totalPages")
+    items: List[GetJobDatapointsEndpointDatapoint]
+    var_schema: List[DatasetSegmentDefinition] = Field(alias="schema")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "totalPages", "items", "schema"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -69,17 +71,20 @@ class GetJobDatapointsEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of context_asset
-        if self.context_asset:
-            _dict['contextAsset'] = self.context_asset.to_dict()
-        # set to None if context (nullable) is None
-        # and model_fields_set contains the field
-        if self.context is None and "context" in self.model_fields_set:
-            _dict['context'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in var_schema (list)
+        _items = []
+        if self.var_schema:
+            for _item_var_schema in self.var_schema:
+                if _item_var_schema:
+                    _items.append(_item_var_schema.to_dict())
+            _dict['schema'] = _items
         return _dict
 
     @classmethod
@@ -92,11 +97,12 @@ class GetJobDatapointsEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "id": obj.get("id"),
-            "datasetId": obj.get("datasetId"),
-            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "context": obj.get("context"),
-            "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None
+            "total": obj.get("total"),
+            "page": obj.get("page"),
+            "pageSize": obj.get("pageSize"),
+            "totalPages": obj.get("totalPages"),
+            "items": [GetJobDatapointsEndpointDatapoint.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "schema": [DatasetSegmentDefinition.from_dict(_item) for _item in obj["schema"]] if obj.get("schema") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

@@ -35,10 +35,11 @@ class UpdateAudienceExampleEndpointInput(LazyValidatedModel):
     context: Optional[StrictStr] = Field(default=None, description="An optional text context that will be shown to the user.")
     context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset that will be used as context to show to the user.", alias="contextAsset")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability that if the user answers at random that they'll be correct.", alias="randomCorrectProbability")
-    is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this example should be treated as commonsense validation.", alias="isCommonSense")
+    is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether answers to this example count towards the annotator's global userscore; platform admins only.", alias="isCommonSense")
+    flag_if_incorrect: Optional[StrictBool] = Field(default=None, description="Whether an incorrect answer is rejected and shown to the annotator as wrong.", alias="flagIfIncorrect")
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index that controls the serving order of this example.", alias="sortIndex")
     visibility: Optional[ExampleVisibility] = Field(default=None, description="Controls who can see this example. Public examples are visible to all customers.  Private examples are only visible to the customer who created them and admins.")
-    __properties: ClassVar[List[str]] = ["truth", "instructionText", "explanation", "context", "contextAsset", "randomCorrectProbability", "isCommonSense", "sortIndex", "visibility"]
+    __properties: ClassVar[List[str]] = ["truth", "instructionText", "explanation", "context", "contextAsset", "randomCorrectProbability", "isCommonSense", "flagIfIncorrect", "sortIndex", "visibility"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -111,6 +112,11 @@ class UpdateAudienceExampleEndpointInput(LazyValidatedModel):
         if self.is_common_sense is None and "is_common_sense" in self.model_fields_set:
             _dict['isCommonSense'] = None
 
+        # set to None if flag_if_incorrect (nullable) is None
+        # and model_fields_set contains the field
+        if self.flag_if_incorrect is None and "flag_if_incorrect" in self.model_fields_set:
+            _dict['flagIfIncorrect'] = None
+
         return _dict
 
     @classmethod
@@ -130,6 +136,7 @@ class UpdateAudienceExampleEndpointInput(LazyValidatedModel):
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "isCommonSense": obj.get("isCommonSense"),
+            "flagIfIncorrect": obj.get("flagIfIncorrect"),
             "sortIndex": obj.get("sortIndex"),
             "visibility": obj.get("visibility")
         }

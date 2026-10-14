@@ -11,6 +11,9 @@ from rapidata.rapidata_client.datapoints.assets.constants import (
 )
 from rapidata.rapidata_client.config import logger
 
+# Several entries go up as one multi-asset, which the backend caps at this size.
+MAX_MEDIA_CONTEXT_ASSETS = 10
+
 if TYPE_CHECKING:
     from rapidata.api_client.models.asset_type import AssetType
     from rapidata.api_client.models.prompt_type import PromptType
@@ -45,6 +48,10 @@ def coerce_media_context(value: object) -> list[str] | None:
         if any(not isinstance(item, str) or item == "" for item in value):
             raise ValueError(
                 "Every entry in a media_context list must be a non-empty string."
+            )
+        if len(value) > MAX_MEDIA_CONTEXT_ASSETS:
+            raise ValueError(
+                f"media_context can hold at most {MAX_MEDIA_CONTEXT_ASSETS} entries, got {len(value)}."
             )
         return value
     raise ValueError(

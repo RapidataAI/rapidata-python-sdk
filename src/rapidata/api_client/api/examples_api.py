@@ -656,6 +656,7 @@ class ExamplesApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         visibility: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by visibility.")] = None,
         is_common_sense: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_common_sense.")] = None,
+        flag_if_incorrect: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by flag_if_incorrect.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -685,6 +686,8 @@ class ExamplesApi:
         :type visibility: AudienceAudienceIdJobsGetJobIdParameter
         :param is_common_sense: Filter by is_common_sense.
         :type is_common_sense: AudienceAudienceIdJobsGetJobIdParameter
+        :param flag_if_incorrect: Filter by flag_if_incorrect.
+        :type flag_if_incorrect: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -716,6 +719,7 @@ class ExamplesApi:
             sort=sort,
             visibility=visibility,
             is_common_sense=is_common_sense,
+            flag_if_incorrect=flag_if_incorrect,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -749,6 +753,7 @@ class ExamplesApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         visibility: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by visibility.")] = None,
         is_common_sense: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_common_sense.")] = None,
+        flag_if_incorrect: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by flag_if_incorrect.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -778,6 +783,8 @@ class ExamplesApi:
         :type visibility: AudienceAudienceIdJobsGetJobIdParameter
         :param is_common_sense: Filter by is_common_sense.
         :type is_common_sense: AudienceAudienceIdJobsGetJobIdParameter
+        :param flag_if_incorrect: Filter by flag_if_incorrect.
+        :type flag_if_incorrect: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -809,6 +816,7 @@ class ExamplesApi:
             sort=sort,
             visibility=visibility,
             is_common_sense=is_common_sense,
+            flag_if_incorrect=flag_if_incorrect,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -842,6 +850,7 @@ class ExamplesApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         visibility: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by visibility.")] = None,
         is_common_sense: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_common_sense.")] = None,
+        flag_if_incorrect: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by flag_if_incorrect.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -871,6 +880,8 @@ class ExamplesApi:
         :type visibility: AudienceAudienceIdJobsGetJobIdParameter
         :param is_common_sense: Filter by is_common_sense.
         :type is_common_sense: AudienceAudienceIdJobsGetJobIdParameter
+        :param flag_if_incorrect: Filter by flag_if_incorrect.
+        :type flag_if_incorrect: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -902,6 +913,7 @@ class ExamplesApi:
             sort=sort,
             visibility=visibility,
             is_common_sense=is_common_sense,
+            flag_if_incorrect=flag_if_incorrect,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -930,6 +942,7 @@ class ExamplesApi:
         sort,
         visibility,
         is_common_sense,
+        flag_if_incorrect,
         logic,
         _request_auth,
         _content_type,
@@ -998,6 +1011,21 @@ class ExamplesApi:
                             _query_params.append(('is_common_sense[' + _k + ']', _item))
                     else:
                         _query_params.append(('is_common_sense[' + _k + ']', _v))
+        if flag_if_incorrect is not None:
+            _param_val = flag_if_incorrect
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('flag_if_incorrect[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('flag_if_incorrect[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))

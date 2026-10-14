@@ -10,6 +10,9 @@ from rapidata.rapidata_client.config import logger, rapidata_config
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+from rapidata.rapidata_client.datapoints._default_segments import (
+    build_default_segments,
+)
 
 if TYPE_CHECKING:
     from rapidata.api_client.models.create_datapoint_endpoint_input import (
@@ -46,10 +49,12 @@ class DatapointUploader:
         )
 
         payload = CreateDatapointEndpointInput(
-            asset=uploaded_asset,
-            context=context,
-            contextAsset=context_asset,
-            transcription=datapoint.sentence,
+            segments=build_default_segments(
+                asset=uploaded_asset,
+                context=context,
+                context_asset=context_asset,
+                transcription=datapoint.sentence,
+            ),
             sortIndex=index,
             group=datapoint.group,
             privateMetadata=datapoint.private_metadata,

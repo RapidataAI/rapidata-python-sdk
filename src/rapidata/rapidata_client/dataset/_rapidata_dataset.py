@@ -521,6 +521,9 @@ class RapidataDataset:
         from rapidata.api_client.models.create_dataset_group_endpoint_input import (
             CreateDatasetGroupEndpointInput,
         )
+        from rapidata.rapidata_client.datapoints._default_segments import (
+            build_default_segments,
+        )
 
         # Collect unique groups (first occurrence per group wins for context)
         groups: dict[str, tuple[str | None, list[str] | None]] = {}
@@ -548,8 +551,9 @@ class RapidataDataset:
                 dataset_id=self.id,
                 create_dataset_group_endpoint_input=CreateDatasetGroupEndpointInput(
                     group=group_id,
-                    context=context,
-                    contextAsset=context_asset,
+                    segments=build_default_segments(
+                        context=context, context_asset=context_asset
+                    ),
                 ),
             )
 

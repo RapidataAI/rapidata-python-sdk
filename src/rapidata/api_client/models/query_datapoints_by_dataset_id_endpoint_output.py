@@ -16,8 +16,8 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_asset import IAsset
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.dataset_segment import DatasetSegment
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,10 +29,8 @@ class QueryDatapointsByDatasetIdEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The id of the datapoint.")
     dataset_id: StrictStr = Field(description="The id of the dataset this datapoint belongs to.", alias="datasetId")
-    asset: IAsset = Field(description="The asset that will be displayed to the users.")
-    context: Optional[StrictStr] = Field(default=None, description="Optional context text shown to annotators alongside the datapoint.")
-    context_asset: Optional[IAsset] = Field(default=None, description="Optional context media (reference image/audio/video) shown alongside the datapoint.", alias="contextAsset")
-    __properties: ClassVar[List[str]] = ["id", "datasetId", "asset", "context", "contextAsset"]
+    segments: List[DatasetSegment]
+    __properties: ClassVar[List[str]] = ["id", "datasetId", "segments"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -69,17 +67,13 @@ class QueryDatapointsByDatasetIdEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of context_asset
-        if self.context_asset:
-            _dict['contextAsset'] = self.context_asset.to_dict()
-        # set to None if context (nullable) is None
-        # and model_fields_set contains the field
-        if self.context is None and "context" in self.model_fields_set:
-            _dict['context'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in segments (list)
+        _items = []
+        if self.segments:
+            for _item_segments in self.segments:
+                if _item_segments:
+                    _items.append(_item_segments.to_dict())
+            _dict['segments'] = _items
         return _dict
 
     @classmethod
@@ -94,9 +88,7 @@ class QueryDatapointsByDatasetIdEndpointOutput(LazyValidatedModel):
         _data = {
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
-            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "context": obj.get("context"),
-            "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None
+            "segments": [DatasetSegment.from_dict(_item) for _item in obj["segments"]] if obj.get("segments") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)
