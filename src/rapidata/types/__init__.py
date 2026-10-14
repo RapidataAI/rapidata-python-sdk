@@ -80,6 +80,7 @@ from rapidata.rapidata_client.settings.compare_panorama import ComparePanoramaSe
 from rapidata.rapidata_client.settings.compare_equirectangular import CompareEquirectangularSetting
 from rapidata.rapidata_client.settings.classify_equirectangular import ClassifyEquirectangularSetting
 from rapidata.rapidata_client.settings.translate_text_assets import TranslateTextAssetsSetting
+from rapidata.rapidata_client.settings.pin_context_media import PinContextMediaSetting
 from rapidata.rapidata_client.settings.custom_setting import CustomSetting
 from rapidata.rapidata_client.settings.rapidata_settings import RapidataSettings
 # --- GENERATED SETTINGS IMPORTS END ---
@@ -164,6 +165,7 @@ __all__ = [
     "CompareEquirectangularSetting",
     "ClassifyEquirectangularSetting",
     "TranslateTextAssetsSetting",
+    "PinContextMediaSetting",
     "CustomSetting",
     "RapidataSettings",
 # --- GENERATED SETTINGS ALL END ---

@@ -73,6 +73,7 @@ from .settings import (
     CompareEquirectangularSetting,
     ClassifyEquirectangularSetting,
     TranslateTextAssetsSetting,
+    PinContextMediaSetting,
 )
 
 # --- GENERATED SETTINGS IMPORTS END ---
