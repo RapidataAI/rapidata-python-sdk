@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.10.13.1613-0664ad5"
+    "version": "2026.10.14.1446-64e3b1c"
   },
   "servers": [
     {
@@ -7962,6 +7962,15 @@
             "items": {
               "$ref": "#/components/schemas/FeatureFlag"
             }
+          },
+          "bindings": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RapidBindings"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -10962,6 +10971,65 @@
         },
         "description": "Results for a compare (ranking) job: a paged list of Elo-ranked datapoints."
       },
+      "RapidBinding": {
+        "type": "object",
+        "properties": {
+          "literal": {
+            "type": "string",
+            "nullable": true
+          },
+          "segment": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SegmentTextLanguage"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "RapidBindings": {
+        "type": "object",
+        "properties": {
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RapidBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RapidBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAsset": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidBinding"
+            },
+            "nullable": true
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RapidBinding"
+            },
+            "nullable": true
+          }
+        }
+      },
       "RapidState": {
         "enum": [
           "Labeling",
@@ -11023,6 +11091,13 @@
           "UnsupportedContentType",
           "CheckErrored",
           "ClassificationTimedOut",
+          null
+        ]
+      },
+      "SegmentTextLanguage": {
+        "enum": [
+          "Original",
+          "English",
           null
         ]
       },

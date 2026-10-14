@@ -19,6 +19,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_v
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
+from rapidata.api_client.models.rapid_bindings import RapidBindings
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,7 +33,8 @@ class IOrderWorkflowInputSimpleWorkflowInput(LazyValidatedModel):
     blueprint: IRapidBlueprint
     batch_size: Optional[StrictInt] = Field(default=None, alias="batchSize")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["_t", "blueprint", "batchSize", "featureFlags"]
+    bindings: Optional[RapidBindings] = None
+    __properties: ClassVar[List[str]] = ["_t", "blueprint", "batchSize", "featureFlags", "bindings"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -86,10 +88,18 @@ class IOrderWorkflowInputSimpleWorkflowInput(LazyValidatedModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # override the default output from pydantic by calling `to_dict()` of bindings
+        if self.bindings:
+            _dict['bindings'] = self.bindings.to_dict()
         # set to None if batch_size (nullable) is None
         # and model_fields_set contains the field
         if self.batch_size is None and "batch_size" in self.model_fields_set:
             _dict['batchSize'] = None
+
+        # set to None if bindings (nullable) is None
+        # and model_fields_set contains the field
+        if self.bindings is None and "bindings" in self.model_fields_set:
+            _dict['bindings'] = None
 
         return _dict
 
@@ -106,7 +116,8 @@ class IOrderWorkflowInputSimpleWorkflowInput(LazyValidatedModel):
             "_t": obj.get("_t"),
             "blueprint": IRapidBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
             "batchSize": obj.get("batchSize"),
-            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "bindings": RapidBindings.from_dict(obj["bindings"]) if obj.get("bindings") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)
