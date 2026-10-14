@@ -479,7 +479,7 @@ settings=[ComparePanoramaSetting()]                       # Render comparison me
 settings=[CompareEquirectangularSetting()]                # Render comparison media as equirectangular 360° view
 settings=[ClassifyEquirectangularSetting()]               # Render classification media as equirectangular 360° view
 settings=[TranslateTextAssetsSetting()]                   # Translate text assets (options + context) into the labeler's language; source assumed English
-settings=[PinContextMediaSetting()]                       # Show the media context next to the task instead of in the collapsible drawer; multi-asset contexts show only the first asset
+settings=[PinContextMediaSetting()]                       # Show the media context next to the task instead of in the collapsible drawer — only if there is enough space for it; inspect job_def.preview() carefully. Multi-asset contexts show only the first asset
 settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (target="rapids", default); target="campaign" for campaign-level
 ```
 
