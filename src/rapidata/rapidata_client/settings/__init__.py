@@ -21,6 +21,7 @@ from .compare_panorama import ComparePanoramaSetting
 from .compare_equirectangular import CompareEquirectangularSetting
 from .classify_equirectangular import ClassifyEquirectangularSetting
 from .translate_text_assets import TranslateTextAssetsSetting
+from .pin_context_media import PinContextMediaSetting
 from .custom_setting import CustomSetting
 from ._rapidata_setting import RapidataSetting
 from .rapidata_settings import RapidataSettings
