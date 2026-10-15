@@ -10,11 +10,13 @@ from rapidata.api_client.models.i_rapid_payload_classify_payload import (
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
+from rapidata.rapidata_client.datapoints._default_segments import (
+    ANSWER_OPTIONS_SEGMENT_KEY,
+)
 from rapidata.api_client.models.i_rapid_spec_classify_rapid_spec import (
     IRapidSpecClassifyRapidSpec,
 )
 from rapidata.api_client.models.options_binding import OptionsBinding
-from rapidata.api_client.models.options_binding_option import OptionsBindingOption
 from rapidata.rapidata_client.workflow._rapid_spec import (
     ASSET,
     literal,
@@ -26,29 +28,26 @@ class ClassifyWorkflow(Workflow):
     """
     A workflow for classification tasks.
 
-    This class represents a classification workflow where a question is presented
-    along with a list of possible options for classification.
+    The question is the same for every datapoint; the answer options are read
+    from each datapoint's ``answer_options``.
 
     Args:
-        question (str): The classification question to be presented.
-        options (list[str]): A list of possible classification options.
-
-    Attributes:
-        _question (str): The classification question.
-        _options (list[str]): The list of classification options.
+        instruction (str): The classification question to be presented.
     """
 
     modality = RapidModality.CLASSIFY
     task_type = "Classification"
 
-    def __init__(self, instruction: str, answer_options: list[str]):
+    def __init__(self, instruction: str):
         super().__init__(type="SimpleWorkflowConfig")
         self._validate_instruction(instruction)
         self._instruction = instruction
-        self._answer_options = answer_options
 
     def _get_instruction(self) -> str:
         return self._instruction
+
+    def _required_segments(self) -> set[str]:
+        return {ANSWER_OPTIONS_SEGMENT_KEY}
 
     def _to_dict(self) -> dict[str, Any]:
         return {
@@ -56,12 +55,7 @@ class ClassifyWorkflow(Workflow):
             "rapid": {
                 "_t": "Classify",
                 "title": {"literal": self._instruction},
-                "categories": {
-                    "literal": [
-                        {"label": option, "value": option}
-                        for option in self._answer_options
-                    ]
-                },
+                "categories": {"segment": ANSWER_OPTIONS_SEGMENT_KEY},
             },
         }
 
@@ -71,12 +65,7 @@ class ClassifyWorkflow(Workflow):
                 _t="Classify",
                 asset=ASSET,
                 title=literal(self._instruction),
-                categories=OptionsBinding(
-                    literal=[
-                        OptionsBindingOption(label=option, value=option)
-                        for option in self._answer_options
-                    ]
-                ),
+                categories=OptionsBinding(segment=ANSWER_OPTIONS_SEGMENT_KEY),
             )
         )
 
@@ -86,14 +75,14 @@ class ClassifyWorkflow(Workflow):
                 _t="ClassifyPayload",
                 categories=[
                     ClassifyPayloadCategory(label=option, value=option)
-                    for option in self._answer_options
+                    for option in datapoint.answer_options or []
                 ],
                 title=self._instruction,
             )
         )
 
     def __str__(self) -> str:
-        return f"ClassifyWorkflow(instruction='{self._instruction}', options={self._answer_options})"
+        return f"ClassifyWorkflow(instruction='{self._instruction}')"
 
     def __repr__(self) -> str:
-        return f"ClassifyWorkflow(instruction='{self._instruction}', answer_options={self._answer_options!r})"
+        return f"ClassifyWorkflow(instruction='{self._instruction}')"

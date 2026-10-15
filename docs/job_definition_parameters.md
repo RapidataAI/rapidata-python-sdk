@@ -393,7 +393,7 @@ job_definition.preview()  # check the context fits next to the task
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `answer_options` | `list[str]` | List of categories to classify into |
+| `answer_options` | `list[str]` or `list[list[str]]` | Categories to classify into. One list applies to every datapoint; one list per datapoint (matched by index) shows different options per datapoint. 2–8 unique options each. |
 
 ```python
 job_definition = client.job.create_classification_job_definition(

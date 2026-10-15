@@ -14,6 +14,7 @@ ASSET_SEGMENT_KEY = "asset"
 CONTEXT_SEGMENT_KEY = "context"
 CONTEXT_ASSET_SEGMENT_KEY = "context_asset"
 TRANSCRIPTION_SEGMENT_KEY = "transcription"
+ANSWER_OPTIONS_SEGMENT_KEY = "answer_options"
 
 
 def build_default_segments(
@@ -21,10 +22,12 @@ def build_default_segments(
     context: str | None = None,
     context_asset: IAssetInput | None = None,
     transcription: str | None = None,
+    answer_options: list[str] | None = None,
 ) -> list[DatasetSegmentInput]:
     """Map the flat datapoint fields onto the default dataset schema; a None value gets no segment."""
     from rapidata.api_client.models.dataset_segment_input import DatasetSegmentInput
     from rapidata.api_client.models.dataset_segment_kind import DatasetSegmentKind
+    from rapidata.api_client.models.dataset_segment_option import DatasetSegmentOption
 
     segments: list[DatasetSegmentInput] = []
     if asset is not None:
@@ -55,6 +58,17 @@ def build_default_segments(
                 text=transcription,
             )
         )
+    if answer_options is not None:
+        segments.append(
+            DatasetSegmentInput(
+                key=ANSWER_OPTIONS_SEGMENT_KEY,
+                kind=DatasetSegmentKind.OPTIONLIST,
+                options=[
+                    DatasetSegmentOption(label=option, value=option)
+                    for option in answer_options
+                ],
+            )
+        )
     return segments
 
 
@@ -67,6 +81,7 @@ def build_schema(required: set[str]) -> list[DatasetSegmentDefinition]:
 
     workflow_segments = {
         TRANSCRIPTION_SEGMENT_KEY: ("Transcription", DatasetSegmentKind.TEXT),
+        ANSWER_OPTIONS_SEGMENT_KEY: ("Answer options", DatasetSegmentKind.OPTIONLIST),
     }
     return [
         DatasetSegmentDefinition(
