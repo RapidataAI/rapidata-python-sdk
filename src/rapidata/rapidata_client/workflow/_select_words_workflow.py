@@ -60,6 +60,9 @@ class SelectWordsWorkflow(Workflow):
             )
         )
 
+    def _required_segments(self) -> set[str]:
+        return {TRANSCRIPTION_SEGMENT_KEY}
+
     def _to_payload(self, datapoint: Datapoint) -> IRapidPayload:
         assert (
             datapoint.sentence is not None

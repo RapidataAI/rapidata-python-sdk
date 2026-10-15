@@ -66,6 +66,10 @@ class Workflow(ABC):
     def _format_datapoints(self, datapoints: list[Datapoint]) -> list[Datapoint]:
         return datapoints
 
+    def _required_segments(self) -> set[str]:
+        """Dataset segments every datapoint must carry; non-empty means the job sends its own schema."""
+        return set()
+
     def __str__(self) -> str:
         return self._type
 

@@ -125,10 +125,16 @@ class JobDefinitionCreationMachine:
         from rapidata.api_client.models.create_dataset_endpoint_input import (
             CreateDatasetEndpointInput,
         )
+        from rapidata.rapidata_client.datapoints._default_segments import build_schema
 
         dataset = self._openapi_service.dataset.dataset_api.dataset_post(
             create_dataset_endpoint_input=CreateDatasetEndpointInput(
-                name=self._name + "_dataset"
+                name=self._name + "_dataset",
+                schema=(
+                    build_schema(required)
+                    if (required := self._workflow._required_segments())
+                    else None
+                ),
             )
         )
         self.dataset = RapidataDataset(dataset.dataset_id, self._openapi_service)

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from rapidata.rapidata_client.datapoints._default_segments import (
     TRANSCRIPTION_SEGMENT_KEY,
+    build_schema,
 )
 from rapidata.rapidata_client.workflow import (
     ClassifyWorkflow,
@@ -50,6 +51,21 @@ def test_select_words_reads_the_text_from_a_segment():
     assert rapid.t == "Transcription"
     assert rapid.title.literal == "Select the wrong words"
     assert rapid.transcription.segment == TRANSCRIPTION_SEGMENT_KEY
+
+
+def test_select_words_requires_the_transcription_segment():
+    workflow = SelectWordsWorkflow(instruction="Select the wrong words")
+    transcription = next(
+        s
+        for s in build_schema(workflow._required_segments())
+        if s.key == TRANSCRIPTION_SEGMENT_KEY
+    )
+
+    assert transcription.required is True
+
+
+def test_workflows_without_required_segments_keep_the_default_schema():
+    assert LocateWorkflow(target="the cat")._required_segments() == set()
 
 
 def test_classify_sends_its_options_as_a_literal():
