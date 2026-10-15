@@ -7366,6 +7366,7 @@ class JobApi:
         job_id: Annotated[StrictStr, Field(description="The id of the job whose responses to list.")],
         limit: Annotated[Optional[StrictInt], Field(description="The maximum number of responses to return.")] = None,
         sort: Annotated[Optional[SortDirection], Field(description="The order to return responses in.")] = None,
+        cursor: Annotated[Optional[StrictStr], Field(description="Id of the last response of the previous page; returns only responses strictly after it in the requested sort order (older for desc, newer for asc).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7389,6 +7390,8 @@ class JobApi:
         :type limit: int
         :param sort: The order to return responses in.
         :type sort: SortDirection
+        :param cursor: Id of the last response of the previous page; returns only responses strictly after it in the requested sort order (older for desc, newer for asc).
+        :type cursor: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7415,6 +7418,7 @@ class JobApi:
             job_id=job_id,
             limit=limit,
             sort=sort,
+            cursor=cursor,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7444,6 +7448,7 @@ class JobApi:
         job_id: Annotated[StrictStr, Field(description="The id of the job whose responses to list.")],
         limit: Annotated[Optional[StrictInt], Field(description="The maximum number of responses to return.")] = None,
         sort: Annotated[Optional[SortDirection], Field(description="The order to return responses in.")] = None,
+        cursor: Annotated[Optional[StrictStr], Field(description="Id of the last response of the previous page; returns only responses strictly after it in the requested sort order (older for desc, newer for asc).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7467,6 +7472,8 @@ class JobApi:
         :type limit: int
         :param sort: The order to return responses in.
         :type sort: SortDirection
+        :param cursor: Id of the last response of the previous page; returns only responses strictly after it in the requested sort order (older for desc, newer for asc).
+        :type cursor: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7493,6 +7500,7 @@ class JobApi:
             job_id=job_id,
             limit=limit,
             sort=sort,
+            cursor=cursor,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7522,6 +7530,7 @@ class JobApi:
         job_id: Annotated[StrictStr, Field(description="The id of the job whose responses to list.")],
         limit: Annotated[Optional[StrictInt], Field(description="The maximum number of responses to return.")] = None,
         sort: Annotated[Optional[SortDirection], Field(description="The order to return responses in.")] = None,
+        cursor: Annotated[Optional[StrictStr], Field(description="Id of the last response of the previous page; returns only responses strictly after it in the requested sort order (older for desc, newer for asc).")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7545,6 +7554,8 @@ class JobApi:
         :type limit: int
         :param sort: The order to return responses in.
         :type sort: SortDirection
+        :param cursor: Id of the last response of the previous page; returns only responses strictly after it in the requested sort order (older for desc, newer for asc).
+        :type cursor: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7571,6 +7582,7 @@ class JobApi:
             job_id=job_id,
             limit=limit,
             sort=sort,
+            cursor=cursor,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7595,6 +7607,7 @@ class JobApi:
         job_id,
         limit,
         sort,
+        cursor,
         _request_auth,
         _content_type,
         _headers,
@@ -7626,6 +7639,10 @@ class JobApi:
         if sort is not None:
             
             _query_params.append(('sort', sort.value))
+            
+        if cursor is not None:
+            
+            _query_params.append(('cursor', cursor))
             
         # process the header parameters
         # process the form parameters
