@@ -18,7 +18,7 @@ from typing_extensions import Self
 
 class SegmentTextLanguage(str, Enum):
     """
-    SegmentTextLanguage
+    Which language of a text segment to read.
     """
 
     """

@@ -18,7 +18,7 @@ from typing_extensions import Self
 
 class ReviewReason(str, Enum):
     """
-    ReviewReason
+    Customer-facing reason a job was routed to manual review. Deliberately a projection of the  internal review-reason taxonomy: the size-triggered LargeJob reason is intentionally  absent so customers cannot learn that job size triggers review (that would incentivize splitting  work into smaller jobs). A size-triggered review therefore surfaces as no reason at all.
     """
 
     """

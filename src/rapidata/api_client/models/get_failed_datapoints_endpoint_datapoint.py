@@ -18,7 +18,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_asset import IAsset
+from rapidata.api_client.models.dataset_segment import DatasetSegment
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -31,9 +31,9 @@ class GetFailedDatapointsEndpointDatapoint(LazyValidatedModel):
     id: StrictStr
     dataset_id: StrictStr = Field(alias="datasetId")
     sort_index: Optional[StrictInt] = Field(alias="sortIndex")
-    asset: IAsset
+    segments: List[DatasetSegment]
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "datasetId", "sortIndex", "asset", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "datasetId", "sortIndex", "segments", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -70,9 +70,13 @@ class GetFailedDatapointsEndpointDatapoint(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in segments (list)
+        _items = []
+        if self.segments:
+            for _item_segments in self.segments:
+                if _item_segments:
+                    _items.append(_item_segments.to_dict())
+            _dict['segments'] = _items
         # set to None if sort_index (nullable) is None
         # and model_fields_set contains the field
         if self.sort_index is None and "sort_index" in self.model_fields_set:
@@ -93,7 +97,7 @@ class GetFailedDatapointsEndpointDatapoint(LazyValidatedModel):
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
             "sortIndex": obj.get("sortIndex"),
-            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "segments": [DatasetSegment.from_dict(_item) for _item in obj["segments"]] if obj.get("segments") is not None else None,
             "createdAt": obj.get("createdAt")
         }
         try:
