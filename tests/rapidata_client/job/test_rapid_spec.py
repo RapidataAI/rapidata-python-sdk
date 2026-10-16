@@ -64,6 +64,13 @@ def test_select_words_requires_the_transcription_segment():
     assert transcription.required is True
 
 
+def test_schema_only_lists_the_workflow_segments_asked_for():
+    keys = [s.key for s in build_schema(set())]
+
+    assert TRANSCRIPTION_SEGMENT_KEY not in keys
+    assert keys == ["asset", "context", "context_asset"]
+
+
 def test_workflows_without_required_segments_keep_the_default_schema():
     assert LocateWorkflow(target="the cat")._required_segments() == set()
 

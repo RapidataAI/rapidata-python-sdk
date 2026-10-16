@@ -58,16 +58,17 @@ def build_default_segments(
     return segments
 
 
-def build_schema(
-    required: set[str] | frozenset[str] = frozenset(),
-) -> list[DatasetSegmentDefinition]:
-    """The backend's default dataset schema, with the given segments made required."""
+def build_schema(required: set[str]) -> list[DatasetSegmentDefinition]:
+    """The asset and context segments, plus each workflow segment in ``required``."""
     from rapidata.api_client.models.dataset_segment_definition import (
         DatasetSegmentDefinition,
     )
     from rapidata.api_client.models.dataset_segment_kind import DatasetSegmentKind
 
-    schema = [
+    workflow_segments = {
+        TRANSCRIPTION_SEGMENT_KEY: ("Transcription", DatasetSegmentKind.TEXT),
+    }
+    return [
         DatasetSegmentDefinition(
             key=ASSET_SEGMENT_KEY,
             label="Asset",
@@ -87,11 +88,13 @@ def build_schema(
             kind=DatasetSegmentKind.ASSET,
             required=False,
         ),
-        DatasetSegmentDefinition(
-            key=TRANSCRIPTION_SEGMENT_KEY,
-            label="Transcription",
-            kind=DatasetSegmentKind.TEXT,
-            required=TRANSCRIPTION_SEGMENT_KEY in required,
+        *(
+            DatasetSegmentDefinition(
+                key=key,
+                label=workflow_segments[key][0],
+                kind=workflow_segments[key][1],
+                required=True,
+            )
+            for key in sorted(required)
         ),
     ]
-    return schema
