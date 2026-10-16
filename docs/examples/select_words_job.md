@@ -113,7 +113,10 @@ Like any other job, a select words job can be assigned to any audience — a rea
 
     client = RapidataClient()
 
-    audience = client.audience.create_audience(name="Image-Text Alignment Audience") # (1)!
+    audience = client.audience.create_audience(
+        name="Image-Text Alignment Audience",
+        min_tasks=len(EXAMPLES), # (1)!
+    )
     for datapoint, sentence, truths in EXAMPLES:
         audience.add_select_words_example(
             instruction="The image is based on the text below. Select mistakes, i.e., words that are not aligned with the image.",
@@ -139,7 +142,7 @@ Like any other job, a select words job can be assigned to any audience — a rea
     print(results)
     ```
 
-    1. Creates a new, empty audience. The `add_select_words_example` calls train and filter the labelers who join it.
+    1. Creates a new, empty audience. The `add_select_words_example` calls train and filter the labelers who join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.
     2. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note

@@ -99,7 +99,10 @@ In this example, we compare images from two image generation models (Flux and Mi
 
     client = RapidataClient()
 
-    audience = client.audience.create_audience(name="Custom Prompt Alignment Audience") # (1)!
+    audience = client.audience.create_audience(
+        name="Custom Prompt Alignment Audience",
+        min_tasks=len(QUALIFICATION_PAIRS), # (1)!
+    )
     for prompt, datapoint in zip(QUALIFICATION_PROMPTS, QUALIFICATION_PAIRS):
         audience.add_compare_example(
             instruction="Which image follows the prompt more accurately?",
@@ -125,7 +128,7 @@ In this example, we compare images from two image generation models (Flux and Mi
     print(results)
     ```
 
-    1. Creates a new, empty audience. The `add_compare_example` calls train and filter the labelers who join it.
+    1. Creates a new, empty audience. The `add_compare_example` calls train and filter the labelers who join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.
     2. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note
