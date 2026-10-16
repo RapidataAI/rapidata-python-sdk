@@ -29,9 +29,7 @@ def test_small_ranking_spreads_budget_over_all_pairs():
     # 7 items -> 21 unique pairs; a budget of 5000 must not collapse to 21.
     workflow = _make(max_group_size=7, budget=5000)
 
-    assert (
-        workflow.pair_maker_config.actual_instance.t == "FullPermutationPairMaker"
-    )
+    assert workflow.pair_maker_config.actual_instance.t == "FullPermutationPairMaker"
     assert workflow.responses_per_datapoint == 5000 // 21  # 238 -> 4998 total
 
 

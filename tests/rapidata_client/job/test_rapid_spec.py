@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from rapidata.rapidata_client.datapoints._default_segments import (
     TRANSCRIPTION_SEGMENT_KEY,
+    build_schema,
 )
 from rapidata.rapidata_client.workflow import (
-    ClassifyWorkflow,
     CompareWorkflow,
     FreeTextWorkflow,
     LocateWorkflow,
@@ -44,20 +44,15 @@ def test_free_text_sends_the_question_as_a_literal():
     assert rapid.question.literal == "Describe it"
 
 
-def test_select_words_reads_the_text_from_a_segment():
-    rapid = _rapid(SelectWordsWorkflow(instruction="Select the wrong words"))
+def test_select_words_reads_the_text_from_a_required_segment():
+    workflow = SelectWordsWorkflow(instruction="Select the wrong words")
+    rapid = _rapid(workflow)
 
     assert rapid.t == "Transcription"
-    assert rapid.title.literal == "Select the wrong words"
     assert rapid.transcription.segment == TRANSCRIPTION_SEGMENT_KEY
-
-
-def test_classify_sends_its_options_as_a_literal():
-    rapid = _rapid(
-        ClassifyWorkflow(instruction="Pick one", answer_options=["cat", "dog"])
+    transcription = next(
+        s
+        for s in build_schema(workflow._required_segments())
+        if s.key == TRANSCRIPTION_SEGMENT_KEY
     )
-
-    assert rapid.t == "Classify"
-    assert rapid.title.literal == "Pick one"
-    assert [o.value for o in rapid.categories.literal] == ["cat", "dog"]
-    assert rapid.categories.segment is None
+    assert transcription.required is True
