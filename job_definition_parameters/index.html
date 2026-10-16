@@ -2854,8 +2854,8 @@
 <tbody>
 <tr>
 <td><code>answer_options</code></td>
-<td><code>list[str]</code></td>
-<td>List of categories to classify into</td>
+<td><code>list[str]</code> or <code>list[list[str]]</code></td>
+<td>Categories to classify into. One list applies to every datapoint; one list per datapoint (matched by index) shows different options per datapoint. 2–8 unique options each.</td>
 </tr>
 </tbody>
 </table>

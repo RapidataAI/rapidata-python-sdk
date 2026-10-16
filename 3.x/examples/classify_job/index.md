@@ -76,7 +76,10 @@ In this example, we rate images on a Likert scale to assess how well generated i
 
     client = RapidataClient()
 
-    audience = client.audience.create_audience(name="Likert Scale Audience") # (1)!
+    audience = client.audience.create_audience(
+        name="Likert Scale Audience",
+        min_tasks=len(EXAMPLES), # (1)!
+    )
     for datapoint, context, truth in EXAMPLES:
         audience.add_classification_example(
             instruction="How well does the image match the description?",
@@ -106,9 +109,27 @@ In this example, we rate images on a Likert scale to assess how well generated i
     print(results)
     ```
 
-    1. Creates a new, empty audience. The `add_classification_example` calls below define who qualifies to join it.
+    1. Creates a new, empty audience. The `add_classification_example` calls below define who qualifies to join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.
     2. Qualify labelers on the same UI they'll see in the job. Since the job uses `NoShuffleSetting`, the examples use it too — see [Custom Audiences](../audiences.md#matching-the-job-ui-with-settings).
     3. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note
         Review every qualification example and its truth carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
+
+## Different answer options per datapoint
+
+Pass one list of answer options per datapoint, matched by index, when each item needs its own choices. Results then list each datapoint's own options.
+
+```python
+job_definition = client.job.create_classification_job_definition(
+    name="Per-datapoint options",
+    instruction="Pick the correct answer",
+    datapoints=["banana", "A dog", "2 + 2"],
+    data_type="text",
+    answer_options=[
+        ["Yellow", "Blue", "Purple"],
+        ["Woof", "Meow"],
+        ["3", "4", "5", "22"],
+    ],
+)
+```

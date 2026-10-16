@@ -27,10 +27,13 @@ A **custom audience** filters labelers through qualification examples before the
 from rapidata import RapidataClient
 
 client = RapidataClient()
-audience = client.audience.create_audience(name="Custom Prompt Alignment Audience") # (1)!
+audience = client.audience.create_audience(
+    name="Custom Prompt Alignment Audience",
+    min_tasks=8, # (1)!
+)
 ```
 
-1. Creates a new, empty audience. Labelers join by passing the qualification examples you add next.
+1. Creates a new, empty audience. Labelers join by passing the qualification examples you add next. `min_tasks` is how many of them a labeler answers before being admitted (default `10`); it can't exceed the number of examples you add. The 8 here matches Step 2.
 
 #### Tuning the admission bar
 
@@ -52,7 +55,9 @@ audience = client.audience.create_audience(
    accuracy verdict is trusted. Omit to use the server default of `10`.
 
 Supplying just one of the two is fine — the other keeps its default. A higher
-bar yields fewer but more reliable labelers.
+bar yields fewer but more reliable labelers. Add at least `min_tasks`
+qualification examples before you start recruiting, or `start_recruiting()` is
+rejected because nobody could ever graduate.
 
 ### Step 2: Add Qualification Examples
 
@@ -114,7 +119,8 @@ audience.start_recruiting()
 !!! warning "Recruiting is explicit"
     Adding qualification examples does not start recruiting; it is a deliberate
     step you trigger yourself with `start_recruiting()` once the examples are
-    reviewed. Calling it more than once on the same audience is a no-op.
+    reviewed. It needs at least `min_tasks` examples (default `10`). Calling it
+    more than once on the same audience is a no-op.
 
 ### Step 4: Create and Assign a Job
 
@@ -183,8 +189,6 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-audience = client.audience.create_audience(name="Custom Prompt Alignment Audience")
-
 DATAPOINTS = [
     ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
     ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
@@ -205,6 +209,11 @@ PROMPTS = [
     "A green, yellow and red traffic light.",
     "A plane flying over a person.",
 ]
+
+audience = client.audience.create_audience(
+    name="Custom Prompt Alignment Audience",
+    min_tasks=len(DATAPOINTS),
+)
 
 for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
     audience.add_compare_example(

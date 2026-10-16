@@ -490,10 +490,13 @@ A **custom audience** filters labelers through qualification examples before the
 from rapidata import RapidataClient
 
 client = RapidataClient()
-audience = client.audience.create_audience(name="Custom Prompt Alignment Audience") # (1)!
+audience = client.audience.create_audience(
+    name="Custom Prompt Alignment Audience",
+    min_tasks=8, # (1)!
+)
 ```
 
-1. Creates a new, empty audience. Labelers join by passing the qualification examples you add next.
+1. Creates a new, empty audience. Labelers join by passing the qualification examples you add next. `min_tasks` is how many of them a labeler answers before being admitted (default `10`); it can't exceed the number of examples you add. The 8 here matches Step 2.
 
 #### Tuning the admission bar
 
@@ -515,7 +518,9 @@ audience = client.audience.create_audience(
    accuracy verdict is trusted. Omit to use the server default of `10`.
 
 Supplying just one of the two is fine — the other keeps its default. A higher
-bar yields fewer but more reliable labelers.
+bar yields fewer but more reliable labelers. Add at least `min_tasks`
+qualification examples before you start recruiting, or `start_recruiting()` is
+rejected because nobody could ever graduate.
 
 ### Step 2: Add Qualification Examples
 
@@ -577,7 +582,8 @@ audience.start_recruiting()
 !!! warning "Recruiting is explicit"
     Adding qualification examples does not start recruiting; it is a deliberate
     step you trigger yourself with `start_recruiting()` once the examples are
-    reviewed. Calling it more than once on the same audience is a no-op.
+    reviewed. It needs at least `min_tasks` examples (default `10`). Calling it
+    more than once on the same audience is a no-op.
 
 ### Step 4: Create and Assign a Job
 
@@ -646,8 +652,6 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-audience = client.audience.create_audience(name="Custom Prompt Alignment Audience")
-
 DATAPOINTS = [
     ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
     ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
@@ -668,6 +672,11 @@ PROMPTS = [
     "A green, yellow and red traffic light.",
     "A plane flying over a person.",
 ]
+
+audience = client.audience.create_audience(
+    name="Custom Prompt Alignment Audience",
+    min_tasks=len(DATAPOINTS),
+)
 
 for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
     audience.add_compare_example(
@@ -1351,7 +1360,7 @@ job_definition.preview()  # check the context fits next to the task
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `answer_options` | `list[str]` | List of categories to classify into |
+| `answer_options` | `list[str]` or `list[list[str]]` | Categories to classify into. One list applies to every datapoint; one list per datapoint (matched by index) shows different options per datapoint. 2–8 unique options each. |
 
 ```python
 job_definition = client.job.create_classification_job_definition(
@@ -2914,7 +2923,10 @@ In this example, we rate images on a Likert scale to assess how well generated i
 
     client = RapidataClient()
 
-    audience = client.audience.create_audience(name="Likert Scale Audience") # (1)!
+    audience = client.audience.create_audience(
+        name="Likert Scale Audience",
+        min_tasks=len(EXAMPLES), # (1)!
+    )
     for datapoint, context, truth in EXAMPLES:
         audience.add_classification_example(
             instruction="How well does the image match the description?",
@@ -2944,12 +2956,30 @@ In this example, we rate images on a Likert scale to assess how well generated i
     print(results)
     ```
 
-    1. Creates a new, empty audience. The `add_classification_example` calls below define who qualifies to join it.
+    1. Creates a new, empty audience. The `add_classification_example` calls below define who qualifies to join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.
     2. Qualify labelers on the same UI they'll see in the job. Since the job uses `NoShuffleSetting`, the examples use it too — see [Custom Audiences](../audiences.md#matching-the-job-ui-with-settings).
     3. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note
         Review every qualification example and its truth carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
+
+## Different answer options per datapoint
+
+Pass one list of answer options per datapoint, matched by index, when each item needs its own choices. Results then list each datapoint's own options.
+
+```python
+job_definition = client.job.create_classification_job_definition(
+    name="Per-datapoint options",
+    instruction="Pick the correct answer",
+    datapoints=["banana", "A dog", "2 + 2"],
+    data_type="text",
+    answer_options=[
+        ["Yellow", "Blue", "Purple"],
+        ["Woof", "Meow"],
+        ["3", "4", "5", "22"],
+    ],
+)
+```
 
 
 ## Comparison
@@ -3055,7 +3085,10 @@ In this example, we compare images from two image generation models (Flux and Mi
 
     client = RapidataClient()
 
-    audience = client.audience.create_audience(name="Custom Prompt Alignment Audience") # (1)!
+    audience = client.audience.create_audience(
+        name="Custom Prompt Alignment Audience",
+        min_tasks=len(QUALIFICATION_PAIRS), # (1)!
+    )
     for prompt, datapoint in zip(QUALIFICATION_PROMPTS, QUALIFICATION_PAIRS):
         audience.add_compare_example(
             instruction="Which image follows the prompt more accurately?",
@@ -3081,7 +3114,7 @@ In this example, we compare images from two image generation models (Flux and Mi
     print(results)
     ```
 
-    1. Creates a new, empty audience. The `add_compare_example` calls train and filter the labelers who join it.
+    1. Creates a new, empty audience. The `add_compare_example` calls train and filter the labelers who join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.
     2. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note
@@ -3170,7 +3203,10 @@ Like any other job, a locate job can be assigned to any audience — a ready-to-
 
     client = RapidataClient()
 
-    audience = client.audience.create_audience(name="Artifact Detection Audience") # (1)!
+    audience = client.audience.create_audience(
+        name="Artifact Detection Audience",
+        min_tasks=len(EXAMPLES), # (1)!
+    )
     for datapoint, truths in EXAMPLES:
         audience.add_locate_example(
             instruction="Tap on any visual glitches or errors in the image.",
@@ -3194,7 +3230,7 @@ Like any other job, a locate job can be assigned to any audience — a ready-to-
     print(results)
     ```
 
-    1. Creates a new, empty audience. The `add_locate_example` calls train and filter the labelers who join it.
+    1. Creates a new, empty audience. The `add_locate_example` calls train and filter the labelers who join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.
     2. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note
@@ -3284,7 +3320,10 @@ Like any other job, a draw job can be assigned to any audience — a ready-to-go
 
     client = RapidataClient()
 
-    audience = client.audience.create_audience(name="Artifact Drawing Audience") # (1)!
+    audience = client.audience.create_audience(
+        name="Artifact Drawing Audience",
+        min_tasks=len(EXAMPLES), # (1)!
+    )
     for datapoint, truths in EXAMPLES:
         audience.add_draw_example(
             instruction="Color in the visual glitches or errors in the image.",
@@ -3308,7 +3347,7 @@ Like any other job, a draw job can be assigned to any audience — a ready-to-go
     print(results)
     ```
 
-    1. Creates a new, empty audience. The `add_draw_example` calls train and filter the labelers who join it.
+    1. Creates a new, empty audience. The `add_draw_example` calls train and filter the labelers who join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.
     2. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note
@@ -3432,7 +3471,10 @@ Like any other job, a select words job can be assigned to any audience — a rea
 
     client = RapidataClient()
 
-    audience = client.audience.create_audience(name="Image-Text Alignment Audience") # (1)!
+    audience = client.audience.create_audience(
+        name="Image-Text Alignment Audience",
+        min_tasks=len(EXAMPLES), # (1)!
+    )
     for datapoint, sentence, truths in EXAMPLES:
         audience.add_select_words_example(
             instruction="The image is based on the text below. Select mistakes, i.e., words that are not aligned with the image.",
@@ -3458,7 +3500,7 @@ Like any other job, a select words job can be assigned to any audience — a rea
     print(results)
     ```
 
-    1. Creates a new, empty audience. The `add_select_words_example` calls train and filter the labelers who join it.
+    1. Creates a new, empty audience. The `add_select_words_example` calls train and filter the labelers who join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.
     2. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note
