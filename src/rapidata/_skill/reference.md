@@ -329,7 +329,7 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 
 ```json
 {
-  "info": { "type": "Classify", "version": "3.0.0" },
+  "info": { "type": "Classification", "version": "3.0.0" },
   "results": [
     {
       "identifier": "image1.jpg",
@@ -414,7 +414,8 @@ A labeler's `demographics` may be empty when no demographic data was collected f
 ```python
 results = job.get_results()              # RapidataResults — a dict subclass holding the raw JSON
 snapshot = job.get_results(preliminary_results=True)  # unfinished job: responses so far, no waiting
-df = results.to_pandas()                  # one row per datapoint; compare results get A_/B_ columns
+df = results.to_pandas()                  # one row per datapoint; compare results get A_/B_ columns,
+                                          # classification gets one row per datapoint and answer option
 df = results.to_pandas(split_details=True)  # one row per individual response
 results.to_json("results.json")           # writes the file (default "./results.json"); returns None
 ```

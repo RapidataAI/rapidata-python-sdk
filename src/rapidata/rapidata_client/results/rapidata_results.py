@@ -23,8 +23,11 @@ class RapidataResults(dict):
         For Compare results (exactly 2 assets), creates standardized ``A_``/``B_``
         columns for each metric (plus ``Both_``/``Neither_`` when those options
         are present). For Ranking results with N assets, creates one
-        ``<asset>_<metric>`` column per asset. For non-compare results, flattens
-        nested dictionaries into columns with underscore-separated names.
+        ``<asset>_<metric>`` column per asset. For Classification results,
+        creates one row per datapoint and answer option, with ``option``,
+        ``count``, ``ratio``, ``summedUserScore`` and ``summedUserScoreRatio``
+        columns. For other results, flattens nested dictionaries into columns
+        with underscore-separated names.
 
         Args:
             split_details: If True, splits each datapoint by its detailed results,
@@ -59,6 +62,9 @@ class RapidataResults(dict):
 
         if split_details:
             return self._to_pandas_with_detailed_results()
+
+        if task_type == "Classification":
+            return self._classification_to_pandas()
 
         # Get the structure from first item
         first_item = self["results"][0]
@@ -298,6 +304,50 @@ class RapidataResults(dict):
                     rows.append(row)
             else:
                 rows.append(base_row)
+
+        return pd.DataFrame(rows)
+
+    _CLASSIFICATION_OPTION_METRICS = {
+        "aggregatedResults": "count",
+        "aggregatedResultsRatios": "ratio",
+        "summedUserScores": "summedUserScore",
+        "summedUserScoresRatios": "summedUserScoreRatio",
+        "confidencePerCategory": "confidence",
+    }
+
+    def _classification_to_pandas(self) -> "pd.DataFrame":
+        """One row per datapoint and answer option; ``detailedResults`` only appears with ``split_details=True``."""
+        import pandas as pd
+
+        rows = []
+        for result in self["results"]:
+            base_row: dict[str, Any] = {}
+            metrics: dict[str, dict[str, Any]] = {}
+            for key, value in result.items():
+                if key == "detailedResults":
+                    continue
+                if key in self._CLASSIFICATION_OPTION_METRICS:
+                    if isinstance(value, dict):
+                        metrics[self._CLASSIFICATION_OPTION_METRICS[key]] = value
+                elif isinstance(value, dict):
+                    base_row.update(self._flatten_dict(value, parent_key=key))
+                else:
+                    base_row[key] = value
+
+            options = list(
+                dict.fromkeys(
+                    option for values in metrics.values() for option in values
+                )
+            )
+            if not options:
+                rows.append(base_row)
+                continue
+            for option in options:
+                row = base_row.copy()
+                row["option"] = option
+                for column, values in metrics.items():
+                    row[column] = values.get(option)
+                rows.append(row)
 
         return pd.DataFrame(rows)
 
