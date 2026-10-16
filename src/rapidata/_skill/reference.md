@@ -174,7 +174,7 @@ audience.add_select_words_example(instruction=..., datapoint=..., sentence=..., 
 df = audience.get_examples(amount=10, page=1)                       # inspect examples (DataFrame)
 
 # Start recruiting — REQUIRED and EXPLICIT for a custom audience. Recruiting begins only when
-# you call this, once >=3 examples are added and reviewed. Adding examples does NOT start it; an
+# you call this, once >= min_tasks examples (default 10, min 3) are added and reviewed. Adding examples does NOT start it; an
 # audience left un-recruited stays in `Created` and a job assigned to it can never get responses
 # (get_results()/display_progress_bar() raise — see "Jobs on an audience that can never respond").
 # Skip all of this and use get_audience_by_id("global") when you need no task-specific qualification.
