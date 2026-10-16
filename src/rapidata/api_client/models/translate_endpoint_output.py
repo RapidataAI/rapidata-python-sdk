@@ -17,6 +17,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.language import Language
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -27,8 +28,8 @@ class TranslateEndpointOutput(LazyValidatedModel):
     TranslateEndpointOutput
     """ # noqa: E501
     translation: StrictStr = Field(description="The translated text.")
-    source_language: Optional[StrictStr] = Field(description="The detected or provided source language of the text.", alias="sourceLanguage")
-    target_language: StrictStr = Field(description="The language the text was translated into.", alias="targetLanguage")
+    source_language: Optional[Language] = Field(description="The detected or provided source language of the text.", alias="sourceLanguage")
+    target_language: Language = Field(alias="targetLanguage")
     __properties: ClassVar[List[str]] = ["translation", "sourceLanguage", "targetLanguage"]
 
     # model_config is inherited from LazyValidatedModel

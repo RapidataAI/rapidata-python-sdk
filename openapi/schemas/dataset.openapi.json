@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Dataset API",
     "description": "The API for the Rapidata Dataset service",
-    "version": "2026.10.15.1147-1d4ff72"
+    "version": "2026.10.16.1509-cade065"
   },
   "servers": [
     {
@@ -1125,7 +1125,7 @@
           "id",
           "datasetId",
           "sortIndex",
-          "asset",
+          "segments",
           "createdAt"
         ],
         "type": "object",
@@ -1142,7 +1142,18 @@
             "nullable": true
           },
           "asset": {
-            "$ref": "#/components/schemas/IAsset"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "deprecated": true
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetSegment"
+            }
           },
           "createdAt": {
             "type": "string",

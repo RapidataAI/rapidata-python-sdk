@@ -18,7 +18,7 @@ from typing_extensions import Self
 
 class MatchupZone(str, Enum):
     """
-    MatchupZone
+    Which side of an A-vs-B matchup a prompt falls on once its Wilson interval is compared to 0.5.
     """
 
     """

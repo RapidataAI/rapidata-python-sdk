@@ -17,7 +17,9 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.country import Country
 from rapidata.api_client.models.i_rapid_result import IRapidResult
+from rapidata.api_client.models.language import Language
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -29,8 +31,8 @@ class GetRapidNavigationEndpointCardResponse(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr
     user_id: StrictStr = Field(alias="userId")
-    country: StrictStr
-    language: StrictStr
+    country: Optional[Country]
+    language: Optional[Language]
     age: Optional[StrictStr]
     gender: Optional[StrictStr]
     occupation: Optional[StrictStr]
@@ -78,6 +80,16 @@ class GetRapidNavigationEndpointCardResponse(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of result
         if self.result:
             _dict['result'] = self.result.to_dict()
+        # set to None if country (nullable) is None
+        # and model_fields_set contains the field
+        if self.country is None and "country" in self.model_fields_set:
+            _dict['country'] = None
+
+        # set to None if language (nullable) is None
+        # and model_fields_set contains the field
+        if self.language is None and "language" in self.model_fields_set:
+            _dict['language'] = None
+
         # set to None if age (nullable) is None
         # and model_fields_set contains the field
         if self.age is None and "age" in self.model_fields_set:
