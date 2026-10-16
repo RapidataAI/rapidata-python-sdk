@@ -18,8 +18,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
-from rapidata.api_client.models.rapid_bindings import RapidBindings
+from rapidata.api_client.models.i_rapid_spec import IRapidSpec
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -30,11 +29,10 @@ class IOrderWorkflowInputSimpleWorkflowInput(LazyValidatedModel):
     IOrderWorkflowInputSimpleWorkflowInput
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    blueprint: IRapidBlueprint
+    rapid: Optional[IRapidSpec] = None
     batch_size: Optional[StrictInt] = Field(default=None, alias="batchSize")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    bindings: Optional[RapidBindings] = None
-    __properties: ClassVar[List[str]] = ["_t", "blueprint", "batchSize", "featureFlags", "bindings"]
+    __properties: ClassVar[List[str]] = ["_t", "rapid", "batchSize", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -78,9 +76,9 @@ class IOrderWorkflowInputSimpleWorkflowInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of blueprint
-        if self.blueprint:
-            _dict['blueprint'] = self.blueprint.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of rapid
+        if self.rapid:
+            _dict['rapid'] = self.rapid.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -88,18 +86,15 @@ class IOrderWorkflowInputSimpleWorkflowInput(LazyValidatedModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
-        # override the default output from pydantic by calling `to_dict()` of bindings
-        if self.bindings:
-            _dict['bindings'] = self.bindings.to_dict()
+        # set to None if rapid (nullable) is None
+        # and model_fields_set contains the field
+        if self.rapid is None and "rapid" in self.model_fields_set:
+            _dict['rapid'] = None
+
         # set to None if batch_size (nullable) is None
         # and model_fields_set contains the field
         if self.batch_size is None and "batch_size" in self.model_fields_set:
             _dict['batchSize'] = None
-
-        # set to None if bindings (nullable) is None
-        # and model_fields_set contains the field
-        if self.bindings is None and "bindings" in self.model_fields_set:
-            _dict['bindings'] = None
 
         return _dict
 
@@ -114,10 +109,9 @@ class IOrderWorkflowInputSimpleWorkflowInput(LazyValidatedModel):
 
         _data = {
             "_t": obj.get("_t"),
-            "blueprint": IRapidBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
+            "rapid": IRapidSpec.from_dict(obj["rapid"]) if obj.get("rapid") is not None else None,
             "batchSize": obj.get("batchSize"),
-            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
-            "bindings": RapidBindings.from_dict(obj["bindings"]) if obj.get("bindings") is not None else None
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

@@ -15,8 +15,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.get_job_responses_endpoint_output_response import GetJobResponsesEndpointOutputResponse
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -28,7 +28,8 @@ class GetJobResponsesEndpointOutput(LazyValidatedModel):
     GetJobResponsesEndpointOutput
     """ # noqa: E501
     responses: List[GetJobResponsesEndpointOutputResponse]
-    __properties: ClassVar[List[str]] = ["responses"]
+    next_cursor: Optional[StrictStr] = Field(default=None, description="The cursor for the next page, or null when there are no more responses.", alias="nextCursor")
+    __properties: ClassVar[List[str]] = ["responses", "nextCursor"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -72,6 +73,11 @@ class GetJobResponsesEndpointOutput(LazyValidatedModel):
                 if _item_responses:
                     _items.append(_item_responses.to_dict())
             _dict['responses'] = _items
+        # set to None if next_cursor (nullable) is None
+        # and model_fields_set contains the field
+        if self.next_cursor is None and "next_cursor" in self.model_fields_set:
+            _dict['nextCursor'] = None
+
         return _dict
 
     @classmethod
@@ -84,7 +90,8 @@ class GetJobResponsesEndpointOutput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "responses": [GetJobResponsesEndpointOutputResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None
+            "responses": [GetJobResponsesEndpointOutputResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
+            "nextCursor": obj.get("nextCursor")
         }
         try:
             _obj = cls.model_validate(_data)

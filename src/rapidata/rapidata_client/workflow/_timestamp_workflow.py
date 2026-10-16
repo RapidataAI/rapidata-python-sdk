@@ -1,13 +1,6 @@
 from rapidata.api_client.models.i_order_workflow_input import (
     IOrderWorkflowInput,
 )
-from rapidata.api_client.models.i_order_workflow_input_simple_workflow_input import (
-    IOrderWorkflowInputSimpleWorkflowInput,
-)
-from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
-from rapidata.api_client.models.i_rapid_blueprint_scrub_rapid_blueprint import (
-    IRapidBlueprintScrubRapidBlueprint,
-)
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client.models.i_rapid_payload_scrub_payload import (
     IRapidPayloadScrubPayload,
@@ -15,6 +8,14 @@ from rapidata.api_client.models.i_rapid_payload_scrub_payload import (
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+from rapidata.api_client.models.i_rapid_spec_scrub_rapid_spec import (
+    IRapidSpecScrubRapidSpec,
+)
+from rapidata.rapidata_client.workflow._rapid_spec import (
+    ASSET,
+    literal,
+    simple_workflow,
+)
 
 
 class TimestampWorkflow(Workflow):
@@ -43,14 +44,9 @@ class TimestampWorkflow(Workflow):
         return self._instruction
 
     def _to_model(self) -> IOrderWorkflowInput:
-        blueprint = IRapidBlueprintScrubRapidBlueprint(
-            _t="ScrubBlueprint", target=self._instruction
-        )
-
-        return IOrderWorkflowInput(
-            actual_instance=IOrderWorkflowInputSimpleWorkflowInput(
-                _t="SimpleWorkflow",
-                blueprint=IRapidBlueprint(actual_instance=blueprint),
+        return simple_workflow(
+            IRapidSpecScrubRapidSpec(
+                _t="Scrub", asset=ASSET, target=literal(self._instruction)
             )
         )
 

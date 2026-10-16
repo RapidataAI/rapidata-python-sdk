@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.10.14.1446-64e3b1c"
+    "version": "2026.10.15.1147-1d4ff72"
   },
   "servers": [
     {
@@ -31574,6 +31574,14 @@
             "description": "The order to return responses in.",
             "schema": {
               "$ref": "#/components/schemas/SortDirection"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Id of the last response of the previous page; returns only responses strictly after it in the requested sort order (older for desc, newer for asc).",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -63303,6 +63311,17 @@
           null
         ]
       },
+      "AssetBinding": {
+        "required": [
+          "segment"
+        ],
+        "type": "object",
+        "properties": {
+          "segment": {
+            "type": "string"
+          }
+        }
+      },
       "AttachCategoryRapidBlueprint_Category": {
         "required": [
           "label",
@@ -64571,6 +64590,11 @@
               }
             ],
             "description": "The responses, newest first by default."
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "The cursor for the next page, or null when there are no more responses.",
+            "nullable": true
           }
         }
       },
@@ -65312,7 +65336,6 @@
       },
       "IOrderWorkflowInputSimpleWorkflowInput": {
         "required": [
-          "blueprint",
           "_t"
         ],
         "properties": {
@@ -65322,8 +65345,22 @@
             ],
             "type": "string"
           },
+          "rapid": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IRapidSpec"
+              }
+            ],
+            "nullable": true
+          },
           "blueprint": {
-            "$ref": "#/components/schemas/IRapidBlueprint"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRapidBlueprint"
+              }
+            ],
+            "deprecated": true
           },
           "batchSize": {
             "type": "integer",
@@ -65337,13 +65374,12 @@
             }
           },
           "bindings": {
-            "type": "object",
-            "oneOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/RapidBindings"
               }
             ],
-            "nullable": true
+            "deprecated": true
           }
         }
       },
@@ -66566,6 +66602,459 @@
           }
         }
       },
+      "IRapidSpec": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRapidSpecBoundingBoxRapidSpec"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidSpecClassifyRapidSpec"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidSpecCompareRapidSpec"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidSpecFreeTextRapidSpec"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidSpecLineRapidSpec"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidSpecLocateRapidSpec"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidSpecNamedEntityRapidSpec"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidSpecPolygonRapidSpec"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidSpecScrubRapidSpec"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidSpecTranscriptionRapidSpec"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "BoundingBox": "#/components/schemas/IRapidSpecBoundingBoxRapidSpec",
+            "Classify": "#/components/schemas/IRapidSpecClassifyRapidSpec",
+            "Compare": "#/components/schemas/IRapidSpecCompareRapidSpec",
+            "FreeText": "#/components/schemas/IRapidSpecFreeTextRapidSpec",
+            "Line": "#/components/schemas/IRapidSpecLineRapidSpec",
+            "Locate": "#/components/schemas/IRapidSpecLocateRapidSpec",
+            "NamedEntity": "#/components/schemas/IRapidSpecNamedEntityRapidSpec",
+            "Polygon": "#/components/schemas/IRapidSpecPolygonRapidSpec",
+            "Scrub": "#/components/schemas/IRapidSpecScrubRapidSpec",
+            "Transcription": "#/components/schemas/IRapidSpecTranscriptionRapidSpec"
+          }
+        }
+      },
+      "IRapidSpecBoundingBoxRapidSpec": {
+        "required": [
+          "asset",
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBox"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetBinding"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetBinding"
+            },
+            "nullable": true
+          },
+          "target": {
+            "$ref": "#/components/schemas/TextBinding"
+          }
+        }
+      },
+      "IRapidSpecClassifyRapidSpec": {
+        "required": [
+          "asset",
+          "title",
+          "categories",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Classify"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetBinding"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetBinding"
+            },
+            "nullable": true
+          },
+          "title": {
+            "$ref": "#/components/schemas/TextBinding"
+          },
+          "categories": {
+            "$ref": "#/components/schemas/OptionsBinding"
+          }
+        }
+      },
+      "IRapidSpecCompareRapidSpec": {
+        "required": [
+          "asset",
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Compare"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetBinding"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetBinding"
+            },
+            "nullable": true
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/TextBinding"
+          },
+          "indexIdentifiers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "IRapidSpecFreeTextRapidSpec": {
+        "required": [
+          "asset",
+          "question",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeText"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetBinding"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetBinding"
+            },
+            "nullable": true
+          },
+          "question": {
+            "$ref": "#/components/schemas/TextBinding"
+          },
+          "shouldValidateResponse": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "validationSystemPrompt": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IRapidSpecLineRapidSpec": {
+        "required": [
+          "asset",
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Line"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetBinding"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetBinding"
+            },
+            "nullable": true
+          },
+          "target": {
+            "$ref": "#/components/schemas/TextBinding"
+          }
+        }
+      },
+      "IRapidSpecLocateRapidSpec": {
+        "required": [
+          "asset",
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Locate"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetBinding"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetBinding"
+            },
+            "nullable": true
+          },
+          "target": {
+            "$ref": "#/components/schemas/TextBinding"
+          }
+        }
+      },
+      "IRapidSpecNamedEntityRapidSpec": {
+        "required": [
+          "asset",
+          "target",
+          "classes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntity"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetBinding"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetBinding"
+            },
+            "nullable": true
+          },
+          "target": {
+            "$ref": "#/components/schemas/TextBinding"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidSpecPolygonRapidSpec": {
+        "required": [
+          "asset",
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Polygon"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetBinding"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetBinding"
+            },
+            "nullable": true
+          },
+          "target": {
+            "$ref": "#/components/schemas/TextBinding"
+          }
+        }
+      },
+      "IRapidSpecScrubRapidSpec": {
+        "required": [
+          "asset",
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Scrub"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetBinding"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetBinding"
+            },
+            "nullable": true
+          },
+          "target": {
+            "$ref": "#/components/schemas/TextBinding"
+          }
+        }
+      },
+      "IRapidSpecTranscriptionRapidSpec": {
+        "required": [
+          "asset",
+          "title",
+          "transcription",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Transcription"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetBinding"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssetBinding"
+            },
+            "nullable": true
+          },
+          "title": {
+            "$ref": "#/components/schemas/TextBinding"
+          },
+          "transcription": {
+            "$ref": "#/components/schemas/TextBinding"
+          }
+        }
+      },
       "IReferee": {
         "required": [
           "_t"
@@ -67592,6 +68081,37 @@
           }
         }
       },
+      "OptionsBinding": {
+        "type": "object",
+        "properties": {
+          "literal": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OptionsBinding_Option"
+            },
+            "nullable": true
+          },
+          "segment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "OptionsBinding_Option": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
       "OrderState": {
         "enum": [
           "Created",
@@ -68505,6 +69025,28 @@
           "ignoreFailedDatapoints": {
             "type": "boolean",
             "description": "Whether the order should proceed even if certain datapoints failed.",
+            "nullable": true
+          }
+        }
+      },
+      "TextBinding": {
+        "type": "object",
+        "properties": {
+          "literal": {
+            "type": "string",
+            "nullable": true
+          },
+          "segment": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SegmentTextLanguage"
+              }
+            ],
             "nullable": true
           }
         }

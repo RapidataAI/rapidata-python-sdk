@@ -1,13 +1,6 @@
 from typing import Any
-from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
 from rapidata.api_client.models.i_order_workflow_input import (
     IOrderWorkflowInput,
-)
-from rapidata.api_client.models.i_order_workflow_input_simple_workflow_input import (
-    IOrderWorkflowInputSimpleWorkflowInput,
-)
-from rapidata.api_client.models.attach_category_rapid_blueprint_category import (
-    AttachCategoryRapidBlueprintCategory,
 )
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.rapidata_client.workflow import Workflow
@@ -17,8 +10,15 @@ from rapidata.api_client.models.i_rapid_payload_classify_payload import (
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
-from rapidata.api_client.models.i_rapid_blueprint_attach_category_rapid_blueprint import (
-    IRapidBlueprintAttachCategoryRapidBlueprint,
+from rapidata.api_client.models.i_rapid_spec_classify_rapid_spec import (
+    IRapidSpecClassifyRapidSpec,
+)
+from rapidata.api_client.models.options_binding import OptionsBinding
+from rapidata.api_client.models.options_binding_option import OptionsBindingOption
+from rapidata.rapidata_client.workflow._rapid_spec import (
+    ASSET,
+    literal,
+    simple_workflow,
 )
 
 
@@ -53,27 +53,30 @@ class ClassifyWorkflow(Workflow):
     def _to_dict(self) -> dict[str, Any]:
         return {
             **super()._to_dict(),
-            "blueprint": {
-                "_t": "ClassifyBlueprint",
-                "title": self._instruction,
-                "possibleCategories": self._answer_options,
+            "rapid": {
+                "_t": "Classify",
+                "title": {"literal": self._instruction},
+                "categories": {
+                    "literal": [
+                        {"label": option, "value": option}
+                        for option in self._answer_options
+                    ]
+                },
             },
         }
 
     def _to_model(self) -> IOrderWorkflowInput:
-        blueprint = IRapidBlueprintAttachCategoryRapidBlueprint(
-            _t="ClassifyBlueprint",
-            title=self._instruction,
-            categories=[
-                AttachCategoryRapidBlueprintCategory(label=option, value=option)
-                for option in self._answer_options
-            ],
-        )
-
-        return IOrderWorkflowInput(
-            actual_instance=IOrderWorkflowInputSimpleWorkflowInput(
-                _t="SimpleWorkflow",
-                blueprint=IRapidBlueprint(actual_instance=blueprint),
+        return simple_workflow(
+            IRapidSpecClassifyRapidSpec(
+                _t="Classify",
+                asset=ASSET,
+                title=literal(self._instruction),
+                categories=OptionsBinding(
+                    literal=[
+                        OptionsBindingOption(label=option, value=option)
+                        for option in self._answer_options
+                    ]
+                ),
             )
         )
 
