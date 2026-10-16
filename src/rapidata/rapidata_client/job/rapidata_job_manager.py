@@ -9,7 +9,7 @@ from rapidata.rapidata_client.job.rapidata_job_definition import RapidataJobDefi
 from rapidata.rapidata_client.job._job_creation_state_machine import (
     JobDefinitionCreationMachine,
 )
-from typing import Sequence, Literal, TYPE_CHECKING
+from typing import Sequence, Literal, TYPE_CHECKING, cast
 from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
 )
@@ -154,7 +154,7 @@ class RapidataJobManager:
         self,
         name: str,
         instruction: str,
-        answer_options: list[str],
+        answer_options: list[str] | list[list[str]],
         datapoints: list[str],
         data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: int = 10,
@@ -174,7 +174,10 @@ class RapidataJobManager:
         Args:
             name (str): The name of the job. (Will not be shown to the labeler)
             instruction (str): The instruction for how the data should be classified.
-            answer_options (list[str]): The list of options for the classification.
+            answer_options (list[str] | list[list[str]]): The options for the classification.\n
+                Pass one list to show the same options for every datapoint, or one list per datapoint
+                (same length as datapoints, matched by index) to show different options per datapoint.
+                Each datapoint needs between 2 and 8 unique options.
             datapoints (list[str]): The list of datapoints for the classification - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
@@ -204,18 +207,29 @@ class RapidataJobManager:
 
             from rapidata.rapidata_client.workflow import ClassifyWorkflow
 
+            per_datapoint = any(isinstance(option, list) for option in answer_options)
+            if per_datapoint and not all(
+                isinstance(option, list) for option in answer_options
+            ):
+                raise ValueError(
+                    "answer_options must be either a list of strings or a list of lists of strings"
+                )
+
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
                 private_metadata=private_metadata,
                 data_type=data_type,
+                answer_options=(
+                    cast(list[list[str]], answer_options)
+                    if per_datapoint
+                    else [list(cast(list[str], answer_options))] * len(datapoints)
+                ),
             )
             return self._create_general_job_definition(
                 name=name,
-                workflow=ClassifyWorkflow(
-                    instruction=instruction, answer_options=answer_options
-                ),
+                workflow=ClassifyWorkflow(instruction=instruction),
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 confidence_threshold=confidence_threshold,

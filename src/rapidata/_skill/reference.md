@@ -29,7 +29,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `answer_options` | list[str] | Categories to choose from |
+| `answer_options` | list[str] \| list[list[str]] | Categories to choose from. Pass one list per datapoint (same length as `datapoints`) to show different options per datapoint; 2–8 unique options each |
 
 ### Comparison-specific
 

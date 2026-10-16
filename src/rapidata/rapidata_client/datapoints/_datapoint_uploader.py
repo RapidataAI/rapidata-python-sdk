@@ -54,6 +54,7 @@ class DatapointUploader:
                 context=context,
                 context_asset=context_asset,
                 transcription=datapoint.sentence,
+                answer_options=datapoint.answer_options,
             ),
             sortIndex=index,
             group=datapoint.group,

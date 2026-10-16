@@ -7,7 +7,6 @@ from rapidata.rapidata_client.datapoints._default_segments import (
     build_schema,
 )
 from rapidata.rapidata_client.workflow import (
-    ClassifyWorkflow,
     CompareWorkflow,
     FreeTextWorkflow,
     LocateWorkflow,
@@ -73,14 +72,3 @@ def test_schema_only_lists_the_workflow_segments_asked_for():
 
 def test_workflows_without_required_segments_keep_the_default_schema():
     assert LocateWorkflow(target="the cat")._required_segments() == set()
-
-
-def test_classify_sends_its_options_as_a_literal():
-    rapid = _rapid(
-        ClassifyWorkflow(instruction="Pick one", answer_options=["cat", "dog"])
-    )
-
-    assert rapid.t == "Classify"
-    assert rapid.title.literal == "Pick one"
-    assert [o.value for o in rapid.categories.literal] == ["cat", "dog"]
-    assert rapid.categories.segment is None

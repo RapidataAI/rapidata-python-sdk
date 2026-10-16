@@ -115,3 +115,21 @@ In this example, we rate images on a Likert scale to assess how well generated i
 
     !!! note
         Review every qualification example and its truth carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
+
+## Different answer options per datapoint
+
+Pass one list of answer options per datapoint, matched by index, when each item needs its own choices. Results then list each datapoint's own options.
+
+```python
+job_definition = client.job.create_classification_job_definition(
+    name="Per-datapoint options",
+    instruction="Pick the correct answer",
+    datapoints=["banana", "A dog", "2 + 2"],
+    data_type="text",
+    answer_options=[
+        ["Yellow", "Blue", "Purple"],
+        ["Woof", "Meow"],
+        ["3", "4", "5", "22"],
+    ],
+)
+```
