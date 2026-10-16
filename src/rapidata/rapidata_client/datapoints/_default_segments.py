@@ -3,6 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from rapidata.api_client.models.dataset_segment_definition import (
+        DatasetSegmentDefinition,
+    )
     from rapidata.api_client.models.dataset_segment_input import DatasetSegmentInput
     from rapidata.api_client.models.i_asset_input import IAssetInput
 
@@ -53,3 +56,45 @@ def build_default_segments(
             )
         )
     return segments
+
+
+def build_schema(required: set[str]) -> list[DatasetSegmentDefinition]:
+    """The asset and context segments, plus each workflow segment in ``required``."""
+    from rapidata.api_client.models.dataset_segment_definition import (
+        DatasetSegmentDefinition,
+    )
+    from rapidata.api_client.models.dataset_segment_kind import DatasetSegmentKind
+
+    workflow_segments = {
+        TRANSCRIPTION_SEGMENT_KEY: ("Transcription", DatasetSegmentKind.TEXT),
+    }
+    return [
+        DatasetSegmentDefinition(
+            key=ASSET_SEGMENT_KEY,
+            label="Asset",
+            kind=DatasetSegmentKind.ASSET,
+            required=True,
+        ),
+        DatasetSegmentDefinition(
+            key=CONTEXT_SEGMENT_KEY,
+            label="Context",
+            kind=DatasetSegmentKind.TEXT,
+            required=False,
+            maxLength=400,
+        ),
+        DatasetSegmentDefinition(
+            key=CONTEXT_ASSET_SEGMENT_KEY,
+            label="Context asset",
+            kind=DatasetSegmentKind.ASSET,
+            required=False,
+        ),
+        *(
+            DatasetSegmentDefinition(
+                key=key,
+                label=workflow_segments[key][0],
+                kind=workflow_segments[key][1],
+                required=True,
+            )
+            for key in sorted(required)
+        ),
+    ]
