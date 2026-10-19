@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.10.15.1147-1d4ff72"
+    "version": "2026.10.19.0712-7b7767e"
   },
   "servers": [
     {
@@ -46072,9 +46072,9 @@
         "enum": [
           "None",
           "Low",
-          "Sufficient",
-          null
-        ]
+          "Sufficient"
+        ],
+        "description": "How much labelling capacity an audience has, as a bucket rather than a headcount. Enough to\n tell someone their job will crawl or never finish, and no more — a filtered audience's\n membership is a predicate over its base, so an exact live count would mean maintaining a\n counter per filter for a number nobody reads."
       },
       "AudienceInactivitySyncPhase": {
         "enum": [
@@ -47545,7 +47545,7 @@
           "languages": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/Language"
             }
           }
         }
@@ -48319,6 +48319,195 @@
             "type": "string"
           }
         }
+      },
+      "Language": {
+        "enum": [
+          "ab",
+          "aa",
+          "af",
+          "ak",
+          "sq",
+          "am",
+          "ar",
+          "an",
+          "hy",
+          "as",
+          "av",
+          "ae",
+          "ay",
+          "az",
+          "bm",
+          "ba",
+          "eu",
+          "be",
+          "bn",
+          "bi",
+          "bs",
+          "br",
+          "bg",
+          "my",
+          "ca",
+          "ch",
+          "ce",
+          "ny",
+          "zh",
+          "cu",
+          "cv",
+          "kw",
+          "co",
+          "cr",
+          "hr",
+          "cs",
+          "da",
+          "dv",
+          "nl",
+          "dz",
+          "en",
+          "eo",
+          "et",
+          "ee",
+          "fo",
+          "fj",
+          "fi",
+          "fr",
+          "ff",
+          "gl",
+          "lg",
+          "ka",
+          "de",
+          "gn",
+          "gu",
+          "ht",
+          "ha",
+          "he",
+          "hz",
+          "hi",
+          "ho",
+          "hu",
+          "is",
+          "io",
+          "ig",
+          "id",
+          "ia",
+          "ie",
+          "iu",
+          "ik",
+          "ga",
+          "it",
+          "ja",
+          "jv",
+          "kl",
+          "kn",
+          "kr",
+          "ks",
+          "kk",
+          "km",
+          "ki",
+          "rw",
+          "ky",
+          "kv",
+          "kg",
+          "ko",
+          "kj",
+          "ku",
+          "lo",
+          "la",
+          "lv",
+          "li",
+          "ln",
+          "lt",
+          "lu",
+          "lb",
+          "mk",
+          "mg",
+          "ms",
+          "ml",
+          "mt",
+          "gv",
+          "mi",
+          "mr",
+          "mh",
+          "el",
+          "mn",
+          "na",
+          "nv",
+          "ng",
+          "ne",
+          "se",
+          "nd",
+          "no",
+          "nb",
+          "nn",
+          "oc",
+          "oj",
+          "or",
+          "om",
+          "os",
+          "pi",
+          "pa",
+          "fa",
+          "pl",
+          "pt",
+          "ps",
+          "qu",
+          "ro",
+          "rm",
+          "rn",
+          "ru",
+          "sm",
+          "sg",
+          "sa",
+          "sc",
+          "gd",
+          "sr",
+          "sh",
+          "sn",
+          "ii",
+          "sd",
+          "si",
+          "sk",
+          "sl",
+          "so",
+          "st",
+          "nr",
+          "es",
+          "su",
+          "sw",
+          "ss",
+          "sv",
+          "tl",
+          "ty",
+          "tg",
+          "ta",
+          "tt",
+          "te",
+          "th",
+          "bo",
+          "ti",
+          "to",
+          "ts",
+          "tn",
+          "tr",
+          "tk",
+          "tw",
+          "ug",
+          "uk",
+          "ur",
+          "uz",
+          "ve",
+          "vi",
+          "vo",
+          "wa",
+          "cy",
+          "fy",
+          "wo",
+          "xh",
+          "yi",
+          "yo",
+          "za",
+          "zu"
+        ],
+        "description": "Serialized as the ISO 639-1 code."
       },
       "MetadataInputCollection": {
         "type": "object",
@@ -49267,6 +49456,261 @@
           "GreaterThan",
           "GreaterThanOrEqual"
         ]
+      },
+      "Country": {
+        "enum": [
+          "AF",
+          "AX",
+          "AL",
+          "DZ",
+          "AS",
+          "AD",
+          "AO",
+          "AI",
+          "AQ",
+          "AG",
+          "AR",
+          "AM",
+          "AW",
+          "AU",
+          "AT",
+          "AZ",
+          "BS",
+          "BH",
+          "BD",
+          "BB",
+          "BY",
+          "BE",
+          "BZ",
+          "BJ",
+          "BM",
+          "BT",
+          "BO",
+          "BQ",
+          "BA",
+          "BW",
+          "BV",
+          "BR",
+          "IO",
+          "VG",
+          "BN",
+          "BG",
+          "BF",
+          "BI",
+          "CV",
+          "KH",
+          "CM",
+          "CA",
+          "KY",
+          "CF",
+          "TD",
+          "CL",
+          "CN",
+          "CX",
+          "CC",
+          "CO",
+          "KM",
+          "CG",
+          "CK",
+          "CR",
+          "CI",
+          "HR",
+          "CU",
+          "CW",
+          "CY",
+          "CZ",
+          "CD",
+          "DK",
+          "DJ",
+          "DM",
+          "DO",
+          "EC",
+          "EG",
+          "SV",
+          "GQ",
+          "ER",
+          "EE",
+          "SZ",
+          "ET",
+          "FK",
+          "FO",
+          "FM",
+          "FJ",
+          "FI",
+          "FR",
+          "GF",
+          "PF",
+          "TF",
+          "GA",
+          "GM",
+          "GE",
+          "DE",
+          "GH",
+          "GI",
+          "GR",
+          "GL",
+          "GD",
+          "GP",
+          "GU",
+          "GT",
+          "GG",
+          "GN",
+          "GW",
+          "GY",
+          "HT",
+          "HM",
+          "VA",
+          "HN",
+          "HK",
+          "HU",
+          "IS",
+          "IN",
+          "ID",
+          "IR",
+          "IQ",
+          "IE",
+          "IM",
+          "IL",
+          "IT",
+          "JM",
+          "JP",
+          "JE",
+          "JO",
+          "KZ",
+          "KE",
+          "KI",
+          "XK",
+          "KW",
+          "KG",
+          "LA",
+          "LV",
+          "LB",
+          "LS",
+          "LR",
+          "LY",
+          "LI",
+          "LT",
+          "LU",
+          "MO",
+          "MG",
+          "MW",
+          "MY",
+          "MV",
+          "ML",
+          "MT",
+          "MH",
+          "MQ",
+          "MR",
+          "MU",
+          "YT",
+          "MX",
+          "MD",
+          "MC",
+          "MN",
+          "ME",
+          "MS",
+          "MA",
+          "MZ",
+          "MM",
+          "NA",
+          "NR",
+          "NP",
+          "NL",
+          "NC",
+          "NZ",
+          "NI",
+          "NE",
+          "NG",
+          "NU",
+          "NF",
+          "MP",
+          "KP",
+          "MK",
+          "NO",
+          "OM",
+          "PK",
+          "PW",
+          "PA",
+          "PG",
+          "PY",
+          "PE",
+          "PH",
+          "PN",
+          "PL",
+          "PT",
+          "PR",
+          "QA",
+          "RE",
+          "RO",
+          "RU",
+          "RW",
+          "BL",
+          "SH",
+          "KN",
+          "LC",
+          "MF",
+          "PM",
+          "VC",
+          "WS",
+          "SM",
+          "ST",
+          "SA",
+          "SN",
+          "RS",
+          "SC",
+          "SL",
+          "SG",
+          "SX",
+          "SK",
+          "SI",
+          "SB",
+          "SO",
+          "ZA",
+          "GS",
+          "KR",
+          "SS",
+          "ES",
+          "LK",
+          "PS",
+          "SD",
+          "SR",
+          "SJ",
+          "SE",
+          "CH",
+          "SY",
+          "TW",
+          "TJ",
+          "TZ",
+          "TH",
+          "TL",
+          "TG",
+          "TK",
+          "TO",
+          "TT",
+          "TN",
+          "TR",
+          "TM",
+          "TC",
+          "TV",
+          "UG",
+          "UA",
+          "AE",
+          "GB",
+          "US",
+          "UM",
+          "UY",
+          "VI",
+          "UZ",
+          "VU",
+          "VE",
+          "VN",
+          "WF",
+          "EH",
+          "YE",
+          "ZM",
+          "ZW"
+        ],
+        "description": "Serialized as the ISO 3166-1 alpha-2 code."
       },
       "CreateExperimentEndpoint_Input": {
         "required": [
@@ -50260,6 +50704,9 @@
             "$ref": "#/components/schemas/ICampaignFilterCampaignIdFilter"
           },
           {
+            "$ref": "#/components/schemas/ICampaignFilterCampaignParticipantCountFilter"
+          },
+          {
             "$ref": "#/components/schemas/ICampaignFilterCampaignSessionCountFilter"
           },
           {
@@ -50306,6 +50753,7 @@
             "AudienceStateFilter": "#/components/schemas/ICampaignFilterAudienceStateFilter",
             "CampaignCooldownFilter": "#/components/schemas/ICampaignFilterCampaignCooldownFilter",
             "CampaignIdFilter": "#/components/schemas/ICampaignFilterCampaignIdFilter",
+            "CampaignParticipantCountFilter": "#/components/schemas/ICampaignFilterCampaignParticipantCountFilter",
             "CampaignSessionCountFilter": "#/components/schemas/ICampaignFilterCampaignSessionCountFilter",
             "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
             "DemographicFilter": "#/components/schemas/ICampaignFilterDemographicFilter",
@@ -50411,6 +50859,28 @@
           }
         }
       },
+      "ICampaignFilterCampaignParticipantCountFilter": {
+        "required": [
+          "participantCount",
+          "operator",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignParticipantCountFilter"
+            ],
+            "type": "string"
+          },
+          "participantCount": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ComparisonOperator"
+          }
+        }
+      },
       "ICampaignFilterCampaignSessionCountFilter": {
         "required": [
           "sessionCount",
@@ -50448,7 +50918,7 @@
           "countries": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/Country"
             }
           }
         }
@@ -50532,7 +51002,7 @@
           "languages": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/Language"
             }
           }
         }
@@ -51228,10 +51698,13 @@
             "$ref": "#/components/schemas/IProgramPredicateCorrectCountPredicate"
           },
           {
-            "$ref": "#/components/schemas/IProgramPredicateTimeElapsedPredicate"
+            "$ref": "#/components/schemas/IProgramPredicateCountryPredicate"
           },
           {
-            "$ref": "#/components/schemas/IProgramPredicateUserAttributePredicate"
+            "$ref": "#/components/schemas/IProgramPredicateLanguagePredicate"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramPredicateTimeElapsedPredicate"
           },
           {
             "$ref": "#/components/schemas/IProgramPredicateUserScorePredicate"
@@ -51245,8 +51718,9 @@
             "ConsecutiveCorrectPredicate": "#/components/schemas/IProgramPredicateConsecutiveCorrectPredicate",
             "ConsecutiveIncorrectPredicate": "#/components/schemas/IProgramPredicateConsecutiveIncorrectPredicate",
             "CorrectCountPredicate": "#/components/schemas/IProgramPredicateCorrectCountPredicate",
+            "CountryPredicate": "#/components/schemas/IProgramPredicateCountryPredicate",
+            "LanguagePredicate": "#/components/schemas/IProgramPredicateLanguagePredicate",
             "TimeElapsedPredicate": "#/components/schemas/IProgramPredicateTimeElapsedPredicate",
-            "UserAttributePredicate": "#/components/schemas/IProgramPredicateUserAttributePredicate",
             "UserScorePredicate": "#/components/schemas/IProgramPredicateUserScorePredicate"
           }
         }
@@ -51365,6 +51839,46 @@
           }
         }
       },
+      "IProgramPredicateCountryPredicate": {
+        "required": [
+          "countries",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountryPredicate"
+            ],
+            "type": "string"
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Country"
+            }
+          }
+        }
+      },
+      "IProgramPredicateLanguagePredicate": {
+        "required": [
+          "languages",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LanguagePredicate"
+            ],
+            "type": "string"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Language"
+            }
+          }
+        }
+      },
       "IProgramPredicateTimeElapsedPredicate": {
         "required": [
           "comparison",
@@ -51384,29 +51898,6 @@
           "seconds": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "IProgramPredicateUserAttributePredicate": {
-        "required": [
-          "attribute",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "UserAttributePredicate"
-            ],
-            "type": "string"
-          },
-          "attribute": {
-            "$ref": "#/components/schemas/UserAttribute"
-          },
-          "values": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           }
         }
       },
@@ -51864,12 +52355,6 @@
             "format": "int32"
           }
         }
-      },
-      "UserAttribute": {
-        "enum": [
-          "Country",
-          "Language"
-        ]
       },
       "ValidationChance": {
         "required": [
@@ -52341,7 +52826,7 @@
           "id",
           "datasetId",
           "sortIndex",
-          "asset",
+          "segments",
           "createdAt"
         ],
         "type": "object",
@@ -52358,7 +52843,18 @@
             "nullable": true
           },
           "asset": {
-            "$ref": "#/components/schemas/IAsset"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "deprecated": true
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatasetSegment"
+            }
           },
           "createdAt": {
             "type": "string",
@@ -55968,9 +56464,9 @@
           "UsdPerImage",
           "UsdPerVideoSecond",
           "UsdPerMillionTokens",
-          "UsdPerSample",
-          null
-        ]
+          "UsdPerSample"
+        ],
+        "description": "The unit a model's cost is quoted in. Costs are only comparable within one unit."
       },
       "CreateBenchmarkCustomRunsEndpoint_Input": {
         "required": [
@@ -59411,9 +59907,9 @@
           "CreatedPrivate",
           "UpdatedPrivate",
           "OpenedPullRequest",
-          "Failed",
-          null
-        ]
+          "Failed"
+        ],
+        "description": "Result of the last completed HuggingFace sync attempt."
       },
       "HuggingFaceSyncStatus": {
         "enum": [
@@ -59641,16 +60137,16 @@
         "enum": [
           "AClearlyWins",
           "CoinFlip",
-          "BClearlyWins",
-          null
-        ]
+          "BClearlyWins"
+        ],
+        "description": "Which side of an A-vs-B matchup a prompt falls on once its Wilson interval is compared to 0.5."
       },
       "ModelLicenseType": {
         "enum": [
           "OpenSource",
-          "Proprietary",
-          null
-        ]
+          "Proprietary"
+        ],
+        "description": "The license classification of the underlying model behind a participant."
       },
       "Origin": {
         "required": [
@@ -63307,8 +63803,7 @@
           "FreeText",
           "Scrub",
           "Ranking",
-          "MultiRanking",
-          null
+          "MultiRanking"
         ]
       },
       "AssetBinding": {
@@ -64621,10 +65116,22 @@
             "type": "string"
           },
           "country": {
-            "type": "string"
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Country"
+              }
+            ],
+            "nullable": true
           },
           "language": {
-            "type": "string"
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Language"
+              }
+            ],
+            "nullable": true
           },
           "age": {
             "type": "string",
@@ -67727,7 +68234,7 @@
           "languages": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/Language"
             }
           }
         }
@@ -67944,10 +68451,22 @@
             "type": "string"
           },
           "country": {
-            "type": "string"
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Country"
+              }
+            ],
+            "nullable": true
           },
           "language": {
-            "type": "string"
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Language"
+              }
+            ],
+            "nullable": true
           },
           "age": {
             "type": "string",
@@ -68950,16 +69469,16 @@
           "ContentFlagged",
           "UnsupportedContentType",
           "CheckErrored",
-          "ClassificationTimedOut",
-          null
-        ]
+          "ClassificationTimedOut"
+        ],
+        "description": "Customer-facing reason a job was routed to manual review. Deliberately a projection of the\n internal review-reason taxonomy: the size-triggered LargeJob reason is intentionally\n absent so customers cannot learn that job size triggers review (that would incentivize splitting\n work into smaller jobs). A size-triggered review therefore surfaces as no reason at all."
       },
       "SegmentTextLanguage": {
         "enum": [
           "Original",
-          "English",
-          null
-        ]
+          "English"
+        ],
+        "description": "Which language of a text segment to read."
       },
       "ShareJobWithOrganizationEndpoint_Input": {
         "required": [
@@ -68993,9 +69512,9 @@
           "None",
           "Temporary",
           "Permanent",
-          "Passive",
-          null
-        ]
+          "Passive"
+        ],
+        "description": "Well-known presets for sticky campaign behavior."
       },
       "SubmitFeedbackEndpoint_Input": {
         "required": [
@@ -73614,7 +74133,13 @@
             "type": "string"
           },
           "country": {
-            "type": "string"
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Country"
+              }
+            ],
+            "nullable": true
           },
           "age": {
             "type": "string",
@@ -73715,10 +74240,22 @@
             "type": "string"
           },
           "country": {
-            "type": "string"
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Country"
+              }
+            ],
+            "nullable": true
           },
           "language": {
-            "type": "string"
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Language"
+              }
+            ],
+            "nullable": true
           },
           "age": {
             "type": "string",
@@ -73889,7 +74426,13 @@
             "type": "string"
           },
           "country": {
-            "type": "string"
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Country"
+              }
+            ],
+            "nullable": true
           },
           "age": {
             "type": "string",
@@ -76168,12 +76711,10 @@
             "description": "The text to translate."
           },
           "targetLanguage": {
-            "type": "string",
-            "description": "The language to translate the text into."
+            "$ref": "#/components/schemas/Language"
           },
           "sourceLanguage": {
-            "type": "string",
-            "description": "The original language of the text."
+            "$ref": "#/components/schemas/Language"
           }
         }
       },
@@ -76191,12 +76732,16 @@
           },
           "sourceLanguage": {
             "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Language"
+              }
+            ],
             "description": "The detected or provided source language of the text.",
             "nullable": true
           },
           "targetLanguage": {
-            "type": "string",
-            "description": "The language the text was translated into."
+            "$ref": "#/components/schemas/Language"
           }
         }
       },

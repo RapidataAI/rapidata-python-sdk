@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.10.15.1147-1d4ff72"
+    "version": "2026.10.19.0712-7b7767e"
   },
   "servers": [
     {
@@ -17359,9 +17359,9 @@
           "UsdPerImage",
           "UsdPerVideoSecond",
           "UsdPerMillionTokens",
-          "UsdPerSample",
-          null
-        ]
+          "UsdPerSample"
+        ],
+        "description": "The unit a model's cost is quoted in. Costs are only comparable within one unit."
       },
       "CreateBenchmarkCustomRunsEndpoint_Input": {
         "required": [
@@ -20849,9 +20849,9 @@
           "CreatedPrivate",
           "UpdatedPrivate",
           "OpenedPullRequest",
-          "Failed",
-          null
-        ]
+          "Failed"
+        ],
+        "description": "Result of the last completed HuggingFace sync attempt."
       },
       "HuggingFaceSyncStatus": {
         "enum": [
@@ -21617,9 +21617,9 @@
         "enum": [
           "AClearlyWins",
           "CoinFlip",
-          "BClearlyWins",
-          null
-        ]
+          "BClearlyWins"
+        ],
+        "description": "Which side of an A-vs-B matchup a prompt falls on once its Wilson interval is compared to 0.5."
       },
       "MetadataInputCollection": {
         "type": "object",
@@ -21650,9 +21650,9 @@
       "ModelLicenseType": {
         "enum": [
           "OpenSource",
-          "Proprietary",
-          null
-        ]
+          "Proprietary"
+        ],
+        "description": "The license classification of the underlying model behind a participant."
       },
       "Origin": {
         "required": [

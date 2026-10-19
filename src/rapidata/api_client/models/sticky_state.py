@@ -18,7 +18,7 @@ from typing_extensions import Self
 
 class StickyState(str, Enum):
     """
-    StickyState
+    Well-known presets for sticky campaign behavior.
     """
 
     """

@@ -18,7 +18,7 @@ from typing_extensions import Self
 
 class HuggingFaceSyncOutcome(str, Enum):
     """
-    HuggingFaceSyncOutcome
+    Result of the last completed HuggingFace sync attempt.
     """
 
     """
