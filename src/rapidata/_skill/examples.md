@@ -599,13 +599,6 @@ leaderboard = benchmark.create_leaderboard(
     # so every matchup weighs the same; ALL_VOTES counts each response as its own
     # matchup, so heavily-answered matchups dominate the standings.
     vote_aggregation=VoteAggregation.ALL_VOTES,
-    # By default an initial run evaluates the models already in the benchmark against
-    # each other so the leaderboard starts with standings. Set skip_initial_run=True to
-    # start with no responses and no standings — models added later still compare
-    # against the whole existing field, and boosting still works. Create-only: it is
-    # applied at creation and not recorded on the leaderboard, so there's no property to
-    # read it back.
-    skip_initial_run=False,
 )
 
 print(leaderboard.included_tags, leaderboard.excluded_tags)  # copies; [] when unset
