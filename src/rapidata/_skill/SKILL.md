@@ -678,9 +678,6 @@ leaderboard = benchmark.create_leaderboard(
     # excluded_tags=["nsfw"],            # Optional: skip prompts carrying one of these tags (always wins)
     # vote_aggregation=VoteAggregation.MAJORITY_VOTE,  # default; or VoteAggregation.ALL_VOTES — how a matchup's
     #                                    #   individual responses are aggregated (import VoteAggregation from rapidata)
-    # skip_initial_run=False,            # Optional: when True, skip the initial run that evaluates the models already
-    #                                    #   in the benchmark against each other — you start with no responses/standings.
-    #                                    #   Later add_model still compares against the whole field; create-only (not readable back).
 )
 
 # Evaluate a model (creates participant, uploads media, and submits in one step)

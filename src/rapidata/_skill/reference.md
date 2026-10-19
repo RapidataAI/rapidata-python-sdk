@@ -895,8 +895,14 @@ leaderboard = benchmark.create_leaderboard(
     # included_tags=["outdoor"],         # Optional: only collect matchups for prompts carrying one of these tags
     # excluded_tags=["nsfw"],            # Optional: skip prompts carrying any of these tags (always wins)
     # vote_aggregation=VoteAggregation.MAJORITY_VOTE,  # VoteAggregation.MAJORITY_VOTE (default) or ALL_VOTES — how matchup votes are aggregated
-    # skip_initial_run=False,            # Optional: when True, skip the initial run that evaluates the models already in the benchmark against each other (start with no responses/standings; later models still compare against the whole field). Create-only — not readable back
+    # skip_initial_run=False,            # Leave False unless the user explicitly asks to skip. See "Skipping the initial run" below
 )
+
+# Skipping the initial run: the initial run IS the evaluation of the models already in the
+# benchmark, so skip_initial_run=True means they are never compared and the leaderboard has
+# no standings. Use it only when the user explicitly asks for it, never to save cost or to
+# "launch it yourself": skipping marks those models submitted, so a later benchmark.run()
+# finds nothing to submit and evaluates nothing. Create-only — not readable back.
 
 # Evaluate a model (creates participant, uploads media, and submits in one step).
 # Pair each media item with its prompt via prompts=[...] or identifiers=[...] (one is required).
