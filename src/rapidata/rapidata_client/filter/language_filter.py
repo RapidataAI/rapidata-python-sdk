@@ -3,6 +3,7 @@ from __future__ import annotations
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from pydantic import BaseModel, field_validator
 from rapidata.rapidata_client.config import logger
+from rapidata.api_client.models.language import Language
 
 
 class LanguageFilter(RapidataFilter, BaseModel):
@@ -38,6 +39,10 @@ class LanguageFilter(RapidataFilter, BaseModel):
                 logger.warning(
                     f"Language code '{code}' should be lowercase. It will be lowercased automatically."
                 )
+            try:
+                Language(code.lower())
+            except ValueError:
+                raise ValueError(f"Unknown ISO 639-1 language code: '{code}'") from None
             validated.append(code.lower())
         return validated
 
@@ -50,7 +55,7 @@ class LanguageFilter(RapidataFilter, BaseModel):
         return IUserFilter(
             actual_instance=IUserFilterLanguageUserFilter(
                 _t="LanguageFilter",
-                languages=self.language_codes,
+                languages=[Language(code) for code in self.language_codes],
             )
         )
 
@@ -62,6 +67,7 @@ class LanguageFilter(RapidataFilter, BaseModel):
 
         return IAudienceFilter(
             actual_instance=IAudienceFilterLanguageAudienceFilter(
-                _t="LanguageFilter", languages=self.language_codes
+                _t="LanguageFilter",
+                languages=[Language(code) for code in self.language_codes],
             )
         )

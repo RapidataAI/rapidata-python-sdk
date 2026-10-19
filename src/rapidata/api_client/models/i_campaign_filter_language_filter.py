@@ -17,6 +17,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.language import Language
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -27,7 +28,7 @@ class ICampaignFilterLanguageFilter(LazyValidatedModel):
     ICampaignFilterLanguageFilter
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    languages: List[StrictStr]
+    languages: List[Language]
     __properties: ClassVar[List[str]] = ["_t", "languages"]
 
     @field_validator('t')

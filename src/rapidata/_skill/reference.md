@@ -282,7 +282,7 @@ from rapidata import (
 #     raise NotImplementedError here; demographic/device targeting belongs on .filter() (below). ---
 audience.update_filters([
     CountryFilter(country_codes=["US", "CA", "GB"]),                  # 2-letter ISO codes (uppercased)
-    LanguageFilter(language_codes=["en", "fr"]),                      # 2-letter ISO language codes
+    LanguageFilter(language_codes=["en", "fr"]),                      # ISO 639-1 codes (lowercased); unknown codes raise ValueError
 ])
 
 # Combine filters with logic operators

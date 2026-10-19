@@ -18,7 +18,7 @@ from typing_extensions import Self
 
 class CostUnit(str, Enum):
     """
-    CostUnit
+    The unit a model's cost is quoted in. Costs are only comparable within one unit.
     """
 
     """
