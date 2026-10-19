@@ -18,6 +18,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.get_replicate_model_endpoint_parameter import GetReplicateModelEndpointParameter
+from rapidata.api_client.models.replicate_model_output_type import ReplicateModelOutputType
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,9 +33,10 @@ class GetReplicateModelEndpointOutput(LazyValidatedModel):
     description: Optional[StrictStr] = Field(default=None, description="A short description of the model.")
     cover_image_url: Optional[StrictStr] = Field(default=None, description="URL of a representative cover image, if available.", alias="coverImageUrl")
     run_count: Optional[StrictInt] = Field(default=None, description="Total number of times the model has been run on Replicate, if known.", alias="runCount")
+    output_type: Optional[ReplicateModelOutputType] = Field(default=None, description="What the model produces, or null when the provider's metadata does not tell.", alias="outputType")
     latest_version: Optional[StrictStr] = Field(default=None, description="The model's latest version id, if reported by Replicate.", alias="latestVersion")
     parameters: List[GetReplicateModelEndpointParameter]
-    __properties: ClassVar[List[str]] = ["modelOwner", "modelName", "description", "coverImageUrl", "runCount", "latestVersion", "parameters"]
+    __properties: ClassVar[List[str]] = ["modelOwner", "modelName", "description", "coverImageUrl", "runCount", "outputType", "latestVersion", "parameters"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -93,6 +95,11 @@ class GetReplicateModelEndpointOutput(LazyValidatedModel):
         if self.run_count is None and "run_count" in self.model_fields_set:
             _dict['runCount'] = None
 
+        # set to None if output_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.output_type is None and "output_type" in self.model_fields_set:
+            _dict['outputType'] = None
+
         # set to None if latest_version (nullable) is None
         # and model_fields_set contains the field
         if self.latest_version is None and "latest_version" in self.model_fields_set:
@@ -115,6 +122,7 @@ class GetReplicateModelEndpointOutput(LazyValidatedModel):
             "description": obj.get("description"),
             "coverImageUrl": obj.get("coverImageUrl"),
             "runCount": obj.get("runCount"),
+            "outputType": obj.get("outputType"),
             "latestVersion": obj.get("latestVersion"),
             "parameters": [GetReplicateModelEndpointParameter.from_dict(_item) for _item in obj["parameters"]] if obj.get("parameters") is not None else None
         }

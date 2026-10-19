@@ -16,7 +16,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.i_program_node import IProgramNode
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -33,7 +33,8 @@ class CreateProgramCampaignEndpointInput(LazyValidatedModel):
     nodes: Dict[str, IProgramNode] = Field(description="The program's decision graph, keyed by node id.")
     max_rapids: StrictInt = Field(description="The session ends after this many counted responses.", alias="maxRapids")
     max_duration_seconds: StrictInt = Field(description="The session ends after this many seconds.", alias="maxDurationSeconds")
-    __properties: ClassVar[List[str]] = ["name", "priority", "rootNodeId", "nodes", "maxRapids", "maxDurationSeconds"]
+    routing_id: Optional[StrictStr] = Field(default=None, description="The routing that owns the work; its completion moves the campaign to analysis.", alias="routingId")
+    __properties: ClassVar[List[str]] = ["name", "priority", "rootNodeId", "nodes", "maxRapids", "maxDurationSeconds", "routingId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -77,6 +78,11 @@ class CreateProgramCampaignEndpointInput(LazyValidatedModel):
                 if self.nodes[_key_nodes]:
                     _field_dict[_key_nodes] = self.nodes[_key_nodes].to_dict()
             _dict['nodes'] = _field_dict
+        # set to None if routing_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.routing_id is None and "routing_id" in self.model_fields_set:
+            _dict['routingId'] = None
+
         return _dict
 
     @classmethod
@@ -99,7 +105,8 @@ class CreateProgramCampaignEndpointInput(LazyValidatedModel):
             if obj.get("nodes") is not None
             else None,
             "maxRapids": obj.get("maxRapids"),
-            "maxDurationSeconds": obj.get("maxDurationSeconds")
+            "maxDurationSeconds": obj.get("maxDurationSeconds"),
+            "routingId": obj.get("routingId")
         }
         try:
             _obj = cls.model_validate(_data)

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.10.19.0712-7b7767e"
+    "version": "2026.10.19.1655-abb0eaf"
   },
   "servers": [
     {
@@ -2271,6 +2271,11 @@
             "type": "integer",
             "description": "The session ends after this many seconds.",
             "format": "int32"
+          },
+          "routingId": {
+            "type": "string",
+            "description": "The routing that owns the work; its completion moves the campaign to analysis.",
+            "nullable": true
           }
         }
       },

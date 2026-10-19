@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.10.19.0712-7b7767e"
+    "version": "2026.10.19.1655-abb0eaf"
   },
   "servers": [
     {
@@ -19865,6 +19865,16 @@
             "format": "int64",
             "nullable": true
           },
+          "outputType": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ReplicateModelOutputType"
+              }
+            ],
+            "description": "What the model produces, or null when the provider's metadata does not tell.",
+            "nullable": true
+          },
           "latestVersion": {
             "type": "string",
             "description": "The model's latest version id, if reported by Replicate.",
@@ -24421,6 +24431,15 @@
           }
         }
       },
+      "ReplicateModelOutputType": {
+        "enum": [
+          "Image",
+          "Video",
+          "Audio",
+          "Text"
+        ],
+        "description": "The kind of output a generation model produces."
+      },
       "ReplicateModelParameterType": {
         "enum": [
           "String",
@@ -24556,6 +24575,15 @@
           "runCount": {
             "type": "integer",
             "format": "int64",
+            "nullable": true
+          },
+          "outputType": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ReplicateModelOutputType"
+              }
+            ],
             "nullable": true
           }
         }

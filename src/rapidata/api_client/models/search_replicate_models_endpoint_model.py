@@ -17,6 +17,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.replicate_model_output_type import ReplicateModelOutputType
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -31,7 +32,8 @@ class SearchReplicateModelsEndpointModel(LazyValidatedModel):
     description: Optional[StrictStr] = None
     cover_image_url: Optional[StrictStr] = Field(default=None, alias="coverImageUrl")
     run_count: Optional[StrictInt] = Field(default=None, alias="runCount")
-    __properties: ClassVar[List[str]] = ["modelOwner", "modelName", "description", "coverImageUrl", "runCount"]
+    output_type: Optional[ReplicateModelOutputType] = Field(default=None, alias="outputType")
+    __properties: ClassVar[List[str]] = ["modelOwner", "modelName", "description", "coverImageUrl", "runCount", "outputType"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -83,6 +85,11 @@ class SearchReplicateModelsEndpointModel(LazyValidatedModel):
         if self.run_count is None and "run_count" in self.model_fields_set:
             _dict['runCount'] = None
 
+        # set to None if output_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.output_type is None and "output_type" in self.model_fields_set:
+            _dict['outputType'] = None
+
         return _dict
 
     @classmethod
@@ -99,7 +106,8 @@ class SearchReplicateModelsEndpointModel(LazyValidatedModel):
             "modelName": obj.get("modelName"),
             "description": obj.get("description"),
             "coverImageUrl": obj.get("coverImageUrl"),
-            "runCount": obj.get("runCount")
+            "runCount": obj.get("runCount"),
+            "outputType": obj.get("outputType")
         }
         try:
             _obj = cls.model_validate(_data)
