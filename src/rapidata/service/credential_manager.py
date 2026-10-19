@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import tempfile
 import time
 import urllib.parse
 import webbrowser
@@ -87,20 +88,13 @@ class CredentialManager:
             for env, creds in credentials.items()
         }
 
-        # Write via a 0o600 temp file + atomic rename so the credentials
-        # file is never readable by other users, even for a brief window
-        # between open() and the trailing chmod. POSIX file perms are
-        # best-effort on Windows.
-        tmp_path = self.config_path.with_suffix(
-            self.config_path.suffix + f".tmp.{os.getpid()}"
+        # A fresh 0o600 temp file per write, then an atomic rename: clients built
+        # concurrently in one process each rewrite this file, so a shared temp name races.
+        fd, tmp_name = tempfile.mkstemp(
+            dir=self.config_dir, prefix=f"{self.config_path.name}.", suffix=".tmp"
         )
+        tmp_path = Path(tmp_name)
         try:
-            flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC
-            if hasattr(os, "O_NOFOLLOW"):
-                # Avoid following a pre-existing symlink into a location
-                # that's writable by another user.
-                flags |= os.O_NOFOLLOW
-            fd = os.open(tmp_path, flags, 0o600)
             with os.fdopen(fd, "w") as f:
                 json.dump(data, f, indent=2)
             # Re-assert perms in case umask or NFS stripped them.
