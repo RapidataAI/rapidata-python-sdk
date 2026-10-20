@@ -1,8 +1,7 @@
 (function () {
   "use strict";
 
-  const PRODUCTION_TOKEN = "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ";
-  const TEST_TOKEN = "phc_yYw9vnbBMDv9qNsUVEf2jnGx68ZXeodnSCfp7Tcaje9b";
+  const TOKEN = "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ";
   const PRODUCTION_HOSTS = [
     "rapidata.ai",
     "www.rapidata.ai",
@@ -227,13 +226,13 @@
 
   function resolveAnalyticsTarget(hostname) {
     const host = String(hostname).toLowerCase();
-    if (PRODUCTION_HOSTS.includes(host)) return { environment: "production", token: PRODUCTION_TOKEN };
-    if (host.endsWith(".vercel.app")) return { environment: "preview", token: TEST_TOKEN };
+    if (PRODUCTION_HOSTS.includes(host)) return { environment: "production", token: TOKEN };
+    if (host.endsWith(".vercel.app")) return { environment: "preview", token: TOKEN };
     if (host.endsWith(".rabbitdata.ch") || host === "rapidata.dev" || host.endsWith(".rapidata.dev")) {
-      return { environment: "test", token: TEST_TOKEN };
+      return { environment: "test", token: TOKEN };
     }
     if (["localhost", "127.0.0.1", "lvh.me"].includes(host) || host.endsWith(".localhost") || host.endsWith(".lvh.me")) {
-      return { environment: "development", token: TEST_TOKEN };
+      return { environment: "development", token: TOKEN };
     }
     return null;
   }
@@ -250,9 +249,13 @@
     return properties;
   }
 
+  function surfaceProperties(environment) {
+    return { surface: "docs", environment, tracking_version: 1, event_source: "browser" };
+  }
+
   function superProperties(environment, attribution) {
     return Object.assign(
-      { surface: "docs", environment, tracking_version: 1, event_source: "browser" },
+      surfaceProperties(environment),
       touchProperties("first_", attribution.first),
       touchProperties("last_external_", attribution.last)
     );
@@ -403,6 +406,11 @@
         // reset() on revoke would otherwise reload flags, contacting PostHog after consent is withdrawn.
         advanced_disable_feature_flags: true,
         disable_session_recording: true,
+        // One project serves every environment and reset() drops super properties, so stamp each event.
+        before_send: (event) => {
+          if (event) event.properties = Object.assign(event.properties || {}, surfaceProperties(target.environment));
+          return event;
+        },
         loaded: (instance) => {
           instance.register(current.properties);
           // The opt-out flag survives a revoke in localStorage; without this the first $pageview is dropped.
@@ -483,7 +491,7 @@
 
   const api = {
     constants: {
-      tokens: { production: PRODUCTION_TOKEN, test: TEST_TOKEN },
+      token: TOKEN,
       productionHosts: PRODUCTION_HOSTS,
       internalReferrerExact: INTERNAL_REFERRER_EXACT,
       internalReferrerSuffix: INTERNAL_REFERRER_SUFFIX,

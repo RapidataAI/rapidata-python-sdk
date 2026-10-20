@@ -7,7 +7,7 @@ const fixtures = require("./journey-protocol-v1.fixtures.json");
 describe("journey protocol v1 fixtures", () => {
   it("uses the contract constants", () => {
     const { constants } = fixtures;
-    assert.deepEqual(analytics.constants.tokens, constants.tokens);
+    assert.equal(analytics.constants.token, constants.token);
     assert.deepEqual(analytics.constants.productionHosts, constants.productionHosts);
     assert.deepEqual(analytics.constants.internalReferrerExact, constants.internalReferrerExact);
     assert.deepEqual(analytics.constants.internalReferrerSuffix, constants.internalReferrerSuffix);
@@ -159,7 +159,8 @@ class FakePostHog {
   capture(event, properties, options) {
     this.calls.push(["capture", event, options]);
     if (this.has_opted_out_capturing()) return;
-    this.events.push({ event, properties: { ...this.properties, ...properties } });
+    const data = this.config.before_send({ event, properties: { ...this.properties, ...properties } });
+    if (data) this.events.push(data);
   }
 
   setPersonProperties(set, setOnce) {
@@ -312,7 +313,7 @@ describe("docs consent controller", () => {
     const env = start({ href: "http://docs.lvh.me:8000/quickstart/?utm_source=pypi", referrer: "https://pypi.org/" });
     await env.decide(true);
     const { posthog } = env;
-    assert.equal(posthog.token, fixtures.constants.tokens.test);
+    assert.equal(posthog.token, fixtures.constants.token);
     assert.equal(posthog.config.api_host, "https://eu.i.posthog.com");
     assert.equal(posthog.config.ui_host, "https://eu.posthog.com");
     assert.equal(posthog.config.capture_pageview, "history_change");
@@ -332,6 +333,24 @@ describe("docs consent controller", () => {
     assert.ok(cookie.attributes.includes("Max-Age=7776000"));
     assert.ok(cookie.attributes.includes("SameSite=Lax"));
     assert.equal(analytics.decodeAttributionCookie(cookie.value).first.source, "pypi");
+  });
+
+  it("stamps surface and environment on every event, including after reset()", async () => {
+    const env = start({ href: "https://docs.rapidata.ai/quickstart/" });
+    await env.decide(true);
+    await env.decide(false, "onChange");
+    await env.decide(true, "onChange");
+    env.posthog.properties = {};
+    env.posthog.capture("$web_vitals");
+    env.click("click", "https://app.rapidata.ai/");
+    const names = new Set(env.posthog.events.map(({ event }) => event));
+    for (const name of ["$pageview", "$set", "$web_vitals", "outbound_link_clicked"]) assert.ok(names.has(name), name);
+    for (const { event, properties } of env.posthog.events) {
+      assert.equal(properties.environment, "production", event);
+      assert.equal(properties.surface, "docs", event);
+      assert.equal(properties.tracking_version, 1, event);
+      assert.equal(properties.event_source, "browser", event);
+    }
   });
 
   it("sets first touch once and last external touch on the person", async () => {

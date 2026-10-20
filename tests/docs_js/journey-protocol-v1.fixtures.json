@@ -2,14 +2,8 @@
   "protocolVersion": 1,
   "now": "2026-10-21T09:00:00.000Z",
   "constants": {
-    "tokens": {
-      "production": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ",
-      "test": "phc_yYw9vnbBMDv9qNsUVEf2jnGx68ZXeodnSCfp7Tcaje9b"
-    },
-    "projects": {
-      "production": 313714,
-      "test": 313715
-    },
+    "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ",
+    "project": 313714,
     "productionHosts": [
       "rapidata.ai",
       "www.rapidata.ai",
@@ -1480,49 +1474,49 @@
       "hostname": "website-abc-rapidata.vercel.app",
       "expected": {
         "environment": "preview",
-        "token": "phc_yYw9vnbBMDv9qNsUVEf2jnGx68ZXeodnSCfp7Tcaje9b"
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
       }
     },
     {
       "hostname": "benchmark-plum.vercel.app",
       "expected": {
         "environment": "preview",
-        "token": "phc_yYw9vnbBMDv9qNsUVEf2jnGx68ZXeodnSCfp7Tcaje9b"
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
       }
     },
     {
       "hostname": "app.rabbitdata.ch",
       "expected": {
         "environment": "test",
-        "token": "phc_yYw9vnbBMDv9qNsUVEf2jnGx68ZXeodnSCfp7Tcaje9b"
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
       }
     },
     {
       "hostname": "app.rapidata.dev",
       "expected": {
         "environment": "test",
-        "token": "phc_yYw9vnbBMDv9qNsUVEf2jnGx68ZXeodnSCfp7Tcaje9b"
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
       }
     },
     {
       "hostname": "localhost",
       "expected": {
         "environment": "development",
-        "token": "phc_yYw9vnbBMDv9qNsUVEf2jnGx68ZXeodnSCfp7Tcaje9b"
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
       }
     },
     {
       "hostname": "127.0.0.1",
       "expected": {
         "environment": "development",
-        "token": "phc_yYw9vnbBMDv9qNsUVEf2jnGx68ZXeodnSCfp7Tcaje9b"
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
       }
     },
     {
       "hostname": "app.lvh.me",
       "expected": {
         "environment": "development",
-        "token": "phc_yYw9vnbBMDv9qNsUVEf2jnGx68ZXeodnSCfp7Tcaje9b"
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
       }
     },
     {
