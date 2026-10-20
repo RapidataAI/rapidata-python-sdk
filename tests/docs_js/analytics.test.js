@@ -173,6 +173,10 @@ class FakePostHog {
     this.properties = {};
   }
 
+  stopSessionRecording() {
+    this.calls.push(["stopSessionRecording"]);
+  }
+
   opt_out_capturing() {
     this.calls.push(["opt_out_capturing"]);
     this.win.localStorage.setItem(this.flagKey, "0");
@@ -315,7 +319,8 @@ describe("docs consent controller", () => {
     assert.equal(posthog.config.cross_subdomain_cookie, true);
     assert.equal(posthog.config.opt_out_persistence_by_default, true);
     assert.equal(posthog.config.persistence, "localStorage+cookie");
-    assert.equal(posthog.config.advanced_disable_flags, true);
+    assert.equal(posthog.config.advanced_disable_feature_flags, true);
+    assert.equal("advanced_disable_flags" in posthog.config, false);
     const [pageview] = pageviews(posthog);
     assert.equal(pageview.properties.surface, "docs");
     assert.equal(pageview.properties.environment, "development");
@@ -338,14 +343,18 @@ describe("docs consent controller", () => {
     assert.equal(call[2].first_landing_path, "/");
   });
 
-  it("revokes with reset() before opt_out_capturing() and clears journey storage", async () => {
+  it("revokes in the contract order and clears journey storage", async () => {
     const env = start();
     await env.decide(true);
     env.win.localStorage.setItem("ph_other_key", "1");
+    const before = env.posthog.calls.length;
     await env.decide(false, "onChange");
-    const names = callNames(env.posthog);
-    assert.ok(names.lastIndexOf("reset") < names.lastIndexOf("opt_out_capturing"));
-    assert.deepEqual(env.posthog.calls.find(([name]) => name === "reset"), ["reset", true]);
+    assert.deepEqual(env.posthog.calls.slice(before), [
+      ["opt_out_capturing"],
+      ["stopSessionRecording"],
+      ["reset", true],
+      ["opt_out_capturing"],
+    ]);
     assert.equal(env.posthog.has_opted_out_capturing(), true);
     assert.deepEqual(env.jar.names(), []);
     assert.deepEqual([...env.win.localStorage.items.keys()], [env.posthog.flagKey]);

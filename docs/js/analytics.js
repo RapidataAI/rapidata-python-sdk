@@ -401,7 +401,7 @@
         capture_pageview: "history_change",
         opt_out_persistence_by_default: true,
         // reset() on revoke would otherwise reload flags, contacting PostHog after consent is withdrawn.
-        advanced_disable_flags: true,
+        advanced_disable_feature_flags: true,
         disable_session_recording: true,
         loaded: (instance) => {
           instance.register(current.properties);
@@ -416,8 +416,10 @@
     function revoke() {
       consented = false;
       if (posthog) {
-        // reset() clears PostHog's consent flag, so it must run before opt_out_capturing().
+        posthog.opt_out_capturing();
+        posthog.stopSessionRecording();
         posthog.reset(true);
+        // reset() deletes the opt-out flag, so opt out again or capturing resumes.
         posthog.opt_out_capturing();
       }
       expireCookie(ATTRIBUTION_COOKIE);
