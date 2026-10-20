@@ -579,6 +579,9 @@ benchmark.update_prompt("wizard", tags=["portrait", "fantasy"], origin="wikiart"
 # aligned by index with benchmark.prompts.
 print(benchmark.tags, benchmark.structured_tags, benchmark.origins)
 
+# Every tag in the benchmark with the number of prompts carrying it, in one request
+print(benchmark.get_tag_counts())
+
 leaderboard = benchmark.create_leaderboard(
     name="Prompt Adherence (outdoor)",
     instruction="Which image matches the description better?",

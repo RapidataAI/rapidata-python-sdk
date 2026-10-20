@@ -171,7 +171,8 @@ audience.add_compare_example(instruction=..., datapoint=[...], truth=...)
 audience.add_locate_example(instruction=..., datapoint=..., truths=[Box(...)])     # requires: from rapidata import Box
 audience.add_draw_example(instruction=..., datapoint=..., truths=[Box(...)])
 audience.add_select_words_example(instruction=..., datapoint=..., sentence=..., truths=[1])
-df = audience.get_examples(amount=10, page=1)                       # inspect examples (DataFrame)
+df = audience.get_examples(amount=10, page=1)                       # inspect examples (DataFrame with an "id" column)
+audience.delete_example(df["id"].iloc[0])                           # remove one, e.g. a wrong or ambiguous truth
 
 # Start recruiting — REQUIRED and EXPLICIT for a custom audience. Recruiting begins only when
 # you call this, once >= min_tasks examples (default 10, min 3) are added and reviewed. Adding examples does NOT start it; an
@@ -997,6 +998,8 @@ print(benchmark.identifiers)      # Prompt identifiers, aligned by index
 print(benchmark.structured_tags)  # list[list[Tag]] — tags with categories, aligned by index
 print(benchmark.origins)          # list[Origin | None], aligned by index
 print(benchmark.tags)             # list[list[str]] — values only (categories dropped)
+print(benchmark.get_tag_counts()) # DataFrame of every tag: value, category, prompt_count — one request,
+                                  # no prompt paging; `value` is what the standings `tags=` filters take
 print(benchmark.prompt_assets)    # list[list[str] | None], aligned by index — the reference asset(s)
                                   # of each prompt. Each entry is the list of assets for that prompt
                                   # (one element for a single asset, several for a multi-asset), or None

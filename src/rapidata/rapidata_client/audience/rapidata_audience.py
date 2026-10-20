@@ -428,8 +428,9 @@ class RapidataAudience(RapidataAudienceBase):
     ) -> pd.DataFrame:
         """Get the examples for this audience as a DataFrame.
 
-        Returns a DataFrame with columns: asset, truth, context, contextAsset.
-        Asset URLs are fully qualified with the environment's asset host.
+        Returns a DataFrame with columns: id, asset, truth, context, contextAsset.
+        Asset URLs are fully qualified with the environment's asset host. Pass an
+        ``id`` to :py:meth:`delete_example` to remove that example.
 
         Args:
             amount: Number of examples per page.
@@ -453,6 +454,25 @@ class RapidataAudience(RapidataAudienceBase):
             asset_url_prefix = f"https://assets.{self._openapi_service.environment}/"
             rows = ExampleFormatter.format_to_csv_rows(response.items, asset_url_prefix)
             return pd.DataFrame(rows)
+
+    def delete_example(self, example_id: str) -> RapidataAudience:
+        """Delete a qualification example from this audience.
+
+        Use it to remove an example with a wrong or ambiguous truth. Annotators'
+        qualification progress is re-evaluated when removing the example can change it.
+
+        Args:
+            example_id (str): The id of the example, from the ``id`` column of :py:meth:`get_examples`.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
+        """
+        with tracer.start_as_current_span("RapidataAudience.delete_example"):
+            logger.debug(f"Deleting example {example_id} from audience: {self.id}")
+            self._openapi_service.audience.examples_api.audience_example_example_id_delete(
+                example_id=example_id
+            )
+            return self
 
     def _add_rapid_example(self, rapid: Rapid) -> RapidataAudience:
         """Add a rapid example to this audience (private method).

@@ -104,6 +104,13 @@ for prompt, datapoint in zip(PROMPTS, DATAPOINTS):
 !!! note
     In practice you'd want to add more examples to the audience to improve the quality of the results.
 
+To review the examples, list them. Remove one with a wrong or ambiguous truth by its `id`:
+
+```py
+examples = audience.get_examples(amount=20)  # columns: id, asset, truth, context, contextAsset
+audience.delete_example(examples["id"].iloc[0])
+```
+
 ### Step 3: Start Recruiting
 
 Once all your qualification examples are added **and reviewed**, call

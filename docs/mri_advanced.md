@@ -107,6 +107,13 @@ benchmark = client.mri.create_new_benchmark(
     (`list[list[str]]`), or `benchmark.structured_tags` (`list[list[Tag]]`) to see
     categories, and prompt origins with `benchmark.origins`.
 
+To see every tag in a benchmark and how many prompts carry it, use `get_tag_counts`. It makes a single request, so it stays fast on large benchmarks:
+
+```python
+counts = benchmark.get_tag_counts()  # columns: value, category, prompt_count
+standings = benchmark.get_overall_standings(tags=["outdoor"])
+```
+
 ### Adding prompts and assets after benchmark creation
 
 If you have already created a benchmark and want to add new prompts and assets after the fact. Note however that these will only take effect for new models.
