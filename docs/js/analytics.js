@@ -401,6 +401,8 @@
         defaults: "2026-05-30",
         persistence: "localStorage+cookie",
         cross_subdomain_cookie: true,
+        // A stale per-origin localStorage id would otherwise overwrite the identified id in the shared cookie.
+        cookieWinsOnConflict: true,
         capture_pageview: "history_change",
         opt_out_persistence_by_default: true,
         // reset() on revoke would otherwise reload flags, contacting PostHog after consent is withdrawn.

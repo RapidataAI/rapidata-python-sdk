@@ -318,6 +318,7 @@ describe("docs consent controller", () => {
     assert.equal(posthog.config.ui_host, "https://eu.posthog.com");
     assert.equal(posthog.config.capture_pageview, "history_change");
     assert.equal(posthog.config.cross_subdomain_cookie, true);
+    assert.equal(posthog.config.cookieWinsOnConflict, true);
     assert.equal(posthog.config.opt_out_persistence_by_default, true);
     assert.equal(posthog.config.persistence, "localStorage+cookie");
     assert.equal(posthog.config.advanced_disable_feature_flags, true);
