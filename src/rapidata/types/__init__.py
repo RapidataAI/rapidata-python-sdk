@@ -52,6 +52,7 @@ from rapidata.rapidata_client.filter.language_filter import LanguageFilter
 from rapidata.rapidata_client.filter.new_user_filter import NewUserFilter
 from rapidata.rapidata_client.filter.not_filter import NotFilter
 from rapidata.rapidata_client.filter.or_filter import OrFilter
+from rapidata.rapidata_client.filter.participant_count_filter import ParticipantCountFilter
 from rapidata.rapidata_client.filter.response_count_filter import ResponseCountFilter
 from rapidata.rapidata_client.filter.user_score_filter import UserScoreFilter
 
@@ -139,6 +140,7 @@ __all__ = [
     "NewUserFilter",
     "NotFilter",
     "OrFilter",
+    "ParticipantCountFilter",
     "ResponseCountFilter",
     "UserScoreFilter",
     # Filter Model Types

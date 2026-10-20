@@ -10,6 +10,7 @@ from .not_filter import NotFilter
 from .or_filter import OrFilter
 from .and_filter import AndFilter
 from .response_count_filter import ResponseCountFilter
+from .participant_count_filter import ParticipantCountFilter
 from .new_user_filter import NewUserFilter
 from .device_filter import DeviceFilter
 from .models.device_type import DeviceType
