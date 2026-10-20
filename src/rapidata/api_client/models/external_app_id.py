@@ -26,6 +26,7 @@ class ExternalAppId(str, Enum):
     """
     ARGOCD = 'ArgoCd'
     GRAFANA = 'Grafana'
+    HEADSCALE = 'Headscale'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
