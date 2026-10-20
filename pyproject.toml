@@ -27,6 +27,10 @@ dependencies = [
     "qrcode>=8.0,<9",
 ]
 
+[project.urls]
+Homepage = "https://rapidata.ai/?utm_source=pypi&utm_medium=referral&utm_campaign=python_sdk&utm_content=project_links"
+Documentation = "https://docs.rapidata.ai/?utm_source=pypi&utm_medium=referral&utm_campaign=python_sdk&utm_content=project_links"
+
 [project.scripts]
 rapidata = "rapidata.__main__:main"
 
