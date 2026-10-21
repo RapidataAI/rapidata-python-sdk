@@ -306,6 +306,19 @@ describe("docs consent controller", () => {
     }
   });
 
+  for (const [href, domain] of [
+    ["https://docs.rabbitdata.ch/", "rabbitdata.ch"],
+    ["https://docs.rapidata.dev/", "rapidata.dev"],
+  ]) {
+    it(`shares test-environment cookies on ${domain}`, async () => {
+      const env = start({ href });
+      await env.decide(true);
+      assert.deepEqual(env.consent.config.cookie, { name: "cc_cookie", domain });
+      assert.ok(env.jar.cookies.has(`rd_attribution_v1|${domain}`));
+      assert.equal(env.posthog.events[0].properties.environment, "test");
+    });
+  }
+
   it("injects the consent and PostHog assets into <body> with SRI", () => {
     const { win } = fakeWindow({ href: "http://docs.lvh.me:8000/" });
     analytics.startJourneyAnalytics(win);

@@ -59,7 +59,7 @@
   const HOST_MAX = 128;
   const TOUCH_KEYS = ["source", "medium", "campaign", "content", "landingPath", "referrerHost", "observedAt"];
   const TOUCH_PROPERTIES = ["source", "medium", "campaign", "content", "landing_path", "referrer_host", "observed_at"];
-  const COOKIE_ROOTS = ["rapidata.ai", "lvh.me"];
+  const COOKIE_ROOTS = ["rapidata.ai", "rabbitdata.ch", "rapidata.dev", "lvh.me"];
   const OUTBOUND_HOSTS = ["app.rapidata.ai", "docs.rapidata.ai", "benchmark.ai", "www.benchmark.ai"];
   // Python's str.strip() set, not String.prototype.trim(), so UTM values match reference.py.
   const PY_WHITESPACE = /^[\t-\r\x1c-\x20\x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+|[\t-\r\x1c-\x20\x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+$/g;
