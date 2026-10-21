@@ -66,6 +66,7 @@ from .rapidata_client import (
     KeyboardNumericSetting,
     LocateMaxPointsSetting,
     LocateMinPointsSetting,
+    ReferenceOverlaySetting,
     ComparePanoramaSetting,
     CompareEquirectangularSetting,
     ClassifyEquirectangularSetting,

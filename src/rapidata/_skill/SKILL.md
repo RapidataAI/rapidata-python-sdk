@@ -458,7 +458,7 @@ from rapidata import (
     LocateMaxPointsSetting, LocateMinPointsSetting,
     ComparePanoramaSetting, CompareEquirectangularSetting,
     ClassifyEquirectangularSetting, TranslateTextAssetsSetting,
-    PinContextMediaSetting, CustomSetting,
+    PinContextMediaSetting, ReferenceOverlaySetting, CustomSetting,
 )
 
 settings=[NoShuffleSetting()]                             # Keep answer options in order (use for Likert scales)
@@ -481,6 +481,7 @@ settings=[CompareEquirectangularSetting()]                # Render comparison me
 settings=[ClassifyEquirectangularSetting()]               # Render classification media as equirectangular 360° view
 settings=[TranslateTextAssetsSetting()]                   # Translate text assets (options + context) into the labeler's language; source assumed English
 settings=[PinContextMediaSetting()]                       # Show the media context next to the task instead of in the collapsible drawer — only if there is enough space for it; inspect job_def.preview() carefully. Multi-asset contexts show only the first asset
+settings=[ReferenceOverlaySetting()]                      # Compare of two image edits: the media context ("Original") covers both options, then the edits are revealed; labelers can toggle back. Needs exactly one image in media_contexts
 settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (target="rapids", default); target="campaign" for campaign-level
 ```
 

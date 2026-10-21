@@ -217,7 +217,7 @@ Image URLs shown as reference context alongside each datapoint. Useful when you 
 
 **Constraints:** If provided, must have the same length as `datapoints`. Each entry is itself a list of image URLs / paths. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
 
-Media contexts open in a collapsible drawer. If there is enough space next to the task, [`PinContextMediaSetting()`](#pincontextmediasetting) keeps the context visible instead.
+Media contexts open in a collapsible drawer. If there is enough space next to the task, [`PinContextMediaSetting()`](#pincontextmediasetting) keeps the context visible instead. For a compare of two image edits, [`ReferenceOverlaySetting()`](#referenceoverlaysetting) lays the original over both options.
 
 ```python
 # One reference image per datapoint (each inner list has one entry)
@@ -383,6 +383,23 @@ job_definition = client.job.create_compare_job_definition(
     settings=[PinContextMediaSetting()]
 )
 job_definition.preview()  # check the context fits next to the task
+```
+
+#### `ReferenceOverlaySetting()`
+
+For Compare jobs between two edits of one image. The media context, labelled "Original", covers both options when the task opens; then the options, labelled "Edit A" and "Edit B", are revealed, and labelers can toggle back to the original. Requires two image options and exactly one image in `media_contexts`. With no media context, or several assets in it, the setting has no effect; options that are not images are not rendered.
+
+```python
+from rapidata import ReferenceOverlaySetting
+
+job_definition = client.job.create_compare_job_definition(
+    name="Image Edit Comparison",
+    instruction="Which edit follows the request better?",
+    datapoints=[["edit_a.jpg", "edit_b.jpg"]],
+    contexts=["Make the sky stormy"],
+    media_contexts=[["original.jpg"]],
+    settings=[ReferenceOverlaySetting()]
+)
 ```
 
 ---
