@@ -43,7 +43,7 @@ async function waitForQuiet(requests, quietMs, timeout) {
   }
 }
 
-test("nothing reaches PostHog before consent or after Reject", { timeout: 180_000 }, async () => {
+async function openDocs() {
   const browser = await chromium.launch();
   const context = await browser.newContext({ userAgent: USER_AGENT, viewport: { width: 1280, height: 800 } });
   await context.addInitScript(() => {
@@ -67,7 +67,13 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
     if (hostname === "cdn.jsdelivr.net" || hostname === "eu-assets.i.posthog.com") return route.continue();
     return route.abort();
   });
+  return { browser, context, requests, events };
+}
 
+const pageviewCount = (events, from) => events.slice(from).filter((event) => event.event === "$pageview").length;
+
+test("nothing reaches PostHog before consent or after Reject", { timeout: 180_000 }, async () => {
+  const { browser, context, requests, events } = await openDocs();
   try {
     const page = await context.newPage();
     const banner = page.locator("#cc-main .cm");
@@ -156,6 +162,38 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
       assert.equal(properties.environment, "production", event);
       assert.equal(properties.surface, "docs", event);
     }
+  } finally {
+    await browser.close();
+  }
+});
+
+test("one $pageview per load with consent, one more per same-page re-grant", { timeout: 180_000 }, async () => {
+  const { browser, requests, events, context } = await openDocs();
+  try {
+    const page = await context.newPage();
+    const preferences = page.locator("#cc-main .pm");
+    const choose = async (name) => {
+      await page.locator("button[data-rd-consent]").click();
+      await preferences.getByRole("button", { name }).click();
+    };
+    await page.goto(`${ORIGIN}/quickstart/`);
+    await page.getByRole("button", { name: "Allow analytics" }).click();
+    await waitFor(() => pageviewCount(events, 0) > 0, 20_000, "no $pageview after consent");
+    await waitForQuiet(requests, 6_000, 60_000);
+    assert.equal(pageviewCount(events, 0), 1, "first grant");
+
+    const reloaded = events.length;
+    await page.reload();
+    await waitFor(() => pageviewCount(events, reloaded) > 0, 20_000, "no $pageview after reload");
+    await waitForQuiet(requests, 6_000, 60_000);
+    assert.equal(pageviewCount(events, reloaded), 1, "load with consent already given");
+
+    await choose("Reject analytics");
+    await page.waitForTimeout(1_000);
+    await choose("Allow analytics");
+    await waitFor(() => pageviewCount(events, reloaded) > 1, 20_000, "no $pageview after re-grant");
+    await waitForQuiet(requests, 6_000, 60_000);
+    assert.equal(pageviewCount(events, reloaded), 2, "Allow, Reject, Allow on one page");
   } finally {
     await browser.close();
   }
