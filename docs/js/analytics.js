@@ -17,6 +17,7 @@
     "billing.stripe.com",
     "localhost",
     "127.0.0.1",
+    "[::1]",
   ]);
   const INTERNAL_REFERRER_SUFFIX = [".vercel.app", ".rabbitdata.ch", ".rapidata.dev", ".lvh.me", ".localhost"];
   // First match wins.
@@ -62,6 +63,7 @@
   const OUTBOUND_HOSTS = ["app.rapidata.ai", "docs.rapidata.ai", "benchmark.ai", "www.benchmark.ai"];
   // Python's str.strip() set, not String.prototype.trim(), so UTM values match reference.py.
   const PY_WHITESPACE = /^[\t-\r\x1c-\x20\x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+|[\t-\r\x1c-\x20\x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+$/g;
+  const LONE_SURROGATE = /\p{Cs}/u;
   const ISO_TIMESTAMP = /^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)\.(\d{3})Z$/;
 
   const PRIVACY_URL = "https://rapidata.ai/privacy";
@@ -86,6 +88,10 @@
 
   function codePointLength(value) {
     return Array.from(value).length;
+  }
+
+  function isWellFormedString(value) {
+    return typeof value === "string" && !LONE_SURROGATE.test(value);
   }
 
   function isInternalHost(host) {
@@ -121,8 +127,7 @@
   function referrerHostOf(referrer) {
     if (!referrer) return null;
     try {
-      const host = new URL(referrer).hostname.replace(/^\[(.*)\]$/, "$1").toLowerCase();
-      return truncate(host, HOST_MAX) || null;
+      return truncate(new URL(referrer).hostname.toLowerCase(), HOST_MAX) || null;
     } catch (error) {
       return null;
     }
@@ -193,12 +198,12 @@
     for (const key of ["source", "medium", "campaign", "content", "referrerHost"]) {
       const field = value[key];
       const max = key === "referrerHost" ? HOST_MAX : UTM_MAX;
-      if (field !== null && !(typeof field === "string" && field.length > 0 && codePointLength(field) <= max)) {
+      if (field !== null && !(isWellFormedString(field) && field.length > 0 && codePointLength(field) <= max)) {
         return false;
       }
     }
     const path = value.landingPath;
-    if (!(typeof path === "string" && path.startsWith("/") && codePointLength(path) <= PATH_MAX)) return false;
+    if (!(isWellFormedString(path) && path.startsWith("/") && codePointLength(path) <= PATH_MAX)) return false;
     return parseIsoTimestamp(value.observedAt) !== null;
   }
 
@@ -232,7 +237,7 @@
     if (host.endsWith(".rabbitdata.ch") || host === "rapidata.dev" || host.endsWith(".rapidata.dev")) {
       return { environment: "test", token: TOKEN };
     }
-    if (["localhost", "127.0.0.1", "lvh.me"].includes(host) || host.endsWith(".localhost") || host.endsWith(".lvh.me")) {
+    if (["localhost", "127.0.0.1", "[::1]", "lvh.me"].includes(host) || host.endsWith(".localhost") || host.endsWith(".lvh.me")) {
       return { environment: "development", token: TOKEN };
     }
     return null;

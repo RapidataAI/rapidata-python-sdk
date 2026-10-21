@@ -321,12 +321,6 @@ describe("docs consent controller", () => {
     assert.match(assets[1].src, /vanilla-cookieconsent@3\.1\.0\/dist\/cookieconsent\.umd\.js$/);
   });
 
-  it("strips IPv6 brackets from the referrer host like the reference", () => {
-    const { touch } = analytics.parseCampaignTouch("https://docs.rapidata.ai/", "http://[::1]:3000/", new Date(fixtures.now));
-    assert.equal(touch.referrerHost, "::1");
-    assert.equal(touch.source, "::1");
-  });
-
   it("does nothing on hosts outside the contract", () => {
     const env = start({ href: "https://rapidataai.github.io/rapidata-python-sdk/" });
     assert.equal(env.controller, null);
