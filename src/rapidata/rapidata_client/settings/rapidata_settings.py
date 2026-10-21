@@ -17,6 +17,7 @@ from rapidata.rapidata_client.settings.no_instruction_display import NoInstructi
 from rapidata.rapidata_client.settings.keyboard_numeric import KeyboardNumericSetting
 from rapidata.rapidata_client.settings.locate_max_points import LocateMaxPointsSetting
 from rapidata.rapidata_client.settings.locate_min_points import LocateMinPointsSetting
+from rapidata.rapidata_client.settings.reference_overlay import ReferenceOverlaySetting
 from rapidata.rapidata_client.settings.compare_panorama import ComparePanoramaSetting
 from rapidata.rapidata_client.settings.compare_equirectangular import CompareEquirectangularSetting
 from rapidata.rapidata_client.settings.classify_equirectangular import ClassifyEquirectangularSetting
@@ -46,6 +47,7 @@ class RapidataSettings:
         KeyboardNumeric (KeyboardNumericSetting): Changes the virtual keyboard input type to numeric-only for free text input fields. Useful when expecting numeric answers.
         LocateMaxPoints (LocateMaxPointsSetting): Sets the maximum number of points a user can place on a locate task. Once the limit is reached, no more points can be added.
         LocateMinPoints (LocateMinPointsSetting): Sets the minimum number of points required for a valid locate submission. The submit button is disabled until enough points are placed.
+        ReferenceOverlay (ReferenceOverlaySetting): Shows a single reference image over both image options, then reveals the edits. Annotators can toggle between the reference and edits. Use with compare tasks that have two image options and one image reference.
         ComparePanorama (ComparePanoramaSetting): Enables panorama comparison mode for compare tasks. Renders a special panoramic image viewer instead of the standard comparison view.
         CompareEquirectangular (CompareEquirectangularSetting): Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.
         ClassifyEquirectangular (ClassifyEquirectangularSetting): Enables equirectangular (360-degree) image mode for classify tasks. Renders a single spherical viewer instead of the standard image view.
@@ -76,6 +78,7 @@ class RapidataSettings:
     KeyboardNumeric = KeyboardNumericSetting
     LocateMaxPoints = LocateMaxPointsSetting
     LocateMinPoints = LocateMinPointsSetting
+    ReferenceOverlay = ReferenceOverlaySetting
     ComparePanorama = ComparePanoramaSetting
     CompareEquirectangular = CompareEquirectangularSetting
     ClassifyEquirectangular = ClassifyEquirectangularSetting

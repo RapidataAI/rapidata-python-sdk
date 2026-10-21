@@ -77,6 +77,7 @@ from rapidata.rapidata_client.settings.no_instruction_display import NoInstructi
 from rapidata.rapidata_client.settings.keyboard_numeric import KeyboardNumericSetting
 from rapidata.rapidata_client.settings.locate_max_points import LocateMaxPointsSetting
 from rapidata.rapidata_client.settings.locate_min_points import LocateMinPointsSetting
+from rapidata.rapidata_client.settings.reference_overlay import ReferenceOverlaySetting
 from rapidata.rapidata_client.settings.compare_panorama import ComparePanoramaSetting
 from rapidata.rapidata_client.settings.compare_equirectangular import CompareEquirectangularSetting
 from rapidata.rapidata_client.settings.classify_equirectangular import ClassifyEquirectangularSetting
@@ -163,6 +164,7 @@ __all__ = [
     "KeyboardNumericSetting",
     "LocateMaxPointsSetting",
     "LocateMinPointsSetting",
+    "ReferenceOverlaySetting",
     "ComparePanoramaSetting",
     "CompareEquirectangularSetting",
     "ClassifyEquirectangularSetting",

@@ -69,6 +69,7 @@ from .settings import (
     KeyboardNumericSetting,
     LocateMaxPointsSetting,
     LocateMinPointsSetting,
+    ReferenceOverlaySetting,
     ComparePanoramaSetting,
     CompareEquirectangularSetting,
     ClassifyEquirectangularSetting,
