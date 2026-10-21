@@ -125,6 +125,7 @@ class FakePostHog {
     this.events = [];
     this.properties = {};
     this.initialPageviewCaptured = false;
+    this.heatmaps = { getAndClearBuffer: () => this.calls.push(["heatmaps.getAndClearBuffer"]) };
   }
 
   get flagKey() {
@@ -281,9 +282,11 @@ describe("docs consent controller", () => {
     const env = start();
     await env.controller.ready;
     const { config } = env.consent;
-    assert.equal(config.revision, 1);
-    assert.deepEqual(config.cookie, { name: "cc_cookie", domain: "lvh.me" });
-    assert.deepEqual(Object.keys(config.categories), ["necessary", "analytics"]);
+    const { consentCookie } = fixtures.constants;
+    assert.equal(config.revision, consentCookie.revision);
+    assert.deepEqual(config.cookie, { name: consentCookie.name, domain: "lvh.me" });
+    assert.deepEqual(Object.keys(config.categories), ["necessary", consentCookie.category]);
+    assert.deepEqual(config.categories.necessary, { enabled: true, readOnly: true });
     assert.equal(config.language.translations.en.consentModal.title, "Analytics preferences");
     assert.equal(config.language.translations.en.consentModal.acceptAllBtn, "Allow analytics");
     assert.equal(config.language.translations.en.consentModal.acceptNecessaryBtn, "Reject analytics");
@@ -294,8 +297,34 @@ describe("docs consent controller", () => {
 
   it("uses the production cookie domain on docs.rapidata.ai", async () => {
     const env = start({ href: "https://docs.rapidata.ai/" });
-    await env.controller.ready;
-    assert.deepEqual(env.consent.config.cookie, { name: "cc_cookie", domain: "rapidata.ai" });
+    await env.decide(true);
+    const { consentCookie, attributionCookie } = fixtures.constants;
+    assert.deepEqual(env.consent.config.cookie, { name: consentCookie.name, domain: consentCookie.domain.rapidata });
+    const cookie = env.jar.cookies.get(`${attributionCookie.name}|${attributionCookie.domain.rapidata}`);
+    for (const attribute of ["Path=/", `Max-Age=${attributionCookie.maxAgeSeconds}`, `SameSite=${attributionCookie.sameSite}`, "Secure"]) {
+      assert.ok(cookie.attributes.includes(attribute), attribute);
+    }
+  });
+
+  it("injects the consent and PostHog assets into <body> with SRI", () => {
+    const { win } = fakeWindow({ href: "http://docs.lvh.me:8000/" });
+    analytics.startJourneyAnalytics(win);
+    const assets = win.document.body.children.filter((child) => child.integrity);
+    assert.deepEqual(
+      assets.map((child) => [child.tag, child.crossOrigin]),
+      [
+        ["link", "anonymous"],
+        ["script", "anonymous"],
+      ]
+    );
+    assert.match(assets[0].href, /vanilla-cookieconsent@3\.1\.0\/dist\/cookieconsent\.css$/);
+    assert.match(assets[1].src, /vanilla-cookieconsent@3\.1\.0\/dist\/cookieconsent\.umd\.js$/);
+  });
+
+  it("strips IPv6 brackets from the referrer host like the reference", () => {
+    const { touch } = analytics.parseCampaignTouch("https://docs.rapidata.ai/", "http://[::1]:3000/", new Date(fixtures.now));
+    assert.equal(touch.referrerHost, "::1");
+    assert.equal(touch.source, "::1");
   });
 
   it("does nothing on hosts outside the contract", () => {
@@ -387,6 +416,8 @@ describe("docs consent controller", () => {
     await env.decide(true, "onChange");
     const optIn = env.posthog.calls.filter(([name]) => name === "opt_in_capturing");
     assert.deepEqual(optIn.at(-1)[1], { captureEventName: false });
+    const names = callNames(env.posthog);
+    assert.equal(names.lastIndexOf("heatmaps.getAndClearBuffer"), names.lastIndexOf("opt_in_capturing") - 1);
     assert.equal(pageviews(env.posthog).length, 2);
     assert.equal(pageviews(env.posthog)[1].properties.surface, "docs");
     assert.ok(env.jar.cookies.has("rd_attribution_v1|lvh.me"));

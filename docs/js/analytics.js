@@ -121,7 +121,8 @@
   function referrerHostOf(referrer) {
     if (!referrer) return null;
     try {
-      return truncate(new URL(referrer).hostname.toLowerCase(), HOST_MAX) || null;
+      const host = new URL(referrer).hostname.replace(/^\[(.*)\]$/, "$1").toLowerCase();
+      return truncate(host, HOST_MAX) || null;
     } catch (error) {
       return null;
     }
@@ -327,7 +328,8 @@
       element.crossOrigin = "anonymous";
       element.onload = resolve;
       element.onerror = reject;
-      doc.head.appendChild(element);
+      // Material's instant navigation drops <head> nodes the next page lacks; <body> children survive.
+      doc.body.appendChild(element);
     });
   }
 
@@ -382,6 +384,8 @@
       if (posthog) {
         posthog.register(current.properties);
         if (posthog.has_opted_out_capturing()) {
+          // Heatmaps keep buffering clicks while opted out; drop what was recorded during the refusal.
+          if (posthog.heatmaps) posthog.heatmaps.getAndClearBuffer();
           posthog.opt_in_capturing({ captureEventName: false });
           posthog.capture("$pageview");
         }
