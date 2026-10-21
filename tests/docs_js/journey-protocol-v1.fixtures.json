@@ -12,15 +12,31 @@
       "benchmark.ai",
       "www.benchmark.ai"
     ],
-    "senderOrigins": [
-      "https://benchmark.ai",
-      "https://www.benchmark.ai"
-    ],
-    "receiverHosts": [
-      "rapidata.ai",
-      "www.rapidata.ai",
-      "app.rapidata.ai"
-    ],
+    "sites": {
+      "rapidata": {
+        "origins": [
+          "https://rapidata.ai",
+          "https://www.rapidata.ai",
+          "https://app.rapidata.ai",
+          "https://docs.rapidata.ai"
+        ],
+        "receivers": [
+          "rapidata.ai",
+          "www.rapidata.ai",
+          "app.rapidata.ai"
+        ]
+      },
+      "benchmark": {
+        "origins": [
+          "https://benchmark.ai",
+          "https://www.benchmark.ai"
+        ],
+        "receivers": [
+          "benchmark.ai",
+          "www.benchmark.ai"
+        ]
+      }
+    },
     "internalReferrerExact": [
       "rapidata.ai",
       "www.rapidata.ai",
@@ -1072,6 +1088,117 @@
         }
       },
       "expected": "https://huggingface.co/Rapidata"
+    },
+    {
+      "name": "rapidata decorates benchmark link",
+      "url": "https://www.benchmark.ai/svg",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-1111-7222-8333-444455556666",
+        "sessionId": "019a0b1c-9999-7888-8777-666655554444",
+        "issuedAt": "2026-10-21T08:59:57.000Z",
+        "sourceOrigin": "https://rapidata.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T08:57:00.000Z"
+        },
+        "lastExternalTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T08:57:00.000Z"
+        }
+      },
+      "expected": "https://www.benchmark.ai/svg#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTExMTEtNzIyMi04MzMzLTQ0NDQ1NTU1NjY2NiIsInNlc3Npb25JZCI6IjAxOWEwYjFjLTk5OTktNzg4OC04Nzc3LTY2NjY1NTU1NDQ0NCIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1Ny4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9yYXBpZGF0YS5haSIsImZpcnN0VG91Y2giOnsic291cmNlIjoiaHVnZ2luZ2ZhY2UiLCJtZWRpdW0iOiJyZWZlcnJhbCIsImNhbXBhaWduIjoic3ZnX2xlYWRlcmJvYXJkIiwiY29udGVudCI6ImRhdGFzZXRfY2FyZCIsImxhbmRpbmdQYXRoIjoiLyIsInJlZmVycmVySG9zdCI6Imh1Z2dpbmdmYWNlLmNvIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTc6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50IjoiZGF0YXNldF9jYXJkIiwibGFuZGluZ1BhdGgiOiIvIiwicmVmZXJyZXJIb3N0IjoiaHVnZ2luZ2ZhY2UuY28iLCJvYnNlcnZlZEF0IjoiMjAyNi0xMC0yMVQwODo1NzowMC4wMDBaIn19"
+    },
+    {
+      "name": "app decorates benchmark apex link",
+      "url": "https://benchmark.ai/",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-1111-7222-8333-444455556666",
+        "issuedAt": "2026-10-21T08:59:57.000Z",
+        "sourceOrigin": "https://app.rapidata.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T08:57:00.000Z"
+        },
+        "lastExternalTouch": null
+      },
+      "expected": "https://benchmark.ai/#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTExMTEtNzIyMi04MzMzLTQ0NDQ1NTU1NjY2NiIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1Ny4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9hcHAucmFwaWRhdGEuYWkiLCJmaXJzdFRvdWNoIjp7InNvdXJjZSI6Imh1Z2dpbmdmYWNlIiwibWVkaXVtIjoicmVmZXJyYWwiLCJjYW1wYWlnbiI6InN2Z19sZWFkZXJib2FyZCIsImNvbnRlbnQiOiJkYXRhc2V0X2NhcmQiLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOiJodWdnaW5nZmFjZS5jbyIsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA4OjU3OjAwLjAwMFoifSwibGFzdEV4dGVybmFsVG91Y2giOm51bGx9"
+    },
+    {
+      "name": "same site is never decorated (rapidata)",
+      "url": "https://app.rapidata.ai/audiences",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-1111-7222-8333-444455556666",
+        "sessionId": "019a0b1c-9999-7888-8777-666655554444",
+        "issuedAt": "2026-10-21T08:59:57.000Z",
+        "sourceOrigin": "https://rapidata.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T08:57:00.000Z"
+        },
+        "lastExternalTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T08:57:00.000Z"
+        }
+      },
+      "expected": "https://app.rapidata.ai/audiences"
+    },
+    {
+      "name": "same site is never decorated (benchmark)",
+      "url": "https://www.benchmark.ai/image",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+        "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+        "issuedAt": "2026-10-21T08:59:55.000Z",
+        "sourceOrigin": "https://www.benchmark.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        },
+        "lastExternalTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        }
+      },
+      "expected": "https://www.benchmark.ai/image"
     }
   ],
   "readHandoff": [
@@ -1242,6 +1369,56 @@
       "expected": {
         "kind": "invalid",
         "reason": "invalid"
+      }
+    },
+    {
+      "name": "benchmark receives from rapidata",
+      "url": "https://www.benchmark.ai/svg#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTExMTEtNzIyMi04MzMzLTQ0NDQ1NTU1NjY2NiIsInNlc3Npb25JZCI6IjAxOWEwYjFjLTk5OTktNzg4OC04Nzc3LTY2NjY1NTU1NDQ0NCIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1Ny4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9yYXBpZGF0YS5haSIsImZpcnN0VG91Y2giOnsic291cmNlIjoiaHVnZ2luZ2ZhY2UiLCJtZWRpdW0iOiJyZWZlcnJhbCIsImNhbXBhaWduIjoic3ZnX2xlYWRlcmJvYXJkIiwiY29udGVudCI6ImRhdGFzZXRfY2FyZCIsImxhbmRpbmdQYXRoIjoiLyIsInJlZmVycmVySG9zdCI6Imh1Z2dpbmdmYWNlLmNvIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTc6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50IjoiZGF0YXNldF9jYXJkIiwibGFuZGluZ1BhdGgiOiIvIiwicmVmZXJyZXJIb3N0IjoiaHVnZ2luZ2ZhY2UuY28iLCJvYnNlcnZlZEF0IjoiMjAyNi0xMC0yMVQwODo1NzowMC4wMDBaIn19",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "valid",
+        "handoff": {
+          "v": 1,
+          "anonymousId": "019a0b1c-1111-7222-8333-444455556666",
+          "sessionId": "019a0b1c-9999-7888-8777-666655554444",
+          "issuedAt": "2026-10-21T08:59:57.000Z",
+          "sourceOrigin": "https://rapidata.ai",
+          "firstTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "dataset_card",
+            "landingPath": "/",
+            "referrerHost": "huggingface.co",
+            "observedAt": "2026-10-21T08:57:00.000Z"
+          },
+          "lastExternalTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "dataset_card",
+            "landingPath": "/",
+            "referrerHost": "huggingface.co",
+            "observedAt": "2026-10-21T08:57:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "name": "same-site origin is invalid",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6ImFub24tMSIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1OS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9hcHAucmFwaWRhdGEuYWkiLCJmaXJzdFRvdWNoIjp7InNvdXJjZSI6Imh1Z2dpbmdmYWNlIiwibWVkaXVtIjoicmVmZXJyYWwiLCJjYW1wYWlnbiI6InN2Z19sZWFkZXJib2FyZCIsImNvbnRlbnQiOiJkYXRhc2V0X2NhcmQiLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOiJodWdnaW5nZmFjZS5jbyIsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA4OjU3OjAwLjAwMFoifSwibGFzdEV4dGVybmFsVG91Y2giOm51bGx9",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "invalid",
+        "reason": "invalid"
+      }
+    },
+    {
+      "name": "docs is not a receiver",
+      "url": "https://docs.rapidata.ai/quickstart/#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTJkM2UtN2Y0MC04YTliLTBjMWQyZTNmNGE1YiIsInNlc3Npb25JZCI6IjAxOWEwYjFjLWFhYWEtN2JiYi04Y2NjLTBkZGQwZWVlMGZmZiIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1NS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly93d3cuYmVuY2htYXJrLmFpIiwiZmlyc3RUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9fQ",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "none"
       }
     }
   ],
