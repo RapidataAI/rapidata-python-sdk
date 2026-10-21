@@ -102,20 +102,54 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
     await page.locator("#cc-main .pm").waitFor({ state: "visible" });
     await waitForQuiet(requests, 6_000, 60_000);
 
-    const before = requests.length;
+    const reject = async () => {
+      await page.locator("button[data-rd-consent]").click();
+      await page.locator("#cc-main .pm").getByRole("button", { name: "Reject analytics" }).click();
+    };
+    const assertNothingStored = async () => {
+      const names = (await context.cookies()).map((cookie) => cookie.name);
+      assert.deepEqual(names.filter((name) => name.startsWith("ph_") || name === "rd_attribution_v1"), []);
+      assert.deepEqual(await page.evaluate(() => Object.keys(localStorage).filter((key) => key.startsWith("ph_"))), []);
+    };
+
+    let before = requests.length;
     await page.locator("#cc-main .pm").getByRole("button", { name: "Reject analytics" }).click();
     await page.waitForTimeout(6_000);
     await navLink("signals").click();
     await page.waitForURL("**/signals/");
     await page.mouse.click(400, 400);
     await page.waitForTimeout(6_000);
+    assert.deepEqual(requests.slice(before), [], "PostHog was contacted after Reject");
+    await assertNothingStored();
+
+    // Heatmaps flush every 5 s and drop clicks while opted out, so only a click just before re-granting can leak.
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.mouse.click(7, 400);
+    await page.locator("button[data-rd-consent]").click();
+    await page.locator("#cc-main .pm").getByRole("button", { name: "Allow analytics" }).click();
+    const regranted = events.length;
+    await page.mouse.click(9, 400);
+    await waitFor(
+      () => events.slice(regranted).some((event) => event.event === "$$heatmap"),
+      20_000,
+      "no $$heatmap after re-grant"
+    );
+    const heatmapX = events
+      .slice(regranted)
+      .filter((event) => event.event === "$$heatmap")
+      .flatMap((event) => Object.values(event.properties.$heatmap_data).flat())
+      .map((point) => point.x);
+    assert.ok(heatmapX.includes(9), `expected the post-grant click in ${heatmapX}`);
+    assert.ok(!heatmapX.includes(7), `a click made while rejected leaked into $$heatmap: ${heatmapX}`);
+
+    await waitForQuiet(requests, 6_000, 60_000);
+    before = requests.length;
+    await reject();
+    await page.waitForTimeout(6_000);
     await page.reload();
     await page.waitForTimeout(4_000);
-    assert.deepEqual(requests.slice(before), [], "PostHog was contacted after Reject");
-
-    const names = (await context.cookies()).map((cookie) => cookie.name);
-    assert.deepEqual(names.filter((name) => name.startsWith("ph_") || name === "rd_attribution_v1"), []);
-    assert.deepEqual(await page.evaluate(() => Object.keys(localStorage).filter((key) => key.startsWith("ph_"))), []);
+    assert.deepEqual(requests.slice(before), [], "PostHog was contacted after the second Reject");
+    await assertNothingStored();
 
     assert.ok(events.length > 0);
     for (const { event, properties } of events) {
