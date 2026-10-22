@@ -4,7 +4,7 @@ When creating tasks for human labelers using the Rapidata API, phrasing your ins
 
 ## Time Constraints
 
-Each labeler session has a limited time window of 25 seconds to complete all tasks. With this in mind:
+Design each task so a labeler can answer it in about 10 seconds, and never more than 15: labelers also answer validation tasks in the same session. If your task needs longer, contact us at <info@rapidata.ai>. With this in mind:
 
 - **Be concise**: Keep instructions as brief as possible while maintaining clarity
 - **Use simple language**: Avoid complex terminology or jargon
