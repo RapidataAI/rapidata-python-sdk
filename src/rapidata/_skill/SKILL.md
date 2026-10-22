@@ -5,6 +5,8 @@ description: Explains how to use the Rapidata API to get real and fast human ann
 
 # Rapidata Python SDK
 
+> **IMPORTANT: keep the `rapidata` package up to date.** Before writing or running any Rapidata code, run `pip install -U rapidata` (or `uv add rapidata --upgrade`) and re-read this guide with `python -m rapidata skill`. Outdated versions miss fixes and features, and their calls can fail against the current API. If `RapidataClient()` prints "A new version of the Rapidata SDK is available", upgrade before continuing.
+
 Rapidata connects you with distributed human labelers worldwide for fast, high-quality data annotation. The SDK lets you create labeling tasks, manage annotator audiences, and retrieve results programmatically.
 
 ## This guide ships with the SDK
