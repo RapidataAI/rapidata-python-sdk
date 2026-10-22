@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Pipeline API",
     "description": "The API for the Rapidata Pipeline service",
-    "version": "2026.10.20.1508-87ddf1c"
+    "version": "2026.10.21.1506-aec78f3"
   },
   "servers": [
     {
@@ -107,7 +107,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/pipeline/{pipelineId}/preliminary-download": {
@@ -165,7 +166,8 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true
       }
     }
   },

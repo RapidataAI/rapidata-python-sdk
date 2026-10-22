@@ -69,6 +69,6 @@ These tips apply to any Rapidata task. They matter most when the signal trains a
   - Rating text rendering? Crop to the text (e.g. a collage of the crops) so nothing else in the image competes.
 - **One criterion per task.** Several criteria folded into one question reduce consistency. Split them into separate flows or leaderboards.
 - **Plain, short instructions.** No jargon; design for an answer in about 10 seconds (15 at most), mostly on phones.
-- **Match annotators to the content.** When rating text in a script, target people who read that script. Flows take no audience or filters in the SDK: ask Rapidata to restrict a flow's annotators, or use a ranking job definition on a filtered audience (`LanguageFilter` / `CountryFilter`).
+- **Match annotators to the content.** When rating text in a script, target people who read that script. Flows take no audience or filters in the SDK: ask Rapidata to restrict a flow's annotators, or use a ranking job definition on an audience filtered with `LanguageFilter`.
 - **Check the layout with a preview** before scaling. Some content renders better with a setting (see Settings in the main guide, `python -m rapidata skill`).
 - **Pilot small.** Try a few setups (instruction wording, context, thresholds) at small scale, compare agreement, then roll out the best one.

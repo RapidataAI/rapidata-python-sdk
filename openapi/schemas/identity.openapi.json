@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.10.20.1508-87ddf1c"
+    "version": "2026.10.21.1506-aec78f3"
   },
   "servers": [
     {
@@ -3044,9 +3044,10 @@
       "AuthorizationRelations_ExternalApp": {
         "enum": [
           "Admin",
+          "User",
           "Viewer"
         ],
-        "description": "Relations on an `external_app` object — one object per third-party app that federates\non the OIDC `groups` claim. The apps themselves are `ExternalAppId`. The ladder is hierarchical: `admin` folds into `viewer`.\nGrants are direct and, like `Bidder`, are never folded in from platform staff —\nholding platform admin must not confer administration of a separate system."
+        "description": "Relations on an `external_app` object — one object per third-party app that federates\non the OIDC `groups` claim. The apps themselves are `ExternalAppId`. The ladder is hierarchical: `admin` folds into `user`, and `user` into `viewer`.\nGrants are direct and, like `Bidder`, are never folded in from platform staff —\nholding platform admin must not confer administration of a separate system."
       },
       "AuthorizationRelations_Platform": {
         "enum": [
