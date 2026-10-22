@@ -217,7 +217,7 @@ Image URLs shown as reference context alongside each datapoint. Useful when you 
 
 **Constraints:** If provided, must have the same length as `datapoints`. Each entry is itself a list of image URLs / paths. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
 
-Media contexts open in a collapsible drawer. If there is enough space next to the task, [`PinContextMediaSetting()`](#pincontextmediasetting) keeps the context visible instead.
+Media contexts open in a collapsible drawer. If there is enough space next to the task, [`PinContextMediaSetting()`](#pincontextmediasetting) keeps the context visible instead. For a compare of two image edits, [`ReferenceOverlaySetting()`](#referenceoverlaysetting) lays the original over both options.
 
 ```python
 # One reference image per datapoint (each inner list has one entry)
@@ -303,6 +303,8 @@ Settings allow you to customize how tasks are displayed.
 
 Most settings only apply to specific task types (see each setting's docstring, e.g. *"Supported task types: Compare."*). If you add a setting that the job's task type does not support, the SDK logs a non-fatal warning and still sends the flag — it is never dropped and no error is raised. Ranking jobs are treated as Compare for this check.
 
+On/off settings such as `NoShuffleSetting()` take no arguments: adding the setting turns the behavior on, and leaving it out keeps it off. Passing a value, e.g. `MuteVideoSetting(False)`, raises a `TypeError`.
+
 ### Commonly Used Settings
 
 #### `NoShuffleSetting()`
@@ -385,6 +387,23 @@ job_definition = client.job.create_compare_job_definition(
 job_definition.preview()  # check the context fits next to the task
 ```
 
+#### `ReferenceOverlaySetting()`
+
+For Compare jobs between two edits of one image. The media context, labelled "Original", covers both options when the task opens; then the options, labelled "Edit A" and "Edit B", are revealed, and labelers can toggle back to the original. Requires two image options and exactly one image in `media_contexts`. With no media context, or several assets in it, the setting has no effect; options that are not images are not rendered.
+
+```python
+from rapidata import ReferenceOverlaySetting
+
+job_definition = client.job.create_compare_job_definition(
+    name="Image Edit Comparison",
+    instruction="Which edit follows the request better?",
+    datapoints=[["edit_a.jpg", "edit_b.jpg"]],
+    contexts=["Make the sky stormy"],
+    media_contexts=[["original.jpg"]],
+    settings=[ReferenceOverlaySetting()]
+)
+```
+
 ---
 
 ## Job-Specific Parameters
@@ -393,7 +412,7 @@ job_definition.preview()  # check the context fits next to the task
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `answer_options` | `list[str]` | List of categories to classify into |
+| `answer_options` | `list[str]` or `list[list[str]]` | Categories to classify into. One list applies to every datapoint; one list per datapoint (matched by index) shows different options per datapoint. 2–8 unique options each. |
 
 ```python
 job_definition = client.job.create_classification_job_definition(

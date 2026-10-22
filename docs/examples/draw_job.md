@@ -79,7 +79,10 @@ Like any other job, a draw job can be assigned to any audience — a ready-to-go
 
     client = RapidataClient()
 
-    audience = client.audience.create_audience(name="Artifact Drawing Audience") # (1)!
+    audience = client.audience.create_audience(
+        name="Artifact Drawing Audience",
+        min_tasks=len(EXAMPLES), # (1)!
+    )
     for datapoint, truths in EXAMPLES:
         audience.add_draw_example(
             instruction="Color in the visual glitches or errors in the image.",
@@ -103,7 +106,7 @@ Like any other job, a draw job can be assigned to any audience — a ready-to-go
     print(results)
     ```
 
-    1. Creates a new, empty audience. The `add_draw_example` calls train and filter the labelers who join it.
+    1. Creates a new, empty audience. The `add_draw_example` calls train and filter the labelers who join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.
     2. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
 
     !!! note

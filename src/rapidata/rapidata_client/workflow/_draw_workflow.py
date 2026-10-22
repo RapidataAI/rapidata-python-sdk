@@ -2,19 +2,20 @@ from rapidata.api_client.models.add_validation_rapid_model import IRapidPayload
 from rapidata.api_client.models.i_order_workflow_input import (
     IOrderWorkflowInput,
 )
-from rapidata.api_client.models.i_order_workflow_input_simple_workflow_input import (
-    IOrderWorkflowInputSimpleWorkflowInput,
-)
-from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
-from rapidata.api_client.models.i_rapid_blueprint_line_rapid_blueprint import (
-    IRapidBlueprintLineRapidBlueprint,
-)
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client.models.i_rapid_payload_line_payload import (
     IRapidPayloadLinePayload,
 )
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
+from rapidata.api_client.models.i_rapid_spec_line_rapid_spec import (
+    IRapidSpecLineRapidSpec,
+)
+from rapidata.rapidata_client.workflow._rapid_spec import (
+    ASSET,
+    literal,
+    simple_workflow,
+)
 
 
 class DrawWorkflow(Workflow):
@@ -30,14 +31,9 @@ class DrawWorkflow(Workflow):
         return self._target
 
     def _to_model(self) -> IOrderWorkflowInput:
-        blueprint = IRapidBlueprintLineRapidBlueprint(
-            _t="LineBlueprint", target=self._target
-        )
-
-        return IOrderWorkflowInput(
-            actual_instance=IOrderWorkflowInputSimpleWorkflowInput(
-                _t="SimpleWorkflow",
-                blueprint=IRapidBlueprint(actual_instance=blueprint),
+        return simple_workflow(
+            IRapidSpecLineRapidSpec(
+                _t="Line", asset=ASSET, target=literal(self._target)
             )
         )
 

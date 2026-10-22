@@ -16,15 +16,9 @@ class ComparePanoramaSetting(RapidataSetting):
     Enables panorama comparison mode for compare tasks. Renders a special panoramic image viewer instead of the standard comparison view.
 
     Supported task types: Compare.
-
-    Args:
-        value (bool, optional): Whether to enable panorama comparison mode. Defaults to True.
     """
 
     supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Compare",)
 
-    def __init__(self, value: bool = True):
-        if not isinstance(value, bool):
-            raise ValueError("The value must be a boolean.")
-
-        super().__init__(key="compare_panorama", value=value)
+    def __init__(self):
+        super().__init__(key="compare_panorama", value="true")

@@ -29,6 +29,7 @@ from rapidata.rapidata_client.settings.no_instruction_display import (
 from rapidata.rapidata_client.settings.keyboard_numeric import KeyboardNumericSetting
 from rapidata.rapidata_client.settings.locate_max_points import LocateMaxPointsSetting
 from rapidata.rapidata_client.settings.locate_min_points import LocateMinPointsSetting
+from rapidata.rapidata_client.settings.reference_overlay import ReferenceOverlaySetting
 from rapidata.rapidata_client.settings.compare_panorama import ComparePanoramaSetting
 from rapidata.rapidata_client.settings.compare_equirectangular import (
     CompareEquirectangularSetting,
@@ -49,7 +50,7 @@ class RapidataSettings:
     Settings can be added to an order to determine the behaviour of the task.
 
     Attributes:
-        NoShuffle (NoShuffleSetting): Only for classification and compare tasks. If true, the order of the categories / images will not be shuffled and presented in the same order as specified.
+        NoShuffle (NoShuffleSetting): Only for classification and compare tasks. The order of the categories / images will not be shuffled and is presented in the same order as specified.
         MuteVideo (MuteVideoSetting): Mute the video. If this setting is not supplied, the video will not be muted.
         FreeTextMinimumCharacters (FreeTextMinimumCharactersSetting): Set the minimum number of characters a user has to type.
         FreeTextMaxCharacters (FreeTextMaxCharactersSetting): Set the maximum number of characters allowed in a free text answer.
@@ -59,11 +60,12 @@ class RapidataSettings:
         AllowNeitherBoth (AllowNeitherBothSetting): Only for compare tasks. Enables an "Unsure" button that allows users to select neither or both options.
         OriginalLanguageOnly (OriginalLanguageOnlySetting): Display the content in the original language only. Hides the language switch UI from users.
         NoMistakeOption (NoMistakeOptionSetting): Enables a "No mistakes" button that allows users to skip task by confirming they found no errors in the media.
-        DisableAutoloop (DisableAutoloopSetting): Disables automatic looping of video media. When enabled, videos will not automatically restart when they finish playing.
+        DisableAutoloop (DisableAutoloopSetting): Disables automatic looping of video media. When this setting is added, videos will not automatically restart when they finish playing.
         NoInstructionDisplay (NoInstructionDisplaySetting): Hides the instruction text in the UI. Only the context will be shown.
         KeyboardNumeric (KeyboardNumericSetting): Changes the virtual keyboard input type to numeric-only for free text input fields. Useful when expecting numeric answers.
         LocateMaxPoints (LocateMaxPointsSetting): Sets the maximum number of points a user can place on a locate task. Once the limit is reached, no more points can be added.
         LocateMinPoints (LocateMinPointsSetting): Sets the minimum number of points required for a valid locate submission. The submit button is disabled until enough points are placed.
+        ReferenceOverlay (ReferenceOverlaySetting): Shows a single reference image over both image options, then reveals the edits. Annotators can toggle between the reference and edits. Use with compare tasks that have two image options and one image reference.
         ComparePanorama (ComparePanoramaSetting): Enables panorama comparison mode for compare tasks. Renders a special panoramic image viewer instead of the standard comparison view.
         CompareEquirectangular (CompareEquirectangularSetting): Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.
         ClassifyEquirectangular (ClassifyEquirectangularSetting): Enables equirectangular (360-degree) image mode for classify tasks. Renders a single spherical viewer instead of the standard image view.
@@ -94,6 +96,7 @@ class RapidataSettings:
     KeyboardNumeric = KeyboardNumericSetting
     LocateMaxPoints = LocateMaxPointsSetting
     LocateMinPoints = LocateMinPointsSetting
+    ReferenceOverlay = ReferenceOverlaySetting
     ComparePanorama = ComparePanoramaSetting
     CompareEquirectangular = CompareEquirectangularSetting
     ClassifyEquirectangular = ClassifyEquirectangularSetting

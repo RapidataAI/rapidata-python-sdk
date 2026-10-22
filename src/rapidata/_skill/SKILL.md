@@ -5,6 +5,8 @@ description: Explains how to use the Rapidata API to get real and fast human ann
 
 # Rapidata Python SDK
 
+> **IMPORTANT: keep the `rapidata` package up to date.** Before writing or running any Rapidata code, run `pip install -U rapidata` (or `uv add rapidata --upgrade`) and re-read this guide with `python -m rapidata skill`. Outdated versions miss fixes and features, and their calls can fail against the current API. If `RapidataClient()` prints "A new version of the Rapidata SDK is available", upgrade before continuing.
+
 Rapidata connects you with distributed human labelers worldwide for fast, high-quality data annotation. The SDK lets you create labeling tasks, manage annotator audiences, and retrieve results programmatically.
 
 ## This guide ships with the SDK
@@ -77,7 +79,7 @@ The file is just one transport. To move the token over any transport (key-value 
 - **Audience**: A group of annotators selected and qualified for **one specific task** — via qualification examples and/or recruitment filters chosen to match that task. The whole point is to put the *right* people on *that* task. An audience trained for one task is **not** meant to be reused on a different, unrelated task: its qualification examples define what "good" means for the original task only, so reusing it elsewhere silently loses the quality it was built for. Reusing the same audience for repeated or scheduled runs of the **same** task is exactly right; for a different task, create a new audience. Three kinds:
   - **global** — the generic baseline pool for tasks that need no special qualification; instant, no setup. Use `client.audience.get_audience_by_id("global")`.
   - **curated** — pre-trained on a domain (e.g. alignment via `aud_MU1GZYoESyO`).
-  - **custom** — trained with your own task-specific qualification examples (`client.audience.create_audience(...)` + `add_*_example(...)` + `start_recruiting()`). ⚠️ Recruiting is **explicit**: a custom audience recruits nobody until you add **≥3 qualification examples** *and then* call `audience.start_recruiting()`. Adding examples does **not** start recruiting on its own; assign a job before recruiting has started and it can never receive responses — `assign_job` logs a warning, and the waiting methods (`get_results()`, `display_progress_bar()`) raise instead of blocking forever. Use `"global"` when you don't need task-specific qualification.
+  - **custom** — trained with your own task-specific qualification examples (`client.audience.create_audience(...)` + `add_*_example(...)` + `start_recruiting()`). ⚠️ Recruiting is **explicit**: a custom audience recruits nobody until you add **at least `min_tasks` qualification examples** (default 10, never fewer than 3) *and then* call `audience.start_recruiting()`, which is rejected with fewer. Adding examples does **not** start recruiting on its own; assign a job before recruiting has started and it can never receive responses — `assign_job` logs a warning, and the waiting methods (`get_results()`, `display_progress_bar()`) raise instead of blocking forever. Use `"global"` when you don't need task-specific qualification.
 - **Job**: A running instance of a job definition assigned to an audience
 - **Flow**: Continuously collect human responses in small batches without full job setup. Two kinds — **ranking flows** (Elo-style comparison) and **classify flows** (sort each datapoint into one of a fixed set of categories)
 - **MRI/Benchmark**: Compare and rank AI models on leaderboards
@@ -91,6 +93,16 @@ The file is just one transport. To move the token over any transport (key-value 
 - `client.context` — shorten over-long datapoint contexts against a specific question
 - `client.billing` — read the current billing period's cost and remaining credit, and the outstanding balance owed (organization-level)
 - `client.validation` — validation sets (`create_classification_set`, `create_compare_set`, …, `get_validation_set_by_id`, `find_validation_sets`); only needed for a flow's `validation_set_id` — jobs qualify labelers through audience examples instead
+
+## Task design rules
+
+Follow these for every job definition and audience example. Design each task so a labeler can answer it in about 10 seconds, 15 at most: labelers also answer validation tasks in the same session, mostly on phones, and within that time they read the instruction and the context and look at the media. A task they can't take in at a glance gets guessed. If a task needs longer, contact Rapidata (info@rapidata.ai) before launching it. The limits the SDK enforces are caps, not targets.
+
+1. **Keep `responses_per_datapoint` at 10 or more.** 10 is the default; never lower it to cut cost. With 3 responses, a single labeler who misread the task can flip the result. To spend less, label fewer datapoints, or add `confidence_threshold` / `quorum_threshold` when the task has one correct answer.
+2. **Ask one short question about one criterion.** Aim for under 80 characters, like the instructions in this guide. To judge several aspects (motion, on-screen text, sound, …), create one job definition per aspect.
+   - ✅ `"Which video matches the description better?"`
+   - ❌ `"Which video is better overall? Consider the motion, timing, camera, style, on-screen text and sound."`
+3. **Keep each context to one sentence under 150 characters, holding only what the question checks.** Don't pass the full generation prompt: nobody reads 300 characters and judges two videos in 15 seconds. Context shortening (see **Context Management**) focuses a context on the question but rarely gets it under 150 characters, so write the short version yourself.
 
 ## Job Definitions + Audiences
 
@@ -107,7 +119,8 @@ client = RapidataClient()
 audience = client.audience.get_audience_by_id("global")
 # Curated domain pool (e.g. alignment): client.audience.get_audience_by_id("aud_MU1GZYoESyO")
 # Only if you need task-specific qualification: client.audience.create_audience(name="My Evaluators")
-#   — but recruiting is explicit: you MUST add >=3 qualification examples (add_*_example) AND
+#   — but recruiting is explicit: you MUST add >= min_tasks qualification examples (default 10,
+#   min 3; add_*_example) AND
 #   then call audience.start_recruiting() BEFORE assign_job. Adding examples does not start
 #   recruiting; a job assigned before recruiting starts can never receive responses.
 #   See "Custom Audiences".
@@ -277,7 +290,7 @@ job_def = client.job.create_free_text_job_definition(
 
 Create an audience trained on your specific task.
 
-⚠️ **Recruiting is explicit — you must start it yourself.** A custom audience recruits nobody until you (1) add **≥3 qualification examples** with `add_*_example(...)` and (2) call `audience.start_recruiting()`. Adding examples does **not** start recruiting; until `start_recruiting()` is called the audience stays in its `Created` state. A job assigned to such an audience is still created (with a warning), but it can never receive responses — `display_progress_bar()` / `get_results()` raise an error explaining that nobody graduated and nobody is being recruited. Call `start_recruiting()` **once**, after all examples are added and reviewed, before `assign_job`. If you don't need task-specific qualification, skip all of this and use the ready-to-go global pool with no setup: `client.audience.get_audience_by_id("global")`.
+⚠️ **Recruiting is explicit — you must start it yourself.** A custom audience recruits nobody until you (1) add **at least `min_tasks` qualification examples** (default 10, never fewer than 3) with `add_*_example(...)` and (2) call `audience.start_recruiting()`. With fewer examples than `min_tasks`, `start_recruiting()` raises `RapidataError` ("The graduation rule needs 10 validation tasks, but the audience only has 8") — add examples, or pass a lower `min_tasks` to `create_audience`. Adding examples does **not** start recruiting; until `start_recruiting()` is called the audience stays in its `Created` state. A job assigned to such an audience is still created (with a warning), but it can never receive responses — `display_progress_bar()` / `get_results()` raise an error explaining that nobody graduated and nobody is being recruited. Call `start_recruiting()` **once**, after all examples are added and reviewed, before `assign_job`. If you don't need task-specific qualification, skip all of this and use the ready-to-go global pool with no setup: `client.audience.get_audience_by_id("global")`.
 
 **Important:** Every qualification example and its associated truth must be manually and thoroughly reviewed by a human before use. If an example has a wrong or ambiguous truth value, the qualification process will filter out good labelers who answer correctly while letting through bad labelers who happen to match the incorrect answer — completely inverting quality control. Always verify that each example has a clear, unambiguous correct answer.
 
@@ -347,7 +360,10 @@ audience.add_select_words_example(
 # Inspect the examples currently on the audience
 examples_df = audience.get_examples(amount=10, page=1)
 
-# Once >=3 examples are added and reviewed, start recruiting. This is required and explicit:
+# Remove one with a wrong or ambiguous truth; ids are in the "id" column
+audience.delete_example(examples_df["id"].iloc[0])
+
+# Once >= min_tasks examples (default 10) are added and reviewed, start recruiting. This is required and explicit:
 # adding examples does not start it, and a job assigned before this can never get responses.
 audience.start_recruiting()
 
@@ -365,7 +381,7 @@ job = audience.assign_job(job_def)
 - `client.audience.find_audiences(name="", amount=10, page=1)` — list your audiences (newest first), optionally filtered by name
 
 **Audience methods:**
-- `audience.start_recruiting()` — begin recruiting/onboarding annotators against the audience's qualification examples. **Required and explicit for custom audiences**: call it once, after adding ≥3 examples and before `assign_job` — adding examples never starts recruiting on its own, and a job assigned before recruiting has started can never receive responses. Calling it again on the same audience object is a no-op; a backend failure raises `RapidataError` rather than being swallowed. Returns the audience, so it chains. Not needed for the global/curated pools.
+- `audience.start_recruiting()` — begin recruiting/onboarding annotators against the audience's qualification examples. **Required and explicit for custom audiences**: call it once, after adding at least `min_tasks` examples (default 10, min 3) and before `assign_job` — adding examples never starts recruiting on its own, and a job assigned before recruiting has started can never receive responses. Calling it again on the same audience object is a no-op; a backend failure raises `RapidataError` rather than being swallowed. Returns the audience, so it chains. Not needed for the global/curated pools.
 - `audience.get_recruiting_metrics()` — snapshot of the audience's recruiting funnel as a `RecruitingMetrics` (`graduated` = eligible to work now, `distilling` = still qualifying, `dropped`, `inactive`; one bucket per annotator). All zeros before `start_recruiting()` has pulled anyone in, and for curated audiences.
 - `audience.assign_job(job_definition, run_after=None)` — start a job. Never blocks on funds: the job is always created, but if its estimated cost exceeds your account balance a cost warning is logged (with the estimate, your balance, and the shortfall) and the job may pause partway until you top up. A warning is also logged if the audience has no graduated annotators yet. Pass `run_after` (a `RapidataJob`, a job id string, or `None`) to queue this job behind an earlier one: the new job is created immediately in the `Queued` state and only starts once the preceding job **completes or fails**, so a single audience never splits its annotators across two jobs at once. Default `None` starts the job right away. Chain further by pointing each new job at its predecessor.
 
@@ -377,7 +393,8 @@ second = audience.assign_job(other_job_def, run_after=first)   # or run_after="j
 - `audience.update_filters([...])` — replace the recruitment filters on this audience (audience-supported filters only — see below)
 - `audience.filter([filters])` — derive a filtered slice of this audience's graduated labelers without re-onboarding; multiple filters are ANDed. Returns a `RapidataFilteredAudience` (id prefixed `fau_`) that exposes only `assign_job` and `find_jobs` (plus `id`, `name`, `filters`) — no examples, `update_filters`, `delete`, or nested `.filter()`. Its id (or the object) can be passed as a leaderboard's `audience_id`
 - `audience.update_name("New Name")` — rename
-- `audience.get_examples(amount=10, page=1)` — list qualification examples (returns DataFrame)
+- `audience.get_examples(amount=10, page=1)` — list qualification examples (DataFrame with columns `id`, `asset`, `truth`, `context`, `contextAsset`)
+- `audience.delete_example(example_id)` — delete one qualification example by its `id` from `get_examples`, e.g. one whose truth turned out wrong or ambiguous. Returns the audience, so it chains.
 - `audience.delete()` — delete the audience
 
 **Audience-supported filters:** `CountryFilter`, `LanguageFilter`, `AgeFilter` (`AgeGroup`), `GenderFilter` (`Gender`), and `DeviceFilter` (`DeviceType`), plus the `AndFilter`/`OrFilter`/`NotFilter` combinators (also via `&` / `|` / `~`). `UserScoreFilter`, `CampaignFilter`, and `CustomFilter` are **not supported on audiences** and raise `NotImplementedError`.
@@ -399,7 +416,7 @@ second = audience.assign_job(other_job_def, run_after=first)   # or run_after="j
 
 ## Context Management
 
-Datapoint contexts have a **400-character maximum**; the backend rejects longer ones. An over-long context is therefore **always** shortened against the task instruction before upload — this cannot be turned off — and a warning reports how many contexts were shortened:
+Write contexts as one sentence under 150 characters (see **Task design rules**); the shortening below is a fallback, not a substitute. Datapoint contexts have a **400-character maximum**; the backend rejects longer ones. An over-long context is therefore **always** shortened against the task instruction before upload — this cannot be turned off — and a warning reports how many contexts were shortened:
 
 ```python
 job_def = client.job.create_classification_job_definition(
@@ -447,6 +464,8 @@ Settings control how a task is rendered and behaves for labelers. All settings a
 
 Most settings only apply to specific task types. If you add a setting that the job's task type does not support, the SDK logs a non-fatal warning and still sends the flag — it is never dropped and no error is raised. Ranking jobs are treated as Compare for this check.
 
+Apart from `CustomSetting` and the settings that take a number (`AllowNeitherBothSetting`, `PlayPercentageVideoSetting`, `FreeText*CharactersSetting`, `Locate*PointsSetting`), settings are on/off and take no argument: add the setting to turn the behavior on, leave it out to keep it off. Passing a value, e.g. `MuteVideoSetting(False)`, raises `TypeError`.
+
 ```python
 from rapidata import (
     NoShuffleSetting, AllowNeitherBothSetting, MarkdownSetting,
@@ -457,7 +476,7 @@ from rapidata import (
     LocateMaxPointsSetting, LocateMinPointsSetting,
     ComparePanoramaSetting, CompareEquirectangularSetting,
     ClassifyEquirectangularSetting, TranslateTextAssetsSetting,
-    PinContextMediaSetting, CustomSetting,
+    PinContextMediaSetting, ReferenceOverlaySetting, CustomSetting,
 )
 
 settings=[NoShuffleSetting()]                             # Keep answer options in order (use for Likert scales)
@@ -468,7 +487,7 @@ settings=[FreeTextMinimumCharactersSetting(50)]           # Min text length for 
 settings=[FreeTextMaxCharactersSetting(500)]              # Max text length for free-text tasks (default 1024) (use with caution — see note below)
 settings=[SwapContextInstructionSetting()]                # Swap the positions of context and instruction
 settings=[PlayPercentageVideoSetting(percentage=95)]      # Require labelers to watch N% of video before answering (0-95)
-settings=[OriginalLanguageOnlySetting()]                  # Do not translate the task (overrides TranslateTextAssetsSetting)
+settings=[OriginalLanguageOnlySetting()]                  # Do not translate the task — instruction, context, answer options are translated by default (overrides TranslateTextAssetsSetting)
 settings=[NoMistakeOptionSetting()]                       # Add a "No mistakes" button so labelers can confirm the media has no errors
 settings=[DisableAutoloopSetting()]                       # Disable automatic looping of videos
 settings=[NoInstructionDisplaySetting()]                  # Hide instruction on the task screen (hides the context instead if combined with SwapContextInstructionSetting)
@@ -478,8 +497,9 @@ settings=[LocateMinPointsSetting(1)]                      # Locate task: min num
 settings=[ComparePanoramaSetting()]                       # Render comparison media in a panoramic viewer
 settings=[CompareEquirectangularSetting()]                # Render comparison media as equirectangular 360° view
 settings=[ClassifyEquirectangularSetting()]               # Render classification media as equirectangular 360° view
-settings=[TranslateTextAssetsSetting()]                   # Translate text assets (options + context) into the labeler's language; source assumed English
+settings=[TranslateTextAssetsSetting()]                   # Translate text assets (text datapoints + text context assets) into the labeler's language; source assumed English
 settings=[PinContextMediaSetting()]                       # Show the media context next to the task instead of in the collapsible drawer — only if there is enough space for it; inspect job_def.preview() carefully. Multi-asset contexts show only the first asset
+settings=[ReferenceOverlaySetting()]                      # Compare of two image edits: the media context ("Original") covers both options, then the edits are revealed; labelers can toggle back. Needs exactly one image in media_contexts
 settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (target="rapids", default); target="campaign" for campaign-level
 ```
 
@@ -489,17 +509,19 @@ settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (ta
 
 1. **Watch early responses** — after assigning, call `job.view()` to open the running job in the browser and check that labelers understand the instruction as intended
 2. **Use `NoShuffleSetting()` for Likert scales** — ordered answer options get shuffled by default
-3. **Custom audiences need ≥3 examples AND an explicit `start_recruiting()`** — recruiting never begins on its own. Add **≥3 qualification examples** (`add_*_example(...)`), then call `audience.start_recruiting()` **once**, before `assign_job`. Skip either step and the audience recruits nobody: the job is still created (with a warning), but it can never receive responses, so `get_results()` / `display_progress_bar()` raise an error saying the audience can never produce responses. Use `client.audience.get_audience_by_id("global")` when you don't need task-specific qualification.
+3. **Custom audiences need ≥ `min_tasks` examples AND an explicit `start_recruiting()`** — recruiting never begins on its own. Add **at least `min_tasks` qualification examples** (default 10, min 3; otherwise `start_recruiting()` raises), then call `audience.start_recruiting()` **once**, before `assign_job`. Skip either step and the audience recruits nobody: the job is still created (with a warning), but it can never receive responses, so `get_results()` / `display_progress_bar()` raise an error saying the audience can never produce responses. Use `client.audience.get_audience_by_id("global")` when you don't need task-specific qualification.
    - **One audience = one task.** A custom audience is qualified for the specific task its examples describe. Reusing it for a different, unrelated task is a misuse — the qualification no longer applies and the quality guarantee is lost. Reuse it only for repeated/scheduled runs of the *same* task; spin up a new audience for a new task.
-4. **25-second time limit, 250-character instructions** — labelers have ~25 seconds per task; keep instructions concise. Instructions are capped at **250 characters** — a longer one raises `ValueError: instruction is <n> characters; maximum is 250` when the job definition or qualification example is created
+4. **10–15 seconds per task, 250-character instructions** — design tasks to be answered in about 10 seconds, 15 at most (contact Rapidata if one needs longer); keep instructions to one criterion and under 80 characters (see **Task design rules**). Instructions are capped at **250 characters** — a longer one raises `ValueError: instruction is <n> characters; maximum is 250` when the job definition or qualification example is created
 5. **Responses may exceed `responses_per_datapoint`** — concurrent labelers can cause slight overflow
 6. **Two early stopping strategies, mutually exclusive** — `confidence_threshold` (statistical, weighted by labeler trust scores) or `quorum_threshold` (stops when N responses agree); cannot use both at once
 7. **Early stopping only for unambiguous tasks** — both strategies work best when there's a clear correct answer
 8. **Failed uploads abort job-definition creation** — job definitions are created atomically: if more than `failure_tolerance` of the datapoints fail to upload, **no job definition is created** (`e.job_definition` is `None`) and at least one datapoint must always succeed. Fix the failing datapoints and call `e.retry()`, which re-uploads only the failed ones into the *same* dataset and finishes creating the definition; it raises `FailedUploadException` again if failures remain, so it can be looped. Within tolerance, the definition is created and a warning reports how many failed. Inspect failures via `e.failures_by_reason`, `e.failures_by_stage` (grouped by remote-URL ingestion stage — only `internal` is a Rapidata-side fault), and each `FailedUpload`'s `stage` / `http_status`
 9. **Preview link printed on job creation** — creating a job definition prints a dashboard preview link; suppress prints with `rapidata_config.logging.silent_mode = True`
-10. **Context length limit is 400 characters** — the backend rejects contexts longer than 400 characters, so an over-long context is **always** shortened against the task instruction before upload (not optional; a warning reports how many were shortened). Set `rapidata_config.upload.contextShortening = True` to shorten *every* context, or use `client.context.shorten_context()` / `client.context.shorten_contexts()` to shorten manually.
+10. **Context length limit is 400 characters** — a cap, not a target: write one sentence under 150 characters (see **Task design rules**). The backend rejects contexts longer than 400 characters, so an over-long context is **always** shortened against the task instruction before upload (not optional; a warning reports how many were shortened). Set `rapidata_config.upload.contextShortening = True` to shorten *every* context, or use `client.context.shorten_context()` / `client.context.shorten_contexts()` to shorten manually.
 11. **Jobs can pause for manual review or funds** — `assign_job` always creates the job, but if its estimated cost exceeds your account balance it logs a cost warning and the job may pause until you top up. A job can also enter manual review (`ManualApproval`), become spend-limited (`SpendLimited`), or be `Blocked` because a rapid was flagged; since none of these completes on its own, `get_results()` raises an informative error naming the state instead of blocking — top up, wait for a reviewer, or unflag the rapid on `job.job_details_page` in the app, then retry.
-12. **Text assets are NOT translated by default** — datapoints uploaded with `data_type="text"` (and text contexts) are shown to labelers exactly as supplied unless you add `TranslateTextAssetsSetting()`, which translates them into each labeler's language. That setting **always treats the source text as English** — for non-English text, leave it off and target speakers of the text's language with `LanguageFilter` / `CountryFilter`. Results keep referencing the original text. `OriginalLanguageOnlySetting` wins over it.
+12. **Don't restrict evaluations to English speakers for comprehension** — the instruction, the `context` string and answer options are translated into each labeler's device language automatically, so the global pool understands an English task. Turn this off with `OriginalLanguageOnlySetting()`. Two exceptions:
+   - **Text assets are NOT translated by default** — datapoints uploaded with `data_type="text"` (and text `context_assets`) are shown exactly as supplied unless you add `TranslateTextAssetsSetting()`, which translates them into each labeler's language. That setting **always treats the source text as English** — for non-English text, leave it off and target speakers of the text's language with `LanguageFilter`. Results keep referencing the original text. `OriginalLanguageOnlySetting` wins over it.
+   - **Text inside images and videos is never translated.** To measure it (e.g. rendered text in a generated image), run it as its own job or leaderboard that asks only about that dimension, on an audience filtered with `LanguageFilter` for the text's language — not `CountryFilter`, since a country's labelers don't all read its language. Keep the other dimensions on the unfiltered audience.
 
 ## Flows (Continuous Response Collection)
 
@@ -660,6 +682,7 @@ benchmark.update_prompt("garage_car", tags=["abstract", "surreal"], origin="wiki
 print(benchmark.tags)             # Values only, aligned by index with prompts (categories dropped)
 print(benchmark.structured_tags)  # list[list[Tag]] — preferred, keeps categories
 print(benchmark.origins)          # list[Origin | None]
+print(benchmark.get_tag_counts()) # DataFrame of every tag: value, category, prompt_count — one request, no prompt paging
 
 # Create leaderboard
 leaderboard = benchmark.create_leaderboard(
@@ -677,9 +700,6 @@ leaderboard = benchmark.create_leaderboard(
     # excluded_tags=["nsfw"],            # Optional: skip prompts carrying one of these tags (always wins)
     # vote_aggregation=VoteAggregation.MAJORITY_VOTE,  # default; or VoteAggregation.ALL_VOTES — how a matchup's
     #                                    #   individual responses are aggregated (import VoteAggregation from rapidata)
-    # skip_initial_run=False,            # Optional: when True, skip the initial run that evaluates the models already
-    #                                    #   in the benchmark against each other — you start with no responses/standings.
-    #                                    #   Later add_model still compares against the whole field; create-only (not readable back).
 )
 
 # Evaluate a model (creates participant, uploads media, and submits in one step)

@@ -13,20 +13,14 @@ from rapidata.rapidata_client.settings._rapidata_setting import (
 
 class NoShuffleSetting(RapidataSetting):
     """
-    Only for classification and compare tasks. If true, the order of the categories / images will not be shuffled and presented in the same order as specified.
+    Only for classification and compare tasks. The order of the categories / images will not be shuffled and is presented in the same order as specified.
 
     If this is not added to the order, the shuffling will be active.
 
     Supported task types: Classification, Compare.
-
-    Args:
-        value (bool, optional): Whether to disable shuffling. Defaults to True for function call.
     """
 
     supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Classification", "Compare")
 
-    def __init__(self, value: bool = True):
-        if not isinstance(value, bool):
-            raise ValueError("The value must be a boolean.")
-
-        super().__init__(key="no_shuffle", value=value)
+    def __init__(self):
+        super().__init__(key="no_shuffle", value="true")

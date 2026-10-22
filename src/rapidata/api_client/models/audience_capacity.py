@@ -18,7 +18,7 @@ from typing_extensions import Self
 
 class AudienceCapacity(str, Enum):
     """
-    AudienceCapacity
+    How much labelling capacity an audience has, as a bucket rather than a headcount. Enough to  tell someone their job will crawl or never finish, and no more — a filtered audience's  membership is a predicate over its base, so an exact live count would mean maintaining a  counter per filter for a number nobody reads.
     """
 
     """

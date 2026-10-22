@@ -10,6 +10,8 @@ on:
       - 'scripts/**'
       - 'site_root/**'
       - 'tests/test_docs_site.py'
+      - 'tests/test_docs_analytics.py'
+      - 'tests/docs_js/**'
       - 'src/**'
       - 'openapi/schemas/**'
       - 'mkdocs.yml'
@@ -41,10 +43,20 @@ jobs:
           python-version-file: '.python-version'
       - uses: astral-sh/setup-uv@v7
       - run: uv sync --group docs --frozen
-      - run: uv run python -m pytest tests/test_docs_site.py
+      - run: uv run python scripts/check_docs_sri.py
+      - run: uv run python -m pytest tests/test_docs_site.py tests/test_docs_analytics.py
       - run: uv run --group docs mkdocs build
       - run: uv run python scripts/prepare_docs_site.py --site site --previous published
       - run: uv run python scripts/build_public_openapi.py site/openapi.json
+      - name: Browser-test analytics consent
+        env:
+          NODE_PATH: ${{ runner.temp }}/playwright/node_modules
+          PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/playwright/browsers
+          DOCS_SITE_DIR: site
+        run: |
+          npm install --no-save --no-package-lock --prefix "$RUNNER_TEMP/playwright" playwright@1.63.0
+          "$RUNNER_TEMP/playwright/node_modules/.bin/playwright" install --with-deps chromium
+          node --test tests/docs_js/consent.browser.test.js
       - uses: actions/upload-artifact@v4
         with:
           name: documentation-site

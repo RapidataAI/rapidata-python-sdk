@@ -16,15 +16,9 @@ class KeyboardNumericSetting(RapidataSetting):
     Changes the virtual keyboard input type to numeric-only for free text input fields. Useful when expecting numeric answers.
 
     Supported task types: Free Text.
-
-    Args:
-        value (bool, optional): Whether to show a numeric keyboard. Defaults to True.
     """
 
     supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Free Text",)
 
-    def __init__(self, value: bool = True):
-        if not isinstance(value, bool):
-            raise ValueError("The value must be a boolean.")
-
-        super().__init__(key="keyboard_numeric", value=value)
+    def __init__(self):
+        super().__init__(key="keyboard_numeric", value="true")

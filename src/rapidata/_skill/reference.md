@@ -12,9 +12,9 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `instruction` | str | Task description shown to labelers (max 250 characters — longer raises `ValueError`) |
 | `datapoints` | list | Data to label (URLs or local paths) |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
-| `responses_per_datapoint` | int | Responses per item (default 10) |
-| `contexts` | list[str] \| None | Text context per datapoint (max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually) |
-| `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview) |
+| `responses_per_datapoint` | int | Responses per item (default 10; never set it below 10 — see **Task design rules** in the main guide) |
+| `contexts` | list[str] \| None | Text context per datapoint: one sentence under 150 characters with only what the instruction asks about (see **Task design rules** in the main guide). Max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually |
+| `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
 | `confidence_threshold` | float \| None | Confidence-based early stopping threshold (0-1); cannot combine with `quorum_threshold` |
 | `quorum_threshold` | int \| None | Quorum-based early stopping: stop when this many responses agree; cannot combine with `confidence_threshold` |
 | `settings` | `Sequence[RapidataSetting] \| None` | Display/behavior settings |
@@ -29,7 +29,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `answer_options` | list[str] | Categories to choose from |
+| `answer_options` | list[str] \| list[list[str]] | Categories to choose from. Pass one list per datapoint (same length as `datapoints`) to show different options per datapoint; 2–8 unique options each |
 
 ### Comparison-specific
 
@@ -171,10 +171,11 @@ audience.add_compare_example(instruction=..., datapoint=[...], truth=...)
 audience.add_locate_example(instruction=..., datapoint=..., truths=[Box(...)])     # requires: from rapidata import Box
 audience.add_draw_example(instruction=..., datapoint=..., truths=[Box(...)])
 audience.add_select_words_example(instruction=..., datapoint=..., sentence=..., truths=[1])
-df = audience.get_examples(amount=10, page=1)                       # inspect examples (DataFrame)
+df = audience.get_examples(amount=10, page=1)                       # inspect examples (DataFrame with an "id" column)
+audience.delete_example(df["id"].iloc[0])                           # remove one, e.g. a wrong or ambiguous truth
 
 # Start recruiting — REQUIRED and EXPLICIT for a custom audience. Recruiting begins only when
-# you call this, once >=3 examples are added and reviewed. Adding examples does NOT start it; an
+# you call this, once >= min_tasks examples (default 10, min 3) are added and reviewed. Adding examples does NOT start it; an
 # audience left un-recruited stays in `Created` and a job assigned to it can never get responses
 # (get_results()/display_progress_bar() raise — see "Jobs on an audience that can never respond").
 # Skip all of this and use get_audience_by_id("global") when you need no task-specific qualification.
@@ -282,7 +283,7 @@ from rapidata import (
 #     raise NotImplementedError here; demographic/device targeting belongs on .filter() (below). ---
 audience.update_filters([
     CountryFilter(country_codes=["US", "CA", "GB"]),                  # 2-letter ISO codes (uppercased)
-    LanguageFilter(language_codes=["en", "fr"]),                      # 2-letter ISO language codes
+    LanguageFilter(language_codes=["en", "fr"]),                      # ISO 639-1 codes (lowercased); unknown codes raise ValueError
 ])
 
 # Combine filters with logic operators
@@ -329,7 +330,7 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 
 ```json
 {
-  "info": { "type": "Classify", "version": "3.0.0" },
+  "info": { "type": "Classification", "version": "3.0.0" },
   "results": [
     {
       "identifier": "image1.jpg",
@@ -414,7 +415,8 @@ A labeler's `demographics` may be empty when no demographic data was collected f
 ```python
 results = job.get_results()              # RapidataResults — a dict subclass holding the raw JSON
 snapshot = job.get_results(preliminary_results=True)  # unfinished job: responses so far, no waiting
-df = results.to_pandas()                  # one row per datapoint; compare results get A_/B_ columns
+df = results.to_pandas()                  # one row per datapoint; compare results get A_/B_ columns,
+                                          # classification gets one row per datapoint and answer option
 df = results.to_pandas(split_details=True)  # one row per individual response
 results.to_json("results.json")           # writes the file (default "./results.json"); returns None
 ```
@@ -567,28 +569,31 @@ All settings inherit from `RapidataSetting` and are importable from `rapidata`.
 
 Most settings only apply to specific task types. If you add a setting that the job's task type does not support, the SDK logs a non-fatal warning and still sends the flag — it is never dropped and no error is raised. Ranking jobs are treated as Compare for this check.
 
+Settings with a `()` constructor are on/off: adding one turns the behavior on, leaving it out keeps it off. They take no argument — `MuteVideoSetting(False)` or `MuteVideoSetting(value=True)` raises `TypeError`.
+
 | Class | Constructor | Effect |
 |-------|-------------|--------|
-| `NoShuffleSetting` | `(value: bool = True)` | Disable shuffling of answer options (Likert scales) |
+| `NoShuffleSetting` | `()` | Disable shuffling of answer options (Likert scales) |
 | `AllowNeitherBothSetting` | `(delay_ms: int = 5000)` — ≥ 0 | Comparison: show an "Unsure" button (answers "Neither" / "Both") after `delay_ms` milliseconds |
-| `MarkdownSetting` | `(value: bool = True)` | Render markdown in text |
-| `MuteVideoSetting` | `(value: bool = True)` | Start videos muted |
+| `MarkdownSetting` | `()` | Render markdown in text |
+| `MuteVideoSetting` | `()` | Start videos muted |
 | `FreeTextMinimumCharactersSetting` | `(value: int)` — must be ≥ 1 (prints a warning above 40) | Min chars for free-text tasks. Use with caution — see note below the table |
 | `FreeTextMaxCharactersSetting` | `(value: int = 1024)` — must be ≥ 1 | Max chars for free-text tasks. Use with caution — see note below the table |
-| `SwapContextInstructionSetting` | `(value: bool = True)` | Swap positions of context and instruction |
+| `SwapContextInstructionSetting` | `()` | Swap positions of context and instruction |
 | `PlayPercentageVideoSetting` | `(percentage: int = 95)` — 0–95 | Require labelers to watch N% of video |
-| `OriginalLanguageOnlySetting` | `(value: bool = True)` | Skip translation; show task in original language. Also overrides `TranslateTextAssetsSetting` |
-| `NoMistakeOptionSetting` | `(value: bool = True)` | Hide the "mark as mistake" option |
-| `DisableAutoloopSetting` | `(value: bool = True)` | Disable automatic media looping |
-| `NoInstructionDisplaySetting` | `(value: bool = True)` | Hide instruction from task screen |
-| `KeyboardNumericSetting` | `(value: bool = True)` | Open numeric keyboard on mobile |
+| `OriginalLanguageOnlySetting` | `()` | Skip translation; show task in original language. By default the instruction, context and answer options are translated into the labeler's device language. Also overrides `TranslateTextAssetsSetting` |
+| `NoMistakeOptionSetting` | `()` | Add a "No mistakes" button so labelers can confirm the media has no errors |
+| `DisableAutoloopSetting` | `()` | Disable automatic media looping |
+| `NoInstructionDisplaySetting` | `()` | Hide instruction from task screen |
+| `KeyboardNumericSetting` | `()` | Open numeric keyboard on mobile |
 | `LocateMaxPointsSetting` | `(value: int = 3)` — ≥ 1 | Locate tasks: max points per labeler |
 | `LocateMinPointsSetting` | `(value: int = 1)` — ≥ 1 | Locate tasks: min points per labeler |
-| `ComparePanoramaSetting` | `(value: bool = True)` | Render comparison media as 360° panorama |
-| `CompareEquirectangularSetting` | `(value: bool = True)` | Render comparison media as equirectangular VR |
-| `ClassifyEquirectangularSetting` | `(value: bool = True)` | Render classification media as equirectangular 360° view |
-| `TranslateTextAssetsSetting` | `(value: bool = True)` | Translate text assets (datapoints and text contexts) into the labeler's language. Off unless added; source text is always assumed to be English; results still reference the original text |
-| `PinContextMediaSetting` | `(value: bool = True)` | Show the context image or video next to the task for the whole rapid instead of inside the collapsible context drawer. Only use it when the task screen has enough space for the context next to the task — inspect `job_def.preview()` carefully before assigning. A multi-asset context is reduced to its first asset. All task types |
+| `ComparePanoramaSetting` | `()` | Render comparison media as 360° panorama |
+| `CompareEquirectangularSetting` | `()` | Render comparison media as equirectangular VR |
+| `ClassifyEquirectangularSetting` | `()` | Render classification media as equirectangular 360° view |
+| `TranslateTextAssetsSetting` | `()` | Translate text assets (datapoints and text contexts) into the labeler's language. Off unless added; source text is always assumed to be English; results still reference the original text |
+| `PinContextMediaSetting` | `()` | Show the context image or video next to the task for the whole rapid instead of inside the collapsible context drawer. Only use it when the task screen has enough space for the context next to the task — inspect `job_def.preview()` carefully before assigning. A multi-asset context is reduced to its first asset. All task types |
+| `ReferenceOverlaySetting` | `()` | Compare tasks: show the media context, labelled "Original", over both options, then reveal the options ("Edit A" / "Edit B"); labelers can toggle back to the original. Use it when both datapoints are edits of the context image. Needs two image options and exactly one image in `media_contexts` — with no media context, or several assets in it, the setting has no effect; options that are not images are not rendered |
 | `CustomSetting` | `(key: str, value: str, target: "rapids" \| "campaign" = "rapids")` | Pass a custom key/value through to the backend; `target` controls whether the flag is applied at the rapid level (`"rapids"`) or campaign level (`"campaign"`) |
 
 **Note on `FreeTextMinimumCharactersSetting` / `FreeTextMaxCharactersSetting`:** use these with caution. Free-text responses already pass through a reasonableness check by default, so tightening the bounds is usually unnecessary and will reject otherwise valid answers. Only set them when the question genuinely demands a specific length (e.g. a single word, or a full paragraph).
@@ -894,8 +899,14 @@ leaderboard = benchmark.create_leaderboard(
     # included_tags=["outdoor"],         # Optional: only collect matchups for prompts carrying one of these tags
     # excluded_tags=["nsfw"],            # Optional: skip prompts carrying any of these tags (always wins)
     # vote_aggregation=VoteAggregation.MAJORITY_VOTE,  # VoteAggregation.MAJORITY_VOTE (default) or ALL_VOTES — how matchup votes are aggregated
-    # skip_initial_run=False,            # Optional: when True, skip the initial run that evaluates the models already in the benchmark against each other (start with no responses/standings; later models still compare against the whole field). Create-only — not readable back
+    # skip_initial_run=False,            # Leave False unless the user explicitly asks to skip. See "Skipping the initial run" below
 )
+
+# Skipping the initial run: the initial run IS the evaluation of the models already in the
+# benchmark, so skip_initial_run=True means they are never compared and the leaderboard has
+# no standings. Use it only when the user explicitly asks for it, never to save cost or to
+# "launch it yourself": skipping marks those models submitted, so a later benchmark.run()
+# finds nothing to submit and evaluates nothing. Create-only — not readable back.
 
 # Evaluate a model (creates participant, uploads media, and submits in one step).
 # Pair each media item with its prompt via prompts=[...] or identifiers=[...] (one is required).
@@ -990,6 +1001,8 @@ print(benchmark.identifiers)      # Prompt identifiers, aligned by index
 print(benchmark.structured_tags)  # list[list[Tag]] — tags with categories, aligned by index
 print(benchmark.origins)          # list[Origin | None], aligned by index
 print(benchmark.tags)             # list[list[str]] — values only (categories dropped)
+print(benchmark.get_tag_counts()) # DataFrame of every tag: value, category, prompt_count — one request,
+                                  # no prompt paging; `value` is what the standings `tags=` filters take
 print(benchmark.prompt_assets)    # list[list[str] | None], aligned by index — the reference asset(s)
                                   # of each prompt. Each entry is the list of assets for that prompt
                                   # (one element for a single asset, several for a multi-asset), or None
@@ -1526,7 +1539,7 @@ rapidata_config.upload.contextShortening = True
 
 ## Human Prompting Best Practices
 
-- **Be concise** — labelers have ~25 seconds per task
+- **Be concise** — design for an answer in about 10 seconds, 15 at most
 - **Positive framing** — "Which is more realistic?" not "Which is less AI-generated?"
 - **Distinct options** — "Poor / Acceptable / Excellent" not "Bad / Not Good / Fine / Good / Great"
 - **Single criterion per task** — "What animal is in the image?" not "Does this contain a rabbit, dog, or cat?"

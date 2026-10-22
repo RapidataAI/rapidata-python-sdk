@@ -1,0 +1,1763 @@
+{
+  "protocolVersion": 1,
+  "now": "2026-10-21T09:00:00.000Z",
+  "constants": {
+    "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ",
+    "project": 313714,
+    "productionHosts": [
+      "rapidata.ai",
+      "www.rapidata.ai",
+      "app.rapidata.ai",
+      "docs.rapidata.ai",
+      "benchmark.ai",
+      "www.benchmark.ai"
+    ],
+    "sites": {
+      "rapidata": {
+        "origins": [
+          "https://rapidata.ai",
+          "https://www.rapidata.ai",
+          "https://app.rapidata.ai",
+          "https://docs.rapidata.ai"
+        ],
+        "receivers": [
+          "rapidata.ai",
+          "www.rapidata.ai",
+          "app.rapidata.ai"
+        ]
+      },
+      "benchmark": {
+        "origins": [
+          "https://benchmark.ai",
+          "https://www.benchmark.ai"
+        ],
+        "receivers": [
+          "benchmark.ai",
+          "www.benchmark.ai"
+        ]
+      }
+    },
+    "internalReferrerExact": [
+      "rapidata.ai",
+      "www.rapidata.ai",
+      "app.rapidata.ai",
+      "docs.rapidata.ai",
+      "benchmark.ai",
+      "www.benchmark.ai",
+      "auth.rapidata.ai",
+      "accounts.google.com",
+      "checkout.stripe.com",
+      "billing.stripe.com",
+      "localhost",
+      "127.0.0.1",
+      "[::1]"
+    ],
+    "internalReferrerSuffix": [
+      ".vercel.app",
+      ".rabbitdata.ch",
+      ".rapidata.dev",
+      ".localhost"
+    ],
+    "referrerRules": [
+      {
+        "match": "suffix",
+        "value": ".hf.space",
+        "source": "huggingface",
+        "medium": "referral"
+      },
+      {
+        "match": "domain",
+        "value": "huggingface.co",
+        "source": "huggingface",
+        "medium": "referral"
+      },
+      {
+        "match": "exact",
+        "value": "gemini.google.com",
+        "source": "gemini",
+        "medium": "ai"
+      },
+      {
+        "match": "regex",
+        "value": "(^|\\.)google\\.(com|[a-z]{2}|co\\.[a-z]{2}|com\\.[a-z]{2})$",
+        "source": "google",
+        "medium": "organic"
+      },
+      {
+        "match": "domain",
+        "value": "bing.com",
+        "source": "bing",
+        "medium": "organic"
+      },
+      {
+        "match": "domain",
+        "value": "duckduckgo.com",
+        "source": "duckduckgo",
+        "medium": "organic"
+      },
+      {
+        "match": "exact",
+        "value": "search.yahoo.com",
+        "source": "yahoo",
+        "medium": "organic"
+      },
+      {
+        "match": "exact",
+        "value": "search.brave.com",
+        "source": "brave",
+        "medium": "organic"
+      },
+      {
+        "match": "domain",
+        "value": "github.com",
+        "source": "github",
+        "medium": "referral"
+      },
+      {
+        "match": "suffix",
+        "value": ".github.io",
+        "source": "github",
+        "medium": "referral"
+      },
+      {
+        "match": "domain",
+        "value": "pypi.org",
+        "source": "pypi",
+        "medium": "referral"
+      },
+      {
+        "match": "domain",
+        "value": "linkedin.com",
+        "source": "linkedin",
+        "medium": "social"
+      },
+      {
+        "match": "exact",
+        "value": "lnkd.in",
+        "source": "linkedin",
+        "medium": "social"
+      },
+      {
+        "match": "exact",
+        "value": "t.co",
+        "source": "x",
+        "medium": "social"
+      },
+      {
+        "match": "domain",
+        "value": "x.com",
+        "source": "x",
+        "medium": "social"
+      },
+      {
+        "match": "domain",
+        "value": "twitter.com",
+        "source": "x",
+        "medium": "social"
+      },
+      {
+        "match": "domain",
+        "value": "reddit.com",
+        "source": "reddit",
+        "medium": "social"
+      },
+      {
+        "match": "exact",
+        "value": "news.ycombinator.com",
+        "source": "hackernews",
+        "medium": "social"
+      },
+      {
+        "match": "exact",
+        "value": "chatgpt.com",
+        "source": "chatgpt",
+        "medium": "ai"
+      },
+      {
+        "match": "exact",
+        "value": "chat.openai.com",
+        "source": "chatgpt",
+        "medium": "ai"
+      },
+      {
+        "match": "domain",
+        "value": "perplexity.ai",
+        "source": "perplexity",
+        "medium": "ai"
+      },
+      {
+        "match": "exact",
+        "value": "claude.ai",
+        "source": "claude",
+        "medium": "ai"
+      }
+    ],
+    "handoffKey": "rd_journey",
+    "handoffMaxChars": 3072,
+    "handoffTtlMs": 120000,
+    "handoffClockSkewMs": 30000,
+    "attributionCookie": {
+      "name": "rd_attribution_v1",
+      "maxAgeSeconds": 7776000,
+      "maxChars": 2048,
+      "domain": {
+        "rapidata": "rapidata.ai",
+        "benchmark": "benchmark.ai"
+      },
+      "sameSite": "Lax",
+      "secure": true
+    },
+    "consentCookie": {
+      "name": "cc_cookie",
+      "domain": {
+        "rapidata": "rapidata.ai",
+        "benchmark": "benchmark.ai"
+      },
+      "revision": 1,
+      "category": "analytics",
+      "policyVersion": "2026-10-20"
+    },
+    "limits": {
+      "utmMaxChars": 64,
+      "landingPathMaxChars": 128,
+      "referrerHostMaxChars": 128
+    }
+  },
+  "parseCampaignTouch": [
+    {
+      "name": "hf dataset card, tagged",
+      "url": "https://rapidata.ai/?utm_source=huggingface&utm_medium=referral&utm_campaign=text_2_image_rich_human_feedback&utm_content=dataset_card",
+      "referrer": "https://huggingface.co/",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "campaign",
+        "touch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "uppercase + whitespace utm normalised",
+      "url": "https://app.rapidata.ai/mri/benchmarks/bmk_1?utm_source=%20HuggingFace%20&utm_campaign=Foo",
+      "referrer": "",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "campaign",
+        "touch": {
+          "source": "huggingface",
+          "medium": null,
+          "campaign": "foo",
+          "content": null,
+          "landingPath": "/mri/benchmarks/bmk_1",
+          "referrerHost": null,
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "utm without referrer (noreferrer link)",
+      "url": "https://docs.rapidata.ai/quickstart/?utm_source=pypi&utm_medium=referral&utm_campaign=python_sdk&utm_content=project_links",
+      "referrer": "",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "campaign",
+        "touch": {
+          "source": "pypi",
+          "medium": "referral",
+          "campaign": "python_sdk",
+          "content": "project_links",
+          "landingPath": "/quickstart/",
+          "referrerHost": null,
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "empty utm values count as absent",
+      "url": "https://rapidata.ai/?utm_source=&utm_medium=",
+      "referrer": "https://www.google.com/",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "referral",
+        "touch": {
+          "source": "google",
+          "medium": "organic",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "www.google.com",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "google organic",
+      "url": "https://rapidata.ai/guides/x",
+      "referrer": "https://www.google.com/",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "referral",
+        "touch": {
+          "source": "google",
+          "medium": "organic",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/guides/x",
+          "referrerHost": "www.google.com",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "google ccTLD",
+      "url": "https://rapidata.ai/",
+      "referrer": "https://www.google.co.uk/",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "referral",
+        "touch": {
+          "source": "google",
+          "medium": "organic",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "www.google.co.uk",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "gemini before google",
+      "url": "https://rapidata.ai/",
+      "referrer": "https://gemini.google.com/",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "referral",
+        "touch": {
+          "source": "gemini",
+          "medium": "ai",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "gemini.google.com",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "hf space iframe referrer",
+      "url": "https://www.benchmark.ai/svg",
+      "referrer": "https://rapidata-svg-leaderboard.static.hf.space/",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "referral",
+        "touch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "chatgpt referrer",
+      "url": "https://rapidata.ai/",
+      "referrer": "https://chatgpt.com/",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "referral",
+        "touch": {
+          "source": "chatgpt",
+          "medium": "ai",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "chatgpt.com",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "x via t.co",
+      "url": "https://rapidata.ai/blog/a",
+      "referrer": "https://t.co/abc",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "referral",
+        "touch": {
+          "source": "x",
+          "medium": "social",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/blog/a",
+          "referrerHost": "t.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "unknown external referrer",
+      "url": "https://rapidata.ai/",
+      "referrer": "https://www.ai.ethz.ch/news",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "referral",
+        "touch": {
+          "source": "ai.ethz.ch",
+          "medium": "referral",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "www.ai.ethz.ch",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "uninstrumented rapidata subdomain is external",
+      "url": "https://rapidata.ai/",
+      "referrer": "https://chat.rapidata.ai/",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "referral",
+        "touch": {
+          "source": "chat.rapidata.ai",
+          "medium": "referral",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "chat.rapidata.ai",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "internal referrer wins over utm (auth hop)",
+      "url": "https://app.rapidata.ai/?utm_source=huggingface",
+      "referrer": "https://auth.rapidata.ai/Account/Login",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "internal",
+        "touch": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "auth.rapidata.ai",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "internal sibling surface",
+      "url": "https://app.rapidata.ai/audiences",
+      "referrer": "https://docs.rapidata.ai/quickstart/",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "internal",
+        "touch": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/audiences",
+          "referrerHost": "docs.rapidata.ai",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "stripe checkout return",
+      "url": "https://app.rapidata.ai/checkout/redirect",
+      "referrer": "https://checkout.stripe.com/c/pay",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "internal",
+        "touch": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/checkout/redirect",
+          "referrerHost": "checkout.stripe.com",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "vercel preview referrer internal",
+      "url": "https://app.rapidata.ai/",
+      "referrer": "https://app-frontend-abc-rapidata.vercel.app/",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "internal",
+        "touch": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "app-frontend-abc-rapidata.vercel.app",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "direct",
+      "url": "https://rapidata.ai/pricing",
+      "referrer": "",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "direct",
+        "touch": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/pricing",
+          "referrerHost": null,
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "long landing path truncated",
+      "url": "https://rapidata.ai/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "referrer": "",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "direct",
+        "touch": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "referrerHost": null,
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "ipv6 loopback referrer keeps brackets and is internal",
+      "url": "http://localhost:3001/",
+      "referrer": "http://[::1]:3000/x",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "internal",
+        "touch": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "[::1]",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    }
+  ],
+  "mergeAttribution": [
+    {
+      "name": "first visit campaign sets first and last",
+      "existing": null,
+      "entry": {
+        "kind": "campaign",
+        "touch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      },
+      "expected": {
+        "v": 1,
+        "first": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        },
+        "last": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "first visit direct sets first only",
+      "existing": null,
+      "entry": {
+        "kind": "direct",
+        "touch": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": null,
+          "observedAt": "2026-10-22T09:00:00.000Z"
+        }
+      },
+      "expected": {
+        "v": 1,
+        "first": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": null,
+          "observedAt": "2026-10-22T09:00:00.000Z"
+        },
+        "last": null
+      }
+    },
+    {
+      "name": "direct never overwrites",
+      "existing": {
+        "v": 1,
+        "first": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        },
+        "last": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      },
+      "entry": {
+        "kind": "direct",
+        "touch": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": null,
+          "observedAt": "2026-10-22T09:00:00.000Z"
+        }
+      },
+      "expected": {
+        "v": 1,
+        "first": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        },
+        "last": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "internal never overwrites",
+      "existing": {
+        "v": 1,
+        "first": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        },
+        "last": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      },
+      "entry": {
+        "kind": "internal",
+        "touch": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "rapidata.ai",
+          "observedAt": "2026-10-24T09:00:00.000Z"
+        }
+      },
+      "expected": {
+        "v": 1,
+        "first": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        },
+        "last": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "later external updates last only",
+      "existing": {
+        "v": 1,
+        "first": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        },
+        "last": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        }
+      },
+      "entry": {
+        "kind": "referral",
+        "touch": {
+          "source": "google",
+          "medium": "organic",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "www.google.com",
+          "observedAt": "2026-10-23T09:00:00.000Z"
+        }
+      },
+      "expected": {
+        "v": 1,
+        "first": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "text_2_image_rich_human_feedback",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T09:00:00.000Z"
+        },
+        "last": {
+          "source": "google",
+          "medium": "organic",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "www.google.com",
+          "observedAt": "2026-10-23T09:00:00.000Z"
+        }
+      }
+    },
+    {
+      "name": "external after direct-first fills last",
+      "existing": {
+        "v": 1,
+        "first": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": null,
+          "observedAt": "2026-10-22T09:00:00.000Z"
+        },
+        "last": null
+      },
+      "entry": {
+        "kind": "referral",
+        "touch": {
+          "source": "google",
+          "medium": "organic",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "www.google.com",
+          "observedAt": "2026-10-23T09:00:00.000Z"
+        }
+      },
+      "expected": {
+        "v": 1,
+        "first": {
+          "source": null,
+          "medium": null,
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": null,
+          "observedAt": "2026-10-22T09:00:00.000Z"
+        },
+        "last": {
+          "source": "google",
+          "medium": "organic",
+          "campaign": null,
+          "content": null,
+          "landingPath": "/",
+          "referrerHost": "www.google.com",
+          "observedAt": "2026-10-23T09:00:00.000Z"
+        }
+      }
+    }
+  ],
+  "attributionCookie": {
+    "encode": [
+      {
+        "name": "hf attribution",
+        "value": {
+          "v": 1,
+          "first": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "text_2_image_rich_human_feedback",
+            "content": "dataset_card",
+            "landingPath": "/",
+            "referrerHost": "huggingface.co",
+            "observedAt": "2026-10-21T09:00:00.000Z"
+          },
+          "last": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "text_2_image_rich_human_feedback",
+            "content": "dataset_card",
+            "landingPath": "/",
+            "referrerHost": "huggingface.co",
+            "observedAt": "2026-10-21T09:00:00.000Z"
+          }
+        },
+        "encoded": "eyJ2IjoxLCJmaXJzdCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJ0ZXh0XzJfaW1hZ2VfcmljaF9odW1hbl9mZWVkYmFjayIsImNvbnRlbnQiOiJkYXRhc2V0X2NhcmQiLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOiJodWdnaW5nZmFjZS5jbyIsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA5OjAwOjAwLjAwMFoifSwibGFzdCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJ0ZXh0XzJfaW1hZ2VfcmljaF9odW1hbl9mZWVkYmFjayIsImNvbnRlbnQiOiJkYXRhc2V0X2NhcmQiLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOiJodWdnaW5nZmFjZS5jbyIsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA5OjAwOjAwLjAwMFoifX0"
+      }
+    ],
+    "decode": [
+      {
+        "name": "roundtrip",
+        "encoded": "eyJ2IjoxLCJmaXJzdCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJ0ZXh0XzJfaW1hZ2VfcmljaF9odW1hbl9mZWVkYmFjayIsImNvbnRlbnQiOiJkYXRhc2V0X2NhcmQiLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOiJodWdnaW5nZmFjZS5jbyIsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA5OjAwOjAwLjAwMFoifSwibGFzdCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJ0ZXh0XzJfaW1hZ2VfcmljaF9odW1hbl9mZWVkYmFjayIsImNvbnRlbnQiOiJkYXRhc2V0X2NhcmQiLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOiJodWdnaW5nZmFjZS5jbyIsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA5OjAwOjAwLjAwMFoifX0",
+        "expected": {
+          "v": 1,
+          "first": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "text_2_image_rich_human_feedback",
+            "content": "dataset_card",
+            "landingPath": "/",
+            "referrerHost": "huggingface.co",
+            "observedAt": "2026-10-21T09:00:00.000Z"
+          },
+          "last": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "text_2_image_rich_human_feedback",
+            "content": "dataset_card",
+            "landingPath": "/",
+            "referrerHost": "huggingface.co",
+            "observedAt": "2026-10-21T09:00:00.000Z"
+          }
+        }
+      },
+      {
+        "name": "not base64url",
+        "encoded": "%%%",
+        "expected": null
+      },
+      {
+        "name": "wrong version",
+        "encoded": "eyJ2IjoyLCJmaXJzdCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJ0ZXh0XzJfaW1hZ2VfcmljaF9odW1hbl9mZWVkYmFjayIsImNvbnRlbnQiOiJkYXRhc2V0X2NhcmQiLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOiJodWdnaW5nZmFjZS5jbyIsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA5OjAwOjAwLjAwMFoifSwibGFzdCI6bnVsbH0",
+        "expected": null
+      },
+      {
+        "name": "bad touch shape",
+        "encoded": "eyJ2IjoxLCJmaXJzdCI6eyJzb3VyY2UiOiJ4In0sImxhc3QiOm51bGx9",
+        "expected": null
+      },
+      {
+        "name": "too long",
+        "encoded": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "expected": null
+      },
+      {
+        "name": "boolean version is not 1",
+        "encoded": "eyJ2Ijp0cnVlLCJmaXJzdCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJ0ZXh0XzJfaW1hZ2VfcmljaF9odW1hbl9mZWVkYmFjayIsImNvbnRlbnQiOiJkYXRhc2V0X2NhcmQiLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOiJodWdnaW5nZmFjZS5jbyIsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA5OjAwOjAwLjAwMFoifSwibGFzdCI6bnVsbH0",
+        "expected": null
+      },
+      {
+        "name": "non-ascii digits in observedAt",
+        "encoded": "eyJ2IjoxLCJmaXJzdCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJ0ZXh0XzJfaW1hZ2VfcmljaF9odW1hbl9mZWVkYmFjayIsImNvbnRlbnQiOiJkYXRhc2V0X2NhcmQiLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOiJodWdnaW5nZmFjZS5jbyIsIm9ic2VydmVkQXQiOiJcdWZmMTIwMjYtMTAtMjFUMDk6MDA6MDAuMDAwWiJ9LCJsYXN0IjpudWxsfQ",
+        "expected": null
+      },
+      {
+        "name": "lone surrogate in a touch field",
+        "encoded": "eyJ2IjoxLCJmaXJzdCI6eyJzb3VyY2UiOiJcdWQ4MDAiLCJtZWRpdW0iOm51bGwsImNhbXBhaWduIjpudWxsLCJjb250ZW50IjpudWxsLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOm51bGwsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA5OjAwOjAwLjAwMFoifSwibGFzdCI6bnVsbH0",
+        "expected": null
+      }
+    ]
+  },
+  "decorateJourneyLink": [
+    {
+      "name": "decorates receiver link",
+      "url": "https://app.rapidata.ai/signup",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+        "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+        "issuedAt": "2026-10-21T08:59:55.000Z",
+        "sourceOrigin": "https://www.benchmark.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        },
+        "lastExternalTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        }
+      },
+      "expected": "https://app.rapidata.ai/signup#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTJkM2UtN2Y0MC04YTliLTBjMWQyZTNmNGE1YiIsInNlc3Npb25JZCI6IjAxOWEwYjFjLWFhYWEtN2JiYi04Y2NjLTBkZGQwZWVlMGZmZiIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1NS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly93d3cuYmVuY2htYXJrLmFpIiwiZmlyc3RUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9fQ"
+    },
+    {
+      "name": "decorates apex with query",
+      "url": "https://rapidata.ai/model-rank-insights?x=1",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+        "issuedAt": "2026-10-21T08:59:59.000Z",
+        "sourceOrigin": "https://benchmark.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        },
+        "lastExternalTouch": null
+      },
+      "expected": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTJkM2UtN2Y0MC04YTliLTBjMWQyZTNmNGE1YiIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1OS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9iZW5jaG1hcmsuYWkiLCJmaXJzdFRvdWNoIjp7InNvdXJjZSI6Imh1Z2dpbmdmYWNlIiwibWVkaXVtIjoicmVmZXJyYWwiLCJjYW1wYWlnbiI6InN2Z19sZWFkZXJib2FyZCIsImNvbnRlbnQiOiJzcGFjZV9lbWJlZCIsImxhbmRpbmdQYXRoIjoiL3N2ZyIsInJlZmVycmVySG9zdCI6InJhcGlkYXRhLXN2Zy1sZWFkZXJib2FyZC5zdGF0aWMuaGYuc3BhY2UiLCJvYnNlcnZlZEF0IjoiMjAyNi0xMC0yMVQwODo1MDowMC4wMDBaIn0sImxhc3RFeHRlcm5hbFRvdWNoIjpudWxsfQ"
+    },
+    {
+      "name": "keeps existing hash untouched",
+      "url": "https://rapidata.ai/pricing#faq",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+        "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+        "issuedAt": "2026-10-21T08:59:55.000Z",
+        "sourceOrigin": "https://www.benchmark.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        },
+        "lastExternalTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        }
+      },
+      "expected": "https://rapidata.ai/pricing#faq"
+    },
+    {
+      "name": "non-receiver host untouched",
+      "url": "https://docs.rapidata.ai/",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+        "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+        "issuedAt": "2026-10-21T08:59:55.000Z",
+        "sourceOrigin": "https://www.benchmark.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        },
+        "lastExternalTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        }
+      },
+      "expected": "https://docs.rapidata.ai/"
+    },
+    {
+      "name": "external host untouched",
+      "url": "https://huggingface.co/Rapidata",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+        "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+        "issuedAt": "2026-10-21T08:59:55.000Z",
+        "sourceOrigin": "https://www.benchmark.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        },
+        "lastExternalTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        }
+      },
+      "expected": "https://huggingface.co/Rapidata"
+    },
+    {
+      "name": "rapidata decorates benchmark link",
+      "url": "https://www.benchmark.ai/svg",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-1111-7222-8333-444455556666",
+        "sessionId": "019a0b1c-9999-7888-8777-666655554444",
+        "issuedAt": "2026-10-21T08:59:57.000Z",
+        "sourceOrigin": "https://rapidata.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T08:57:00.000Z"
+        },
+        "lastExternalTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T08:57:00.000Z"
+        }
+      },
+      "expected": "https://www.benchmark.ai/svg#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTExMTEtNzIyMi04MzMzLTQ0NDQ1NTU1NjY2NiIsInNlc3Npb25JZCI6IjAxOWEwYjFjLTk5OTktNzg4OC04Nzc3LTY2NjY1NTU1NDQ0NCIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1Ny4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9yYXBpZGF0YS5haSIsImZpcnN0VG91Y2giOnsic291cmNlIjoiaHVnZ2luZ2ZhY2UiLCJtZWRpdW0iOiJyZWZlcnJhbCIsImNhbXBhaWduIjoic3ZnX2xlYWRlcmJvYXJkIiwiY29udGVudCI6ImRhdGFzZXRfY2FyZCIsImxhbmRpbmdQYXRoIjoiLyIsInJlZmVycmVySG9zdCI6Imh1Z2dpbmdmYWNlLmNvIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTc6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50IjoiZGF0YXNldF9jYXJkIiwibGFuZGluZ1BhdGgiOiIvIiwicmVmZXJyZXJIb3N0IjoiaHVnZ2luZ2ZhY2UuY28iLCJvYnNlcnZlZEF0IjoiMjAyNi0xMC0yMVQwODo1NzowMC4wMDBaIn19"
+    },
+    {
+      "name": "app decorates benchmark apex link",
+      "url": "https://benchmark.ai/",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-1111-7222-8333-444455556666",
+        "issuedAt": "2026-10-21T08:59:57.000Z",
+        "sourceOrigin": "https://app.rapidata.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T08:57:00.000Z"
+        },
+        "lastExternalTouch": null
+      },
+      "expected": "https://benchmark.ai/#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTExMTEtNzIyMi04MzMzLTQ0NDQ1NTU1NjY2NiIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1Ny4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9hcHAucmFwaWRhdGEuYWkiLCJmaXJzdFRvdWNoIjp7InNvdXJjZSI6Imh1Z2dpbmdmYWNlIiwibWVkaXVtIjoicmVmZXJyYWwiLCJjYW1wYWlnbiI6InN2Z19sZWFkZXJib2FyZCIsImNvbnRlbnQiOiJkYXRhc2V0X2NhcmQiLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOiJodWdnaW5nZmFjZS5jbyIsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA4OjU3OjAwLjAwMFoifSwibGFzdEV4dGVybmFsVG91Y2giOm51bGx9"
+    },
+    {
+      "name": "same site is never decorated (rapidata)",
+      "url": "https://app.rapidata.ai/audiences",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-1111-7222-8333-444455556666",
+        "sessionId": "019a0b1c-9999-7888-8777-666655554444",
+        "issuedAt": "2026-10-21T08:59:57.000Z",
+        "sourceOrigin": "https://rapidata.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T08:57:00.000Z"
+        },
+        "lastExternalTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "dataset_card",
+          "landingPath": "/",
+          "referrerHost": "huggingface.co",
+          "observedAt": "2026-10-21T08:57:00.000Z"
+        }
+      },
+      "expected": "https://app.rapidata.ai/audiences"
+    },
+    {
+      "name": "same site is never decorated (benchmark)",
+      "url": "https://www.benchmark.ai/image",
+      "handoff": {
+        "v": 1,
+        "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+        "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+        "issuedAt": "2026-10-21T08:59:55.000Z",
+        "sourceOrigin": "https://www.benchmark.ai",
+        "firstTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        },
+        "lastExternalTouch": {
+          "source": "huggingface",
+          "medium": "referral",
+          "campaign": "svg_leaderboard",
+          "content": "space_embed",
+          "landingPath": "/svg",
+          "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+          "observedAt": "2026-10-21T08:50:00.000Z"
+        }
+      },
+      "expected": "https://www.benchmark.ai/image"
+    }
+  ],
+  "readHandoff": [
+    {
+      "name": "valid with session",
+      "url": "https://app.rapidata.ai/signup#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTJkM2UtN2Y0MC04YTliLTBjMWQyZTNmNGE1YiIsInNlc3Npb25JZCI6IjAxOWEwYjFjLWFhYWEtN2JiYi04Y2NjLTBkZGQwZWVlMGZmZiIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1NS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly93d3cuYmVuY2htYXJrLmFpIiwiZmlyc3RUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9fQ",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "valid",
+        "handoff": {
+          "v": 1,
+          "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+          "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+          "issuedAt": "2026-10-21T08:59:55.000Z",
+          "sourceOrigin": "https://www.benchmark.ai",
+          "firstTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          },
+          "lastExternalTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "name": "valid without session",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTJkM2UtN2Y0MC04YTliLTBjMWQyZTNmNGE1YiIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1OS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9iZW5jaG1hcmsuYWkiLCJmaXJzdFRvdWNoIjp7InNvdXJjZSI6Imh1Z2dpbmdmYWNlIiwibWVkaXVtIjoicmVmZXJyYWwiLCJjYW1wYWlnbiI6InN2Z19sZWFkZXJib2FyZCIsImNvbnRlbnQiOiJzcGFjZV9lbWJlZCIsImxhbmRpbmdQYXRoIjoiL3N2ZyIsInJlZmVycmVySG9zdCI6InJhcGlkYXRhLXN2Zy1sZWFkZXJib2FyZC5zdGF0aWMuaGYuc3BhY2UiLCJvYnNlcnZlZEF0IjoiMjAyNi0xMC0yMVQwODo1MDowMC4wMDBaIn0sImxhc3RFeHRlcm5hbFRvdWNoIjpudWxsfQ",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "valid",
+        "handoff": {
+          "v": 1,
+          "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+          "issuedAt": "2026-10-21T08:59:59.000Z",
+          "sourceOrigin": "https://benchmark.ai",
+          "firstTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          },
+          "lastExternalTouch": null
+        }
+      }
+    },
+    {
+      "name": "no fragment",
+      "url": "https://rapidata.ai/",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "none"
+      }
+    },
+    {
+      "name": "unrelated fragment",
+      "url": "https://rapidata.ai/guides/x#section-2",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "none"
+      }
+    },
+    {
+      "name": "expired past ttl",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6ImFub24tMSIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1Nzo1OS45OTlaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly93d3cuYmVuY2htYXJrLmFpIiwiZmlyc3RUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6bnVsbH0",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "invalid",
+        "reason": "expired"
+      }
+    },
+    {
+      "name": "issued too far in future",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6ImFub24tMSIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwOTowMDozMC4wMDFaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly93d3cuYmVuY2htYXJrLmFpIiwiZmlyc3RUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6bnVsbH0",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "invalid",
+        "reason": "expired"
+      }
+    },
+    {
+      "name": "small clock skew accepted",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6ImFub24tMSIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwOTowMDoyOS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly93d3cuYmVuY2htYXJrLmFpIiwiZmlyc3RUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6bnVsbH0",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "valid",
+        "handoff": {
+          "v": 1,
+          "anonymousId": "anon-1",
+          "issuedAt": "2026-10-21T09:00:29.000Z",
+          "sourceOrigin": "https://www.benchmark.ai",
+          "firstTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          },
+          "lastExternalTouch": null
+        }
+      }
+    },
+    {
+      "name": "wrong sender origin",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6ImFub24tMSIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1OS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9ldmlsLmV4YW1wbGUiLCJmaXJzdFRvdWNoIjp7InNvdXJjZSI6Imh1Z2dpbmdmYWNlIiwibWVkaXVtIjoicmVmZXJyYWwiLCJjYW1wYWlnbiI6InN2Z19sZWFkZXJib2FyZCIsImNvbnRlbnQiOiJzcGFjZV9lbWJlZCIsImxhbmRpbmdQYXRoIjoiL3N2ZyIsInJlZmVycmVySG9zdCI6InJhcGlkYXRhLXN2Zy1sZWFkZXJib2FyZC5zdGF0aWMuaGYuc3BhY2UiLCJvYnNlcnZlZEF0IjoiMjAyNi0xMC0yMVQwODo1MDowMC4wMDBaIn0sImxhc3RFeHRlcm5hbFRvdWNoIjpudWxsfQ",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "invalid",
+        "reason": "invalid"
+      }
+    },
+    {
+      "name": "anonymous id with illegal chars",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6ImFub24gMSA8c2NyaXB0PiIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1OS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly93d3cuYmVuY2htYXJrLmFpIiwiZmlyc3RUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6bnVsbH0",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "invalid",
+        "reason": "invalid"
+      }
+    },
+    {
+      "name": "email is not a valid anonymous id",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6InNvbWVvbmVAZXhhbXBsZS5jb20iLCJpc3N1ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTk6NTkuMDAwWiIsInNvdXJjZU9yaWdpbiI6Imh0dHBzOi8vd3d3LmJlbmNobWFyay5haSIsImZpcnN0VG91Y2giOnsic291cmNlIjoiaHVnZ2luZ2ZhY2UiLCJtZWRpdW0iOiJyZWZlcnJhbCIsImNhbXBhaWduIjoic3ZnX2xlYWRlcmJvYXJkIiwiY29udGVudCI6InNwYWNlX2VtYmVkIiwibGFuZGluZ1BhdGgiOiIvc3ZnIiwicmVmZXJyZXJIb3N0IjoicmFwaWRhdGEtc3ZnLWxlYWRlcmJvYXJkLnN0YXRpYy5oZi5zcGFjZSIsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA4OjUwOjAwLjAwMFoifSwibGFzdEV4dGVybmFsVG91Y2giOm51bGx9",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "invalid",
+        "reason": "invalid"
+      }
+    },
+    {
+      "name": "garbage payload",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=not*base64",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "invalid",
+        "reason": "invalid"
+      }
+    },
+    {
+      "name": "too large",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "invalid",
+        "reason": "invalid"
+      }
+    },
+    {
+      "name": "boolean version is invalid",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=eyJ2Ijp0cnVlLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTJkM2UtN2Y0MC04YTliLTBjMWQyZTNmNGE1YiIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1OS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9iZW5jaG1hcmsuYWkiLCJmaXJzdFRvdWNoIjp7InNvdXJjZSI6Imh1Z2dpbmdmYWNlIiwibWVkaXVtIjoicmVmZXJyYWwiLCJjYW1wYWlnbiI6InN2Z19sZWFkZXJib2FyZCIsImNvbnRlbnQiOiJzcGFjZV9lbWJlZCIsImxhbmRpbmdQYXRoIjoiL3N2ZyIsInJlZmVycmVySG9zdCI6InJhcGlkYXRhLXN2Zy1sZWFkZXJib2FyZC5zdGF0aWMuaGYuc3BhY2UiLCJvYnNlcnZlZEF0IjoiMjAyNi0xMC0yMVQwODo1MDowMC4wMDBaIn0sImxhc3RFeHRlcm5hbFRvdWNoIjpudWxsfQ",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "invalid",
+        "reason": "invalid"
+      }
+    },
+    {
+      "name": "benchmark receives from rapidata",
+      "url": "https://www.benchmark.ai/svg#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTExMTEtNzIyMi04MzMzLTQ0NDQ1NTU1NjY2NiIsInNlc3Npb25JZCI6IjAxOWEwYjFjLTk5OTktNzg4OC04Nzc3LTY2NjY1NTU1NDQ0NCIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1Ny4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9yYXBpZGF0YS5haSIsImZpcnN0VG91Y2giOnsic291cmNlIjoiaHVnZ2luZ2ZhY2UiLCJtZWRpdW0iOiJyZWZlcnJhbCIsImNhbXBhaWduIjoic3ZnX2xlYWRlcmJvYXJkIiwiY29udGVudCI6ImRhdGFzZXRfY2FyZCIsImxhbmRpbmdQYXRoIjoiLyIsInJlZmVycmVySG9zdCI6Imh1Z2dpbmdmYWNlLmNvIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTc6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50IjoiZGF0YXNldF9jYXJkIiwibGFuZGluZ1BhdGgiOiIvIiwicmVmZXJyZXJIb3N0IjoiaHVnZ2luZ2ZhY2UuY28iLCJvYnNlcnZlZEF0IjoiMjAyNi0xMC0yMVQwODo1NzowMC4wMDBaIn19",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "valid",
+        "handoff": {
+          "v": 1,
+          "anonymousId": "019a0b1c-1111-7222-8333-444455556666",
+          "sessionId": "019a0b1c-9999-7888-8777-666655554444",
+          "issuedAt": "2026-10-21T08:59:57.000Z",
+          "sourceOrigin": "https://rapidata.ai",
+          "firstTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "dataset_card",
+            "landingPath": "/",
+            "referrerHost": "huggingface.co",
+            "observedAt": "2026-10-21T08:57:00.000Z"
+          },
+          "lastExternalTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "dataset_card",
+            "landingPath": "/",
+            "referrerHost": "huggingface.co",
+            "observedAt": "2026-10-21T08:57:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "name": "same-site origin is invalid",
+      "url": "https://rapidata.ai/model-rank-insights?x=1#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6ImFub24tMSIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1OS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly9hcHAucmFwaWRhdGEuYWkiLCJmaXJzdFRvdWNoIjp7InNvdXJjZSI6Imh1Z2dpbmdmYWNlIiwibWVkaXVtIjoicmVmZXJyYWwiLCJjYW1wYWlnbiI6InN2Z19sZWFkZXJib2FyZCIsImNvbnRlbnQiOiJkYXRhc2V0X2NhcmQiLCJsYW5kaW5nUGF0aCI6Ii8iLCJyZWZlcnJlckhvc3QiOiJodWdnaW5nZmFjZS5jbyIsIm9ic2VydmVkQXQiOiIyMDI2LTEwLTIxVDA4OjU3OjAwLjAwMFoifSwibGFzdEV4dGVybmFsVG91Y2giOm51bGx9",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "invalid",
+        "reason": "invalid"
+      }
+    },
+    {
+      "name": "docs is not a receiver",
+      "url": "https://docs.rapidata.ai/quickstart/#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTJkM2UtN2Y0MC04YTliLTBjMWQyZTNmNGE1YiIsInNlc3Npb25JZCI6IjAxOWEwYjFjLWFhYWEtN2JiYi04Y2NjLTBkZGQwZWVlMGZmZiIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1NS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly93d3cuYmVuY2htYXJrLmFpIiwiZmlyc3RUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9fQ",
+      "now": "2026-10-21T09:00:00.000Z",
+      "expected": {
+        "kind": "none"
+      }
+    }
+  ],
+  "stripHandoff": [
+    {
+      "url": "https://app.rapidata.ai/signup#rd_journey=eyJ2IjoxLCJhbm9ueW1vdXNJZCI6IjAxOWEwYjFjLTJkM2UtN2Y0MC04YTliLTBjMWQyZTNmNGE1YiIsInNlc3Npb25JZCI6IjAxOWEwYjFjLWFhYWEtN2JiYi04Y2NjLTBkZGQwZWVlMGZmZiIsImlzc3VlZEF0IjoiMjAyNi0xMC0yMVQwODo1OTo1NS4wMDBaIiwic291cmNlT3JpZ2luIjoiaHR0cHM6Ly93d3cuYmVuY2htYXJrLmFpIiwiZmlyc3RUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9LCJsYXN0RXh0ZXJuYWxUb3VjaCI6eyJzb3VyY2UiOiJodWdnaW5nZmFjZSIsIm1lZGl1bSI6InJlZmVycmFsIiwiY2FtcGFpZ24iOiJzdmdfbGVhZGVyYm9hcmQiLCJjb250ZW50Ijoic3BhY2VfZW1iZWQiLCJsYW5kaW5nUGF0aCI6Ii9zdmciLCJyZWZlcnJlckhvc3QiOiJyYXBpZGF0YS1zdmctbGVhZGVyYm9hcmQuc3RhdGljLmhmLnNwYWNlIiwib2JzZXJ2ZWRBdCI6IjIwMjYtMTAtMjFUMDg6NTA6MDAuMDAwWiJ9fQ",
+      "expected": "https://app.rapidata.ai/signup"
+    },
+    {
+      "url": "https://rapidata.ai/guides/x#section-2",
+      "expected": "https://rapidata.ai/guides/x#section-2"
+    },
+    {
+      "url": "https://rapidata.ai/?a=1",
+      "expected": "https://rapidata.ai/?a=1"
+    }
+  ],
+  "planHandoff": [
+    {
+      "name": "adopt fresh destination",
+      "read": {
+        "kind": "valid",
+        "handoff": {
+          "v": 1,
+          "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+          "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+          "issuedAt": "2026-10-21T08:59:55.000Z",
+          "sourceOrigin": "https://www.benchmark.ai",
+          "firstTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          },
+          "lastExternalTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          }
+        }
+      },
+      "hasPersistedIdentity": false,
+      "consent": true,
+      "expected": {
+        "kind": "adopt",
+        "handoff": {
+          "v": 1,
+          "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+          "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+          "issuedAt": "2026-10-21T08:59:55.000Z",
+          "sourceOrigin": "https://www.benchmark.ai",
+          "firstTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          },
+          "lastExternalTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "name": "existing identity is a conflict",
+      "read": {
+        "kind": "valid",
+        "handoff": {
+          "v": 1,
+          "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+          "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+          "issuedAt": "2026-10-21T08:59:55.000Z",
+          "sourceOrigin": "https://www.benchmark.ai",
+          "firstTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          },
+          "lastExternalTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          }
+        }
+      },
+      "hasPersistedIdentity": true,
+      "consent": true,
+      "expected": {
+        "kind": "skip",
+        "reason": "conflict"
+      }
+    },
+    {
+      "name": "no consent skips",
+      "read": {
+        "kind": "valid",
+        "handoff": {
+          "v": 1,
+          "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+          "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+          "issuedAt": "2026-10-21T08:59:55.000Z",
+          "sourceOrigin": "https://www.benchmark.ai",
+          "firstTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          },
+          "lastExternalTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          }
+        }
+      },
+      "hasPersistedIdentity": false,
+      "consent": false,
+      "expected": {
+        "kind": "skip",
+        "reason": "consent"
+      }
+    },
+    {
+      "name": "consent checked before conflict",
+      "read": {
+        "kind": "valid",
+        "handoff": {
+          "v": 1,
+          "anonymousId": "019a0b1c-2d3e-7f40-8a9b-0c1d2e3f4a5b",
+          "sessionId": "019a0b1c-aaaa-7bbb-8ccc-0ddd0eee0fff",
+          "issuedAt": "2026-10-21T08:59:55.000Z",
+          "sourceOrigin": "https://www.benchmark.ai",
+          "firstTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          },
+          "lastExternalTouch": {
+            "source": "huggingface",
+            "medium": "referral",
+            "campaign": "svg_leaderboard",
+            "content": "space_embed",
+            "landingPath": "/svg",
+            "referrerHost": "rapidata-svg-leaderboard.static.hf.space",
+            "observedAt": "2026-10-21T08:50:00.000Z"
+          }
+        }
+      },
+      "hasPersistedIdentity": true,
+      "consent": false,
+      "expected": {
+        "kind": "skip",
+        "reason": "consent"
+      }
+    },
+    {
+      "name": "invalid stays invalid",
+      "read": {
+        "kind": "invalid",
+        "reason": "invalid"
+      },
+      "hasPersistedIdentity": false,
+      "consent": true,
+      "expected": {
+        "kind": "skip",
+        "reason": "invalid"
+      }
+    },
+    {
+      "name": "expired stays expired",
+      "read": {
+        "kind": "invalid",
+        "reason": "expired"
+      },
+      "hasPersistedIdentity": false,
+      "consent": true,
+      "expected": {
+        "kind": "skip",
+        "reason": "expired"
+      }
+    },
+    {
+      "name": "nothing to plan",
+      "read": {
+        "kind": "none"
+      },
+      "hasPersistedIdentity": true,
+      "consent": true,
+      "expected": {
+        "kind": "none"
+      }
+    }
+  ],
+  "resolveAnalyticsTarget": [
+    {
+      "hostname": "rapidata.ai",
+      "expected": {
+        "environment": "production",
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
+      }
+    },
+    {
+      "hostname": "www.rapidata.ai",
+      "expected": {
+        "environment": "production",
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
+      }
+    },
+    {
+      "hostname": "app.rapidata.ai",
+      "expected": {
+        "environment": "production",
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
+      }
+    },
+    {
+      "hostname": "docs.rapidata.ai",
+      "expected": {
+        "environment": "production",
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
+      }
+    },
+    {
+      "hostname": "benchmark.ai",
+      "expected": {
+        "environment": "production",
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
+      }
+    },
+    {
+      "hostname": "www.benchmark.ai",
+      "expected": {
+        "environment": "production",
+        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
+      }
+    },
+    {
+      "hostname": "website-abc-rapidata.vercel.app",
+      "expected": null
+    },
+    {
+      "hostname": "benchmark-plum.vercel.app",
+      "expected": null
+    },
+    {
+      "hostname": "app.rabbitdata.ch",
+      "expected": null
+    },
+    {
+      "hostname": "app.rapidata.dev",
+      "expected": null
+    },
+    {
+      "hostname": "localhost",
+      "expected": null
+    },
+    {
+      "hostname": "127.0.0.1",
+      "expected": null
+    },
+    {
+      "hostname": "rapidata.dev",
+      "expected": null
+    },
+    {
+      "hostname": "rapidata.io",
+      "expected": null
+    },
+    {
+      "hostname": "chat.rapidata.ai",
+      "expected": null
+    },
+    {
+      "hostname": "auth.rapidata.ai",
+      "expected": null
+    },
+    {
+      "hostname": "[::1]",
+      "expected": null
+    }
+  ],
+  "campaignSlug": [
+    {
+      "input": "117k_human_alignment_flux1.0_V_flux1.1Blueberry",
+      "expected": "117k_human_alignment_flux1_0_v_flux1_1blueberry"
+    },
+    {
+      "input": "text-2-image-Rich-Human-Feedback",
+      "expected": "text_2_image_rich_human_feedback"
+    },
+    {
+      "input": "text-2-image-Rich-Human-Feedback-32k",
+      "expected": "text_2_image_rich_human_feedback_32k"
+    },
+    {
+      "input": "image-to-video-physics-human-feedback-benchmark",
+      "expected": "image_to_video_physics_human_feedback_benchmark"
+    },
+    {
+      "input": "svg-leaderboard",
+      "expected": "svg_leaderboard"
+    },
+    {
+      "input": "README",
+      "expected": "readme"
+    }
+  ]
+}

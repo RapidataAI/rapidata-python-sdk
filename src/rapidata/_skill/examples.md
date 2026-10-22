@@ -140,7 +140,7 @@ from rapidata import RapidataClient, Box
 
 client = RapidataClient()
 
-audience = client.audience.create_audience(name="Artifact Detection Audience")
+audience = client.audience.create_audience(name="Artifact Detection Audience", min_tasks=3)
 
 EXAMPLES = [
     ("example1.jpg", [Box(x_min=0.44, y_min=0.42, x_max=0.58, y_max=0.63)]),
@@ -282,11 +282,11 @@ client = RapidataClient()
 # tasks a labeler must get right (server default 0.75), min_tasks how many tasks
 # before that verdict is trusted (default 10), max_tasks an optional cap after
 # which a verdict is forced. Supplying just one is fine — the rest fall back to
-# the defaults.
+# the defaults. start_recruiting() raises if fewer than min_tasks examples exist.
 audience = client.audience.create_audience(
     name="Image Quality Experts",
     target_accuracy=0.8,
-    min_tasks=12,
+    min_tasks=3,
 )
 
 DATAPOINTS = [
@@ -352,14 +352,14 @@ from rapidata import (
 )
 
 client = RapidataClient()
-audience = client.audience.create_audience(name="US English Evaluators")
+audience = client.audience.create_audience(name="US English Evaluators", min_tasks=3)
 audience.update_filters([
     CountryFilter(country_codes=["US", "CA"]),
     LanguageFilter(language_codes=["en"]),
 ])
 
-# Recruiting is explicit: a custom audience recruits nobody until you add >=3 qualification
-# examples AND then call start_recruiting(). A job assigned before recruiting starts can never
+# Recruiting is explicit: a custom audience recruits nobody until you add >= min_tasks qualification
+# examples (default 10, min 3) AND then call start_recruiting(). A job assigned before recruiting starts can never
 # receive responses (get_results() raises). So: add examples, start_recruiting, THEN assign.
 EXAMPLES = [
     ("clear.jpg", ["Excellent"]),
@@ -579,6 +579,9 @@ benchmark.update_prompt("wizard", tags=["portrait", "fantasy"], origin="wikiart"
 # aligned by index with benchmark.prompts.
 print(benchmark.tags, benchmark.structured_tags, benchmark.origins)
 
+# Every tag in the benchmark with the number of prompts carrying it, in one request
+print(benchmark.get_tag_counts())
+
 leaderboard = benchmark.create_leaderboard(
     name="Prompt Adherence (outdoor)",
     instruction="Which image matches the description better?",
@@ -599,13 +602,6 @@ leaderboard = benchmark.create_leaderboard(
     # so every matchup weighs the same; ALL_VOTES counts each response as its own
     # matchup, so heavily-answered matchups dominate the standings.
     vote_aggregation=VoteAggregation.ALL_VOTES,
-    # By default an initial run evaluates the models already in the benchmark against
-    # each other so the leaderboard starts with standings. Set skip_initial_run=True to
-    # start with no responses and no standings — models added later still compare
-    # against the whole existing field, and boosting still works. Create-only: it is
-    # applied at creation and not recorded on the leaderboard, so there's no property to
-    # read it back.
-    skip_initial_run=False,
 )
 
 print(leaderboard.included_tags, leaderboard.excluded_tags)  # copies; [] when unset

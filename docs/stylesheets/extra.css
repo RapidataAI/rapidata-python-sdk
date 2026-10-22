@@ -528,3 +528,13 @@ body {
 
 #llms-copy-button button:hover::after { opacity: 1; }
 #llms-copy-button button.copied::after { opacity: 0 !important; }
+
+.rd-consent-link {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}

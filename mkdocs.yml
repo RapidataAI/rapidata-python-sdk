@@ -2,7 +2,9 @@ site_name: Rapidata Python SDK
 site_url: https://docs.rapidata.ai/
 repo_url: https://github.com/RapidataAI/rapidata-python-sdk
 repo_name: rapidata-python-sdk
+copyright: '<button type="button" class="rd-consent-link ph-no-capture" data-rd-consent>Analytics preferences</button>'
 extra_javascript:
+  - js/analytics.js
   - js/tawk.js
   - js/login.js
   - js/ai-copy-button.js

@@ -726,7 +726,7 @@ class RapidataBenchmark:
             included_tags: Restricts **which of the benchmark's prompts this leaderboard collects matchups for**: only prompts carrying at least one of these tag values are used. When empty or not specified (the default) every prompt is eligible. Note that a non-empty list drops untagged prompts. (default: None)
             excluded_tags: Prompt tag values to skip when collecting matchups. Always wins over ``included_tags`` — a prompt carrying both an included and an excluded tag is skipped. (default: None)
             vote_aggregation: How the responses on a single matchup are aggregated into that matchup's result. :attr:`VoteAggregation.MAJORITY_VOTE` (the default) collapses each matchup to one win for the majority side, ties split 0.5/0.5, so every matchup weighs the same no matter how many responses it collected. :attr:`VoteAggregation.ALL_VOTES` counts every individual response as its own matchup, which lets heavily-answered matchups dominate the standings. Changeable afterwards via :attr:`RapidataLeaderboard.vote_aggregation`.
-            skip_initial_run: Whether to skip the initial run that evaluates the models already in the benchmark against each other. Adding a model afterwards still compares it against the whole existing field, and boosting the leaderboard still works — you just start with no responses collected and therefore no standings. Set this when you want to choose what gets evaluated first instead of paying for a full round. (default: False)
+            skip_initial_run: Leave this False unless you explicitly want to skip it. The initial run is the evaluation of the models already in the benchmark, so skipping it leaves them uncompared and the leaderboard without standings. Skipping also marks those models as submitted, so a later :py:meth:`run` has nothing to submit and evaluates nothing. Models added afterwards still compare against the whole existing field. (default: False)
 
         Do not confuse either tag argument with the ``tags`` argument of
         :meth:`RapidataLeaderboard.get_standings`: that filters the standings you read
@@ -1135,6 +1135,35 @@ class RapidataBenchmark:
                 Fore.RED
                 + f"Please open this URL in your browser: '{encoded_url}'"
                 + Fore.RESET
+            )
+
+    def get_tag_counts(self) -> pd.DataFrame:
+        """
+        Returns every tag used in the benchmark with the number of prompts carrying it.
+
+        Fetched in one request, so it stays cheap on benchmarks where loading every
+        prompt through `structured_tags` is slow. The ``value`` column holds what the
+        ``tags`` filters of the standings methods expect.
+
+        Returns:
+            pd.DataFrame: One row per tag, with columns ``value``, ``category`` and ``prompt_count``.
+        """
+        import pandas as pd
+
+        with tracer.start_as_current_span("RapidataBenchmark.get_tag_counts"):
+            result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_tags_get(
+                benchmark_id=self.id
+            )
+            return pd.DataFrame(
+                [
+                    {
+                        "value": tag.value,
+                        "category": tag.category,
+                        "prompt_count": tag.prompt_count,
+                    }
+                    for tag in result.tags
+                ],
+                columns=pd.Index(["value", "category", "prompt_count"]),
             )
 
     def get_overall_standings(

@@ -1,13 +1,6 @@
 from rapidata.api_client.models.i_order_workflow_input import (
     IOrderWorkflowInput,
 )
-from rapidata.api_client.models.i_order_workflow_input_simple_workflow_input import (
-    IOrderWorkflowInputSimpleWorkflowInput,
-)
-from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
-from rapidata.api_client.models.i_rapid_blueprint_transcription_rapid_blueprint import (
-    IRapidBlueprintTranscriptionRapidBlueprint,
-)
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client.models.i_rapid_payload_transcription_payload import (
     IRapidPayloadTranscriptionPayload,
@@ -18,6 +11,18 @@ from rapidata.api_client.models.transcription_payload_transcription_word import 
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+from rapidata.api_client.models.i_rapid_spec_transcription_rapid_spec import (
+    IRapidSpecTranscriptionRapidSpec,
+)
+from rapidata.rapidata_client.workflow._rapid_spec import (
+    ASSET,
+    literal,
+    segment,
+    simple_workflow,
+)
+from rapidata.rapidata_client.datapoints._default_segments import (
+    TRANSCRIPTION_SEGMENT_KEY,
+)
 
 
 class SelectWordsWorkflow(Workflow):
@@ -46,16 +51,17 @@ class SelectWordsWorkflow(Workflow):
         return self._instruction
 
     def _to_model(self) -> IOrderWorkflowInput:
-        blueprint = IRapidBlueprintTranscriptionRapidBlueprint(
-            _t="TranscriptionBlueprint", title=self._instruction
-        )
-
-        return IOrderWorkflowInput(
-            actual_instance=IOrderWorkflowInputSimpleWorkflowInput(
-                _t="SimpleWorkflow",
-                blueprint=IRapidBlueprint(actual_instance=blueprint),
+        return simple_workflow(
+            IRapidSpecTranscriptionRapidSpec(
+                _t="Transcription",
+                asset=ASSET,
+                title=literal(self._instruction),
+                transcription=segment(TRANSCRIPTION_SEGMENT_KEY),
             )
         )
+
+    def _required_segments(self) -> set[str]:
+        return {TRANSCRIPTION_SEGMENT_KEY}
 
     def _to_payload(self, datapoint: Datapoint) -> IRapidPayload:
         assert (

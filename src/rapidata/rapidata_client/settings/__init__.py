@@ -17,6 +17,7 @@ from .no_instruction_display import NoInstructionDisplaySetting
 from .keyboard_numeric import KeyboardNumericSetting
 from .locate_max_points import LocateMaxPointsSetting
 from .locate_min_points import LocateMinPointsSetting
+from .reference_overlay import ReferenceOverlaySetting
 from .compare_panorama import ComparePanoramaSetting
 from .compare_equirectangular import CompareEquirectangularSetting
 from .classify_equirectangular import ClassifyEquirectangularSetting

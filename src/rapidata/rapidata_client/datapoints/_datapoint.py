@@ -67,6 +67,7 @@ class Datapoint(BaseModel):
     sentence: str | None = None
     private_metadata: dict[str, str] | None = None
     group: str | None = None
+    answer_options: list[str] | None = None
 
     @field_validator("context")
     @classmethod

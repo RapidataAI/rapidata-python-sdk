@@ -18,7 +18,7 @@ from typing_extensions import Self
 
 class ModelLicenseType(str, Enum):
     """
-    ModelLicenseType
+    The license classification of the underlying model behind a participant.
     """
 
     """

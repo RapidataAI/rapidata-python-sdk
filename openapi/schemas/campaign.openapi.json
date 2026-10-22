@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.10.13.1613-0664ad5"
+    "version": "2026.10.21.1506-aec78f3"
   },
   "servers": [
     {
@@ -1886,6 +1886,261 @@
           "GreaterThanOrEqual"
         ]
       },
+      "Country": {
+        "enum": [
+          "AF",
+          "AX",
+          "AL",
+          "DZ",
+          "AS",
+          "AD",
+          "AO",
+          "AI",
+          "AQ",
+          "AG",
+          "AR",
+          "AM",
+          "AW",
+          "AU",
+          "AT",
+          "AZ",
+          "BS",
+          "BH",
+          "BD",
+          "BB",
+          "BY",
+          "BE",
+          "BZ",
+          "BJ",
+          "BM",
+          "BT",
+          "BO",
+          "BQ",
+          "BA",
+          "BW",
+          "BV",
+          "BR",
+          "IO",
+          "VG",
+          "BN",
+          "BG",
+          "BF",
+          "BI",
+          "CV",
+          "KH",
+          "CM",
+          "CA",
+          "KY",
+          "CF",
+          "TD",
+          "CL",
+          "CN",
+          "CX",
+          "CC",
+          "CO",
+          "KM",
+          "CG",
+          "CK",
+          "CR",
+          "CI",
+          "HR",
+          "CU",
+          "CW",
+          "CY",
+          "CZ",
+          "CD",
+          "DK",
+          "DJ",
+          "DM",
+          "DO",
+          "EC",
+          "EG",
+          "SV",
+          "GQ",
+          "ER",
+          "EE",
+          "SZ",
+          "ET",
+          "FK",
+          "FO",
+          "FM",
+          "FJ",
+          "FI",
+          "FR",
+          "GF",
+          "PF",
+          "TF",
+          "GA",
+          "GM",
+          "GE",
+          "DE",
+          "GH",
+          "GI",
+          "GR",
+          "GL",
+          "GD",
+          "GP",
+          "GU",
+          "GT",
+          "GG",
+          "GN",
+          "GW",
+          "GY",
+          "HT",
+          "HM",
+          "VA",
+          "HN",
+          "HK",
+          "HU",
+          "IS",
+          "IN",
+          "ID",
+          "IR",
+          "IQ",
+          "IE",
+          "IM",
+          "IL",
+          "IT",
+          "JM",
+          "JP",
+          "JE",
+          "JO",
+          "KZ",
+          "KE",
+          "KI",
+          "XK",
+          "KW",
+          "KG",
+          "LA",
+          "LV",
+          "LB",
+          "LS",
+          "LR",
+          "LY",
+          "LI",
+          "LT",
+          "LU",
+          "MO",
+          "MG",
+          "MW",
+          "MY",
+          "MV",
+          "ML",
+          "MT",
+          "MH",
+          "MQ",
+          "MR",
+          "MU",
+          "YT",
+          "MX",
+          "MD",
+          "MC",
+          "MN",
+          "ME",
+          "MS",
+          "MA",
+          "MZ",
+          "MM",
+          "NA",
+          "NR",
+          "NP",
+          "NL",
+          "NC",
+          "NZ",
+          "NI",
+          "NE",
+          "NG",
+          "NU",
+          "NF",
+          "MP",
+          "KP",
+          "MK",
+          "NO",
+          "OM",
+          "PK",
+          "PW",
+          "PA",
+          "PG",
+          "PY",
+          "PE",
+          "PH",
+          "PN",
+          "PL",
+          "PT",
+          "PR",
+          "QA",
+          "RE",
+          "RO",
+          "RU",
+          "RW",
+          "BL",
+          "SH",
+          "KN",
+          "LC",
+          "MF",
+          "PM",
+          "VC",
+          "WS",
+          "SM",
+          "ST",
+          "SA",
+          "SN",
+          "RS",
+          "SC",
+          "SL",
+          "SG",
+          "SX",
+          "SK",
+          "SI",
+          "SB",
+          "SO",
+          "ZA",
+          "GS",
+          "KR",
+          "SS",
+          "ES",
+          "LK",
+          "PS",
+          "SD",
+          "SR",
+          "SJ",
+          "SE",
+          "CH",
+          "SY",
+          "TW",
+          "TJ",
+          "TZ",
+          "TH",
+          "TL",
+          "TG",
+          "TK",
+          "TO",
+          "TT",
+          "TN",
+          "TR",
+          "TM",
+          "TC",
+          "TV",
+          "UG",
+          "UA",
+          "AE",
+          "GB",
+          "US",
+          "UM",
+          "UY",
+          "VI",
+          "UZ",
+          "VU",
+          "VE",
+          "VN",
+          "WF",
+          "EH",
+          "YE",
+          "ZM",
+          "ZW"
+        ],
+        "description": "Serialized as the ISO 3166-1 alpha-2 code."
+      },
       "CreateExperimentEndpoint_Input": {
         "required": [
           "name",
@@ -2016,6 +2271,11 @@
             "type": "integer",
             "description": "The session ends after this many seconds.",
             "format": "int32"
+          },
+          "routingId": {
+            "type": "string",
+            "description": "The routing that owns the work; its completion moves the campaign to analysis.",
+            "nullable": true
           }
         }
       },
@@ -2900,6 +3160,9 @@
             "$ref": "#/components/schemas/ICampaignFilterCampaignIdFilter"
           },
           {
+            "$ref": "#/components/schemas/ICampaignFilterCampaignParticipantCountFilter"
+          },
+          {
             "$ref": "#/components/schemas/ICampaignFilterCampaignSessionCountFilter"
           },
           {
@@ -2946,6 +3209,7 @@
             "AudienceStateFilter": "#/components/schemas/ICampaignFilterAudienceStateFilter",
             "CampaignCooldownFilter": "#/components/schemas/ICampaignFilterCampaignCooldownFilter",
             "CampaignIdFilter": "#/components/schemas/ICampaignFilterCampaignIdFilter",
+            "CampaignParticipantCountFilter": "#/components/schemas/ICampaignFilterCampaignParticipantCountFilter",
             "CampaignSessionCountFilter": "#/components/schemas/ICampaignFilterCampaignSessionCountFilter",
             "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
             "DemographicFilter": "#/components/schemas/ICampaignFilterDemographicFilter",
@@ -3051,6 +3315,28 @@
           }
         }
       },
+      "ICampaignFilterCampaignParticipantCountFilter": {
+        "required": [
+          "participantCount",
+          "operator",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignParticipantCountFilter"
+            ],
+            "type": "string"
+          },
+          "participantCount": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ComparisonOperator"
+          }
+        }
+      },
       "ICampaignFilterCampaignSessionCountFilter": {
         "required": [
           "sessionCount",
@@ -3088,7 +3374,7 @@
           "countries": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/Country"
             }
           }
         }
@@ -3172,7 +3458,7 @@
           "languages": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/Language"
             }
           }
         }
@@ -3868,10 +4154,13 @@
             "$ref": "#/components/schemas/IProgramPredicateCorrectCountPredicate"
           },
           {
-            "$ref": "#/components/schemas/IProgramPredicateTimeElapsedPredicate"
+            "$ref": "#/components/schemas/IProgramPredicateCountryPredicate"
           },
           {
-            "$ref": "#/components/schemas/IProgramPredicateUserAttributePredicate"
+            "$ref": "#/components/schemas/IProgramPredicateLanguagePredicate"
+          },
+          {
+            "$ref": "#/components/schemas/IProgramPredicateTimeElapsedPredicate"
           },
           {
             "$ref": "#/components/schemas/IProgramPredicateUserScorePredicate"
@@ -3885,8 +4174,9 @@
             "ConsecutiveCorrectPredicate": "#/components/schemas/IProgramPredicateConsecutiveCorrectPredicate",
             "ConsecutiveIncorrectPredicate": "#/components/schemas/IProgramPredicateConsecutiveIncorrectPredicate",
             "CorrectCountPredicate": "#/components/schemas/IProgramPredicateCorrectCountPredicate",
+            "CountryPredicate": "#/components/schemas/IProgramPredicateCountryPredicate",
+            "LanguagePredicate": "#/components/schemas/IProgramPredicateLanguagePredicate",
             "TimeElapsedPredicate": "#/components/schemas/IProgramPredicateTimeElapsedPredicate",
-            "UserAttributePredicate": "#/components/schemas/IProgramPredicateUserAttributePredicate",
             "UserScorePredicate": "#/components/schemas/IProgramPredicateUserScorePredicate"
           }
         }
@@ -4005,6 +4295,46 @@
           }
         }
       },
+      "IProgramPredicateCountryPredicate": {
+        "required": [
+          "countries",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountryPredicate"
+            ],
+            "type": "string"
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Country"
+            }
+          }
+        }
+      },
+      "IProgramPredicateLanguagePredicate": {
+        "required": [
+          "languages",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LanguagePredicate"
+            ],
+            "type": "string"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Language"
+            }
+          }
+        }
+      },
       "IProgramPredicateTimeElapsedPredicate": {
         "required": [
           "comparison",
@@ -4024,29 +4354,6 @@
           "seconds": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "IProgramPredicateUserAttributePredicate": {
-        "required": [
-          "attribute",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "UserAttributePredicate"
-            ],
-            "type": "string"
-          },
-          "attribute": {
-            "$ref": "#/components/schemas/UserAttribute"
-          },
-          "values": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           }
         }
       },
@@ -4071,6 +4378,195 @@
             "format": "double"
           }
         }
+      },
+      "Language": {
+        "enum": [
+          "ab",
+          "aa",
+          "af",
+          "ak",
+          "sq",
+          "am",
+          "ar",
+          "an",
+          "hy",
+          "as",
+          "av",
+          "ae",
+          "ay",
+          "az",
+          "bm",
+          "ba",
+          "eu",
+          "be",
+          "bn",
+          "bi",
+          "bs",
+          "br",
+          "bg",
+          "my",
+          "ca",
+          "ch",
+          "ce",
+          "ny",
+          "zh",
+          "cu",
+          "cv",
+          "kw",
+          "co",
+          "cr",
+          "hr",
+          "cs",
+          "da",
+          "dv",
+          "nl",
+          "dz",
+          "en",
+          "eo",
+          "et",
+          "ee",
+          "fo",
+          "fj",
+          "fi",
+          "fr",
+          "ff",
+          "gl",
+          "lg",
+          "ka",
+          "de",
+          "gn",
+          "gu",
+          "ht",
+          "ha",
+          "he",
+          "hz",
+          "hi",
+          "ho",
+          "hu",
+          "is",
+          "io",
+          "ig",
+          "id",
+          "ia",
+          "ie",
+          "iu",
+          "ik",
+          "ga",
+          "it",
+          "ja",
+          "jv",
+          "kl",
+          "kn",
+          "kr",
+          "ks",
+          "kk",
+          "km",
+          "ki",
+          "rw",
+          "ky",
+          "kv",
+          "kg",
+          "ko",
+          "kj",
+          "ku",
+          "lo",
+          "la",
+          "lv",
+          "li",
+          "ln",
+          "lt",
+          "lu",
+          "lb",
+          "mk",
+          "mg",
+          "ms",
+          "ml",
+          "mt",
+          "gv",
+          "mi",
+          "mr",
+          "mh",
+          "el",
+          "mn",
+          "na",
+          "nv",
+          "ng",
+          "ne",
+          "se",
+          "nd",
+          "no",
+          "nb",
+          "nn",
+          "oc",
+          "oj",
+          "or",
+          "om",
+          "os",
+          "pi",
+          "pa",
+          "fa",
+          "pl",
+          "pt",
+          "ps",
+          "qu",
+          "ro",
+          "rm",
+          "rn",
+          "ru",
+          "sm",
+          "sg",
+          "sa",
+          "sc",
+          "gd",
+          "sr",
+          "sh",
+          "sn",
+          "ii",
+          "sd",
+          "si",
+          "sk",
+          "sl",
+          "so",
+          "st",
+          "nr",
+          "es",
+          "su",
+          "sw",
+          "ss",
+          "sv",
+          "tl",
+          "ty",
+          "tg",
+          "ta",
+          "tt",
+          "te",
+          "th",
+          "bo",
+          "ti",
+          "to",
+          "ts",
+          "tn",
+          "tr",
+          "tk",
+          "tw",
+          "ug",
+          "uk",
+          "ur",
+          "uz",
+          "ve",
+          "vi",
+          "vo",
+          "wa",
+          "cy",
+          "fy",
+          "wo",
+          "xh",
+          "yi",
+          "yo",
+          "za",
+          "zu"
+        ],
+        "description": "Serialized as the ISO 639-1 code."
       },
       "ProgramCase": {
         "required": [
@@ -4511,12 +5007,6 @@
             "format": "int32"
           }
         }
-      },
-      "UserAttribute": {
-        "enum": [
-          "Country",
-          "Language"
-        ]
       },
       "ValidationChance": {
         "required": [
