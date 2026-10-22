@@ -94,13 +94,13 @@ The file is just one transport. To move the token over any transport (key-value 
 
 ## Task design rules
 
-Follow these for every job definition and audience example. Labelers work mostly on phones with about 25 seconds per task, and in that time they read the instruction and the context and look at the media. A task they can't take in at a glance gets guessed. The limits the SDK enforces are caps, not targets.
+Follow these for every job definition and audience example. Design each task so a labeler can answer it in about 10 seconds, 15 at most: labelers also answer validation tasks in the same session, mostly on phones, and within that time they read the instruction and the context and look at the media. A task they can't take in at a glance gets guessed. If a task needs longer, contact Rapidata (info@rapidata.ai) before launching it. The limits the SDK enforces are caps, not targets.
 
 1. **Keep `responses_per_datapoint` at 10 or more.** 10 is the default; never lower it to cut cost. With 3 responses, a single labeler who misread the task can flip the result. To spend less, label fewer datapoints, or add `confidence_threshold` / `quorum_threshold` when the task has one correct answer.
 2. **Ask one short question about one criterion.** Aim for under 80 characters, like the instructions in this guide. To judge several aspects (motion, on-screen text, sound, …), create one job definition per aspect.
    - ✅ `"Which video matches the description better?"`
    - ❌ `"Which video is better overall? Consider the motion, timing, camera, style, on-screen text and sound."`
-3. **Keep each context to one sentence under 150 characters, holding only what the question checks.** Don't pass the full generation prompt: nobody reads 300 characters and judges two videos in 25 seconds. Context shortening (see **Context Management**) focuses a context on the question but rarely gets it under 150 characters, so write the short version yourself.
+3. **Keep each context to one sentence under 150 characters, holding only what the question checks.** Don't pass the full generation prompt: nobody reads 300 characters and judges two videos in 15 seconds. Context shortening (see **Context Management**) focuses a context on the question but rarely gets it under 150 characters, so write the short version yourself.
 
 ## Job Definitions + Audiences
 
@@ -503,7 +503,7 @@ settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (ta
 2. **Use `NoShuffleSetting()` for Likert scales** — ordered answer options get shuffled by default
 3. **Custom audiences need ≥ `min_tasks` examples AND an explicit `start_recruiting()`** — recruiting never begins on its own. Add **at least `min_tasks` qualification examples** (default 10, min 3; otherwise `start_recruiting()` raises), then call `audience.start_recruiting()` **once**, before `assign_job`. Skip either step and the audience recruits nobody: the job is still created (with a warning), but it can never receive responses, so `get_results()` / `display_progress_bar()` raise an error saying the audience can never produce responses. Use `client.audience.get_audience_by_id("global")` when you don't need task-specific qualification.
    - **One audience = one task.** A custom audience is qualified for the specific task its examples describe. Reusing it for a different, unrelated task is a misuse — the qualification no longer applies and the quality guarantee is lost. Reuse it only for repeated/scheduled runs of the *same* task; spin up a new audience for a new task.
-4. **25-second time limit, 250-character instructions** — labelers have ~25 seconds per task; keep instructions to one criterion and under 80 characters (see **Task design rules**). Instructions are capped at **250 characters** — a longer one raises `ValueError: instruction is <n> characters; maximum is 250` when the job definition or qualification example is created
+4. **10–15 seconds per task, 250-character instructions** — design tasks to be answered in about 10 seconds, 15 at most (contact Rapidata if one needs longer); keep instructions to one criterion and under 80 characters (see **Task design rules**). Instructions are capped at **250 characters** — a longer one raises `ValueError: instruction is <n> characters; maximum is 250` when the job definition or qualification example is created
 5. **Responses may exceed `responses_per_datapoint`** — concurrent labelers can cause slight overflow
 6. **Two early stopping strategies, mutually exclusive** — `confidence_threshold` (statistical, weighted by labeler trust scores) or `quorum_threshold` (stops when N responses agree); cannot use both at once
 7. **Early stopping only for unambiguous tasks** — both strategies work best when there's a clear correct answer

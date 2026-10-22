@@ -1534,7 +1534,7 @@ rapidata_config.upload.contextShortening = True
 
 ## Human Prompting Best Practices
 
-- **Be concise** — labelers have ~25 seconds per task
+- **Be concise** — design for an answer in about 10 seconds, 15 at most
 - **Positive framing** — "Which is more realistic?" not "Which is less AI-generated?"
 - **Distinct options** — "Poor / Acceptable / Excellent" not "Bad / Not Good / Fine / Good / Great"
 - **Single criterion per task** — "What animal is in the image?" not "Does this contain a rabbit, dog, or cat?"
