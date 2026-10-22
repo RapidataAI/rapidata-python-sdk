@@ -137,6 +137,8 @@
     return { source, medium, campaign, content, landingPath, referrerHost, observedAt };
   }
 
+  // Classifies a full page load as internal, campaign, referral or direct (journey contract §5). Order matters:
+  // an internal referrer beats UTMs, because a hop through auth or another Rapidata site re-carries them.
   function parseCampaignTouch(url, referrer, now) {
     const parsed = new URL(String(url));
     const utm = {};
