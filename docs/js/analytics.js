@@ -331,14 +331,10 @@
     });
   }
 
-  function startJourneyAnalytics(win, loaders) {
+  function startJourneyAnalytics(win) {
     const target = resolveAnalyticsTarget(win.location.hostname);
-    if (!target) return null;
+    if (!target) return;
     const doc = win.document;
-    const load = loaders || {
-      script: (asset) => loadAsset(doc, asset, false),
-      style: (asset) => loadAsset(doc, asset, true),
-    };
 
     const stripped = stripHandoff(win.location.href);
     if (stripped !== win.location.href) win.history.replaceState(win.history.state, "", stripped);
@@ -387,10 +383,10 @@
           posthog.capture("$pageview");
         }
         sendPersonProperties(posthog);
-        return Promise.resolve();
+        return;
       }
-      posthogScript = posthogScript || load.script(POSTHOG_SCRIPT);
-      return posthogScript.then(initPosthog, () => undefined);
+      posthogScript = posthogScript || loadAsset(doc, POSTHOG_SCRIPT, false);
+      posthogScript.then(initPosthog, () => undefined);
     }
 
     function initPosthog() {
@@ -447,9 +443,8 @@
     }
 
     function onDecision() {
-      if (win.CookieConsent.acceptedCategory("analytics")) return grant();
-      revoke();
-      return Promise.resolve();
+      if (win.CookieConsent.acceptedCategory("analytics")) grant();
+      else revoke();
     }
 
     function trackOutbound(event) {
@@ -486,10 +481,9 @@
     consentRoot.className = "ph-no-capture";
     doc.body.appendChild(consentRoot);
 
-    const ready = Promise.all([load.style(CONSENT_STYLE), load.script(CONSENT_SCRIPT)])
+    Promise.all([loadAsset(doc, CONSENT_STYLE, true), loadAsset(doc, CONSENT_SCRIPT, false)])
       .then(() => win.CookieConsent.run(consentConfig(sharedDomain, consentRoot, onDecision)))
       .catch(() => undefined);
-    return { entry, ready };
   }
 
   const api = {
@@ -510,7 +504,6 @@
     decodeAttributionCookie,
     stripHandoff,
     resolveAnalyticsTarget,
-    startJourneyAnalytics,
   };
 
   if (typeof module === "object" && module.exports) {

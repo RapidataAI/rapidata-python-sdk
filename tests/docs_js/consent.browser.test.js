@@ -10,6 +10,8 @@ const SITE = path.resolve(process.env.DOCS_SITE_DIR || "site");
 const ORIGIN = "https://docs.rapidata.ai";
 const HOST = new URL(ORIGIN).hostname;
 const COOKIE_DOMAIN = ".rapidata.ai";
+// Heatmaps flush every 5 s into a batch queue sent every 3 s, so a shorter quiet window can still hold events.
+const DRAIN_MS = 9_000;
 // Analytics only runs on production hosts, so pages are served locally and every PostHog host is unresolvable:
 // unload flushes use sendBeacon, which bypasses Playwright routes.
 const HOST_RULES =
@@ -91,14 +93,18 @@ async function openDocs() {
     if (hostname === "cdn.jsdelivr.net") return route.continue();
     return route.abort();
   });
-  return { browser, context, requests, events };
+  const close = async () => {
+    await context.unrouteAll({ behavior: "ignoreErrors" });
+    await browser.close();
+  };
+  return { context, close, requests, events };
 }
 
 const beaconCount = (page) => page.evaluate(() => Number(localStorage.getItem("journeyTestBeacons") || 0));
 const pageviewCount = (events, from) => events.slice(from).filter((event) => event.event === "$pageview").length;
 
 test("nothing reaches PostHog before consent or after Reject", { timeout: 180_000 }, async () => {
-  const { browser, context, requests, events } = await openDocs();
+  const { context, close, requests, events } = await openDocs();
   try {
     const page = await context.newPage();
     const banner = page.locator("#cc-main .cm");
@@ -122,6 +128,24 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
     assert.equal(cookies.cc_cookie.domain, COOKIE_DOMAIN);
     assert.equal(cookies.rd_attribution_v1.domain, COOKIE_DOMAIN);
     assert.equal(cookies.rd_attribution_v1.secure, true);
+    await waitFor(() => events.some((event) => event.event === "$set"), 20_000, "no $set after consent");
+    const person = events.find((event) => event.event === "$set");
+    assert.equal(person.properties.$set_once.first_source, "pypi");
+    assert.equal(person.properties.$set.last_external_source, "pypi");
+
+    const outbound = await page.evaluate(() => {
+      const captured = [];
+      window.posthog.on("eventCaptured", (event) => captured.push(event));
+      const link = Object.assign(document.createElement("a"), { href: "https://app.rapidata.ai/settings/tokens?client=1#top" });
+      link.addEventListener("click", (event) => event.preventDefault());
+      document.body.appendChild(link).click();
+      link.remove();
+      return captured.filter((event) => event.event === "outbound_link_clicked").map((event) => event.properties);
+    });
+    assert.deepEqual(
+      outbound.map((properties) => [properties.destination_host, properties.destination_path, properties.surface]),
+      [["app.rapidata.ai", "/settings/tokens", "docs"]]
+    );
 
     await navLink("audiences").click();
     await waitFor(
@@ -131,7 +155,7 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
     );
     await page.locator("button[data-rd-consent]").click();
     await page.locator("#cc-main .pm").waitFor({ state: "visible" });
-    await waitForQuiet(requests, 6_000, 60_000);
+    await waitForQuiet(requests, DRAIN_MS, 90_000);
 
     const reject = async () => {
       await page.locator("button[data-rd-consent]").click();
@@ -144,6 +168,7 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
     };
 
     let before = requests.length;
+    let eventsBefore = events.length;
     let beaconsBefore = await beaconCount(page);
     await page.locator("#cc-main .pm").getByRole("button", { name: "Reject analytics" }).click();
     await page.waitForTimeout(6_000);
@@ -151,7 +176,8 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
     await page.waitForURL("**/signals/");
     await page.mouse.click(400, 400);
     await page.waitForTimeout(6_000);
-    assert.deepEqual(requests.slice(before), [], "PostHog was contacted after Reject");
+    const leaked = () => events.slice(eventsBefore).map((event) => `${event.event} ${event.properties.$pathname}`);
+    assert.deepEqual(requests.slice(before), [], `PostHog was contacted after Reject: ${leaked()}`);
     assert.equal(await beaconCount(page), beaconsBefore, "a beacon went to PostHog after Reject");
     await assertNothingStored();
 
@@ -175,14 +201,15 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
     assert.ok(heatmapX.includes(9), `expected the post-grant click in ${heatmapX}`);
     assert.ok(!heatmapX.includes(7), `a click made while rejected leaked into $$heatmap: ${heatmapX}`);
 
-    await waitForQuiet(requests, 6_000, 60_000);
+    await waitForQuiet(requests, DRAIN_MS, 90_000);
     before = requests.length;
+    eventsBefore = events.length;
     beaconsBefore = await beaconCount(page);
     await reject();
     await page.waitForTimeout(6_000);
     await page.reload();
     await page.waitForTimeout(4_000);
-    assert.deepEqual(requests.slice(before), [], "PostHog was contacted after the second Reject");
+    assert.deepEqual(requests.slice(before), [], `PostHog was contacted after the second Reject: ${leaked()}`);
     assert.equal(await beaconCount(page), beaconsBefore, "a beacon went to PostHog after the second Reject");
     await assertNothingStored();
 
@@ -192,12 +219,12 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
       assert.equal(properties.surface, "docs", event);
     }
   } finally {
-    await browser.close();
+    await close();
   }
 });
 
-test("one $pageview per load with consent, one more per same-page re-grant", { timeout: 180_000 }, async () => {
-  const { browser, requests, events, context } = await openDocs();
+test("one $pageview per consented load and per re-grant, on the same page or a later one", { timeout: 180_000 }, async () => {
+  const { context, close, requests, events } = await openDocs();
   try {
     const page = await context.newPage();
     const preferences = page.locator("#cc-main .pm");
@@ -223,13 +250,23 @@ test("one $pageview per load with consent, one more per same-page re-grant", { t
     await waitFor(() => pageviewCount(events, reloaded) > 1, 20_000, "no $pageview after re-grant");
     await waitForQuiet(requests, 6_000, 60_000);
     assert.equal(pageviewCount(events, reloaded), 2, "Allow, Reject, Allow on one page");
+
+    await choose("Reject analytics");
+    await page.waitForTimeout(1_000);
+    const later = events.length;
+    await page.reload();
+    await page.waitForFunction(() => window.CookieConsent);
+    await choose("Allow analytics");
+    await waitFor(() => pageviewCount(events, later) > 0, 20_000, "no $pageview when re-allowing on a later load");
+    await waitForQuiet(requests, 6_000, 60_000);
+    assert.equal(pageviewCount(events, later), 1, "re-allow on a later page load");
   } finally {
-    await browser.close();
+    await close();
   }
 });
 
 test("an identity set on a sibling subdomain wins over docs' stale anonymous id", { timeout: 120_000 }, async () => {
-  const { browser, context, events } = await openDocs();
+  const { context, close, events } = await openDocs();
   const { posthog } = analytics.constants.assets;
   const app = `https://app${COOKIE_DOMAIN}`;
   await context.route(`${app}/identify.html*`, (route) =>
@@ -266,6 +303,6 @@ test("an identity set on a sibling subdomain wins over docs' stale anonymous id"
     const pageview = events.slice(returned).find((event) => event.event === "$pageview");
     assert.equal(pageview.properties.distinct_id, customer);
   } finally {
-    await browser.close();
+    await close();
   }
 });
