@@ -18,13 +18,14 @@ from typing_extensions import Self
 
 class AuthorizationRelationsExternalApp(str, Enum):
     """
-    Relations on an `external_app` object — one object per third-party app that federates on the OIDC `groups` claim. The apps themselves are `ExternalAppId`. The ladder is hierarchical: `admin` folds into `viewer`. Grants are direct and, like `Bidder`, are never folded in from platform staff — holding platform admin must not confer administration of a separate system.
+    Relations on an `external_app` object — one object per third-party app that federates on the OIDC `groups` claim. The apps themselves are `ExternalAppId`. The ladder is hierarchical: `admin` folds into `user`, and `user` into `viewer`. Grants are direct and, like `Bidder`, are never folded in from platform staff — holding platform admin must not confer administration of a separate system.
     """
 
     """
     allowed enum values
     """
     ADMIN = 'Admin'
+    USER = 'User'
     VIEWER = 'Viewer'
 
     @classmethod
