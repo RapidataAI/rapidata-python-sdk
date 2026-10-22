@@ -578,7 +578,7 @@ Most settings only apply to specific task types. If you add a setting that the j
 | `FreeTextMaxCharactersSetting` | `(value: int = 1024)` — must be ≥ 1 | Max chars for free-text tasks. Use with caution — see note below the table |
 | `SwapContextInstructionSetting` | `(value: bool = True)` | Swap positions of context and instruction |
 | `PlayPercentageVideoSetting` | `(percentage: int = 95)` — 0–95 | Require labelers to watch N% of video |
-| `OriginalLanguageOnlySetting` | `(value: bool = True)` | Skip translation; show task in original language. Also overrides `TranslateTextAssetsSetting` |
+| `OriginalLanguageOnlySetting` | `(value: bool = True)` | Skip translation; show task in original language. By default the instruction, context and answer options are translated into the labeler's device language. Also overrides `TranslateTextAssetsSetting` |
 | `NoMistakeOptionSetting` | `(value: bool = True)` | Hide the "mark as mistake" option |
 | `DisableAutoloopSetting` | `(value: bool = True)` | Disable automatic media looping |
 | `NoInstructionDisplaySetting` | `(value: bool = True)` | Hide instruction from task screen |
