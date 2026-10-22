@@ -37,6 +37,7 @@ _API_IMPORTS = {
     "CacheApi": "rapidata.api_client.api.cache_api",
     "CampaignApi": "rapidata.api_client.api.campaign_api",
     "CapabilitiesApi": "rapidata.api_client.api.capabilities_api",
+    "ClickHouseApi": "rapidata.api_client.api.click_house_api",
     "ClientApi": "rapidata.api_client.api.client_api",
     "ContextShorteningApi": "rapidata.api_client.api.context_shortening_api",
     "CustomerApi": "rapidata.api_client.api.customer_api",

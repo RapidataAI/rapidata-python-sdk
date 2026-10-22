@@ -15,8 +15,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -27,7 +27,9 @@ class GoogleOneTapLoginEndpointInput(LazyValidatedModel):
     GoogleOneTapLoginEndpointInput
     """ # noqa: E501
     id_token: StrictStr = Field(description="The id token received from the Google One Tap login.", alias="idToken")
-    __properties: ClassVar[List[str]] = ["idToken"]
+    analytics_consent: Optional[StrictBool] = Field(default=None, description="Whether the visitor allowed analytics; the request carries no cookies.", alias="analyticsConsent")
+    analytics_anonymous_id: Optional[StrictStr] = Field(default=None, description="The browser's anonymous analytics id, merged into the customer when allowed.", alias="analyticsAnonymousId")
+    __properties: ClassVar[List[str]] = ["idToken", "analyticsConsent", "analyticsAnonymousId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -64,6 +66,16 @@ class GoogleOneTapLoginEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if analytics_consent (nullable) is None
+        # and model_fields_set contains the field
+        if self.analytics_consent is None and "analytics_consent" in self.model_fields_set:
+            _dict['analyticsConsent'] = None
+
+        # set to None if analytics_anonymous_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.analytics_anonymous_id is None and "analytics_anonymous_id" in self.model_fields_set:
+            _dict['analyticsAnonymousId'] = None
+
         return _dict
 
     @classmethod
@@ -76,7 +88,9 @@ class GoogleOneTapLoginEndpointInput(LazyValidatedModel):
             return cls.model_validate(obj)
 
         _data = {
-            "idToken": obj.get("idToken")
+            "idToken": obj.get("idToken"),
+            "analyticsConsent": obj.get("analyticsConsent"),
+            "analyticsAnonymousId": obj.get("analyticsAnonymousId")
         }
         try:
             _obj = cls.model_validate(_data)

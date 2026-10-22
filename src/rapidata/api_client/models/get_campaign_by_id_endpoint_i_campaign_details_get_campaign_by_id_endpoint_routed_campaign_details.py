@@ -48,10 +48,11 @@ class GetCampaignByIdEndpointICampaignDetailsGetCampaignByIdEndpointRoutedCampai
     selections: List[ICampaignSelection]
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     experiment_id: Optional[StrictStr] = Field(default=None, description="The id of the experiment attached to this campaign, or null when none is attached.", alias="experimentId")
+    is_language_experiment_enabled: StrictBool = Field(description="Whether eligible sessions of the campaign take part in the language experiment.", alias="isLanguageExperimentEnabled")
     owner_mail: StrictStr = Field(description="The email of the campaign owner.", alias="ownerMail")
     organization_id: StrictStr = Field(description="The id of the organization that owns the campaign.", alias="organizationId")
     created_at: datetime = Field(description="The timestamp when the campaign was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["_t", "id", "name", "status", "priority", "boostingProfile", "boostingControlMode", "hasBooster", "boostLevel", "stickyConfig", "filters", "selections", "featureFlags", "experimentId", "ownerMail", "organizationId", "createdAt"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "name", "status", "priority", "boostingProfile", "boostingControlMode", "hasBooster", "boostLevel", "stickyConfig", "filters", "selections", "featureFlags", "experimentId", "isLanguageExperimentEnabled", "ownerMail", "organizationId", "createdAt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -153,6 +154,7 @@ class GetCampaignByIdEndpointICampaignDetailsGetCampaignByIdEndpointRoutedCampai
             "selections": [ICampaignSelection.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "experimentId": obj.get("experimentId"),
+            "isLanguageExperimentEnabled": obj.get("isLanguageExperimentEnabled"),
             "ownerMail": obj.get("ownerMail"),
             "organizationId": obj.get("organizationId"),
             "createdAt": obj.get("createdAt")
