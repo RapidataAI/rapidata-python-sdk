@@ -43,6 +43,7 @@ jobs:
           python-version-file: '.python-version'
       - uses: astral-sh/setup-uv@v7
       - run: uv sync --group docs --frozen
+      - run: uv run python scripts/check_docs_sri.py
       - run: uv run python -m pytest tests/test_docs_site.py tests/test_docs_analytics.py
       - run: uv run --group docs mkdocs build
       - run: uv run python scripts/prepare_docs_site.py --site site --previous published
