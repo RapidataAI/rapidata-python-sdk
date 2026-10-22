@@ -25,7 +25,7 @@ def _create_text_compare(settings):
 def test_translate_text_assets_sent_as_rapid_feature_flag():
     flags = _create_text_compare([RapidataSettings.TranslateTextAssets()])
 
-    assert flags == [FeatureFlag(key="translate_text_assets", value="True")]
+    assert flags == [FeatureFlag(key="translate_text_assets", value="true")]
 
 
 def test_translate_text_assets_absent_by_default():

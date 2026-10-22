@@ -464,6 +464,8 @@ Settings control how a task is rendered and behaves for labelers. All settings a
 
 Most settings only apply to specific task types. If you add a setting that the job's task type does not support, the SDK logs a non-fatal warning and still sends the flag — it is never dropped and no error is raised. Ranking jobs are treated as Compare for this check.
 
+Apart from `CustomSetting` and the settings that take a number (`AllowNeitherBothSetting`, `PlayPercentageVideoSetting`, `FreeText*CharactersSetting`, `Locate*PointsSetting`), settings are on/off and take no argument: add the setting to turn the behavior on, leave it out to keep it off. Passing a value, e.g. `MuteVideoSetting(False)`, raises `TypeError`.
+
 ```python
 from rapidata import (
     NoShuffleSetting, AllowNeitherBothSetting, MarkdownSetting,

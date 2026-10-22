@@ -569,29 +569,31 @@ All settings inherit from `RapidataSetting` and are importable from `rapidata`.
 
 Most settings only apply to specific task types. If you add a setting that the job's task type does not support, the SDK logs a non-fatal warning and still sends the flag — it is never dropped and no error is raised. Ranking jobs are treated as Compare for this check.
 
+Settings with a `()` constructor are on/off: adding one turns the behavior on, leaving it out keeps it off. They take no argument — `MuteVideoSetting(False)` or `MuteVideoSetting(value=True)` raises `TypeError`.
+
 | Class | Constructor | Effect |
 |-------|-------------|--------|
-| `NoShuffleSetting` | `(value: bool = True)` | Disable shuffling of answer options (Likert scales) |
+| `NoShuffleSetting` | `()` | Disable shuffling of answer options (Likert scales) |
 | `AllowNeitherBothSetting` | `(delay_ms: int = 5000)` — ≥ 0 | Comparison: show an "Unsure" button (answers "Neither" / "Both") after `delay_ms` milliseconds |
-| `MarkdownSetting` | `(value: bool = True)` | Render markdown in text |
-| `MuteVideoSetting` | `(value: bool = True)` | Start videos muted |
+| `MarkdownSetting` | `()` | Render markdown in text |
+| `MuteVideoSetting` | `()` | Start videos muted |
 | `FreeTextMinimumCharactersSetting` | `(value: int)` — must be ≥ 1 (prints a warning above 40) | Min chars for free-text tasks. Use with caution — see note below the table |
 | `FreeTextMaxCharactersSetting` | `(value: int = 1024)` — must be ≥ 1 | Max chars for free-text tasks. Use with caution — see note below the table |
-| `SwapContextInstructionSetting` | `(value: bool = True)` | Swap positions of context and instruction |
+| `SwapContextInstructionSetting` | `()` | Swap positions of context and instruction |
 | `PlayPercentageVideoSetting` | `(percentage: int = 95)` — 0–95 | Require labelers to watch N% of video |
-| `OriginalLanguageOnlySetting` | `(value: bool = True)` | Skip translation; show task in original language. By default the instruction, context and answer options are translated into the labeler's device language. Also overrides `TranslateTextAssetsSetting` |
-| `NoMistakeOptionSetting` | `(value: bool = True)` | Hide the "mark as mistake" option |
-| `DisableAutoloopSetting` | `(value: bool = True)` | Disable automatic media looping |
-| `NoInstructionDisplaySetting` | `(value: bool = True)` | Hide instruction from task screen |
-| `KeyboardNumericSetting` | `(value: bool = True)` | Open numeric keyboard on mobile |
+| `OriginalLanguageOnlySetting` | `()` | Skip translation; show task in original language. By default the instruction, context and answer options are translated into the labeler's device language. Also overrides `TranslateTextAssetsSetting` |
+| `NoMistakeOptionSetting` | `()` | Add a "No mistakes" button so labelers can confirm the media has no errors |
+| `DisableAutoloopSetting` | `()` | Disable automatic media looping |
+| `NoInstructionDisplaySetting` | `()` | Hide instruction from task screen |
+| `KeyboardNumericSetting` | `()` | Open numeric keyboard on mobile |
 | `LocateMaxPointsSetting` | `(value: int = 3)` — ≥ 1 | Locate tasks: max points per labeler |
 | `LocateMinPointsSetting` | `(value: int = 1)` — ≥ 1 | Locate tasks: min points per labeler |
-| `ComparePanoramaSetting` | `(value: bool = True)` | Render comparison media as 360° panorama |
-| `CompareEquirectangularSetting` | `(value: bool = True)` | Render comparison media as equirectangular VR |
-| `ClassifyEquirectangularSetting` | `(value: bool = True)` | Render classification media as equirectangular 360° view |
-| `TranslateTextAssetsSetting` | `(value: bool = True)` | Translate text assets (datapoints and text contexts) into the labeler's language. Off unless added; source text is always assumed to be English; results still reference the original text |
-| `PinContextMediaSetting` | `(value: bool = True)` | Show the context image or video next to the task for the whole rapid instead of inside the collapsible context drawer. Only use it when the task screen has enough space for the context next to the task — inspect `job_def.preview()` carefully before assigning. A multi-asset context is reduced to its first asset. All task types |
-| `ReferenceOverlaySetting` | `(value: bool = True)` | Compare tasks: show the media context, labelled "Original", over both options, then reveal the options ("Edit A" / "Edit B"); labelers can toggle back to the original. Use it when both datapoints are edits of the context image. Needs two image options and exactly one image in `media_contexts` — with no media context, or several assets in it, the setting has no effect; options that are not images are not rendered |
+| `ComparePanoramaSetting` | `()` | Render comparison media as 360° panorama |
+| `CompareEquirectangularSetting` | `()` | Render comparison media as equirectangular VR |
+| `ClassifyEquirectangularSetting` | `()` | Render classification media as equirectangular 360° view |
+| `TranslateTextAssetsSetting` | `()` | Translate text assets (datapoints and text contexts) into the labeler's language. Off unless added; source text is always assumed to be English; results still reference the original text |
+| `PinContextMediaSetting` | `()` | Show the context image or video next to the task for the whole rapid instead of inside the collapsible context drawer. Only use it when the task screen has enough space for the context next to the task — inspect `job_def.preview()` carefully before assigning. A multi-asset context is reduced to its first asset. All task types |
+| `ReferenceOverlaySetting` | `()` | Compare tasks: show the media context, labelled "Original", over both options, then reveal the options ("Edit A" / "Edit B"); labelers can toggle back to the original. Use it when both datapoints are edits of the context image. Needs two image options and exactly one image in `media_contexts` — with no media context, or several assets in it, the setting has no effect; options that are not images are not rendered |
 | `CustomSetting` | `(key: str, value: str, target: "rapids" \| "campaign" = "rapids")` | Pass a custom key/value through to the backend; `target` controls whether the flag is applied at the rapid level (`"rapids"`) or campaign level (`"campaign"`) |
 
 **Note on `FreeTextMinimumCharactersSetting` / `FreeTextMaxCharactersSetting`:** use these with caution. Free-text responses already pass through a reasonableness check by default, so tightening the bounds is usually unnecessary and will reject otherwise valid answers. Only set them when the question genuinely demands a specific length (e.g. a single word, or a full paragraph).

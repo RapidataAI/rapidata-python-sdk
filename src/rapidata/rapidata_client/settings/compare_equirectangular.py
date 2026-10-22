@@ -16,15 +16,9 @@ class CompareEquirectangularSetting(RapidataSetting):
     Enables equirectangular (360-degree) image comparison mode for compare tasks. Renders a special spherical viewer instead of the standard comparison view.
 
     Supported task types: Compare.
-
-    Args:
-        value (bool, optional): Whether to enable 360-degree comparison mode. Defaults to True.
     """
 
     supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Compare",)
 
-    def __init__(self, value: bool = True):
-        if not isinstance(value, bool):
-            raise ValueError("The value must be a boolean.")
-
-        super().__init__(key="compare_equirectangular", value=value)
+    def __init__(self):
+        super().__init__(key="compare_equirectangular", value="true")

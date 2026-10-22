@@ -12,13 +12,7 @@ class MuteVideoSetting(RapidataSetting):
     Mute the video. If this setting is not supplied, the video will not be muted.
 
     Supported task types: all.
-
-    Args:
-        value (bool, optional): Whether to mute the video. Defaults to True.
     """
 
-    def __init__(self, value: bool = True):
-        if not isinstance(value, bool):
-            raise ValueError("The value must be a boolean.")
-
-        super().__init__(key="mute_video_asset", value=value)
+    def __init__(self):
+        super().__init__(key="mute_video_asset", value="true")

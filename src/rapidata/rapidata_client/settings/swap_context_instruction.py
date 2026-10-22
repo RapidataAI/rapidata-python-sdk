@@ -11,18 +11,12 @@ class SwapContextInstructionSetting(RapidataSetting):
     """
     Swap the place of the context and instruction.
 
-    If set to true, the instruction will be shown on top and the context below. If collapsed, only the instruction will be shown.
+    When this setting is added, the instruction will be shown on top and the context below. If collapsed, only the instruction will be shown.
 
     By default, the context will be shown on top and the instruction below.
 
     Supported task types: all.
-
-    Args:
-        value (bool, optional): Whether to swap the place of the context and instruction.
     """
 
-    def __init__(self, value: bool = True):
-        if not isinstance(value, bool):
-            raise ValueError("The value must be a boolean.")
-
-        super().__init__(key="swap_question_and_prompt", value=value)
+    def __init__(self):
+        super().__init__(key="swap_question_and_prompt", value="true")
