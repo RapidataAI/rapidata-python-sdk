@@ -14,13 +14,7 @@ class PinContextMediaSetting(RapidataSetting):
     Useful when annotators have to judge the assets against a reference, e.g. comparing two videos to a reference video. A multi-asset context is reduced to its first asset. Search terms: reference, context video, context image, alongside, side by side, pinned, thumbnail.
 
     Supported task types: all.
-
-    Args:
-        value (bool, optional): Whether to show the context media next to the task. Defaults to True.
     """
 
-    def __init__(self, value: bool = True):
-        if not isinstance(value, bool):
-            raise ValueError("The value must be a boolean.")
-
-        super().__init__(key="media_context_persistent_thumbnail", value=value)
+    def __init__(self):
+        super().__init__(key="media_context_persistent_thumbnail", value="true")

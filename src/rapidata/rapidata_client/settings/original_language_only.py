@@ -14,13 +14,7 @@ class OriginalLanguageOnlySetting(RapidataSetting):
     Use this when task content should not be translated: it disables the automatic translation / localization of the content and prevents annotators from switching languages. Search terms: translation, translate, translated, multilingual, localization, localize, i18n, language switch.
 
     Supported task types: all.
-
-    Args:
-        value (bool, optional): Whether to display the content in the original language only. Defaults to True.
     """
 
-    def __init__(self, value: bool = True):
-        if not isinstance(value, bool):
-            raise ValueError("The value must be a boolean.")
-
-        super().__init__(key="force_original_language", value=value)
+    def __init__(self):
+        super().__init__(key="force_original_language", value="true")

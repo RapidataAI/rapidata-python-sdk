@@ -28,6 +28,8 @@ HANDWRITTEN_FILES = {
     "custom_setting.py",
 }
 
+SETTING_TYPES = ("flag", "int")
+
 # The support matrix (which task types honor each setting) is NOT defined here.
 # It is the source of truth in rapids-frontend's settings.ts and ships in
 # settings.json per setting as a `supported_rapid_types` field (rapids-frontend
@@ -79,11 +81,35 @@ def load_settings(settings_json: Path) -> list[dict[str, Any]]:
     with open(settings_json) as f:
         data = json.load(f)
     settings = data["settings"]
+    unsupported = [s for s in settings if s.get("type") not in SETTING_TYPES]
+    if unsupported:
+        for s in unsupported:
+            print(
+                f"ERROR: {s['class_name']} has unsupported type {s.get('type')!r}; "
+                f"expected one of {', '.join(repr(t) for t in SETTING_TYPES)}."
+            )
+        print("No files were generated.")
+        sys.exit(1)
     # Derive file_name and container_name from class_name
     for s in settings:
         s["file_name"] = class_name_to_file_name(s["class_name"])
         s["container_name"] = class_name_to_container_name(s["class_name"])
     return settings
+
+
+def supported_rapid_types_lines(supported: tuple[str, ...] | str) -> list[str]:
+    """Machine-readable support matrix (metadata only; not serialized)."""
+    if supported == "all":
+        return []
+    # Match black's tuple formatting so regeneration stays idempotent.
+    if len(supported) == 1:
+        tuple_repr = f'("{supported[0]}",)'
+    else:
+        tuple_repr = "(" + ", ".join(f'"{t}"' for t in supported) + ")"
+    return [
+        f"    supported_rapid_types: ClassVar[SupportedRapidTypes] = {tuple_repr}",
+        "",
+    ]
 
 
 def generate_setting_module(s: dict[str, Any]) -> str:
@@ -116,11 +142,8 @@ def generate_setting_module(s: dict[str, Any]) -> str:
 
     # Main class
     class_name = s["class_name"]
-    param_name = s["param_name"]
     value_type = s["type"]
-    default = s.get("default")
     description = s["description"]
-    param_description = s["param_description"]
 
     lines.append(f"class {class_name}(RapidataSetting):")
     lines.append(f'    """')
@@ -132,11 +155,25 @@ def generate_setting_module(s: dict[str, Any]) -> str:
     lines.append("")
     supported_str = "all" if supported == "all" else ", ".join(supported)
     lines.append(f"    Supported task types: {supported_str}.")
+
+    if value_type == "flag":
+        lines.append('    """')
+        lines.append("")
+        lines.extend(supported_rapid_types_lines(supported))
+        lines.append("    def __init__(self):")
+        lines.append(f'        super().__init__(key="{s["key"]}", value="true")')
+        lines.append("")
+        return "\n".join(lines)
+
+    param_name = s["param_name"]
+    default = s.get("default")
+    param_description = s["param_description"]
+
     lines.append("")
     lines.append("    Args:")
 
     # Build type annotation string for docstring
-    type_str = value_type  # "bool" or "int"
+    type_str = value_type
     if default is not None:
         lines.append(
             f"        {param_name} ({type_str}, optional): {param_description}"
@@ -147,34 +184,13 @@ def generate_setting_module(s: dict[str, Any]) -> str:
     lines.append('    """')
     lines.append("")
 
-    # Machine-readable support matrix (metadata only; not serialized).
-    if has_supported:
-        # Match black's tuple formatting so regeneration stays idempotent.
-        if len(supported) == 1:
-            tuple_repr = f'("{supported[0]}",)'
-        else:
-            tuple_repr = "(" + ", ".join(f'"{t}"' for t in supported) + ")"
-        lines.append(
-            f"    supported_rapid_types: ClassVar[SupportedRapidTypes] = {tuple_repr}"
-        )
-        lines.append("")
+    lines.extend(supported_rapid_types_lines(supported))
 
     # __init__ signature
     if default is not None:
-        if value_type == "bool":
-            default_str = "True" if default else "False"
-        else:
-            default_str = str(default)
-        lines.append(
-            f"    def __init__(self, {param_name}: {type_str} = {default_str}):"
-        )
+        lines.append(f"    def __init__(self, {param_name}: {type_str} = {default}):")
     else:
         lines.append(f"    def __init__(self, {param_name}: {type_str}):")
-
-    # Validation
-    if value_type == "bool":
-        lines.append(f"        if not isinstance({param_name}, bool):")
-        lines.append(f'            raise ValueError("The value must be a boolean.")')
 
     validation = s.get("validation")
     if validation:
@@ -307,6 +323,7 @@ def generate_rapidata_client_init_block(settings: list[dict[str, Any]]) -> str:
     for s in settings:
         lines.append(f"    {s['class_name']},")
     lines.append(")")
+    lines.append("")
     return "\n".join(lines)
 
 
@@ -365,6 +382,10 @@ def replace_between_markers(
         sys.exit(1)
 
     before = text[: start_idx + len(start_marker)]
+    # Keep the end marker's indentation: black indents it inside an open bracket.
+    end_line_start = text.rfind("\n", 0, end_idx) + 1
+    if not text[end_line_start:end_idx].strip():
+        end_idx = end_line_start
     after = text[end_idx:]
     new_text = before + "\n" + new_content + "\n" + after
 

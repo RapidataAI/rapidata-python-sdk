@@ -32,7 +32,7 @@ class RapidataSettings:
     Settings can be added to an order to determine the behaviour of the task.
 
     Attributes:
-        NoShuffle (NoShuffleSetting): Only for classification and compare tasks. If true, the order of the categories / images will not be shuffled and presented in the same order as specified.
+        NoShuffle (NoShuffleSetting): Only for classification and compare tasks. The order of the categories / images will not be shuffled and is presented in the same order as specified.
         MuteVideo (MuteVideoSetting): Mute the video. If this setting is not supplied, the video will not be muted.
         FreeTextMinimumCharacters (FreeTextMinimumCharactersSetting): Set the minimum number of characters a user has to type.
         FreeTextMaxCharacters (FreeTextMaxCharactersSetting): Set the maximum number of characters allowed in a free text answer.
@@ -42,7 +42,7 @@ class RapidataSettings:
         AllowNeitherBoth (AllowNeitherBothSetting): Only for compare tasks. Enables an "Unsure" button that allows users to select neither or both options.
         OriginalLanguageOnly (OriginalLanguageOnlySetting): Display the content in the original language only. Hides the language switch UI from users.
         NoMistakeOption (NoMistakeOptionSetting): Enables a "No mistakes" button that allows users to skip task by confirming they found no errors in the media.
-        DisableAutoloop (DisableAutoloopSetting): Disables automatic looping of video media. When enabled, videos will not automatically restart when they finish playing.
+        DisableAutoloop (DisableAutoloopSetting): Disables automatic looping of video media. When this setting is added, videos will not automatically restart when they finish playing.
         NoInstructionDisplay (NoInstructionDisplaySetting): Hides the instruction text in the UI. Only the context will be shown.
         KeyboardNumeric (KeyboardNumericSetting): Changes the virtual keyboard input type to numeric-only for free text input fields. Useful when expecting numeric answers.
         LocateMaxPoints (LocateMaxPointsSetting): Sets the maximum number of points a user can place on a locate task. Once the limit is reached, no more points can be added.

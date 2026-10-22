@@ -9,16 +9,10 @@ from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 class DisableAutoloopSetting(RapidataSetting):
     """
-    Disables automatic looping of video media. When enabled, videos will not automatically restart when they finish playing.
+    Disables automatic looping of video media. When this setting is added, videos will not automatically restart when they finish playing.
 
     Supported task types: all.
-
-    Args:
-        value (bool, optional): Whether to disable video autoloop. Defaults to True.
     """
 
-    def __init__(self, value: bool = True):
-        if not isinstance(value, bool):
-            raise ValueError("The value must be a boolean.")
-
-        super().__init__(key="disable_autoloop", value=value)
+    def __init__(self):
+        super().__init__(key="disable_autoloop", value="true")

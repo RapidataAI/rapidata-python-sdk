@@ -16,15 +16,9 @@ class ReferenceOverlaySetting(RapidataSetting):
     Shows a single reference image over both image options, then reveals the edits. Annotators can toggle between the reference and edits. Use with compare tasks that have two image options and one image reference.
 
     Supported task types: Compare.
-
-    Args:
-        value (bool, optional): Whether to show the reference overlay. Defaults to True.
     """
 
     supported_rapid_types: ClassVar[SupportedRapidTypes] = ("Compare",)
 
-    def __init__(self, value: bool = True):
-        if not isinstance(value, bool):
-            raise ValueError("The value must be a boolean.")
-
-        super().__init__(key="reference_overlay", value=value)
+    def __init__(self):
+        super().__init__(key="reference_overlay", value="true")

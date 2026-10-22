@@ -13,13 +13,7 @@ class MarkdownSetting(RapidataSetting):
     Useful when comparing formatted text like LLM outputs.
 
     Supported task types: all.
-
-    Args:
-        value (bool, optional): Whether to enable markdown rendering. Defaults to True.
     """
 
-    def __init__(self, value: bool = True):
-        if not isinstance(value, bool):
-            raise ValueError("The value must be a boolean.")
-
-        super().__init__(key="use_main_text_markdown", value=value)
+    def __init__(self):
+        super().__init__(key="use_main_text_markdown", value="true")
