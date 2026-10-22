@@ -56,7 +56,6 @@
       ".vercel.app",
       ".rabbitdata.ch",
       ".rapidata.dev",
-      ".lvh.me",
       ".localhost"
     ],
     "referrerRules": [
@@ -1714,7 +1713,7 @@
     {
       "hostname": "app.rapidata.dev",
       "expected": {
-        "environment": "test",
+        "environment": "development",
         "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
       }
     },
@@ -1733,7 +1732,7 @@
       }
     },
     {
-      "hostname": "app.lvh.me",
+      "hostname": "rapidata.dev",
       "expected": {
         "environment": "development",
         "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"

@@ -19,7 +19,7 @@
     "127.0.0.1",
     "[::1]",
   ]);
-  const INTERNAL_REFERRER_SUFFIX = [".vercel.app", ".rabbitdata.ch", ".rapidata.dev", ".lvh.me", ".localhost"];
+  const INTERNAL_REFERRER_SUFFIX = [".vercel.app", ".rabbitdata.ch", ".rapidata.dev", ".localhost"];
   // First match wins.
   const REFERRER_RULES = [
     { match: "suffix", value: ".hf.space", source: "huggingface", medium: "referral" },
@@ -59,7 +59,7 @@
   const HOST_MAX = 128;
   const TOUCH_KEYS = ["source", "medium", "campaign", "content", "landingPath", "referrerHost", "observedAt"];
   const TOUCH_PROPERTIES = ["source", "medium", "campaign", "content", "landing_path", "referrer_host", "observed_at"];
-  const COOKIE_ROOTS = ["rapidata.ai", "rabbitdata.ch", "rapidata.dev", "lvh.me"];
+  const COOKIE_ROOTS = ["rapidata.ai", "rabbitdata.ch", "rapidata.dev"];
   const OUTBOUND_HOSTS = ["app.rapidata.ai", "docs.rapidata.ai", "benchmark.ai", "www.benchmark.ai"];
   // Python's str.strip() set, not String.prototype.trim(), so UTM values match reference.py.
   const PY_WHITESPACE = /^[\t-\r\x1c-\x20\x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+|[\t-\r\x1c-\x20\x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+$/g;
@@ -234,10 +234,8 @@
     const host = String(hostname).toLowerCase();
     if (PRODUCTION_HOSTS.includes(host)) return { environment: "production", token: TOKEN };
     if (host.endsWith(".vercel.app")) return { environment: "preview", token: TOKEN };
-    if (host.endsWith(".rabbitdata.ch") || host === "rapidata.dev" || host.endsWith(".rapidata.dev")) {
-      return { environment: "test", token: TOKEN };
-    }
-    if (["localhost", "127.0.0.1", "[::1]", "lvh.me"].includes(host) || host.endsWith(".localhost") || host.endsWith(".lvh.me")) {
+    if (host.endsWith(".rabbitdata.ch")) return { environment: "test", token: TOKEN };
+    if (["localhost", "127.0.0.1", "[::1]", "rapidata.dev"].includes(host) || host.endsWith(".localhost") || host.endsWith(".rapidata.dev")) {
       return { environment: "development", token: TOKEN };
     }
     return null;
@@ -503,6 +501,7 @@
   const api = {
     constants: {
       token: TOKEN,
+      assets: { posthog: POSTHOG_SCRIPT, consentScript: CONSENT_SCRIPT, consentStyle: CONSENT_STYLE },
       productionHosts: PRODUCTION_HOSTS,
       internalReferrerExact: INTERNAL_REFERRER_EXACT,
       internalReferrerSuffix: INTERNAL_REFERRER_SUFFIX,

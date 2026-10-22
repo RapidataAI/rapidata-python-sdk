@@ -137,7 +137,7 @@ class FakePostHog {
     this.config = config;
     this.calls.push(["init", token]);
     this.win.localStorage.setItem(`ph_${token}_posthog`, "{}");
-    this.win.document.cookie = `ph_${token}_posthog=%7B%7D; Path=/; Domain=lvh.me`;
+    this.win.document.cookie = `ph_${token}_posthog=%7B%7D; Path=/; Domain=rapidata.dev`;
     config.loaded(this);
     if (!this.has_opted_out_capturing()) this.captureInitialPageview();
   }
@@ -228,7 +228,7 @@ function fakeWindow({ href, referrer = "", localStorage = {}, cookies = [] }) {
 }
 
 function start(options = {}) {
-  const env = fakeWindow({ href: "http://docs.lvh.me:8000/quickstart/", ...options });
+  const env = fakeWindow({ href: "http://docs.rapidata.dev/quickstart/", ...options });
   const loaded = [];
   env.consent = { analytics: false, config: null };
   const loaders = {
@@ -269,7 +269,7 @@ const pageviews = (posthog) => posthog.events.filter((event) => event.event === 
 
 describe("docs consent controller", () => {
   it("loads nothing but the consent banner before a choice", async () => {
-    const env = start({ href: "http://docs.lvh.me:8000/?utm_source=pypi", referrer: "https://pypi.org/" });
+    const env = start({ href: "http://docs.rapidata.dev/?utm_source=pypi", referrer: "https://pypi.org/" });
     await env.controller.ready;
     assert.equal(env.loaded.length, 2);
     assert.ok(env.loaded.every((url) => url.includes("vanilla-cookieconsent@3.1.0")));
@@ -284,7 +284,7 @@ describe("docs consent controller", () => {
     const { config } = env.consent;
     const { consentCookie } = fixtures.constants;
     assert.equal(config.revision, consentCookie.revision);
-    assert.deepEqual(config.cookie, { name: consentCookie.name, domain: "lvh.me" });
+    assert.deepEqual(config.cookie, { name: consentCookie.name, domain: "rapidata.dev" });
     assert.deepEqual(Object.keys(config.categories), ["necessary", consentCookie.category]);
     assert.deepEqual(config.categories.necessary, { enabled: true, readOnly: true });
     assert.equal(config.language.translations.en.consentModal.title, "Analytics preferences");
@@ -306,21 +306,21 @@ describe("docs consent controller", () => {
     }
   });
 
-  for (const [href, domain] of [
-    ["https://docs.rabbitdata.ch/", "rabbitdata.ch"],
-    ["https://docs.rapidata.dev/", "rapidata.dev"],
+  for (const [href, domain, environment] of [
+    ["https://docs.rabbitdata.ch/", "rabbitdata.ch", "test"],
+    ["https://docs.rapidata.dev/", "rapidata.dev", "development"],
   ]) {
-    it(`shares test-environment cookies on ${domain}`, async () => {
+    it(`shares ${environment} cookies on ${domain}`, async () => {
       const env = start({ href });
       await env.decide(true);
       assert.deepEqual(env.consent.config.cookie, { name: "cc_cookie", domain });
       assert.ok(env.jar.cookies.has(`rd_attribution_v1|${domain}`));
-      assert.equal(env.posthog.events[0].properties.environment, "test");
+      assert.equal(env.posthog.events[0].properties.environment, environment);
     });
   }
 
   it("injects the consent and PostHog assets into <body> with SRI", () => {
-    const { win } = fakeWindow({ href: "http://docs.lvh.me:8000/" });
+    const { win } = fakeWindow({ href: "http://docs.rapidata.dev/" });
     analytics.startJourneyAnalytics(win);
     const assets = win.document.body.children.filter((child) => child.integrity);
     assert.deepEqual(
@@ -341,12 +341,12 @@ describe("docs consent controller", () => {
   });
 
   it("strips a stray handoff fragment before parsing", () => {
-    const env = start({ href: "http://docs.lvh.me:8000/quickstart/#rd_journey=abc" });
-    assert.deepEqual(env.win.history.replaced, ["http://docs.lvh.me:8000/quickstart/"]);
+    const env = start({ href: "http://docs.rapidata.dev/quickstart/#rd_journey=abc" });
+    assert.deepEqual(env.win.history.replaced, ["http://docs.rapidata.dev/quickstart/"]);
   });
 
   it("initialises PostHog with super properties before the first pageview on grant", async () => {
-    const env = start({ href: "http://docs.lvh.me:8000/quickstart/?utm_source=pypi", referrer: "https://pypi.org/" });
+    const env = start({ href: "http://docs.rapidata.dev/quickstart/?utm_source=pypi", referrer: "https://pypi.org/" });
     await env.decide(true);
     const { posthog } = env;
     assert.equal(posthog.token, fixtures.constants.token);
@@ -366,7 +366,7 @@ describe("docs consent controller", () => {
     assert.equal(pageview.properties.event_source, "browser");
     assert.equal(pageview.properties.first_source, "pypi");
     assert.equal(pageview.properties.last_external_source, "pypi");
-    const cookie = env.jar.cookies.get("rd_attribution_v1|lvh.me");
+    const cookie = env.jar.cookies.get("rd_attribution_v1|rapidata.dev");
     assert.ok(cookie.attributes.includes("Max-Age=7776000"));
     assert.ok(cookie.attributes.includes("SameSite=Lax"));
     assert.equal(analytics.decodeAttributionCookie(cookie.value).first.source, "pypi");
@@ -391,7 +391,7 @@ describe("docs consent controller", () => {
   });
 
   it("sets first touch once and last external touch on the person", async () => {
-    const env = start({ href: "http://docs.lvh.me:8000/", referrer: "https://github.com/RapidataAI" });
+    const env = start({ href: "http://docs.rapidata.dev/", referrer: "https://github.com/RapidataAI" });
     await env.decide(true);
     const call = env.posthog.calls.find(([name]) => name === "setPersonProperties");
     assert.equal(call[1].last_external_source, "github");
@@ -427,7 +427,7 @@ describe("docs consent controller", () => {
     assert.equal(names.lastIndexOf("heatmaps.getAndClearBuffer"), names.lastIndexOf("opt_in_capturing") - 1);
     assert.equal(pageviews(env.posthog).length, 2);
     assert.equal(pageviews(env.posthog)[1].properties.surface, "docs");
-    assert.ok(env.jar.cookies.has("rd_attribution_v1|lvh.me"));
+    assert.ok(env.jar.cookies.has("rd_attribution_v1|rapidata.dev"));
   });
 
   it("does not add a pageview when consent is confirmed again without a revoke", async () => {
@@ -471,7 +471,7 @@ describe("docs consent controller", () => {
     env.click("click", "https://app.rapidata.ai/settings/tokens?client=1#top");
     await env.decide(true);
     env.click("click", "https://app.rapidata.ai/settings/tokens?client=1#top");
-    env.click("click", "http://docs.lvh.me:8000/audiences/");
+    env.click("click", "http://docs.rapidata.dev/audiences/");
     env.click("click", "https://github.com/RapidataAI");
     env.click("auxclick", "https://huggingface.co/Rapidata", 1);
     env.click("auxclick", "https://huggingface.co/Rapidata", 2);
@@ -499,7 +499,7 @@ describe("docs consent controller", () => {
   });
 
   it("clears leftovers when analytics is rejected", async () => {
-    const env = start({ cookies: ["ph_x_posthog=1; Path=/; Domain=lvh.me", "rd_attribution_v1=abc; Path=/; Domain=lvh.me"] });
+    const env = start({ cookies: ["ph_x_posthog=1; Path=/; Domain=rapidata.dev", "rd_attribution_v1=abc; Path=/; Domain=rapidata.dev"] });
     await env.decide(false);
     assert.equal(env.win.posthog, undefined);
     assert.deepEqual(env.jar.names(), []);

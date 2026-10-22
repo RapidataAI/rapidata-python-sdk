@@ -4,9 +4,13 @@ const path = require("node:path");
 const zlib = require("node:zlib");
 const { test } = require("node:test");
 const { chromium } = require("playwright");
+const analytics = require("../../docs/js/analytics.js");
 
 const SITE = path.resolve(process.env.DOCS_SITE_DIR || "site");
-const ORIGIN = "https://docs.rapidata.ai";
+const ORIGIN = process.env.DOCS_ORIGIN || "https://docs.rapidata.ai";
+const HOST = new URL(ORIGIN).hostname;
+const COOKIE_DOMAIN = "." + HOST.split(".").slice(-2).join(".");
+const ENVIRONMENT = analytics.resolveAnalyticsTarget(HOST).environment;
 // posthog-js drops HeadlessChrome (UA or userAgentData brand) as a bot, so "zero requests" would pass vacuously.
 const USER_AGENT =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
@@ -56,9 +60,13 @@ async function openDocs() {
     const request = route.request();
     const { hostname } = new URL(request.url());
     if (hostname.endsWith("posthog.com")) requests.push(request.url());
-    if (hostname === "docs.rapidata.ai") {
+    if (hostname === HOST) {
       const file = localFile(request.url());
-      return fs.existsSync(file) ? route.fulfill({ path: file }) : route.fulfill({ status: 404, body: "" });
+      if (!fs.existsSync(file)) return route.fulfill({ status: 404, body: "" });
+      if (!file.endsWith("sitemap.xml")) return route.fulfill({ path: file });
+      // Material only navigates instantly to URLs listed in the sitemap, which names the production host.
+      const sitemap = fs.readFileSync(file, "utf8").replaceAll("https://docs.rapidata.ai", ORIGIN);
+      return route.fulfill({ body: sitemap, contentType: "application/xml" });
     }
     if (hostname === "eu.i.posthog.com") {
       events.push(...decodeEvents(request));
@@ -94,8 +102,8 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
     await page.getByRole("button", { name: "Allow analytics" }).click();
     await waitFor(() => events.some((event) => event.event === "$pageview"), 20_000, "no $pageview after consent");
     const cookies = Object.fromEntries((await context.cookies()).map((cookie) => [cookie.name, cookie]));
-    assert.equal(cookies.cc_cookie.domain, ".rapidata.ai");
-    assert.equal(cookies.rd_attribution_v1.domain, ".rapidata.ai");
+    assert.equal(cookies.cc_cookie.domain, COOKIE_DOMAIN);
+    assert.equal(cookies.rd_attribution_v1.domain, COOKIE_DOMAIN);
     assert.equal(cookies.rd_attribution_v1.secure, true);
 
     await navLink("audiences").click();
@@ -159,7 +167,7 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
 
     assert.ok(events.length > 0);
     for (const { event, properties } of events) {
-      assert.equal(properties.environment, "production", event);
+      assert.equal(properties.environment, ENVIRONMENT, event);
       assert.equal(properties.surface, "docs", event);
     }
   } finally {
@@ -194,6 +202,47 @@ test("one $pageview per load with consent, one more per same-page re-grant", { t
     await waitFor(() => pageviewCount(events, reloaded) > 1, 20_000, "no $pageview after re-grant");
     await waitForQuiet(requests, 6_000, 60_000);
     assert.equal(pageviewCount(events, reloaded), 2, "Allow, Reject, Allow on one page");
+  } finally {
+    await browser.close();
+  }
+});
+
+test("an identity set on a sibling subdomain wins over docs' stale anonymous id", { timeout: 120_000 }, async () => {
+  const { browser, context, events } = await openDocs();
+  const { posthog } = analytics.constants.assets;
+  const app = `https://app${COOKIE_DOMAIN}`;
+  await context.route(`${app}/identify.html*`, (route) =>
+    route.fulfill({
+      contentType: "text/html",
+      body: `<!doctype html><script src="${posthog.url}" integrity="${posthog.integrity}" crossorigin="anonymous"></script>
+<script>
+  posthog.init("${analytics.constants.token}", {
+    api_host: "https://eu.i.posthog.com", defaults: "2026-05-30", persistence: "localStorage+cookie",
+    cross_subdomain_cookie: true, cookieWinsOnConflict: true, advanced_disable_feature_flags: true,
+    autocapture: false, capture_pageview: false,
+    loaded: (ph) => { window.before = ph.get_distinct_id(); ph.identify(new URLSearchParams(location.search).get("id")); },
+  });
+</script>`,
+    })
+  );
+  try {
+    const page = await context.newPage();
+    await page.goto(`${ORIGIN}/quickstart/`);
+    await page.getByRole("button", { name: "Allow analytics" }).click();
+    await waitFor(() => pageviewCount(events, 0) > 0, 20_000, "no $pageview after consent");
+    const anonymous = await page.evaluate(() => window.posthog.get_distinct_id());
+
+    const customer = `journey-e2e-${Date.now()}`;
+    await page.goto(`${app}/identify.html?id=${customer}`);
+    await page.waitForFunction(() => window.before !== undefined);
+    assert.equal(await page.evaluate(() => window.before), anonymous, "app did not read the shared cookie");
+
+    const returned = events.length;
+    await page.goto(`${ORIGIN}/audiences/`);
+    await waitFor(() => pageviewCount(events, returned) > 0, 20_000, "no $pageview back on docs");
+    assert.equal(await page.evaluate(() => window.posthog.get_distinct_id()), customer);
+    const pageview = events.slice(returned).find((event) => event.event === "$pageview");
+    assert.equal(pageview.properties.distinct_id, customer);
   } finally {
     await browser.close();
   }
