@@ -51,6 +51,7 @@ def redirect(destination: Path) -> str:
   <title>Documentation moved</title>
   <meta name="robots" content="noindex">
   <link rel="canonical" href="{SITE_URL}{escaped}">
+  <meta name="referrer" content="no-referrer">
   <script>window.location.replace({json.dumps(url)} + window.location.search + window.location.hash);</script>
   <noscript><meta http-equiv="refresh" content="0; url={escaped}"></noscript>
 </head>
@@ -99,7 +100,7 @@ def prepare(site: Path, previous: Path, root_files: Path) -> None:
         if not (site / target).is_file():
             raise ValueError(f"Missing redirect destination: {target}")
         content = redirect(target)
-        if page not in current:
+        if page not in current or page.as_posix() in RENAMED:
             output = site / page
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(content, encoding="utf-8")

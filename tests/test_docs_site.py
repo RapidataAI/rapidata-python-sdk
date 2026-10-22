@@ -107,3 +107,15 @@ def test_existing_alias_blocks_reusing_dirty_build(tmp_path, root_files):
     write(site, "3.x/index.html")
     with pytest.raises(ValueError, match="clean MkDocs build"):
         prepare(site, previous, root_files)
+
+
+def test_redirects_keep_the_query_and_drop_the_referrer(tmp_path, root_files):
+    site = build_site(tmp_path / "site")
+    write(site, "starting_page/index.html", 'location.href="../"')
+    prepare(site, tmp_path / "missing", root_files)
+    for prefix in ("", "latest/", "3.x/"):
+        stub = (site / prefix / "starting_page/index.html").read_text()
+        assert "window.location.search + window.location.hash" in stub
+        assert stub.index('<meta name="referrer" content="no-referrer">') < stub.index(
+            "<script>"
+        )
