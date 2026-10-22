@@ -20,6 +20,7 @@ class ExampleFormatter:
         for item in items:
             rows.append(
                 {
+                    "id": item.id,
                     "asset": ExampleFormatter._format_asset(
                         item.asset, asset_url_prefix
                     ),

@@ -1137,6 +1137,35 @@ class RapidataBenchmark:
                 + Fore.RESET
             )
 
+    def get_tag_counts(self) -> pd.DataFrame:
+        """
+        Returns every tag used in the benchmark with the number of prompts carrying it.
+
+        Fetched in one request, so it stays cheap on benchmarks where loading every
+        prompt through `structured_tags` is slow. The ``value`` column holds what the
+        ``tags`` filters of the standings methods expect.
+
+        Returns:
+            pd.DataFrame: One row per tag, with columns ``value``, ``category`` and ``prompt_count``.
+        """
+        import pandas as pd
+
+        with tracer.start_as_current_span("RapidataBenchmark.get_tag_counts"):
+            result = self._openapi_service.leaderboard.benchmark_api.benchmark_benchmark_id_tags_get(
+                benchmark_id=self.id
+            )
+            return pd.DataFrame(
+                [
+                    {
+                        "value": tag.value,
+                        "category": tag.category,
+                        "prompt_count": tag.prompt_count,
+                    }
+                    for tag in result.tags
+                ],
+                columns=pd.Index(["value", "category", "prompt_count"]),
+            )
+
     def get_overall_standings(
         self,
         tags: Optional[list[str]] = None,

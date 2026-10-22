@@ -358,6 +358,9 @@ audience.add_select_words_example(
 # Inspect the examples currently on the audience
 examples_df = audience.get_examples(amount=10, page=1)
 
+# Remove one with a wrong or ambiguous truth; ids are in the "id" column
+audience.delete_example(examples_df["id"].iloc[0])
+
 # Once >= min_tasks examples (default 10) are added and reviewed, start recruiting. This is required and explicit:
 # adding examples does not start it, and a job assigned before this can never get responses.
 audience.start_recruiting()
@@ -388,7 +391,8 @@ second = audience.assign_job(other_job_def, run_after=first)   # or run_after="j
 - `audience.update_filters([...])` — replace the recruitment filters on this audience (audience-supported filters only — see below)
 - `audience.filter([filters])` — derive a filtered slice of this audience's graduated labelers without re-onboarding; multiple filters are ANDed. Returns a `RapidataFilteredAudience` (id prefixed `fau_`) that exposes only `assign_job` and `find_jobs` (plus `id`, `name`, `filters`) — no examples, `update_filters`, `delete`, or nested `.filter()`. Its id (or the object) can be passed as a leaderboard's `audience_id`
 - `audience.update_name("New Name")` — rename
-- `audience.get_examples(amount=10, page=1)` — list qualification examples (returns DataFrame)
+- `audience.get_examples(amount=10, page=1)` — list qualification examples (DataFrame with columns `id`, `asset`, `truth`, `context`, `contextAsset`)
+- `audience.delete_example(example_id)` — delete one qualification example by its `id` from `get_examples`, e.g. one whose truth turned out wrong or ambiguous. Returns the audience, so it chains.
 - `audience.delete()` — delete the audience
 
 **Audience-supported filters:** `CountryFilter`, `LanguageFilter`, `AgeFilter` (`AgeGroup`), `GenderFilter` (`Gender`), and `DeviceFilter` (`DeviceType`), plus the `AndFilter`/`OrFilter`/`NotFilter` combinators (also via `&` / `|` / `~`). `UserScoreFilter`, `CampaignFilter`, and `CustomFilter` are **not supported on audiences** and raise `NotImplementedError`.
@@ -674,6 +678,7 @@ benchmark.update_prompt("garage_car", tags=["abstract", "surreal"], origin="wiki
 print(benchmark.tags)             # Values only, aligned by index with prompts (categories dropped)
 print(benchmark.structured_tags)  # list[list[Tag]] — preferred, keeps categories
 print(benchmark.origins)          # list[Origin | None]
+print(benchmark.get_tag_counts()) # DataFrame of every tag: value, category, prompt_count — one request, no prompt paging
 
 # Create leaderboard
 leaderboard = benchmark.create_leaderboard(
