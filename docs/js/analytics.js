@@ -59,7 +59,7 @@
   const HOST_MAX = 128;
   const TOUCH_KEYS = ["source", "medium", "campaign", "content", "landingPath", "referrerHost", "observedAt"];
   const TOUCH_PROPERTIES = ["source", "medium", "campaign", "content", "landing_path", "referrer_host", "observed_at"];
-  const COOKIE_ROOTS = ["rapidata.ai", "rabbitdata.ch", "rapidata.dev"];
+  const COOKIE_ROOTS = ["rapidata.ai", "benchmark.ai"];
   const OUTBOUND_HOSTS = ["app.rapidata.ai", "docs.rapidata.ai", "benchmark.ai", "www.benchmark.ai"];
   // Python's str.strip() set, not String.prototype.trim(), so UTM values match reference.py.
   const PY_WHITESPACE = /^[\t-\r\x1c-\x20\x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+|[\t-\r\x1c-\x20\x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+$/g;
@@ -233,18 +233,11 @@
   }
 
   function resolveAnalyticsTarget(hostname) {
-    const host = String(hostname).toLowerCase();
-    if (PRODUCTION_HOSTS.includes(host)) return { environment: "production", token: TOKEN };
-    if (host.endsWith(".vercel.app")) return { environment: "preview", token: TOKEN };
-    if (host.endsWith(".rabbitdata.ch")) return { environment: "test", token: TOKEN };
-    if (["localhost", "127.0.0.1", "[::1]", "rapidata.dev"].includes(host) || host.endsWith(".localhost") || host.endsWith(".rapidata.dev")) {
-      return { environment: "development", token: TOKEN };
-    }
-    return null;
+    return PRODUCTION_HOSTS.includes(String(hostname).toLowerCase()) ? { environment: "production", token: TOKEN } : null;
   }
 
   function sharedCookieDomain(hostname) {
-    return COOKIE_ROOTS.find((root) => hostname === root || hostname.endsWith("." + root)) || null;
+    return COOKIE_ROOTS.find((root) => hostname === root || hostname.endsWith("." + root));
   }
 
   function touchProperties(prefix, value) {
@@ -353,8 +346,7 @@
 
     const hostname = win.location.hostname;
     const sharedDomain = sharedCookieDomain(hostname);
-    const secure = win.location.protocol === "https:" ? "; Secure" : "";
-    const cookieAttributes = "; Path=/" + (sharedDomain ? "; Domain=" + sharedDomain : "") + "; SameSite=Lax" + secure;
+    const cookieAttributes = "; Path=/; Domain=" + sharedDomain + "; SameSite=Lax; Secure";
     let consented = false;
     let initialized = false;
     let posthog = null;
@@ -368,8 +360,8 @@
     }
 
     function expireCookie(name) {
-      doc.cookie = name + "=; Path=/; Max-Age=0; SameSite=Lax" + secure;
-      if (sharedDomain) doc.cookie = name + "=; Path=/; Domain=" + sharedDomain + "; Max-Age=0; SameSite=Lax" + secure;
+      doc.cookie = name + "=; Path=/; Max-Age=0; SameSite=Lax; Secure";
+      doc.cookie = name + "=; Path=/; Domain=" + sharedDomain + "; Max-Age=0; SameSite=Lax; Secure";
     }
 
     function sendPersonProperties(instance) {
@@ -495,7 +487,7 @@
     doc.body.appendChild(consentRoot);
 
     const ready = Promise.all([load.style(CONSENT_STYLE), load.script(CONSENT_SCRIPT)])
-      .then(() => win.CookieConsent.run(consentConfig(sharedDomain || hostname, consentRoot, onDecision)))
+      .then(() => win.CookieConsent.run(consentConfig(sharedDomain, consentRoot, onDecision)))
       .catch(() => undefined);
     return { entry, ready };
   }

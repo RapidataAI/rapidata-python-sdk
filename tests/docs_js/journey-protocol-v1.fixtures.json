@@ -1691,52 +1691,31 @@
     },
     {
       "hostname": "website-abc-rapidata.vercel.app",
-      "expected": {
-        "environment": "preview",
-        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
-      }
+      "expected": null
     },
     {
       "hostname": "benchmark-plum.vercel.app",
-      "expected": {
-        "environment": "preview",
-        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
-      }
+      "expected": null
     },
     {
       "hostname": "app.rabbitdata.ch",
-      "expected": {
-        "environment": "test",
-        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
-      }
+      "expected": null
     },
     {
       "hostname": "app.rapidata.dev",
-      "expected": {
-        "environment": "development",
-        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
-      }
+      "expected": null
     },
     {
       "hostname": "localhost",
-      "expected": {
-        "environment": "development",
-        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
-      }
+      "expected": null
     },
     {
       "hostname": "127.0.0.1",
-      "expected": {
-        "environment": "development",
-        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
-      }
+      "expected": null
     },
     {
       "hostname": "rapidata.dev",
-      "expected": {
-        "environment": "development",
-        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
-      }
+      "expected": null
     },
     {
       "hostname": "rapidata.io",
@@ -1752,10 +1731,7 @@
     },
     {
       "hostname": "[::1]",
-      "expected": {
-        "environment": "development",
-        "token": "phc_sPu43oDPe9Gfd3Pg8nVHvhLj3rzyHQa8ujPFP7muBqtZ"
-      }
+      "expected": null
     }
   ],
   "campaignSlug": [

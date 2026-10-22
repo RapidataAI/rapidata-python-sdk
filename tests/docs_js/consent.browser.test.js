@@ -7,13 +7,14 @@ const { chromium } = require("playwright");
 const analytics = require("../../docs/js/analytics.js");
 
 const SITE = path.resolve(process.env.DOCS_SITE_DIR || "site");
-const ORIGIN = process.env.DOCS_ORIGIN || "https://docs.rapidata.dev";
+const ORIGIN = "https://docs.rapidata.ai";
 const HOST = new URL(ORIGIN).hostname;
-const COOKIE_DOMAIN = "." + HOST.split(".").slice(-2).join(".");
-const ENVIRONMENT = analytics.resolveAnalyticsTarget(HOST).environment;
-if (ENVIRONMENT === "production") throw new Error(`${ORIGIN} would tag test events as production`);
-// Unload flushes use sendBeacon, which bypasses Playwright routes; make every PostHog host unresolvable.
-const BLOCK_POSTHOG = "--host-resolver-rules=MAP *.posthog.com ~NOTFOUND, MAP posthog.com ~NOTFOUND";
+const COOKIE_DOMAIN = ".rapidata.ai";
+// Analytics only runs on production hosts, so pages are served locally and every PostHog host is unresolvable:
+// unload flushes use sendBeacon, which bypasses Playwright routes.
+const HOST_RULES =
+  "--host-resolver-rules=MAP docs.rapidata.ai 127.0.0.1, MAP app.rapidata.ai 127.0.0.1, " +
+  "MAP *.posthog.com ~NOTFOUND, MAP posthog.com ~NOTFOUND";
 // posthog-js drops HeadlessChrome (UA or userAgentData brand) as a bot, so "zero requests" would pass vacuously.
 const USER_AGENT =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
@@ -51,7 +52,14 @@ async function waitForQuiet(requests, quietMs, timeout) {
 }
 
 async function openDocs() {
-  const browser = await chromium.launch({ args: [BLOCK_POSTHOG] });
+  const browser = await chromium.launch({ args: [HOST_RULES] });
+  const probe = await browser.newPage();
+  const blocked = await probe.goto("https://eu.i.posthog.com/").then(() => "", (error) => error.message);
+  await probe.close();
+  if (!/ERR_NAME_NOT_RESOLVED/.test(blocked)) {
+    await browser.close();
+    throw new Error("PostHog must be unreachable from the test browser");
+  }
   const context = await browser.newContext({ userAgent: USER_AGENT, viewport: { width: 1280, height: 800 } });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, "webdriver", { get: () => false });
@@ -72,11 +80,7 @@ async function openDocs() {
     if (hostname.endsWith("posthog.com")) requests.push(request.url());
     if (hostname === HOST) {
       const file = localFile(request.url());
-      if (!fs.existsSync(file)) return route.fulfill({ status: 404, body: "" });
-      if (!file.endsWith("sitemap.xml")) return route.fulfill({ path: file });
-      // Material only navigates instantly to URLs listed in the sitemap, which names the production host.
-      const sitemap = fs.readFileSync(file, "utf8").replaceAll("https://docs.rapidata.ai", ORIGIN);
-      return route.fulfill({ body: sitemap, contentType: "application/xml" });
+      return fs.existsSync(file) ? route.fulfill({ path: file }) : route.fulfill({ status: 404, body: "" });
     }
     if (hostname === "eu.i.posthog.com") {
       events.push(...decodeEvents(request));
@@ -184,7 +188,7 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
 
     assert.ok(events.length > 0);
     for (const { event, properties } of events) {
-      assert.equal(properties.environment, ENVIRONMENT, event);
+      assert.equal(properties.environment, "production", event);
       assert.equal(properties.surface, "docs", event);
     }
   } finally {
