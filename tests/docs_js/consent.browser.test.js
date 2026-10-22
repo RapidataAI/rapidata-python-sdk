@@ -7,10 +7,13 @@ const { chromium } = require("playwright");
 const analytics = require("../../docs/js/analytics.js");
 
 const SITE = path.resolve(process.env.DOCS_SITE_DIR || "site");
-const ORIGIN = process.env.DOCS_ORIGIN || "https://docs.rapidata.ai";
+const ORIGIN = process.env.DOCS_ORIGIN || "https://docs.rapidata.dev";
 const HOST = new URL(ORIGIN).hostname;
 const COOKIE_DOMAIN = "." + HOST.split(".").slice(-2).join(".");
 const ENVIRONMENT = analytics.resolveAnalyticsTarget(HOST).environment;
+if (ENVIRONMENT === "production") throw new Error(`${ORIGIN} would tag test events as production`);
+// Unload flushes use sendBeacon, which bypasses Playwright routes; make every PostHog host unresolvable.
+const BLOCK_POSTHOG = "--host-resolver-rules=MAP *.posthog.com ~NOTFOUND, MAP posthog.com ~NOTFOUND";
 // posthog-js drops HeadlessChrome (UA or userAgentData brand) as a bot, so "zero requests" would pass vacuously.
 const USER_AGENT =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
@@ -48,11 +51,18 @@ async function waitForQuiet(requests, quietMs, timeout) {
 }
 
 async function openDocs() {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ args: [BLOCK_POSTHOG] });
   const context = await browser.newContext({ userAgent: USER_AGENT, viewport: { width: 1280, height: 800 } });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, "webdriver", { get: () => false });
     Object.defineProperty(navigator, "userAgentData", { get: () => undefined });
+    const sendBeacon = navigator.sendBeacon.bind(navigator);
+    navigator.sendBeacon = (url, data) => {
+      if (String(url).includes("posthog.com")) {
+        localStorage.setItem("journeyTestBeacons", String(Number(localStorage.getItem("journeyTestBeacons") || 0) + 1));
+      }
+      return sendBeacon(url, data);
+    };
   });
   const requests = [];
   const events = [];
@@ -72,12 +82,15 @@ async function openDocs() {
       events.push(...decodeEvents(request));
       return route.fulfill({ status: 200, contentType: "application/json", body: '{"status":1}' });
     }
-    if (hostname === "cdn.jsdelivr.net" || hostname === "eu-assets.i.posthog.com") return route.continue();
+    // Fetched from Node: a browser connection to *.i.posthog.com would let beacons coalesce onto it.
+    if (hostname === "eu-assets.i.posthog.com") return route.fulfill({ response: await route.fetch() });
+    if (hostname === "cdn.jsdelivr.net") return route.continue();
     return route.abort();
   });
   return { browser, context, requests, events };
 }
 
+const beaconCount = (page) => page.evaluate(() => Number(localStorage.getItem("journeyTestBeacons") || 0));
 const pageviewCount = (events, from) => events.slice(from).filter((event) => event.event === "$pageview").length;
 
 test("nothing reaches PostHog before consent or after Reject", { timeout: 180_000 }, async () => {
@@ -127,6 +140,7 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
     };
 
     let before = requests.length;
+    let beaconsBefore = await beaconCount(page);
     await page.locator("#cc-main .pm").getByRole("button", { name: "Reject analytics" }).click();
     await page.waitForTimeout(6_000);
     await navLink("signals").click();
@@ -134,6 +148,7 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
     await page.mouse.click(400, 400);
     await page.waitForTimeout(6_000);
     assert.deepEqual(requests.slice(before), [], "PostHog was contacted after Reject");
+    assert.equal(await beaconCount(page), beaconsBefore, "a beacon went to PostHog after Reject");
     await assertNothingStored();
 
     // Heatmaps flush every 5 s and drop clicks while opted out, so only a click just before re-granting can leak.
@@ -158,11 +173,13 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
 
     await waitForQuiet(requests, 6_000, 60_000);
     before = requests.length;
+    beaconsBefore = await beaconCount(page);
     await reject();
     await page.waitForTimeout(6_000);
     await page.reload();
     await page.waitForTimeout(4_000);
     assert.deepEqual(requests.slice(before), [], "PostHog was contacted after the second Reject");
+    assert.equal(await beaconCount(page), beaconsBefore, "a beacon went to PostHog after the second Reject");
     await assertNothingStored();
 
     assert.ok(events.length > 0);
@@ -241,6 +258,7 @@ test("an identity set on a sibling subdomain wins over docs' stale anonymous id"
     await page.goto(`${ORIGIN}/audiences/`);
     await waitFor(() => pageviewCount(events, returned) > 0, 20_000, "no $pageview back on docs");
     assert.equal(await page.evaluate(() => window.posthog.get_distinct_id()), customer);
+    assert.ok((await beaconCount(page)) > 0, "the unload flush to app should have gone out as a sendBeacon");
     const pageview = events.slice(returned).find((event) => event.event === "$pageview");
     assert.equal(pageview.properties.distinct_id, customer);
   } finally {
