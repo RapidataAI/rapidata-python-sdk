@@ -66,6 +66,8 @@
   const LONE_SURROGATE = /\p{Cs}/u;
   const ISO_TIMESTAMP = /^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)\.(\d{3})Z$/;
 
+  const SURFACE = "docs";
+  const CONSENT_COOKIE = { name: "cc_cookie", revision: 1, policyVersion: "2026-10-20" };
   const PRIVACY_URL = "https://rapidata.ai/privacy";
   const POSTHOG_SCRIPT = {
     url: "https://cdn.jsdelivr.net/npm/posthog-js@1.436.1/dist/array.js",
@@ -249,7 +251,7 @@
   }
 
   function surfaceProperties(environment) {
-    return { surface: "docs", environment, tracking_version: 1, event_source: "browser" };
+    return { surface: SURFACE, environment, tracking_version: 1, event_source: "browser" };
   }
 
   function superProperties(environment, attribution) {
@@ -264,15 +266,15 @@
     return OUTBOUND_HOSTS.includes(host) || host === "huggingface.co" || host.endsWith(".huggingface.co");
   }
 
-  function consentConfig(cookieDomain, root, onDecision) {
+  function consentConfig(cookieDomain, root, callbacks) {
     const description =
       "Allow analytics to connect your visits across our sites and understand how you use Rapidata. " +
       "You can change this choice later.";
     const privacyLink = '<a href="' + PRIVACY_URL + '" target="_blank" rel="noopener">Privacy policy</a>';
     return {
       root,
-      revision: 1,
-      cookie: { name: "cc_cookie", domain: cookieDomain },
+      revision: CONSENT_COOKIE.revision,
+      cookie: { name: CONSENT_COOKIE.name, domain: cookieDomain },
       categories: {
         necessary: { enabled: true, readOnly: true },
         analytics: {},
@@ -281,8 +283,10 @@
         consentModal: { layout: "box", position: "bottom right" },
         preferencesModal: { layout: "box" },
       },
-      onConsent: onDecision,
-      onChange: onDecision,
+      onFirstConsent: callbacks.onFirstConsent,
+      // onConsent replays a stored choice on every page load, so it must never capture consent_granted.
+      onConsent: callbacks.onConsent,
+      onChange: callbacks.onChange,
       language: {
         default: "en",
         translations: {
@@ -348,6 +352,7 @@
     let posthog = null;
     let posthogScript = null;
     let current = null;
+    let pendingConsentGranted = null;
 
     function readCookie(name) {
       const prefix = name + "=";
@@ -363,6 +368,17 @@
     function sendPersonProperties(instance) {
       const lastExternal = current.attribution.last ? touchProperties("last_external_", current.attribution.last) : undefined;
       instance.setPersonProperties(lastExternal, touchProperties("first_", current.attribution.first));
+    }
+
+    function captureConsentGranted(instance) {
+      if (!pendingConsentGranted) return;
+      const { change, at } = pendingConsentGranted;
+      pendingConsentGranted = null;
+      instance.capture(
+        "consent_granted",
+        { policy_version: CONSENT_COOKIE.policyVersion, change },
+        { $set_once: { first_consent_surface: SURFACE, first_consent_at: at } }
+      );
     }
 
     function grant() {
@@ -383,6 +399,7 @@
           posthog.capture("$pageview");
         }
         sendPersonProperties(posthog);
+        captureConsentGranted(posthog);
         return;
       }
       posthogScript = posthogScript || loadAsset(doc, POSTHOG_SCRIPT, false);
@@ -415,6 +432,7 @@
           // The opt-out flag survives a revoke in localStorage; without this the first $pageview is dropped.
           if (instance.has_opted_out_capturing()) instance.opt_in_capturing({ captureEventName: false });
           sendPersonProperties(instance);
+          captureConsentGranted(instance);
           posthog = instance;
         },
       });
@@ -422,6 +440,7 @@
 
     function revoke() {
       consented = false;
+      pendingConsentGranted = null;
       if (posthog) {
         posthog.opt_out_capturing();
         posthog.stopSessionRecording();
@@ -445,6 +464,17 @@
     function onDecision() {
       if (win.CookieConsent.acceptedCategory("analytics")) grant();
       else revoke();
+    }
+
+    // A click on this page's banner or preferences; grant() or loaded() captures it once PostHog is opted in.
+    function queueConsentGranted(change) {
+      if (!win.CookieConsent.acceptedCategory("analytics")) return;
+      pendingConsentGranted = { change, at: new Date().toISOString() };
+    }
+
+    function onChange({ changedCategories }) {
+      if (changedCategories.includes("analytics")) queueConsentGranted("regrant");
+      onDecision();
     }
 
     function trackOutbound(event) {
@@ -482,7 +512,15 @@
     doc.body.appendChild(consentRoot);
 
     Promise.all([loadAsset(doc, CONSENT_STYLE, true), loadAsset(doc, CONSENT_SCRIPT, false)])
-      .then(() => win.CookieConsent.run(consentConfig(sharedDomain, consentRoot, onDecision)))
+      .then(() =>
+        win.CookieConsent.run(
+          consentConfig(sharedDomain, consentRoot, {
+            onFirstConsent: () => queueConsentGranted("first"),
+            onConsent: onDecision,
+            onChange,
+          })
+        )
+      )
       .catch(() => undefined);
   }
 
@@ -496,8 +534,10 @@
       referrerRules: REFERRER_RULES,
       handoffKey: HANDOFF_KEY,
       attributionCookie: { name: ATTRIBUTION_COOKIE, maxAgeSeconds: ATTRIBUTION_MAX_AGE_SECONDS, maxChars: ATTRIBUTION_MAX_CHARS },
+      consentCookie: CONSENT_COOKIE,
       limits: { utmMaxChars: UTM_MAX, landingPathMaxChars: PATH_MAX, referrerHostMaxChars: HOST_MAX },
     },
+    startJourneyAnalytics,
     parseCampaignTouch,
     mergeAttribution,
     encodeAttributionCookie,
