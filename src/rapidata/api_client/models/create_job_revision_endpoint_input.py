@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.feature_flag import FeatureFlag
@@ -37,7 +37,9 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
     campaign_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="campaignFeatureFlags")
     aggregator_type: Optional[AggregatorType] = Field(default=None, description="The aggregator type. If not provided, inherits from the previous revision.", alias="aggregatorType")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="A validation set id to pin on this revision. When set, every job run from this  revision uses the specified validation set as the source of validation rapids  instead of audience-derived examples. If not provided, inherits from the previous  revision. Provide a wrapped null value to clear a previously pinned set.", alias="validationSetId")
-    __properties: ClassVar[List[str]] = ["workflow", "referee", "datasetId", "rapidFeatureFlags", "campaignFeatureFlags", "aggregatorType", "validationSetId"]
+    base_revision_number: Optional[StrictInt] = Field(default=None, description="The revision this one was edited from. Stored as lineage only; fields are never  inherited from it. Must refer to an existing revision of this definition.", alias="baseRevisionNumber")
+    require_latest: Optional[StrictBool] = Field(default=None, description="When true, the revision is only created if baseRevisionNumber is still the latest  revision; otherwise 409 with a latestRevisionNumber member. Requires baseRevisionNumber.", alias="requireLatest")
+    __properties: ClassVar[List[str]] = ["workflow", "referee", "datasetId", "rapidFeatureFlags", "campaignFeatureFlags", "aggregatorType", "validationSetId", "baseRevisionNumber", "requireLatest"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -104,6 +106,11 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
         if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
             _dict['validationSetId'] = None
 
+        # set to None if base_revision_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.base_revision_number is None and "base_revision_number" in self.model_fields_set:
+            _dict['baseRevisionNumber'] = None
+
         return _dict
 
     @classmethod
@@ -122,7 +129,9 @@ class CreateJobRevisionEndpointInput(LazyValidatedModel):
             "rapidFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["rapidFeatureFlags"]] if obj.get("rapidFeatureFlags") is not None else None,
             "campaignFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["campaignFeatureFlags"]] if obj.get("campaignFeatureFlags") is not None else None,
             "aggregatorType": obj.get("aggregatorType"),
-            "validationSetId": obj.get("validationSetId")
+            "validationSetId": obj.get("validationSetId"),
+            "baseRevisionNumber": obj.get("baseRevisionNumber"),
+            "requireLatest": obj.get("requireLatest")
         }
         try:
             _obj = cls.model_validate(_data)
