@@ -12,11 +12,12 @@ const HOST = new URL(ORIGIN).hostname;
 const COOKIE_DOMAIN = ".rapidata.ai";
 // Heatmaps flush every 5 s into a batch queue sent every 3 s, so a shorter quiet window can still hold events.
 const DRAIN_MS = 9_000;
-// Analytics only runs on production hosts, so pages are served locally and every PostHog host is unresolvable:
-// unload flushes use sendBeacon, which bypasses Playwright routes.
+// Analytics only runs on production hosts, so pages are served locally, and the ingest proxy and PostHog are
+// unresolvable: unload flushes use sendBeacon, which bypasses Playwright routes.
 const HOST_RULES =
-  "--host-resolver-rules=MAP docs.rapidata.ai 127.0.0.1, MAP app.rapidata.ai 127.0.0.1, " +
+  "--host-resolver-rules=MAP docs.rapidata.ai 127.0.0.1, MAP app.rapidata.ai 127.0.0.1, MAP rapidata.ai ~NOTFOUND, " +
   "MAP *.posthog.com ~NOTFOUND, MAP posthog.com ~NOTFOUND";
+const INGEST_HOSTS = ["rapidata.ai", "app.rapidata.ai"];
 // posthog-js drops HeadlessChrome (UA or userAgentData brand) as a bot, so "zero requests" would pass vacuously.
 const USER_AGENT =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
@@ -56,40 +57,50 @@ async function waitForQuiet(requests, quietMs, timeout) {
 async function openDocs() {
   const browser = await chromium.launch({ args: [HOST_RULES] });
   const probe = await browser.newPage();
-  const blocked = await probe.goto("https://eu.i.posthog.com/").then(() => "", (error) => error.message);
-  await probe.close();
-  if (!/ERR_NAME_NOT_RESOLVED/.test(blocked)) {
-    await browser.close();
-    throw new Error("PostHog must be unreachable from the test browser");
+  for (const url of ["https://eu.i.posthog.com/", "https://rapidata.ai/ingest/"]) {
+    const blocked = await probe.goto(url).then(() => "", (error) => error.message);
+    if (!/ERR_NAME_NOT_RESOLVED/.test(blocked)) {
+      await browser.close();
+      throw new Error(`${url} must be unreachable from the test browser`);
+    }
   }
+  await probe.close();
   const context = await browser.newContext({ userAgent: USER_AGENT, viewport: { width: 1280, height: 800 } });
   await context.addInitScript(() => {
     Object.defineProperty(navigator, "webdriver", { get: () => false });
     Object.defineProperty(navigator, "userAgentData", { get: () => undefined });
     const sendBeacon = navigator.sendBeacon.bind(navigator);
     navigator.sendBeacon = (url, data) => {
-      if (String(url).includes("posthog.com")) {
+      if (String(url).includes("/ingest/") || String(url).includes("posthog.com")) {
         localStorage.setItem("journeyTestBeacons", String(Number(localStorage.getItem("journeyTestBeacons") || 0) + 1));
       }
       return sendBeacon(url, data);
     };
   });
   const requests = [];
+  const direct = [];
   const events = [];
   await context.route("**/*", async (route) => {
     const request = route.request();
-    const { hostname } = new URL(request.url());
-    if (hostname.endsWith("posthog.com")) requests.push(request.url());
+    const { hostname, pathname, search } = new URL(request.url());
+    if (hostname.endsWith("posthog.com")) {
+      direct.push(request.url());
+      return route.abort();
+    }
+    if (INGEST_HOSTS.includes(hostname) && pathname.startsWith("/ingest/")) {
+      requests.push(request.url());
+      const upstream = pathname.slice("/ingest".length);
+      // Like the Website rewrite, assets come from eu-assets, fetched from Node so the browser holds no connection.
+      if (/^\/(static|array)\//.test(upstream)) {
+        return route.fulfill({ response: await route.fetch({ url: `https://eu-assets.i.posthog.com${upstream}${search}` }) });
+      }
+      events.push(...decodeEvents(request));
+      return route.fulfill({ status: 200, contentType: "application/json", body: '{"status":1}' });
+    }
     if (hostname === HOST) {
       const file = localFile(request.url());
       return fs.existsSync(file) ? route.fulfill({ path: file }) : route.fulfill({ status: 404, body: "" });
     }
-    if (hostname === "eu.i.posthog.com") {
-      events.push(...decodeEvents(request));
-      return route.fulfill({ status: 200, contentType: "application/json", body: '{"status":1}' });
-    }
-    // Fetched from Node: a browser connection to *.i.posthog.com would let beacons coalesce onto it.
-    if (hostname === "eu-assets.i.posthog.com") return route.fulfill({ response: await route.fetch() });
     if (hostname === "cdn.jsdelivr.net") return route.continue();
     return route.abort();
   });
@@ -97,7 +108,7 @@ async function openDocs() {
     await context.unrouteAll({ behavior: "ignoreErrors" });
     await browser.close();
   };
-  return { context, close, requests, events };
+  return { context, close, requests, direct, events };
 }
 
 const beaconCount = (page) => page.evaluate(() => Number(localStorage.getItem("journeyTestBeacons") || 0));
@@ -109,7 +120,7 @@ const consentChanges = (events, from) =>
     .map((event) => event.properties.change);
 
 test("nothing reaches PostHog before consent or after Reject", { timeout: 180_000 }, async () => {
-  const { context, close, requests, events } = await openDocs();
+  const { context, close, requests, direct, events } = await openDocs();
   try {
     const page = await context.newPage();
     const banner = page.locator("#cc-main .cm");
@@ -223,13 +234,18 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
       assert.equal(properties.environment, "production", event);
       assert.equal(properties.surface, "docs", event);
     }
+    assert.deepEqual(direct, [], "the browser called PostHog directly instead of rapidata.ai/ingest");
+    assert.ok(requests.every((url) => url.startsWith("https://rapidata.ai/ingest/")), requests.join("\n"));
+    for (const path of [/\/ingest\/array\//, /\/ingest\/static\/1\.436\.1\//, /\/ingest\/(i\/v0\/)?e\//]) {
+      assert.ok(requests.some((url) => path.test(url)), `expected a request matching ${path}`);
+    }
   } finally {
     await close();
   }
 });
 
 test("one $pageview and one consent_granted per Allow click, none for a stored choice", { timeout: 180_000 }, async () => {
-  const { context, close, requests, events } = await openDocs();
+  const { context, close, requests, direct, events } = await openDocs();
   try {
     const page = await context.newPage();
     const preferences = page.locator("#cc-main .pm");
@@ -279,13 +295,14 @@ test("one $pageview and one consent_granted per Allow click, none for a stored c
     await waitForQuiet(requests, 6_000, 60_000);
     assert.equal(pageviewCount(events, later), 1, "re-allow on a later page load");
     assert.deepEqual(consentChanges(events, later), ["regrant"]);
+    assert.deepEqual(direct, [], "the browser called PostHog directly");
   } finally {
     await close();
   }
 });
 
 test("an identity set on a sibling subdomain wins over docs' stale anonymous id", { timeout: 120_000 }, async () => {
-  const { context, close, events } = await openDocs();
+  const { context, close, direct, events } = await openDocs();
   const { posthog } = analytics.constants.assets;
   const app = `https://app${COOKIE_DOMAIN}`;
   await context.route(`${app}/identify.html*`, (route) =>
@@ -294,7 +311,7 @@ test("an identity set on a sibling subdomain wins over docs' stale anonymous id"
       body: `<!doctype html><script src="${posthog.url}" integrity="${posthog.integrity}" crossorigin="anonymous"></script>
 <script>
   posthog.init("${analytics.constants.token}", {
-    api_host: "https://eu.i.posthog.com", defaults: "2026-05-30", persistence: "localStorage+cookie",
+    api_host: "/ingest", ui_host: "https://eu.posthog.com", defaults: "2026-05-30", persistence: "localStorage+cookie",
     cross_subdomain_cookie: true, cookieWinsOnConflict: true, advanced_disable_feature_flags: true,
     autocapture: false, capture_pageview: false,
     loaded: (ph) => { window.before = ph.get_distinct_id(); ph.identify(new URLSearchParams(location.search).get("id")); },
@@ -321,6 +338,7 @@ test("an identity set on a sibling subdomain wins over docs' stale anonymous id"
     assert.ok((await beaconCount(page)) > 0, "the unload flush to app should have gone out as a sendBeacon");
     const pageview = events.slice(returned).find((event) => event.event === "$pageview");
     assert.equal(pageview.properties.distinct_id, customer);
+    assert.deepEqual(direct, [], "the browser called PostHog directly");
   } finally {
     await close();
   }
