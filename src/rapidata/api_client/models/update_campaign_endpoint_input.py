@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.boosting_profile import BoostingProfile
 from rapidata.api_client.models.feature_flag import FeatureFlag
@@ -33,13 +33,14 @@ class UpdateCampaignEndpointInput(LazyValidatedModel):
     """ # noqa: E501
     name: Optional[StrictStr] = Field(default=None, description="The new name for the campaign.")
     priority: Optional[StrictInt] = Field(default=None, description="The new priority value for the campaign.")
+    is_language_experiment_enabled: Optional[StrictBool] = Field(default=None, description="Whether eligible sessions of the campaign take part in the language experiment.", alias="isLanguageExperimentEnabled")
     boost_level: Optional[StrictInt] = Field(default=None, description="The campaign's boost level. Set 1-10 to boost, 0 to clear. The server derives the  boost slots from the campaign's filters; a BoostingProfile sent alongside  only contributes its auto-adjust bounds and prospect blacklist.", alias="boostLevel")
     boosting_profile: Optional[BoostingProfile] = Field(default=None, description="The boosting profile configuration. Its boost slots apply only when no  BoostLevel is sent; prefer BoostLevel and let the server derive them.", alias="boostingProfile")
     sticky_config: Optional[StickyConfig] = Field(default=None, description="The sticky behavior configuration.", alias="stickyConfig")
     filters: Optional[List[ICampaignFilter]] = None
     selections: Optional[List[ICampaignSelection]] = None
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["name", "priority", "boostLevel", "boostingProfile", "stickyConfig", "filters", "selections", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["name", "priority", "isLanguageExperimentEnabled", "boostLevel", "boostingProfile", "stickyConfig", "filters", "selections", "featureFlags"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -117,6 +118,7 @@ class UpdateCampaignEndpointInput(LazyValidatedModel):
         _data = {
             "name": obj.get("name"),
             "priority": obj.get("priority"),
+            "isLanguageExperimentEnabled": obj.get("isLanguageExperimentEnabled"),
             "boostLevel": obj.get("boostLevel"),
             "boostingProfile": BoostingProfile.from_dict(obj["boostingProfile"]) if obj.get("boostingProfile") is not None else None,
             "stickyConfig": StickyConfig.from_dict(obj["stickyConfig"]) if obj.get("stickyConfig") is not None else None,

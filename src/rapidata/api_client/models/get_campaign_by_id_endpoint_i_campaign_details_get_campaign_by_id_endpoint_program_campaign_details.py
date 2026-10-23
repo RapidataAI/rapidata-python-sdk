@@ -47,6 +47,7 @@ class GetCampaignByIdEndpointICampaignDetailsGetCampaignByIdEndpointProgramCampa
     filters: List[ICampaignFilter]
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     experiment_id: Optional[StrictStr] = Field(default=None, description="The id of the experiment attached to this campaign, or null when none is attached.", alias="experimentId")
+    is_language_experiment_enabled: StrictBool = Field(description="Whether eligible sessions of the campaign take part in the language experiment.", alias="isLanguageExperimentEnabled")
     owner_mail: StrictStr = Field(description="The email of the campaign owner.", alias="ownerMail")
     organization_id: StrictStr = Field(description="The id of the organization that owns the campaign.", alias="organizationId")
     created_at: datetime = Field(description="The timestamp when the campaign was created.", alias="createdAt")
@@ -55,7 +56,7 @@ class GetCampaignByIdEndpointICampaignDetailsGetCampaignByIdEndpointProgramCampa
     nodes: Dict[str, IProgramNode] = Field(description="The program's decision graph, keyed by node id.")
     max_rapids: StrictInt = Field(description="The session ends after this many counted responses.", alias="maxRapids")
     max_duration_seconds: StrictInt = Field(description="The session ends after this many seconds.", alias="maxDurationSeconds")
-    __properties: ClassVar[List[str]] = ["_t", "id", "name", "status", "priority", "boostingProfile", "boostingControlMode", "hasBooster", "boostLevel", "stickyConfig", "filters", "featureFlags", "experimentId", "ownerMail", "organizationId", "createdAt", "version", "rootNodeId", "nodes", "maxRapids", "maxDurationSeconds"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "name", "status", "priority", "boostingProfile", "boostingControlMode", "hasBooster", "boostLevel", "stickyConfig", "filters", "featureFlags", "experimentId", "isLanguageExperimentEnabled", "ownerMail", "organizationId", "createdAt", "version", "rootNodeId", "nodes", "maxRapids", "maxDurationSeconds"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -156,6 +157,7 @@ class GetCampaignByIdEndpointICampaignDetailsGetCampaignByIdEndpointProgramCampa
             "filters": [ICampaignFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "experimentId": obj.get("experimentId"),
+            "isLanguageExperimentEnabled": obj.get("isLanguageExperimentEnabled"),
             "ownerMail": obj.get("ownerMail"),
             "organizationId": obj.get("organizationId"),
             "createdAt": obj.get("createdAt"),

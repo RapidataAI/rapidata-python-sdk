@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.10.21.1506-aec78f3"
+    "version": "2026.10.22.2043-69fe913"
   },
   "servers": [
     {
@@ -2690,6 +2690,7 @@
           "stickyConfig",
           "filters",
           "featureFlags",
+          "isLanguageExperimentEnabled",
           "ownerMail",
           "organizationId",
           "createdAt",
@@ -2793,6 +2794,10 @@
             "description": "The id of the experiment attached to this campaign, or null when none is attached.",
             "nullable": true
           },
+          "isLanguageExperimentEnabled": {
+            "type": "boolean",
+            "description": "Whether eligible sessions of the campaign take part in the language experiment."
+          },
           "ownerMail": {
             "type": "string",
             "description": "The email of the campaign owner."
@@ -2853,6 +2858,7 @@
           "filters",
           "selections",
           "featureFlags",
+          "isLanguageExperimentEnabled",
           "ownerMail",
           "organizationId",
           "createdAt",
@@ -2961,6 +2967,10 @@
             "type": "string",
             "description": "The id of the experiment attached to this campaign, or null when none is attached.",
             "nullable": true
+          },
+          "isLanguageExperimentEnabled": {
+            "type": "boolean",
+            "description": "Whether eligible sessions of the campaign take part in the language experiment."
           },
           "ownerMail": {
             "type": "string",
@@ -4886,6 +4896,10 @@
             "type": "integer",
             "description": "The new priority value for the campaign.",
             "format": "int32"
+          },
+          "isLanguageExperimentEnabled": {
+            "type": "boolean",
+            "description": "Whether eligible sessions of the campaign take part in the language experiment."
           },
           "requiresBooster": {
             "type": "boolean",

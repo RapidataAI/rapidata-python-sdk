@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.10.21.1506-aec78f3"
+    "version": "2026.10.22.2043-69fe913"
   },
   "servers": [
     {
@@ -400,6 +400,165 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/authorization/relations/clickhouse": {
+      "get": {
+        "tags": [
+          "ClickHouse"
+        ],
+        "summary": "Lists every grantable ClickHouse database with its members and agent ceiling.",
+        "description": "Databases with no grants are included, with no members and a None ceiling.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetClickHouseAccessEndpoint_Output"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ClickHouse"
+        ],
+        "summary": "Sets a customer's access to a ClickHouse database to exactly the given relation.",
+        "description": "Replaces the customer's other relation on the same database. Idempotent. 400 when the database is not grantable.",
+        "requestBody": {
+          "description": "The customer, the database and the relation to grant.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrantClickHouseRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ClickHouse"
+        ],
+        "summary": "Revokes a relation on a ClickHouse database from a customer.",
+        "description": "Idempotent: revoking a relation that was never granted is a no-op. 400 when the database is not grantable.",
+        "requestBody": {
+          "description": "The customer, the database and the relation to revoke.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeClickHouseRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/authorization/relations/clickhouse/agent": {
+      "put": {
+        "tags": [
+          "ClickHouse"
+        ],
+        "summary": "Sets the agent ceiling on a ClickHouse database; an agent gets the lesser of this and its owner's access.",
+        "description": "None denies agents the database. Idempotent. 400 when the database is not grantable.",
+        "requestBody": {
+          "description": "The database and the ceiling to set.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetClickHouseAgentCeilingEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "204": {
             "description": "No Content"
@@ -3041,6 +3200,21 @@
         ],
         "description": "Relations on the singleton `bidder` object that carries global RTB access. Grants are\ndirect here and, unlike Organization, are never folded in from platform staff."
       },
+      "AuthorizationRelations_ClickHouseAgentCeiling": {
+        "enum": [
+          "None",
+          "Reader",
+          "Writer"
+        ],
+        "description": "The most an `agent` may do on a `clickhouse_database`, whoever it acts for.\nClickHouseAgentCeiling.None means no agent tuple exists on the database."
+      },
+      "AuthorizationRelations_ClickHouseDatabase": {
+        "enum": [
+          "Reader",
+          "Writer"
+        ],
+        "description": "Relations a customer holds on a `clickhouse_database`, one object per ClickHouse\ndatabase name. `writer` folds into `reader`."
+      },
       "AuthorizationRelations_ExternalApp": {
         "enum": [
           "Admin",
@@ -3496,6 +3670,54 @@
           }
         }
       },
+      "GetClickHouseAccessEndpoint_Member": {
+        "required": [
+          "customer",
+          "email",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseDatabase"
+          }
+        }
+      },
+      "GetClickHouseAccessEndpoint_Output": {
+        "required": [
+          "database",
+          "members",
+          "agentCeiling"
+        ],
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string",
+            "description": "The ClickHouse database name."
+          },
+          "members": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetClickHouseAccessEndpoint_Member"
+                }
+              }
+            ],
+            "description": "The customers holding a relation on the database."
+          },
+          "agentCeiling": {
+            "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseAgentCeiling"
+          }
+        }
+      },
       "GetCustomerCapabilitiesEndpoint_Output": {
         "required": [
           "capabilities"
@@ -3713,6 +3935,16 @@
           "idToken": {
             "type": "string",
             "description": "The id token received from the Google One Tap login."
+          },
+          "analyticsConsent": {
+            "type": "boolean",
+            "description": "Whether the visitor allowed analytics; the request carries no cookies.",
+            "nullable": true
+          },
+          "analyticsAnonymousId": {
+            "type": "string",
+            "description": "The browser's anonymous analytics id, merged into the customer when allowed.",
+            "nullable": true
           }
         }
       },
@@ -3747,6 +3979,28 @@
           },
           "relation": {
             "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
+          }
+        }
+      },
+      "GrantClickHouseRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "database",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to grant the relation to.",
+            "format": "uuid"
+          },
+          "database": {
+            "type": "string",
+            "description": "The ClickHouse database name."
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseDatabase"
           }
         }
       },
@@ -4465,6 +4719,28 @@
           }
         }
       },
+      "RevokeClickHouseRelationEndpoint_Input": {
+        "required": [
+          "customer",
+          "database",
+          "relation"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer to revoke the relation from.",
+            "format": "uuid"
+          },
+          "database": {
+            "type": "string",
+            "description": "The ClickHouse database name."
+          },
+          "relation": {
+            "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseDatabase"
+          }
+        }
+      },
       "RevokeExternalAppRelationEndpoint_Input": {
         "required": [
           "customer",
@@ -4519,6 +4795,22 @@
               }
             ],
             "description": "The fields of the survey."
+          }
+        }
+      },
+      "SetClickHouseAgentCeilingEndpoint_Input": {
+        "required": [
+          "database",
+          "ceiling"
+        ],
+        "type": "object",
+        "properties": {
+          "database": {
+            "type": "string",
+            "description": "The ClickHouse database name."
+          },
+          "ceiling": {
+            "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseAgentCeiling"
           }
         }
       },
