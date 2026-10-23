@@ -42,12 +42,15 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
     workflow: IOrderWorkflowInput = Field(description="The workflow configuration. Can be used directly to create a new revision.")
     referee: IReferee = Field(description="The referee configuration. Can be used directly to create a new revision.")
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
+    campaign_feature_flags: List[FeatureFlag] = Field(alias="campaignFeatureFlags")
+    validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set pinned on this revision, or null when none is pinned.", alias="validationSetId")
+    base_revision_number: Optional[StrictInt] = Field(default=None, description="The revision this one was edited from, when the caller supplied it.", alias="baseRevisionNumber")
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     created_by_id: UUID = Field(description="The id of the user who created the revision.", alias="createdById")
     created_by_mail: StrictStr = Field(description="The email of the user who created the revision.", alias="createdByMail")
     is_instruction_complex: Optional[StrictBool] = Field(default=None, description="Whether the instruction was flagged as too complex for the average annotator to  understand. Null until the asynchronous complexity check has completed.", alias="isInstructionComplex")
     instruction_complexity_reason: Optional[StrictStr] = Field(default=None, description="A short explanation of why the instruction was flagged, when applicable.", alias="instructionComplexityReason")
-    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "state", "pipelineId", "datasetId", "aggregatorType", "workflow", "referee", "featureFlags", "createdAt", "createdById", "createdByMail", "isInstructionComplex", "instructionComplexityReason"]
+    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "state", "pipelineId", "datasetId", "aggregatorType", "workflow", "referee", "featureFlags", "campaignFeatureFlags", "validationSetId", "baseRevisionNumber", "createdAt", "createdById", "createdByMail", "isInstructionComplex", "instructionComplexityReason"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -97,10 +100,27 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in campaign_feature_flags (list)
+        _items = []
+        if self.campaign_feature_flags:
+            for _item_campaign_feature_flags in self.campaign_feature_flags:
+                if _item_campaign_feature_flags:
+                    _items.append(_item_campaign_feature_flags.to_dict())
+            _dict['campaignFeatureFlags'] = _items
         # set to None if aggregator_type (nullable) is None
         # and model_fields_set contains the field
         if self.aggregator_type is None and "aggregator_type" in self.model_fields_set:
             _dict['aggregatorType'] = None
+
+        # set to None if validation_set_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
+            _dict['validationSetId'] = None
+
+        # set to None if base_revision_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.base_revision_number is None and "base_revision_number" in self.model_fields_set:
+            _dict['baseRevisionNumber'] = None
 
         # set to None if is_instruction_complex (nullable) is None
         # and model_fields_set contains the field
@@ -133,6 +153,9 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
             "workflow": IOrderWorkflowInput.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
             "referee": IReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "campaignFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["campaignFeatureFlags"]] if obj.get("campaignFeatureFlags") is not None else None,
+            "validationSetId": obj.get("validationSetId"),
+            "baseRevisionNumber": obj.get("baseRevisionNumber"),
             "createdAt": obj.get("createdAt"),
             "createdById": obj.get("createdById"),
             "createdByMail": obj.get("createdByMail"),

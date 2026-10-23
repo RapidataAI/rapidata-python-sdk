@@ -864,15 +864,14 @@ third_def = client.job.create_classification_job_definition(
 third = audience.assign_job(third_def, run_after=second.id)
 ```
 
-## Updating a Job Definition's Dataset
+## Editing a Job Definition
 
 ```python
-# Keep the job definition (and its config / audience) but swap in new datapoints.
-job_def.update_dataset(
-    datapoints=["new1.jpg", "new2.jpg", "new3.jpg"],
-    data_type="media",
-    contexts=["ctx 1", "ctx 2", "ctx 3"],
-)
+job_def = client.job.get_job_definition_by_id("job_definition_id")
+job_def.instruction = "Which image looks more realistic?"
+job_def.save()                      # creates a new revision; job_def now holds it
+
+job = audience.assign_job(job_def)  # runs job_def.revision
 ```
 
 ## Checking Job Progress Without Blocking

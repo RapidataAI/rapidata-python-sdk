@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.10.22.2043-69fe913"
+    "version": "2026.10.23.1246-9b4eb7f"
   },
   "servers": [
     {
@@ -257,7 +257,7 @@
           "Job"
         ],
         "summary": "Creates a new revision for an existing job definition.",
-        "description": "Unspecified fields are inherited from the previous revision. Workflow and Referee must be\n provided together if either is specified.",
+        "description": "Unspecified fields are inherited from the latest revision. Revision numbers are allocated\n atomically; set requireLatest to get 409 instead of overwriting a newer revision.",
         "parameters": [
           {
             "name": "definitionId",
@@ -6143,6 +6143,16 @@
             "type": "string",
             "description": "A validation set id to pin on this revision. When set, every job run from this\n revision uses the specified validation set as the source of validation rapids\n instead of audience-derived examples. If not provided, inherits from the previous\n revision. Provide a wrapped null value to clear a previously pinned set.",
             "nullable": true
+          },
+          "baseRevisionNumber": {
+            "type": "integer",
+            "description": "The revision this one was edited from. Stored as lineage only; fields are never\n inherited from it. Must refer to an existing revision of this definition.",
+            "format": "int32",
+            "nullable": true
+          },
+          "requireLatest": {
+            "type": "boolean",
+            "description": "When true, the revision is only created if baseRevisionNumber is still the latest\n revision; otherwise 409 with a latestRevisionNumber member. Requires baseRevisionNumber."
           }
         },
         "description": "The input for the create job revision endpoint."
@@ -7194,6 +7204,7 @@
           "workflow",
           "referee",
           "featureFlags",
+          "campaignFeatureFlags",
           "createdAt",
           "createdById",
           "createdByMail"
@@ -7260,7 +7271,29 @@
                 }
               }
             ],
-            "description": "The feature flags."
+            "description": "The rapid-level feature flags. Send back as rapidFeatureFlags to create a new revision."
+          },
+          "campaignFeatureFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "The campaign-level (session-wide) feature flags."
+          },
+          "validationSetId": {
+            "type": "string",
+            "description": "The validation set pinned on this revision, or null when none is pinned.",
+            "nullable": true
+          },
+          "baseRevisionNumber": {
+            "type": "integer",
+            "description": "The revision this one was edited from, when the caller supplied it.",
+            "format": "int32",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -11662,6 +11695,12 @@
             "type": "integer",
             "description": "The revision number.",
             "format": "int32"
+          },
+          "baseRevisionNumber": {
+            "type": "integer",
+            "description": "The revision this one was edited from, when the caller supplied it.",
+            "format": "int32",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",

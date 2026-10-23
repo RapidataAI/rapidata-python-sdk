@@ -690,11 +690,14 @@ class RapidataJobManager:
                 failure_tolerance=failure_tolerance,
             )
 
-    def get_job_definition_by_id(self, job_definition_id: str) -> RapidataJobDefinition:
-        """Get a job definition by ID.
+    def get_job_definition_by_id(
+        self, job_definition_id: str, revision: int | None = None
+    ) -> RapidataJobDefinition:
+        """Get a job definition by ID, loaded at one revision.
 
         Args:
             job_definition_id (str): The ID of the job definition.
+            revision (int, optional): The revision to load. Defaults to None, the latest.
 
         Returns:
             JobDefinition: The JobDefinition instance.
@@ -707,11 +710,13 @@ class RapidataJobManager:
                 )
             )
 
-            return RapidataJobDefinition(
+            definition = RapidataJobDefinition(
                 id=job_definition.definition_id,
                 name=job_definition.name,
                 openapi_service=self._openapi_service,
             )
+            definition.reload(revision)
+            return definition
 
     def find_job_definitions(
         self, name: str = "", amount: int = 10, page: int = 1

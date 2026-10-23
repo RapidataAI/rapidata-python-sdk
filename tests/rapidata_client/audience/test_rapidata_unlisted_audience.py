@@ -100,7 +100,7 @@ def test_assign_job_shares_link_instead_of_recruiting_warning(monkeypatch, capsy
     warn = MagicMock()
     monkeypatch.setattr(base_module.logger, "warning", warn)
 
-    job = audience.assign_job(MagicMock(id="def-1", name="My Job"))
+    job = audience.assign_job(MagicMock(id="def-1", name="My Job", revision=1, has_unsaved_changes=False))
 
     sent = openapi_service.order.job_api.job_post.call_args.kwargs[
         "create_job_endpoint_input"

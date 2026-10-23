@@ -17,7 +17,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.job_definition_revision_state import JobDefinitionRevisionState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -30,9 +30,10 @@ class QueryJobRevisionsEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     definition_id: StrictStr = Field(description="The id of the job definition this revision belongs to.", alias="definitionId")
     revision_number: StrictInt = Field(description="The revision number.", alias="revisionNumber")
+    base_revision_number: Optional[StrictInt] = Field(default=None, description="The revision this one was edited from, when the caller supplied it.", alias="baseRevisionNumber")
     created_at: datetime = Field(description="The timestamp when this revision was created.", alias="createdAt")
     state: JobDefinitionRevisionState = Field(description="The current state of the revision.")
-    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "createdAt", "state"]
+    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "baseRevisionNumber", "createdAt", "state"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -69,6 +70,11 @@ class QueryJobRevisionsEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if base_revision_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.base_revision_number is None and "base_revision_number" in self.model_fields_set:
+            _dict['baseRevisionNumber'] = None
+
         return _dict
 
     @classmethod
@@ -83,6 +89,7 @@ class QueryJobRevisionsEndpointOutput(LazyValidatedModel):
         _data = {
             "definitionId": obj.get("definitionId"),
             "revisionNumber": obj.get("revisionNumber"),
+            "baseRevisionNumber": obj.get("baseRevisionNumber"),
             "createdAt": obj.get("createdAt"),
             "state": obj.get("state")
         }

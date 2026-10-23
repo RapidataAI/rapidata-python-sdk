@@ -40,7 +40,7 @@ def test_assign_job_warns_on_cost_warning(monkeypatch):
     warn = MagicMock()
     monkeypatch.setattr(base_module.logger, "warning", warn)
 
-    audience.assign_job(MagicMock(id="def-1", name="My Job"))
+    audience.assign_job(MagicMock(id="def-1", name="My Job", revision=1, has_unsaved_changes=False))
 
     warn.assert_called_once()
     args = warn.call_args.args
@@ -62,7 +62,7 @@ def test_assign_job_no_warning_when_cost_within_balance(monkeypatch):
     warn = MagicMock()
     monkeypatch.setattr(base_module.logger, "warning", warn)
 
-    job = audience.assign_job(MagicMock(id="def-1", name="My Job"))
+    job = audience.assign_job(MagicMock(id="def-1", name="My Job", revision=1, has_unsaved_changes=False))
 
     warn.assert_not_called()
     assert job.id == "job-1"
@@ -77,7 +77,7 @@ def test_assign_job_sends_no_experiment_id():
     response.content_check_skip_denied = None
     openapi_service.order.job_api.job_post.return_value = response
 
-    job = audience.assign_job(MagicMock(id="def-1", name="My Job"))
+    job = audience.assign_job(MagicMock(id="def-1", name="My Job", revision=1, has_unsaved_changes=False))
 
     posted_input = openapi_service.order.job_api.job_post.call_args.kwargs[
         "create_job_endpoint_input"
@@ -96,7 +96,7 @@ def test_create_job_with_experiment_id_sets_job_experiment_id():
     openapi_service.order.job_api.job_post.return_value = response
 
     job = audience._create_job(
-        MagicMock(id="def-1", name="My Job"), experiment_id="exp-1"
+        MagicMock(id="def-1", name="My Job", revision=1, has_unsaved_changes=False), experiment_id="exp-1"
     )
 
     posted_input = openapi_service.order.job_api.job_post.call_args.kwargs[
@@ -123,7 +123,7 @@ def test_assign_job_queues_behind_a_job():
         definition_id="def-1",
         openapi_service=openapi_service,
     )
-    audience.assign_job(MagicMock(id="def-2", name="Second"), run_after=preceding)
+    audience.assign_job(MagicMock(id="def-2", name="Second", revision=1, has_unsaved_changes=False), run_after=preceding)
 
     posted_input = openapi_service.order.job_api.job_post.call_args.kwargs[
         "create_job_endpoint_input"
@@ -140,7 +140,7 @@ def test_assign_job_queues_behind_a_job_id():
     response.content_check_skip_denied = None
     openapi_service.order.job_api.job_post.return_value = response
 
-    audience.assign_job(MagicMock(id="def-2", name="Second"), run_after="job-1")
+    audience.assign_job(MagicMock(id="def-2", name="Second", revision=1, has_unsaved_changes=False), run_after="job-1")
 
     posted_input = openapi_service.order.job_api.job_post.call_args.kwargs[
         "create_job_endpoint_input"
@@ -157,7 +157,7 @@ def test_assign_job_sends_no_preceding_job_by_default():
     response.content_check_skip_denied = None
     openapi_service.order.job_api.job_post.return_value = response
 
-    audience.assign_job(MagicMock(id="def-1", name="My Job"))
+    audience.assign_job(MagicMock(id="def-1", name="My Job", revision=1, has_unsaved_changes=False))
 
     posted_input = openapi_service.order.job_api.job_post.call_args.kwargs[
         "create_job_endpoint_input"

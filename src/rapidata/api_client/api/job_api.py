@@ -1760,7 +1760,7 @@ class JobApi:
     ) -> CreateJobRevisionEndpointOutput:
         """Creates a new revision for an existing job definition.
 
-        Unspecified fields are inherited from the previous revision. Workflow and Referee must be  provided together if either is specified.
+        Unspecified fields are inherited from the latest revision. Revision numbers are allocated  atomically; set requireLatest to get 409 instead of overwriting a newer revision.
 
         :param definition_id: The id of the job definition to create a revision for. (required)
         :type definition_id: str
@@ -1834,7 +1834,7 @@ class JobApi:
     ) -> ApiResponse[CreateJobRevisionEndpointOutput]:
         """Creates a new revision for an existing job definition.
 
-        Unspecified fields are inherited from the previous revision. Workflow and Referee must be  provided together if either is specified.
+        Unspecified fields are inherited from the latest revision. Revision numbers are allocated  atomically; set requireLatest to get 409 instead of overwriting a newer revision.
 
         :param definition_id: The id of the job definition to create a revision for. (required)
         :type definition_id: str
@@ -1908,7 +1908,7 @@ class JobApi:
     ) -> RESTResponseType:
         """Creates a new revision for an existing job definition.
 
-        Unspecified fields are inherited from the previous revision. Workflow and Referee must be  provided together if either is specified.
+        Unspecified fields are inherited from the latest revision. Revision numbers are allocated  atomically; set requireLatest to get 409 instead of overwriting a newer revision.
 
         :param definition_id: The id of the job definition to create a revision for. (required)
         :type definition_id: str
