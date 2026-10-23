@@ -152,6 +152,21 @@ job_definitions = client.job.find_job_definitions("Example Image Prompt Alignmen
 job_definition = client.job.get_job_definition_by_id("job_definition_id")
 ```
 
+### Edit a Job Definition
+
+A job definition object holds one revision. Changing a property only stages it; `save()` creates a new revision from the loaded one plus your changes, and `assign_job` runs the revision the object holds.
+
+```py
+job_definition = client.job.get_job_definition_by_id("job_definition_id")
+job_definition.instruction = "Which image looks more realistic?"
+job_definition.responses_per_datapoint = 15
+job_definition.save()                       # returns the new revision number
+
+job = audience.assign_job(job_definition)   # runs job_definition.revision
+```
+
+Editable properties are `instruction`, `answer_options` (classification), `responses_per_datapoint`, `settings` and `validation_set_id`; `set_datapoints(...)` stages a new dataset. Changes another user saved after you loaded are not merged in. Pass `save(require_latest=True)` to raise `RevisionConflictError` instead of saving over them.
+
 ### Find Jobs
 
 ```py
