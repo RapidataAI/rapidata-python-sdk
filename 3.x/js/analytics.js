@@ -410,7 +410,8 @@
       if (!consented || initialized) return;
       initialized = true;
       win.posthog.init(target.token, {
-        api_host: "https://eu.i.posthog.com",
+        // GitHub Pages cannot proxy, so docs sends through the Website's same-site /ingest rewrite.
+        api_host: "https://rapidata.ai/ingest",
         ui_host: "https://eu.posthog.com",
         defaults: "2026-05-30",
         persistence: "localStorage+cookie",
