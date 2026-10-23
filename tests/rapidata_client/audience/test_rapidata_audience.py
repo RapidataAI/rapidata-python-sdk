@@ -44,7 +44,7 @@ def test_assign_job_warns_when_no_annotators_have_graduated(monkeypatch):
     warn = MagicMock()
     monkeypatch.setattr(audience_module.logger, "warning", warn)
 
-    audience.assign_job(MagicMock(id="def-1", name="My Job"))
+    audience.assign_job(MagicMock(id="def-1", name="My Job", revision=1, has_unsaved_changes=False))
 
     warn.assert_called_once()
     message = warn.call_args.args[0].lower()
@@ -58,7 +58,7 @@ def test_assign_job_no_warning_when_audience_has_graduated_annotators(monkeypatc
     warn = MagicMock()
     monkeypatch.setattr(audience_module.logger, "warning", warn)
 
-    job = audience.assign_job(MagicMock(id="def-1", name="My Job"))
+    job = audience.assign_job(MagicMock(id="def-1", name="My Job", revision=1, has_unsaved_changes=False))
 
     warn.assert_not_called()
     assert job.id == "job-1"

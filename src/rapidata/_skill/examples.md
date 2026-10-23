@@ -864,15 +864,33 @@ third_def = client.job.create_classification_job_definition(
 third = audience.assign_job(third_def, run_after=second.id)
 ```
 
-## Updating a Job Definition's Dataset
+## Editing a Job Definition
 
 ```python
-# Keep the job definition (and its config / audience) but swap in new datapoints.
-job_def.update_dataset(
+from rapidata import RapidataClient, RevisionConflictError
+
+client = RapidataClient()
+job_def = client.job.get_job_definition_by_id("job_definition_id")  # latest revision
+print(job_def.revision, job_def.instruction)
+
+# Staged locally; nothing is sent until save().
+job_def.instruction = "Which image looks more realistic?"
+job_def.responses_per_datapoint = 15
+job_def.set_datapoints(                      # uploads now, staged for save()
     datapoints=["new1.jpg", "new2.jpg", "new3.jpg"],
     data_type="media",
-    contexts=["ctx 1", "ctx 2", "ctx 3"],
 )
+
+try:
+    job_def.save(require_latest=True)        # fail instead of overwriting a newer revision
+except RevisionConflictError as e:
+    print(f"revision {e.latest_revision} was saved since; reload and reapply")
+    raise
+
+job = audience.assign_job(job_def)           # runs exactly job_def.revision
+
+# A specific older revision:
+old = client.job.get_job_definition_by_id("job_definition_id", revision=1)
 ```
 
 ## Checking Job Progress Without Blocking

@@ -200,6 +200,7 @@ class JobDefinitionCreationMachine:
             id=response.definition_id,
             name=self._name,
             openapi_service=self._openapi_service,
+            revision=1,
         )
 
         print_job_definition_preview_link(

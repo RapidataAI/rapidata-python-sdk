@@ -70,7 +70,9 @@ def test_run_experiment_posts_to_audience_id_with_experiment_id():
     audience = RapidataAudienceBase(
         id="aud-1", name="Aud", filters=[], openapi_service=audience_openapi_service
     )
-    job_definition = MagicMock(id="def-1", name="My Job")
+    job_definition = MagicMock(
+        id="def-1", name="My Job", revision=1, has_unsaved_changes=False
+    )
     config = ExperimentConfig(
         job_definition=job_definition, experiment_id="exp-1", audience=audience
     )

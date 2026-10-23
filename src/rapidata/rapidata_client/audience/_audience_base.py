@@ -67,7 +67,8 @@ class RapidataAudienceBase:
         """Assign a job to this audience.
 
         Creates a new job instance from the job definition and assigns it to this audience.
-        The job will be executed by the annotators in this audience.
+        The job runs the revision the job definition object holds (``job_definition.revision``),
+        not whatever revision is latest on the server.
 
         Args:
             job_definition (JobDefinition): The job definition to create and assign to the audience.
@@ -77,6 +78,9 @@ class RapidataAudienceBase:
 
         Returns:
             RapidataJob: The created job instance.
+
+        Raises:
+            RuntimeError: If the job definition has unsaved changes.
         """
         with tracer.start_as_current_span(f"{type(self).__name__}.assign_job"):
             return self._create_job(job_definition, run_after=run_after)
@@ -105,6 +109,11 @@ class RapidataAudienceBase:
         from rapidata.rapidata_client.job.rapidata_job import RapidataJob
         from datetime import datetime
 
+        if job_definition.has_unsaved_changes:
+            raise RuntimeError(
+                f"Job definition '{job_definition.id}' has unsaved changes. "
+                "Call save() to run them, or discard_changes() to run the loaded revision."
+            )
         logger.debug(f"Assigning job to audience: {self.id}")
         preceding_job_id = (
             run_after.id if isinstance(run_after, RapidataJob) else run_after
@@ -113,6 +122,7 @@ class RapidataAudienceBase:
             create_job_endpoint_input=CreateJobEndpointInput(
                 audienceId=self.id,
                 jobDefinitionId=job_definition.id,
+                revisionNumber=job_definition.revision,
                 checkForExplicitContent=rapidata_config.upload.checkForExplicitContent,
                 experimentId=experiment_id,
                 precedingJobId=preceding_job_id,
