@@ -710,11 +710,13 @@ class RapidataJobManager:
                 )
             )
 
-            return RapidataJobDefinition(
+            definition = RapidataJobDefinition(
                 id=job_definition.definition_id,
                 name=job_definition.name,
                 openapi_service=self._openapi_service,
-            ).reload(revision)
+            )
+            definition.reload(revision)
+            return definition
 
     def find_job_definitions(
         self, name: str = "", amount: int = 10, page: int = 1
