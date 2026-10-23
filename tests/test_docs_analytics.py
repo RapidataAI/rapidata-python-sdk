@@ -7,7 +7,10 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).parent.parent
-TEST_FILE = ROOT / "tests" / "docs_js" / "analytics.test.js"
+TEST_FILES = [
+    ROOT / "tests" / "docs_js" / "analytics.test.js",
+    ROOT / "tests" / "docs_js" / "consent.test.js",
+]
 
 
 def test_docs_analytics_passes_journey_protocol_fixtures():
@@ -17,7 +20,7 @@ def test_docs_analytics_passes_journey_protocol_fixtures():
             pytest.fail("node is required to test docs/js/analytics.js")
         pytest.skip("node is not installed")
     result = subprocess.run(
-        [node, "--test", str(TEST_FILE)], capture_output=True, text=True
+        [node, "--test", *map(str, TEST_FILES)], capture_output=True, text=True
     )
     assert result.returncode == 0, result.stdout + result.stderr
 

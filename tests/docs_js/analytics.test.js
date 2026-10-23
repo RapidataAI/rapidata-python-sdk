@@ -16,6 +16,9 @@ describe("journey protocol v1 fixtures", () => {
     assert.equal(analytics.constants.attributionCookie.name, constants.attributionCookie.name);
     assert.equal(analytics.constants.attributionCookie.maxAgeSeconds, constants.attributionCookie.maxAgeSeconds);
     assert.equal(analytics.constants.attributionCookie.maxChars, constants.attributionCookie.maxChars);
+    assert.equal(analytics.constants.consentCookie.name, constants.consentCookie.name);
+    assert.equal(analytics.constants.consentCookie.revision, constants.consentCookie.revision);
+    assert.equal(analytics.constants.consentCookie.policyVersion, constants.consentCookie.policyVersion);
     assert.deepEqual(analytics.constants.limits, constants.limits);
   });
 

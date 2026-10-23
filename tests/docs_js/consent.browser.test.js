@@ -102,6 +102,11 @@ async function openDocs() {
 
 const beaconCount = (page) => page.evaluate(() => Number(localStorage.getItem("journeyTestBeacons") || 0));
 const pageviewCount = (events, from) => events.slice(from).filter((event) => event.event === "$pageview").length;
+const consentChanges = (events, from) =>
+  events
+    .slice(from)
+    .filter((event) => event.event === "consent_granted")
+    .map((event) => event.properties.change);
 
 test("nothing reaches PostHog before consent or after Reject", { timeout: 180_000 }, async () => {
   const { context, close, requests, events } = await openDocs();
@@ -223,7 +228,7 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
   }
 });
 
-test("one $pageview per consented load and per re-grant, on the same page or a later one", { timeout: 180_000 }, async () => {
+test("one $pageview and one consent_granted per Allow click, none for a stored choice", { timeout: 180_000 }, async () => {
   const { context, close, requests, events } = await openDocs();
   try {
     const page = await context.newPage();
@@ -233,16 +238,28 @@ test("one $pageview per consented load and per re-grant, on the same page or a l
       await preferences.getByRole("button", { name }).click();
     };
     await page.goto(`${ORIGIN}/quickstart/`);
+    const clickedAt = Date.now();
     await page.getByRole("button", { name: "Allow analytics" }).click();
     await waitFor(() => pageviewCount(events, 0) > 0, 20_000, "no $pageview after consent");
+    await waitFor(() => consentChanges(events, 0).length > 0, 20_000, "no consent_granted after Allow");
     await waitForQuiet(requests, 6_000, 60_000);
     assert.equal(pageviewCount(events, 0), 1, "first grant");
+    assert.deepEqual(consentChanges(events, 0), ["first"]);
+    const granted = events.find((event) => event.event === "consent_granted");
+    assert.equal(granted.properties.policy_version, analytics.constants.consentCookie.policyVersion);
+    assert.equal(granted.properties.surface, "docs");
+    assert.equal(granted.properties.environment, "production");
+    assert.equal(granted.properties.distinct_id, await page.evaluate(() => window.posthog.get_distinct_id()));
+    assert.equal(granted.$set_once.first_consent_surface, "docs");
+    assert.match(granted.$set_once.first_consent_at, /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/);
+    assert.ok(Date.parse(granted.$set_once.first_consent_at) >= clickedAt - 1_000);
 
     const reloaded = events.length;
     await page.reload();
     await waitFor(() => pageviewCount(events, reloaded) > 0, 20_000, "no $pageview after reload");
     await waitForQuiet(requests, 6_000, 60_000);
     assert.equal(pageviewCount(events, reloaded), 1, "load with consent already given");
+    assert.deepEqual(consentChanges(events, reloaded), [], "a stored choice sent consent_granted");
 
     await choose("Reject analytics");
     await page.waitForTimeout(1_000);
@@ -250,6 +267,7 @@ test("one $pageview per consented load and per re-grant, on the same page or a l
     await waitFor(() => pageviewCount(events, reloaded) > 1, 20_000, "no $pageview after re-grant");
     await waitForQuiet(requests, 6_000, 60_000);
     assert.equal(pageviewCount(events, reloaded), 2, "Allow, Reject, Allow on one page");
+    assert.deepEqual(consentChanges(events, reloaded), ["regrant"]);
 
     await choose("Reject analytics");
     await page.waitForTimeout(1_000);
@@ -260,6 +278,7 @@ test("one $pageview per consented load and per re-grant, on the same page or a l
     await waitFor(() => pageviewCount(events, later) > 0, 20_000, "no $pageview when re-allowing on a later load");
     await waitForQuiet(requests, 6_000, 60_000);
     assert.equal(pageviewCount(events, later), 1, "re-allow on a later page load");
+    assert.deepEqual(consentChanges(events, later), ["regrant"]);
   } finally {
     await close();
   }
