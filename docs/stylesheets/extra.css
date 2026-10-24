@@ -1,10 +1,61 @@
 /* ==========================================================================
-   Fonts
+   Design tokens — the dashboard theme of app-frontend (packages/ui/theme.css).
+   Keep names and values in step with it; change a value there, then here.
    ========================================================================== */
 
 :root {
-    --md-text-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --md-code-font: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+    --p-neutral-50: oklch(0.967 0.003 264.54);
+    --p-neutral-300: oklch(0.74 0.01 264.54);
+    --p-neutral-400: oklch(0.63 0.01 264.54);
+    --p-neutral-600: oklch(0.32 0.014 264.36);
+    --p-neutral-700: oklch(0.28 0.012 264.36);
+    --p-neutral-800: oklch(0.22 0.013 264.28);
+    --p-neutral-900: oklch(0.14 0.011 264.28);
+    --p-neutral-950: oklch(0.08 0.01 264.28);
+    --p-blue-400: oklch(0.707 0.165 254.62);
+    --p-blue-500: oklch(0.597 0.221 258.03);
+    --p-blue-600: oklch(0.48 0.167 258.22);
+    --p-cyan-400: oklch(0.75 0.128 202.6);
+    --p-teal-400: oklch(0.839 0.165 170.61);
+    --p-green-400: oklch(0.75 0.15 147.68);
+    --p-gold-warm: oklch(0.83 0.14 84);
+    --p-red-400: oklch(0.76 0.18 24.84);
+    --p-purple-400: oklch(0.73 0.15 292);
+    --p-white: oklch(1 0 0);
+
+    --color-background: var(--p-neutral-900);
+    --color-foreground: var(--p-neutral-50);
+    --color-card: var(--p-neutral-800);
+    --color-muted: var(--p-neutral-600);
+    --color-muted-foreground: var(--p-neutral-300);
+    --color-subtle-foreground: var(--p-neutral-400);
+    --color-chrome: var(--p-neutral-950);
+    --color-fill-rest: color-mix(in oklab, var(--p-white) 6%, transparent);
+    --color-fill-hover: color-mix(in oklab, var(--p-white) 9%, transparent);
+    --color-fill-selected: color-mix(in oklab, var(--p-white) 10%, transparent);
+    --color-tooltip: color-mix(in srgb, var(--p-white) 10%, var(--color-background));
+    --color-border: color-mix(in oklab, var(--p-white) 9%, transparent);
+    --color-border-strong: color-mix(in oklab, var(--p-white) 14%, transparent);
+    --color-input: color-mix(in oklab, var(--p-white) 15%, transparent);
+    --color-primary: var(--p-blue-500);
+    --color-primary-hover: var(--p-blue-600);
+    --color-primary-light: var(--p-blue-400);
+    --color-primary-foreground: var(--p-white);
+    --color-success-light: var(--p-green-400);
+    --color-warning: var(--p-gold-warm);
+    --color-destructive-light: var(--p-red-400);
+    --color-device-frame: var(--p-neutral-700);
+    --gradient-accent: linear-gradient(90deg,
+        color-mix(in oklab, var(--p-cyan-400) 75%, var(--p-blue-500)), var(--p-teal-400));
+
+    --radius-control: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-surface: 0.75rem;
+
+    --md-text-font: "Red Hat Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --md-code-font: ui-monospace, SFMono-Regular, Menlo, "Liberation Mono", monospace;
+
+    color-scheme: dark;
 }
 
 body {
@@ -14,247 +65,540 @@ body {
 
 
 /* ==========================================================================
-   Color tokens
-   ========================================================================== */
-
-:root {
-    --primitive-white: oklch(100% 0 0);
-    --primitive-black: oklch(0% 0 0);
-
-    --primitive-brand-primary: oklch(59.67% 0.2212 258.03);
-    --primitive-brand-dark: oklch(0.48 0.1674 258.22);
-    --primitive-brand-light: oklch(0.707 0.165 254.624);
-    --color-blue-400: oklch(0.707 0.165 254.624);
-    --color-blue-dim: oklch(0.50 0.10 254);
-
-    --primitive-gold: oklch(0.8238 0.1678 90.3);
-    --primitive-brand-secondary: oklch(83.92% 0.165058 170.6089);
-
-    --primitive-gray-100: oklch(0.967 0.003 264.542);
-    --primitive-gray-150: oklch(55.55% 0 0);
-    --primitive-gray-200: oklch(28.04% 0.0119 264.36);
-    --primitive-gray-250: oklch(0.25 0.0099 268.28);
-    --primitive-gray-300: oklch(20.27% 0.0118 254.1);
-    --primitive-gray-400: oklch(16.34% 0.0091 264.28);
-    --primitive-gray-500: oklch(12% 0.006 264);
-
-    --primitive-red-100: oklch(58.02% 0.2043 24.84);
-    --primitive-green-100: oklch(57.77% 0.1309 147.68);
-
-    --color-chart-1: #e76e50;
-    --color-chart-2: #2a9d90;
-    --color-chart-3: #274754;
-    --color-chart-4: #e8c468;
-    --color-chart-5: #f4a462;
-
-    --color-background: var(--primitive-gray-400);
-    --color-background-secondary: var(--primitive-gray-300);
-    --color-background-tertiary: var(--primitive-gray-200);
-    --color-background-tertiary-dark: var(--primitive-gray-250);
-    --color-background-deep: var(--primitive-gray-500);
-    --color-background-error: var(--primitive-red-100);
-    --color-background-success: var(--primitive-green-100);
-
-    --color-border-primary: var(--primitive-gray-200);
-    --color-border-secondary: var(--primitive-gray-300);
-    --color-border-success: var(--primitive-green-100);
-
-    --color-text-primary: var(--primitive-gray-100);
-    --color-text-secondary: var(--primitive-gray-150);
-    --color-text-error: var(--primitive-red-100);
-    --color-text-success: var(--primitive-green-100);
-
-    --color-button-primary: var(--primitive-brand-primary);
-    --color-button-primary-dark: var(--primitive-brand-dark);
-    --color-button-text-primary: var(--primitive-white);
-
-    --color-fill-primary: var(--primitive-brand-primary);
-    --color-fill-primary-light: var(--primitive-brand-light);
-    --color-fill-secondary: var(--primitive-brand-secondary);
-    --color-fill-muted: var(--primitive-gray-150);
-    --color-fill-gold: var(--primitive-gold);
-    --color-preview-frame: var(--primitive-gray-200);
-}
-
-
-/* ==========================================================================
-   Material theme color overrides
+   Material theme variables
    ========================================================================== */
 
 :root > * {
     --md-primary-fg-color:             var(--color-background);
     --md-primary-fg-color--light:      var(--color-background);
     --md-primary-fg-color--dark:       var(--color-background);
-    --md-primary-bg-color:             hsla(0, 0%, 100%, 1);
-    --md-primary-bg-color--light:      hsla(0, 0%, 100%, 0.7);
+    --md-primary-bg-color:             var(--color-foreground);
+    --md-primary-bg-color--light:      var(--color-muted-foreground);
 
-    --md-accent-fg-color:              var(--color-blue-400);
-    --md-accent-fg-color--transparent: var(--color-background-secondary);
-    --md-accent-bg-color:              hsla(0, 0%, 100%, 1);
-    --md-accent-bg-color--light:       hsla(0, 0%, 100%, 0.7);
+    --md-accent-fg-color:              var(--color-primary-light);
+    --md-accent-fg-color--transparent: var(--color-fill-hover);
+    --md-accent-bg-color:              var(--color-foreground);
+    --md-accent-bg-color--light:       var(--color-muted-foreground);
 
-    --md-hue: 225deg;
+    --md-default-fg-color:             var(--color-foreground);
+    --md-default-fg-color--light:      var(--color-muted-foreground);
+    --md-default-fg-color--lighter:    var(--color-subtle-foreground);
+    --md-default-fg-color--lightest:   var(--color-border);
+    --md-default-bg-color:             var(--color-background);
+    --md-default-bg-color--light:      var(--color-background);
+    --md-default-bg-color--lighter:    var(--color-card);
+    --md-default-bg-color--lightest:   var(--color-card);
 
-    --md-default-fg-color:           hsla(var(--md-hue), 15%, 90%, 0.82);
-    --md-default-fg-color--light:    hsla(var(--md-hue), 15%, 90%, 0.56);
-    --md-default-fg-color--lighter:  hsla(var(--md-hue), 15%, 90%, 0.32);
-    --md-default-fg-color--lightest: hsla(var(--md-hue), 15%, 90%, 0.12);
+    --md-code-fg-color:                #e1e4e8;
+    --md-code-bg-color:                var(--color-card);
+    --md-code-hl-color:                var(--color-fill-selected);
+    --md-code-hl-color--light:         var(--color-fill-rest);
+    --md-code-hl-number-color:         #79b8ff;
+    --md-code-hl-special-color:        #ffab70;
+    --md-code-hl-function-color:       #b392f0;
+    --md-code-hl-constant-color:       #79b8ff;
+    --md-code-hl-keyword-color:        #f97583;
+    --md-code-hl-string-color:         #9ecbff;
+    --md-code-hl-name-color:           var(--md-code-fg-color);
+    --md-code-hl-operator-color:       #f97583;
+    --md-code-hl-punctuation-color:    var(--color-muted-foreground);
+    --md-code-hl-comment-color:        #6a737d;
+    --md-code-hl-generic-color:        var(--color-muted-foreground);
+    --md-code-hl-variable-color:       #ffab70;
 
-    --md-default-bg-color:           var(--color-background);
-    --md-default-bg-color--light:    var(--color-background);
-    --md-default-bg-color--lighter:  var(--color-background-secondary);
-    --md-default-bg-color--lightest: var(--color-background-secondary);
+    --md-typeset-color:                var(--color-muted-foreground);
+    --md-typeset-a-color:              var(--color-primary-light);
+    --md-typeset-mark-color:           color-mix(in oklab, var(--p-gold-warm) 30%, transparent);
+    --md-typeset-kbd-color:            var(--color-fill-rest);
+    --md-typeset-kbd-accent-color:     var(--color-fill-hover);
+    --md-typeset-kbd-border-color:     var(--color-border-strong);
+    --md-typeset-table-color:          var(--color-border);
+    --md-typeset-table-color--light:   var(--color-fill-rest);
 
-    --md-code-fg-color:              hsla(var(--md-hue), 18%, 86%, 0.87);
-    --md-code-bg-color:              var(--color-background-deep);
+    --md-admonition-fg-color:          var(--color-muted-foreground);
+    --md-admonition-bg-color:          var(--color-card);
 
-    --md-code-hl-number-color:       hsla(6, 74%, 63%, 1);
-    --md-code-hl-special-color:      hsla(340, 83%, 66%, 1);
-    --md-code-hl-function-color:     hsla(291, 57%, 65%, 1);
-    --md-code-hl-constant-color:     hsla(250, 62%, 70%, 1);
-    --md-code-hl-keyword-color:      hsla(219, 66%, 64%, 1);
-    --md-code-hl-string-color:       hsla(150, 58%, 44%, 1);
-    --md-code-hl-name-color:         var(--md-code-fg-color);
-    --md-code-hl-operator-color:     var(--md-default-fg-color--light);
-    --md-code-hl-punctuation-color:  var(--md-default-fg-color--light);
-    --md-code-hl-comment-color:      var(--md-default-fg-color--light);
-    --md-code-hl-generic-color:      var(--md-default-fg-color--light);
-    --md-code-hl-variable-color:     var(--md-default-fg-color--light);
+    --md-footer-fg-color:              var(--color-muted-foreground);
+    --md-footer-fg-color--light:       var(--color-subtle-foreground);
+    --md-footer-fg-color--lighter:     var(--color-subtle-foreground);
+    --md-footer-bg-color:              var(--color-background);
+    --md-footer-bg-color--dark:        var(--color-background);
 
-    --md-typeset-color:              var(--color-text-primary);
-    --md-typeset-a-color:            var(--color-blue-400);
-    --md-typeset-kbd-color:          hsla(var(--md-hue), 15%, 90%, 0.12);
-    --md-typeset-kbd-accent-color:   hsla(var(--md-hue), 15%, 90%, 0.2);
-    --md-typeset-kbd-border-color:   hsla(var(--md-hue), 15%, 14%, 1);
-    --md-typeset-table-color:        hsla(var(--md-hue), 15%, 95%, 0.12);
-    --md-typeset-table-color--light: hsla(var(--md-hue), 15%, 95%, 0.035);
-
-    --md-admonition-fg-color:        var(--md-default-fg-color);
-    --md-admonition-bg-color:        var(--color-background-secondary);
-
-    --md-footer-bg-color:            var(--color-background-deep);
-    --md-footer-bg-color--dark:      var(--color-background-deep);
+    --md-shadow-z1: none;
+    --md-shadow-z2: none;
+    --md-shadow-z3: none;
 }
 
 
 /* ==========================================================================
-   Header & tabs
+   Header — flat canvas with a hairline, like the dashboard's chrome
    ========================================================================== */
 
-.md-tabs {
-    background: var(--color-background-secondary);
+.md-header,
+.md-header--shadow {
+    background: var(--color-background);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: none;
 }
 
-.md-tabs__link--active,
-.md-tabs__link:hover {
-    color: var(--color-blue-400);
+.md-header__title {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.md-header__button.md-logo img {
+    height: 1.4rem;
+}
+
+.md-source {
+    color: var(--color-muted-foreground);
+}
+
+.md-source:hover {
+    color: var(--color-foreground);
 }
 
 
 /* ==========================================================================
-   Navigation
+   Search — the dashboard's "Search  Ctrl K" field
    ========================================================================== */
 
-/* Dim all nav links, highlight only active */
+.md-search__form {
+    height: 1.8rem;
+    background: var(--color-fill-rest);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.md-search__form:hover {
+    background: var(--color-fill-hover);
+}
+
+.md-search__input,
+.md-search__suggest {
+    font-size: 0.7rem;
+    color: var(--color-foreground);
+}
+
+.md-search__input::placeholder,
+.md-search__icon {
+    color: var(--color-subtle-foreground);
+}
+
+.search-kbd {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.15rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.search-kbd kbd {
+    padding: 0 0.25rem;
+    font-family: var(--md-text-font);
+    font-size: 0.55rem;
+    line-height: 0.9rem;
+    color: var(--color-subtle-foreground);
+    background: var(--color-fill-rest);
+    border: 1px solid var(--color-border);
+    border-radius: 0.2rem;
+}
+
+[data-md-toggle="search"]:checked ~ .md-header .search-kbd {
+    display: none;
+}
+
+.md-search__output,
+.md-search__scrollwrap {
+    background: var(--color-background);
+}
+
+@media screen and (min-width: 60em) {
+    [data-md-toggle="search"]:checked ~ .md-header .md-search__form {
+        background: var(--color-background);
+        border-color: var(--color-border-strong);
+        border-radius: var(--radius-control) var(--radius-control) 0 0;
+    }
+
+    [data-md-toggle="search"]:checked ~ .md-header .md-search__output {
+        border: 1px solid var(--color-border-strong);
+        border-top: 0;
+        border-radius: 0 0 var(--radius-control) var(--radius-control);
+    }
+}
+
+.md-search-result__meta {
+    background: var(--color-background);
+    color: var(--color-subtle-foreground);
+}
+
+.md-search-result__link:hover,
+.md-search-result__link:focus,
+.md-search-result__more > summary:hover > div {
+    background: var(--color-fill-hover);
+}
+
+.md-search-result mark {
+    color: var(--color-primary-light);
+}
+
+
+/* ==========================================================================
+   Login button — the primary Button
+   ========================================================================== */
+
+.login-button {
+    background: var(--color-primary);
+    color: var(--color-primary-foreground);
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-control);
+    font-size: 0.7rem;
+    font-weight: 500;
+    transition: background-color 0.15s ease;
+
+    @media screen and (min-width: 1024px) {
+        margin-left: 1.5rem;
+    }
+}
+
+.login-button:hover,
+.login-button:focus {
+    background: var(--color-primary-hover);
+    color: var(--color-primary-foreground);
+}
+
+
+/* ==========================================================================
+   Sidebar navigation — eyebrow group labels, filled rows
+   ========================================================================== */
+
+.md-nav {
+    font-size: 0.7rem;
+}
+
 .md-nav__link {
-    color: var(--md-default-fg-color--light);
+    color: var(--color-muted-foreground);
+    transition: color 0.15s ease;
 }
 
-.md-nav__link:hover {
-    color: var(--md-default-fg-color);
+.md-nav__link:hover,
+.md-nav__link:focus {
+    color: var(--color-foreground);
+}
+
+@media screen and (min-width: 76.25em) {
+    .md-nav--primary > .md-nav__title {
+        display: none;
+    }
+
+    .md-sidebar--primary .md-nav__item:not(.md-nav__item--section) > .md-nav__link {
+        margin-top: 0.1rem;
+        padding: 0.3rem 0.5rem;
+        border-radius: var(--radius-control);
+    }
+
+    .md-sidebar--primary .md-nav__item:not(.md-nav__item--section) > .md-nav__link:hover {
+        background: var(--color-fill-hover);
+    }
+
+    .md-sidebar--primary .md-nav__item:not(.md-nav__item--section) > .md-nav__link--active,
+    .md-sidebar--primary .md-nav__item:not(.md-nav__item--section) > .md-nav__link--active:hover {
+        background: var(--color-fill-selected);
+        color: var(--color-foreground);
+    }
+
+    .md-sidebar--primary .md-nav__item--section {
+        margin: 1.25rem 0 0;
+    }
+
+    .md-sidebar--primary .md-nav__item--section:first-child {
+        margin-top: 0;
+    }
+
+    .md-sidebar--primary .md-nav__item--section > .md-nav__link {
+        margin-bottom: 0.2rem;
+        padding: 0 0.5rem;
+        font-size: 0.6rem;
+        font-weight: 500;
+        color: var(--color-subtle-foreground);
+    }
+
+    .md-sidebar--primary .md-nav__item--section > .md-nav {
+        margin-left: 0;
+    }
+
+    .md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item:not(.md-nav__item--section) {
+        margin-top: 1.25rem;
+    }
 }
 
 .md-nav__link--active {
-    color: var(--color-blue-400);
+    color: var(--color-foreground);
+    font-weight: 500;
 }
 
-/* Right TOC: dim all links, highlight only current */
+/* Right-hand outline */
+.md-nav--secondary .md-nav__title {
+    font-size: 0.6rem;
+    font-weight: 500;
+    color: var(--color-subtle-foreground);
+    background: var(--color-background);
+    box-shadow: none;
+}
+
 .md-sidebar--secondary .md-nav__link {
-    color: var(--md-default-fg-color--light);
+    color: var(--color-subtle-foreground);
+}
+
+.md-sidebar--secondary .md-nav__link:hover,
+.md-sidebar--secondary .md-nav__link--active {
+    color: var(--color-foreground);
 }
 
 .md-sidebar--secondary .md-nav__link--active {
-    color: var(--color-blue-400);
+    font-weight: 400;
+}
+
+/* Mobile drawer */
+.md-nav--primary .md-nav__title,
+.md-nav--primary .md-nav__title[for="__drawer"] {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    box-shadow: none;
 }
 
 
 /* ==========================================================================
-   Code blocks
+   Typography — Red Hat Display on the dashboard's type scale
    ========================================================================== */
 
+.md-typeset {
+    font-size: 0.8rem;
+    line-height: 1.7;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+    color: var(--color-foreground);
+}
+
+.md-typeset h1 {
+    margin-bottom: 1rem;
+    font-size: 1.875em;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.md-typeset h2 {
+    margin-top: 2.25em;
+    font-size: 1.25em;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.md-typeset h3 {
+    font-size: 1.125em;
+    font-weight: 600;
+}
+
+.md-typeset h4 {
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.md-typeset strong {
+    color: var(--color-foreground);
+    font-weight: 600;
+}
+
+.md-typeset a {
+    text-decoration: none;
+}
+
+.md-typeset a:hover {
+    color: var(--color-primary-light);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.md-typeset hr {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.md-typeset .headerlink {
+    color: var(--color-subtle-foreground);
+}
+
+
+/* ==========================================================================
+   Code — the dashboard's CodeBlock: card surface, hairline, github-dark
+   ========================================================================== */
+
+.md-typeset code {
+    border-radius: 0.25rem;
+}
+
+.md-typeset :not(pre) > code {
+    padding: 0.1em 0.35em;
+    color: var(--color-foreground);
+    background: var(--color-fill-rest);
+    border: 1px solid var(--color-border);
+}
+
+.md-typeset pre > code {
+    padding: 0.9em 1.1em;
+}
+
+.md-typeset .highlight,
 .md-typeset pre {
-    position: relative;
+    border-radius: var(--radius-lg);
 }
 
-/* Accent bar on the left edge */
-.md-typeset pre::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--color-blue-dim);
-    border-radius: 0.1rem 0 0 0.1rem;
-    z-index: 1;
+.md-typeset .highlight > pre,
+.md-typeset pre:not(.mermaid) {
+    border: 1px solid var(--color-border);
+}
+
+.md-clipboard {
+    color: var(--color-subtle-foreground);
+}
+
+.md-clipboard:hover,
+.md-clipboard:focus {
+    color: var(--color-foreground);
 }
 
 
 /* ==========================================================================
-   Tabs (code example switcher)
+   Content tabs (code example switcher)
    ========================================================================== */
+
+.md-typeset .tabbed-labels {
+    box-shadow: inset 0 -1px 0 var(--color-border);
+}
+
+.md-typeset .tabbed-labels > label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--color-subtle-foreground);
+}
+
+.md-typeset .tabbed-labels > label:hover {
+    color: var(--color-foreground);
+}
+
+.md-typeset .tabbed-set > input:checked + .tabbed-labels > label,
+.md-typeset .tabbed-labels > label.tabbed-label--active {
+    color: var(--color-foreground);
+}
+
+.md-typeset .tabbed-labels::before {
+    background: var(--color-primary);
+}
 
 .tabbed-set .tabbed-content {
     padding-top: 0.5rem;
 }
 
-.tabbed-set > input:checked + label + .tabbed-content {
-    padding-top: 0.5rem;
+
+/* ==========================================================================
+   Admonitions — card surface, hairline edge, the type keeps its icon colour
+   ========================================================================== */
+
+.md-typeset :is(.admonition, details)[class] {
+    font-size: 0.75rem;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-surface);
+    box-shadow: none;
+}
+
+.md-typeset :is(.admonition, details) > :is(.admonition-title, summary) {
+    font-weight: 600;
+    color: var(--color-foreground);
+    background: transparent;
+    border: 0;
 }
 
 
 /* ==========================================================================
-   Admonitions — let Material handle styling, just tweak backgrounds
+   Tables — hairline rows, quiet headers
    ========================================================================== */
 
-.md-typeset .admonition,
-.md-typeset details {
-    border-radius: 0.25rem;
-    border-width: 0 0 0 3px;
+.md-typeset table:not([class]) {
+    font-size: 0.75rem;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
 }
-
-
-/* ==========================================================================
-   Tables
-   ========================================================================== */
 
 .md-typeset table:not([class]) th {
-    background-color: var(--color-background-secondary);
+    font-weight: 500;
+    color: var(--color-subtle-foreground);
+    background: transparent;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.md-typeset table:not([class]) td {
+    border-top: 1px solid var(--color-border);
+}
+
+.md-typeset table:not([class]) tr:hover {
+    background: var(--color-fill-rest);
+    box-shadow: none;
 }
 
 
 /* ==========================================================================
-   Login button
+   API reference (mkdocstrings)
    ========================================================================== */
 
-.login-button {
-    background: linear-gradient(150.81deg, #00ECBB -29.74%, #0077FF 62.28%);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 0.2rem;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    transition: opacity 0.1s ease;
-    box-shadow: none;
-
-    @media screen and (min-width: 1024px) {
-        margin-left: 2rem;
-    }
+.md-typeset .doc-heading code {
+    color: var(--color-foreground);
+    background: transparent;
+    border: 0;
 }
 
-.login-button:hover {
-    opacity: 0.85;
+.md-typeset .doc-signature {
+    font-size: 0.75rem;
+}
+
+.md-typeset .doc-label code {
+    color: var(--color-muted-foreground);
+}
+
+
+/* ==========================================================================
+   Footer & progress
+   ========================================================================== */
+
+.md-footer {
+    border-top: 1px solid var(--color-border);
+}
+
+.md-footer__link:hover {
+    color: var(--color-foreground);
+}
+
+.md-footer-meta {
+    background: var(--color-background);
+}
+
+.md-progress {
+    background: var(--gradient-accent);
+}
+
+.md-top {
+    color: var(--color-foreground);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    box-shadow: none;
 }
 
 
@@ -267,15 +611,6 @@ body {
 .image-switch img.dark { display: none; }
 [data-md-color-scheme="slate"] .image-switch img.light { display: none; }
 [data-md-color-scheme="slate"] .image-switch img.dark { display: block; }
-
-
-/* ==========================================================================
-   Progress bar
-   ========================================================================== */
-
-.md-progress {
-    background: var(--color-blue-400);
-}
 
 
 /* ==========================================================================
@@ -293,8 +628,8 @@ body {
     height: 667px;
     margin: 1.5rem auto 0;
     border-radius: 40px;
-    border: 14px solid var(--color-preview-frame);
-    background: var(--color-preview-frame);
+    border: 14px solid var(--color-device-frame);
+    background: var(--color-device-frame);
     box-shadow:
         0 20px 25px -5px rgba(0, 0, 0, 0.35),
         0 8px 10px -6px rgba(0, 0, 0, 0.25);
@@ -307,7 +642,7 @@ body {
     transform: translateX(-50%);
     width: 148px;
     height: 7px;
-    background: var(--color-preview-frame);
+    background: var(--color-device-frame);
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
     z-index: 30;
@@ -316,7 +651,7 @@ body {
 .phone-preview__btn {
     position: absolute;
     width: 3px;
-    background: var(--color-preview-frame);
+    background: var(--color-device-frame);
     z-index: 30;
 }
 
@@ -369,7 +704,7 @@ body {
     gap: 0.4rem;
     padding: 0.35rem 0.75rem;
     font-size: 0.75rem;
-    color: var(--color-text-secondary);
+    color: var(--color-muted-foreground);
     background: transparent;
     border: 1px solid var(--md-default-fg-color--lightest);
     border-radius: 0.25rem;
@@ -378,7 +713,7 @@ body {
 }
 
 .preview-controls button:hover {
-    color: var(--color-text-primary);
+    color: var(--color-foreground);
     border-color: var(--md-default-fg-color--lighter);
 }
 
@@ -481,7 +816,7 @@ body {
 #llms-copy-button button {
     background: transparent !important;
     border: 1px solid var(--md-default-fg-color--lightest) !important;
-    border-radius: 0.2rem !important;
+    border-radius: var(--radius-control) !important;
     padding: 0.3rem 0.55rem !important;
     line-height: 1 !important;
     box-shadow: none !important;
@@ -495,17 +830,17 @@ body {
 }
 
 #llms-copy-button button:hover {
-    color: var(--color-text-primary) !important;
+    color: var(--color-foreground) !important;
     border-color: var(--md-default-fg-color--lighter) !important;
 }
 
 #llms-copy-button button.copied {
-    color: var(--color-text-success) !important;
-    border-color: var(--color-border-success) !important;
+    color: var(--color-success-light) !important;
+    border-color: var(--color-success-light) !important;
 }
 
 #llms-copy-button button.error {
-    color: var(--color-text-error) !important;
+    color: var(--color-destructive-light) !important;
 }
 
 #llms-copy-button button::after {
@@ -514,16 +849,16 @@ body {
     left: calc(100% + 0.5rem);
     top: 50%;
     transform: translateY(-50%);
-    background: var(--color-background-tertiary);
-    color: var(--color-text-primary);
+    background: var(--color-tooltip);
+    color: var(--color-foreground);
     padding: 0.25rem 0.45rem;
-    border-radius: 0.2rem;
+    border-radius: var(--radius-control);
     font-size: 0.62rem;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.1s ease;
-    border: 1px solid var(--color-border-primary);
+    border: 1px solid var(--color-border-strong);
 }
 
 #llms-copy-button button:hover::after { opacity: 1; }
