@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Dataset API",
     "description": "The API for the Rapidata Dataset service",
-    "version": "2026.10.23.1246-9b4eb7f"
+    "version": "2026.10.25.1756-089bed7"
   },
   "servers": [
     {
