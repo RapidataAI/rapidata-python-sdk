@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import Optional, Any
-import json
 
 
 class RapidataError(Exception):
@@ -44,6 +43,20 @@ class RapidataError(Exception):
                 return raw
         return None
 
+    @staticmethod
+    def _format_errors(errors: Any) -> list[str]:
+        """One ``field: message`` line per validation message."""
+        if isinstance(errors, dict):
+            lines = []
+            for field, messages in errors.items():
+                if not isinstance(messages, list):
+                    messages = [messages]
+                lines.extend(f"{field}: {m}" if field else str(m) for m in messages)
+            return lines
+        if isinstance(errors, list):
+            return [str(e) for e in errors]
+        return [str(errors)]
+
     def get_reason(self) -> str:
         """Get a concise reason string suitable for grouping and display.
 
@@ -76,10 +89,7 @@ class RapidataError(Exception):
             error_parts.append(f"{self.message or 'Unknown error'}")
 
         if errors:
-            if isinstance(errors, dict):
-                error_parts.append(f"Reasons: {json.dumps({'errors': errors})}")
-            else:
-                error_parts.append(f"Reasons: {errors}")
+            error_parts.extend(self._format_errors(errors))
 
         if self.trace_id:
             error_parts.append(f"Trace Id: {self.trace_id}")

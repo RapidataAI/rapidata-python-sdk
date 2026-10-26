@@ -9,6 +9,9 @@ from rapidata.rapidata_client.job.rapidata_job_definition import RapidataJobDefi
 from rapidata.rapidata_client.job._job_creation_state_machine import (
     JobDefinitionCreationMachine,
 )
+from rapidata.rapidata_client.job._response_minimum import (
+    ensure_response_count_allowed,
+)
 from typing import Sequence, Literal, TYPE_CHECKING, cast
 from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
@@ -78,6 +81,10 @@ class RapidataJobManager:
             raise ValueError("failure_tolerance must be between 0.0 and 1.0")
 
         self._warn_unsupported_settings(workflow, settings)
+
+        ensure_response_count_allowed(
+            self._openapi_service, workflow._to_model(), responses_per_datapoint
+        )
 
         self.__context_manager._apply_context_shortening(
             datapoints=datapoints,
@@ -181,7 +188,8 @@ class RapidataJobManager:
             datapoints (list[str]): The list of datapoints for the classification - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
-            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.\n
+                Fewer than 10 raises LowResponseCountError before any upload unless your organization was enabled for it (email info@rapidata.ai with your use case).
             contexts (list[str], optional): The list of contexts for the classification. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
@@ -264,7 +272,8 @@ class RapidataJobManager:
             datapoints (list[list[str]]): Outher list is the datapoints, inner list is the options for the comparison - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
-            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.\n
+                Fewer than 10 raises LowResponseCountError before any upload unless your organization was enabled for it (email info@rapidata.ai with your use case).
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
@@ -449,7 +458,8 @@ class RapidataJobManager:
             datapoints (list[str]): The list of datapoints for the free text - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
-            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.\n
+                Fewer than 10 raises LowResponseCountError before any upload unless your organization was enabled for it (email info@rapidata.ai with your use case).
             contexts (list[str], optional): The list of contexts for the free text. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
@@ -505,7 +515,8 @@ class RapidataJobManager:
             datapoints (list[str]): The list of datapoints for the select words - each datapoint will be labeled.
             sentences (list[str]): The list of sentences for the select words - Will be split up by spaces and shown along side each datapoint.\n
                 Must be the same length as datapoints.
-            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.\n
+                Fewer than 10 raises LowResponseCountError before any upload unless your organization was enabled for it (email info@rapidata.ai with your use case).
             settings (Sequence[RapidataSetting], optional): The list of settings for the select words. Defaults to []. Decides how the tasks should be shown.
             failure_tolerance (float, optional): The fraction of datapoints allowed to fail while still creating the job definition (0.0-1.0). Defaults to None, which uses rapidata_config.upload.failureTolerance (default 0.0 = strict).\n                0.0 means any failed upload aborts creation so no incomplete definition is left behind; the failed datapoints can then be retried into the same dataset via the raised FailedUploadException.retry(). 1.0 creates the definition regardless of failures, as long as at least one datapoint uploads successfully.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
@@ -552,7 +563,8 @@ class RapidataJobManager:
             name (str): The name of the job. (Will not be shown to the labeler)
             instruction (str): The instruction what should be located. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the locate - each datapoint will be labeled.
-            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.\n
+                Fewer than 10 raises LowResponseCountError before any upload unless your organization was enabled for it (email info@rapidata.ai with your use case).
             contexts (list[str], optional): The list of contexts for the locate. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
@@ -604,7 +616,8 @@ class RapidataJobManager:
             name (str): The name of the job. (Will not be shown to the labeler)
             instruction (str): The instruction for how the lines should be drawn. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the draw lines - each datapoint will be labeled.
-            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.\n
+                Fewer than 10 raises LowResponseCountError before any upload unless your organization was enabled for it (email info@rapidata.ai with your use case).
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
@@ -659,7 +672,8 @@ class RapidataJobManager:
             name (str): The name of the job. (Will not be shown to the labeler)
             instruction (str): The instruction for the timestamp task. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the timestamp - each datapoint will be labeled.
-            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.\n
+                Fewer than 10 raises LowResponseCountError before any upload unless your organization was enabled for it (email info@rapidata.ai with your use case).
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.

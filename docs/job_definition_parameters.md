@@ -101,10 +101,12 @@ datapoints=[
 
 The minimum number of responses to collect for each datapoint. The actual number may slightly exceed this due to concurrent labelers.
 
+The minimum is `10`. Fewer raises `LowResponseCountError` before any datapoint is uploaded. If your use case needs fewer, email [info@rapidata.ai](mailto:info@rapidata.ai) with it and we will enable it for your organization. Ranking jobs are not affected: their `responses_per_comparison` can stay below 10.
+
 **Best Practices:**
 
 - Use 15-25 for ambiguous or subjective tasks
-- Use 5-10 for clear-cut decisions
+- Use 10 for clear-cut decisions, with `confidence_threshold` or `quorum_threshold` to stop early once the answer is clear
 
 ```python
 responses_per_datapoint=15

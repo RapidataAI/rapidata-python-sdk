@@ -29,6 +29,9 @@ from rapidata.rapidata_client.job._revision_body import (
     _with_instruction,
     _with_responses,
 )
+from rapidata.rapidata_client.job._response_minimum import (
+    ensure_response_count_allowed,
+)
 import webbrowser
 import urllib.parse
 from colorama import Fore
@@ -214,7 +217,10 @@ class RapidataJobDefinition:
 
     @property
     def responses_per_datapoint(self) -> int:
-        """The maximum number of responses collected per datapoint."""
+        """The maximum number of responses collected per datapoint.
+
+        Setting fewer than 10 raises LowResponseCountError unless your organization was enabled for it.
+        """
         return self._effective(
             "responses_per_datapoint", _get_responses(self._snapshot.referee)
         )
@@ -224,6 +230,9 @@ class RapidataJobDefinition:
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
             raise ValueError("responses_per_datapoint must be a positive integer")
         _with_responses(self._snapshot.referee, value)
+        ensure_response_count_allowed(
+            self._openapi_service, self._snapshot.workflow, value
+        )
         self._pending["responses_per_datapoint"] = value
 
     @property

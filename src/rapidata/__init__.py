@@ -95,6 +95,7 @@ from .rapidata_client import (
     ContextManager,
     FailedUploadException,
     FailedUpload,
+    LowResponseCountError,
     RevisionConflictError,
     SampleUpload,
     rapidata_config,

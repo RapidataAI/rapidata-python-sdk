@@ -200,6 +200,16 @@ except FailedUploadException as e:
 
 Note that this only re-uploads the datapoints; it does not create the job definition. Prefer `exception.retry()` unless you specifically need the lower-level control.
 
+## Fewer than 10 responses per datapoint
+
+Job definitions collect at least 10 responses per datapoint. Asking for fewer, in a `create_*_job_definition` call or by setting `responses_per_datapoint` on an existing definition, raises `LowResponseCountError` before anything is uploaded:
+
+```
+Requested 5 responses per datapoint (minimum 10). At least 10 responses per datapoint are required. To collect fewer, email info@rapidata.ai with your use case and we will enable it for your organization.
+```
+
+Once your organization is enabled, the same call goes through; a new `RapidataClient` is not needed. Ranking jobs (`responses_per_comparison`) are not affected.
+
 ## Too many open files
 
 If uploads fail with `OSError: [Errno 24] Too many open files`, the process has hit its file-descriptor limit — the upload cache, worker pool, and HTTP connections all consume descriptors. When the SDK detects this it appends a hint to the `FailedUploadException` message pointing at the relevant knobs.
