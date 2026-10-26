@@ -8,6 +8,7 @@ from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
 from opentelemetry.sdk.resources import Resource
 from rapidata import __version__
 from .logging_config import LoggingConfig, register_config_handler
+from ._telemetry import OTEL_SERVICE_NAME
 
 
 @runtime_checkable
@@ -68,7 +69,7 @@ class RapidataLogger:
                 logger_provider = LoggerProvider(
                     resource=Resource.create(
                         {
-                            "service.name": "Rapidata.Python.SDK",
+                            "service.name": OTEL_SERVICE_NAME,
                             "service.version": __version__,
                         }
                     ),

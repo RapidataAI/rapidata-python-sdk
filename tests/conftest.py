@@ -4,7 +4,7 @@ The SDK ships OTLP tracing on by default, and `rapidata_config` reads
 `RAPIDATA_DISABLE_OTLP` once at import time. Without this, every test run
 exports spans to the production collector: the suite drives the SDK with
 `MagicMock` arguments, so the resulting validation failures land in prod
-telemetry as real errors from `Rapidata.Python.SDK` and drown out genuine
+telemetry as real errors from `rapidata-python-sdk` and drown out genuine
 customer failures.
 
 Setting the env var before `rapidata` is imported is what actually disables
