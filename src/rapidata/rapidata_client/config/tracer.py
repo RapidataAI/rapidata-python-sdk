@@ -12,6 +12,7 @@ from opentelemetry.sdk.resources import Resource
 from rapidata import __version__
 from rapidata._agent_hint import agent_trace_attributes, detected_coding_agent
 from .logging_config import LoggingConfig, register_config_handler
+from ._telemetry import OTEL_SERVICE_NAME
 from rapidata.rapidata_client.config import logger
 
 
@@ -166,7 +167,7 @@ class RapidataTracer:
 
             try:
                 resource_attributes = {
-                    "service.name": "Rapidata.Python.SDK",
+                    "service.name": OTEL_SERVICE_NAME,
                     "service.version": __version__,
                     **get_system_attributes(),
                 }
