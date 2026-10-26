@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.10.25.1756-089bed7"
+    "version": "2026.10.26.1905-8f5745f"
   },
   "servers": [
     {
@@ -26868,6 +26868,7 @@
           "Sample"
         ],
         "summary": "Queries all samples of a participant.",
+        "description": "With fillMissing=true, sample_id[eq]=null returns only the prompts the participant has no sample for.",
         "parameters": [
           {
             "name": "participantId",
@@ -26987,6 +26988,55 @@
             "name": "created_at",
             "in": "query",
             "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "sample_id",
+            "in": "query",
+            "description": "Filter by sample_id.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -50245,7 +50295,8 @@
           "RunExperiments",
           "UploadLongMedia",
           "Faucets",
-          "BringYourOwnAudience"
+          "BringYourOwnAudience",
+          "LowResponseCount"
         ],
         "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
       },
@@ -52281,8 +52332,7 @@
       "CreateLeaderboardEndpoint_Input": {
         "required": [
           "name",
-          "instruction",
-          "showPrompt"
+          "instruction"
         ],
         "type": "object",
         "properties": {
@@ -52316,7 +52366,7 @@
           },
           "showPrompt": {
             "type": "boolean",
-            "description": "Indicates if the prompt is shown on the rapids."
+            "description": "Whether the prompt is shown on the rapids. Defaults to false."
           },
           "showPromptAsset": {
             "type": "boolean",
@@ -52332,7 +52382,7 @@
           },
           "responseBudget": {
             "type": "integer",
-            "description": "Total amount of responses that get collected per run.",
+            "description": "Responses collected per onboarded participant, not per run: a run onboarding N participants collects N times this (N − 1 on the first run), spread over its comparisons with at least minResponses each.",
             "format": "int32",
             "nullable": true
           },
@@ -52458,7 +52508,7 @@
           },
           "responseBudget": {
             "type": "integer",
-            "description": "The response budget per run.",
+            "description": "Responses collected per onboarded participant, not per run: a run onboarding N participants collects N times this (N − 1 on the first run).",
             "format": "int32"
           },
           "minResponses": {
@@ -53997,7 +54047,7 @@
           },
           "responseBudget": {
             "type": "integer",
-            "description": "The response budget per run.",
+            "description": "Responses collected per onboarded participant, not per run: a run onboarding N participants collects N times this (N − 1 on the first run).",
             "format": "int32"
           },
           "minResponses": {
@@ -56599,7 +56649,7 @@
           },
           "responseBudget": {
             "type": "integer",
-            "description": "The response budget for the leaderboard.",
+            "description": "Responses collected per onboarded participant, not per run: a run onboarding N participants collects N times this (N − 1 on the first run).",
             "format": "int32"
           },
           "minResponses": {
@@ -56768,7 +56818,7 @@
           },
           "responseBudget": {
             "type": "integer",
-            "description": "The response budget per run.",
+            "description": "Responses collected per onboarded participant, not per run: a run onboarding N participants collects N times this (N − 1 on the first run).",
             "format": "int32"
           },
           "minResponses": {
@@ -57314,6 +57364,7 @@
           "benchmarkId",
           "status",
           "votesExcluded",
+          "coveredPromptCount",
           "createdAt"
         ],
         "type": "object",
@@ -57387,6 +57438,11 @@
           "votesExcluded": {
             "type": "boolean",
             "description": "Whether the participant's already-collected votes are dropped from the scores. Only meaningful while it is disabled."
+          },
+          "coveredPromptCount": {
+            "type": "integer",
+            "description": "How many of the benchmark's prompts the participant has at least one sample for.",
+            "format": "int32"
           },
           "createdAt": {
             "type": "string",

@@ -35,7 +35,7 @@ class QueryLeaderboardsByBenchmarkEndpointOutput(LazyValidatedModel):
     show_prompt: StrictBool = Field(description="Whether the prompt text is shown.", alias="showPrompt")
     show_prompt_asset: StrictBool = Field(description="Whether the prompt asset is shown.", alias="showPromptAsset")
     is_inversed: StrictBool = Field(description="Whether the leaderboard's scoring is inversed.", alias="isInversed")
-    response_budget: StrictInt = Field(description="The response budget for the leaderboard.", alias="responseBudget")
+    response_budget: StrictInt = Field(description="Responses collected per onboarded participant, not per run: a run onboarding N participants collects N times this (N − 1 on the first run).", alias="responseBudget")
     min_responses: StrictInt = Field(description="The minimum number of responses for the leaderboard.", alias="minResponses")
     audience_id: StrictStr = Field(description="The id of the audience assigned to the leaderboard.", alias="audienceId")
     job_definition_id: Optional[StrictStr] = Field(default=None, description="The id of the job definition assigned to the leaderboard, if any.", alias="jobDefinitionId")
