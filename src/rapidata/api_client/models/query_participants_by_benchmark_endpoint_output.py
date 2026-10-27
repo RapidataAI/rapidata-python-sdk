@@ -42,8 +42,9 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
     logo: Optional[StrictStr] = Field(default=None, description="The logo of the model, or null if unset.")
     status: ParticipantStatus = Field(description="The status of the participant.")
     votes_excluded: StrictBool = Field(description="Whether the participant's already-collected votes are dropped from the scores. Only meaningful while it is disabled.", alias="votesExcluded")
+    covered_prompt_count: StrictInt = Field(description="How many of the benchmark's prompts the participant has at least one sample for.", alias="coveredPromptCount")
     created_at: datetime = Field(description="When the participant was added to the benchmark.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "status", "votesExcluded", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "status", "votesExcluded", "coveredPromptCount", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -139,6 +140,7 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
             "logo": obj.get("logo"),
             "status": obj.get("status"),
             "votesExcluded": obj.get("votesExcluded"),
+            "coveredPromptCount": obj.get("coveredPromptCount"),
             "createdAt": obj.get("createdAt")
         }
         try:

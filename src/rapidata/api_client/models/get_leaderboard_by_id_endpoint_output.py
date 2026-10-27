@@ -38,7 +38,7 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
     show_prompt_asset: StrictBool = Field(description="Whether the prompt asset is shown on the rapids.", alias="showPromptAsset")
     rapid_context_projection: RapidContextProjection = Field(description="Which prompt segments this leaderboard's rapids show. Always populated: a leaderboard  still on the legacy flags reports the projection those flags stand for.", alias="rapidContextProjection")
     is_inversed: StrictBool = Field(description="Whether the leaderboard results are inversed.", alias="isInversed")
-    response_budget: StrictInt = Field(description="The response budget per run.", alias="responseBudget")
+    response_budget: StrictInt = Field(description="Responses collected per onboarded participant, not per run: a run onboarding N participants collects N times this (N − 1 on the first run).", alias="responseBudget")
     min_responses: StrictInt = Field(description="The minimum responses collected per comparison.", alias="minResponses")
     audience_id: StrictStr = Field(description="The id of the audience that evaluates the leaderboard.", alias="audienceId")
     job_definition_id: Optional[StrictStr] = Field(default=None, description="The id of the associated job definition, if any.", alias="jobDefinitionId")
