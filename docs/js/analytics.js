@@ -83,10 +83,7 @@
   const X_PIXEL = {
     id: "ri3so",
     visitEvent: "tw-ri3so-ri3tn",
-    url: "https://static.ads-twitter.com/uwt.js",
     cookies: ["_twclid", "_twpid", "_twsid"],
-    // uwt.js re-writes _twclid for 120 s after a ?twclid= landing, ignoring consent, so revoke keeps expiring it.
-    twclidSweep: { cookie: "_twclid", everyMs: 1000, forMs: 130000 },
     // Off so only the visit event is sent: these scrape form PII and send dwell, leave and click events on timers.
     disabledFeatures: ["autoConfig", "autoAdvancedMatching", "dataLayerTracking", "autoDwellTracking"],
   };
@@ -369,7 +366,6 @@
     let current = null;
     let pendingConsentGranted = null;
     let xVisitSent = false;
-    let stopTwclidSweep = null;
 
     function readCookie(name) {
       const prefix = name + "=";
@@ -398,55 +394,33 @@
       );
     }
 
-    function consentCoversXPixel() {
+    function xPixelAllowed() {
+      if (!win.CookieConsent.acceptedCategory("analytics")) return false;
       const since = Date.parse(X_PIXEL_CONSENT_SINCE);
       const data = win.CookieConsent.getCookie("data");
       const stamps = [win.CookieConsent.getCookie("lastConsentTimestamp"), data && data.adConsentAt];
       return stamps.some((stamp) => Date.parse(stamp) >= since);
     }
 
+    function expireXPixelCookies() {
+      X_PIXEL.cookies.forEach(expireCookie);
+    }
+
     // Material's instant navigation keeps window, so twq persists and this runs once per full load.
     function startXPixel() {
-      if (xVisitSent || !consentCoversXPixel()) return;
+      if (xVisitSent || !xPixelAllowed()) return;
       if (!win.twq) {
-        const twq = (win.twq = function () {
-          if (twq.exe) twq.exe.apply(twq, arguments);
-          else twq.queue.push(arguments);
-        });
-        twq.version = "1.1";
-        twq.queue = [];
-        const script = doc.createElement("script");
-        script.async = true;
-        script.src = X_PIXEL.url;
-        doc.body.appendChild(script);
-        X_PIXEL.disabledFeatures.forEach((feature) => twq("set", feature, "false", X_PIXEL.id));
-        twq("config", X_PIXEL.id);
+        // X base code, verbatim apart from (win, doc).
+        !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);},s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(win,doc,'script');
+        X_PIXEL.disabledFeatures.forEach((feature) => win.twq("set", feature, "false", X_PIXEL.id));
+        win.twq("config", X_PIXEL.id);
       }
       xVisitSent = true;
       win.twq("event", X_PIXEL.visitEvent, {});
     }
 
-    function sweepTwclid() {
-      if (stopTwclidSweep || !win.twq) return;
-      const { cookie, everyMs, forMs } = X_PIXEL.twclidSweep;
-      const expire = () => expireCookie(cookie);
-      const onVisibilityChange = () => {
-        if (doc.visibilityState === "hidden") expire();
-      };
-      const interval = win.setInterval(expire, everyMs);
-      const timeout = win.setTimeout(() => stopTwclidSweep(), forMs);
-      doc.addEventListener("visibilitychange", onVisibilityChange);
-      stopTwclidSweep = () => {
-        win.clearInterval(interval);
-        win.clearTimeout(timeout);
-        doc.removeEventListener("visibilitychange", onVisibilityChange);
-        stopTwclidSweep = null;
-      };
-    }
-
     function grant() {
       consented = true;
-      if (stopTwclidSweep) stopTwclidSweep();
       startXPixel();
       const attribution = mergeAttribution(decodeAttributionCookie(readCookie(ATTRIBUTION_COOKIE)), entry);
       const encoded = encodeAttributionCookie(attribution);
@@ -515,8 +489,7 @@
         posthog.opt_out_capturing();
       }
       expireCookie(ATTRIBUTION_COOKIE);
-      X_PIXEL.cookies.forEach(expireCookie);
-      sweepTwclid();
+      expireXPixelCookies();
       for (const pair of doc.cookie.split("; ")) {
         const name = pair.split("=")[0];
         if (name.startsWith("ph_")) expireCookie(name);
@@ -527,6 +500,8 @@
           if (key && key.startsWith("ph_")) storage.removeItem(key);
         }
       }
+      // uwt.js keeps re-writing _twclid from a closure that never re-checks consent; only a reload ends it.
+      if (win.twq) win.location.reload();
     }
 
     function onDecision() {
@@ -598,6 +573,9 @@
           })
         )
       )
+      .then(() => {
+        if (!xPixelAllowed()) expireXPixelCookies();
+      })
       .catch(() => undefined);
   }
 

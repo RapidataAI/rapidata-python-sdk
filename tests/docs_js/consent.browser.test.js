@@ -19,6 +19,7 @@ const HOST_RULES =
   "MAP *.posthog.com ~NOTFOUND, MAP posthog.com ~NOTFOUND";
 const INGEST_HOSTS = ["rapidata.ai", "app.rapidata.ai"];
 const X_HOSTS = ["static.ads-twitter.com", "analytics.twitter.com", "t.co"];
+const UWT_URL = "https://static.ads-twitter.com/uwt.js";
 // posthog-js drops HeadlessChrome (UA or userAgentData brand) as a bot, so "zero requests" would pass vacuously.
 const USER_AGENT =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
@@ -352,7 +353,7 @@ test("an identity set on a sibling subdomain wins over docs' stale anonymous id"
 
 test("the X pixel loads once, only for a consent given to the current banner text", { timeout: 120_000 }, async () => {
   const { context, close, xRequests } = await openDocs();
-  const { id, url, visitEvent } = analytics.constants.xPixel;
+  const { id, visitEvent, cookies } = analytics.constants.xPixel;
   const since = Date.parse(analytics.constants.xPixelConsentSince);
   await context.clock.setSystemTime(since + 3_600_000);
   const twqCalls = (page) => page.evaluate(() => (window.twq ? window.twq.queue.map((args) => [...args]) : null));
@@ -372,27 +373,35 @@ test("the X pixel loads once, only for a consent given to the current banner tex
 
     await choose("Allow analytics");
     await page.waitForFunction(() => window.twq);
+    assert.equal(await page.locator(`script[src="${UWT_URL}"]`).count(), 1);
     await page.locator('a.md-nav__link[href$="audiences/"]').first().click();
     await page.waitForURL("**/audiences/");
-    await choose("Reject analytics");
-    await choose("Allow analytics");
-    await page.waitForTimeout(1_000);
     const calls = await twqCalls(page);
     assert.ok(calls.some(([kind, pixel]) => kind === "config" && pixel === id));
     assert.equal(visits(calls), 1, "one visit per full page load");
-    assert.equal(await page.locator(`script[src="${url}"]`).count(), 1);
-    assert.deepEqual(xRequests, [url]);
+    assert.deepEqual(xRequests, [UWT_URL]);
+
+    await Promise.all([page.waitForEvent("load"), choose("Reject analytics")]);
+    await page.waitForFunction(() => window.CookieConsent);
+    await page.waitForTimeout(1_000);
+    assert.equal(await twqCalls(page), null, "Reject did not reload the page that ran uwt.js");
+    assert.deepEqual(xRequests, [UWT_URL]);
 
     const consent = (await context.cookies()).find((cookie) => cookie.name === "cc_cookie");
     const stale = JSON.parse(decodeURIComponent(consent.value));
-    Object.assign(stale, { consentTimestamp: new Date(since - 1).toISOString(), data: null });
+    Object.assign(stale, { categories: ["necessary", "analytics"], consentTimestamp: new Date(since - 1).toISOString(), data: null });
     stale.lastConsentTimestamp = stale.consentTimestamp;
-    await context.addCookies([{ ...consent, value: encodeURIComponent(JSON.stringify(stale)) }]);
+    await context.addCookies([
+      { ...consent, value: encodeURIComponent(JSON.stringify(stale)) },
+      ...cookies.map((name) => ({ name, value: "left-behind", domain: COOKIE_DOMAIN, path: "/", secure: true })),
+    ]);
     await page.reload();
     await page.waitForFunction(() => window.CookieConsent);
     await page.waitForTimeout(1_000);
     assert.equal(await twqCalls(page), null, "a consent given to the older banner text loaded the X pixel");
     assert.equal(xRequests.length, 1);
+    const left = (await context.cookies()).filter((cookie) => cookies.includes(cookie.name));
+    assert.deepEqual(left, [], "X cookies survived a load without valid consent");
 
     await choose("Allow analytics");
     await page.waitForFunction(() => window.twq);
