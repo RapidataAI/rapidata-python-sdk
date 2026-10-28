@@ -85,6 +85,8 @@
     visitEvent: "tw-ri3so-ri3tn",
     url: "https://static.ads-twitter.com/uwt.js",
     cookies: ["_twclid", "_twpid", "_twsid"],
+    // uwt.js re-writes _twclid for 120 s after a ?twclid= landing, ignoring consent, so revoke keeps expiring it.
+    twclidSweep: { cookie: "_twclid", everyMs: 1000, forMs: 130000 },
     // Off so only the visit event is sent: these scrape form PII and send dwell, leave and click events on timers.
     disabledFeatures: ["autoConfig", "autoAdvancedMatching", "dataLayerTracking", "autoDwellTracking"],
   };
@@ -367,6 +369,7 @@
     let current = null;
     let pendingConsentGranted = null;
     let xVisitSent = false;
+    let stopTwclidSweep = null;
 
     function readCookie(name) {
       const prefix = name + "=";
@@ -423,8 +426,27 @@
       win.twq("event", X_PIXEL.visitEvent, {});
     }
 
+    function sweepTwclid() {
+      if (stopTwclidSweep || !win.twq) return;
+      const { cookie, everyMs, forMs } = X_PIXEL.twclidSweep;
+      const expire = () => expireCookie(cookie);
+      const onVisibilityChange = () => {
+        if (doc.visibilityState === "hidden") expire();
+      };
+      const interval = win.setInterval(expire, everyMs);
+      const timeout = win.setTimeout(() => stopTwclidSweep(), forMs);
+      doc.addEventListener("visibilitychange", onVisibilityChange);
+      stopTwclidSweep = () => {
+        win.clearInterval(interval);
+        win.clearTimeout(timeout);
+        doc.removeEventListener("visibilitychange", onVisibilityChange);
+        stopTwclidSweep = null;
+      };
+    }
+
     function grant() {
       consented = true;
+      if (stopTwclidSweep) stopTwclidSweep();
       startXPixel();
       const attribution = mergeAttribution(decodeAttributionCookie(readCookie(ATTRIBUTION_COOKIE)), entry);
       const encoded = encodeAttributionCookie(attribution);
@@ -494,6 +516,7 @@
       }
       expireCookie(ATTRIBUTION_COOKIE);
       X_PIXEL.cookies.forEach(expireCookie);
+      sweepTwclid();
       for (const pair of doc.cookie.split("; ")) {
         const name = pair.split("=")[0];
         if (name.startsWith("ph_")) expireCookie(name);
