@@ -215,7 +215,7 @@
       },
       "revision": 1,
       "category": "analytics",
-      "policyVersion": "2026-10-20"
+      "policyVersion": "2026-10-29"
     },
     "limits": {
       "utmMaxChars": 64,
