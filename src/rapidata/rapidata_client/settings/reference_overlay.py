@@ -13,7 +13,7 @@ from rapidata.rapidata_client.settings._rapidata_setting import (
 
 class ReferenceOverlaySetting(RapidataSetting):
     """
-    Shows a single reference image over both image options, then reveals the edits. Annotators can toggle between the reference and edits. Use with compare tasks that have two image options and one image reference.
+    Shows a single reference image over both image options until the annotator toggles to the edits. Annotators can toggle between the reference and edits. Use with compare tasks that have two image options and one image reference.
 
     Supported task types: Compare.
     """
