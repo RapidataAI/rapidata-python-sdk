@@ -210,6 +210,8 @@ test("nothing reaches PostHog before consent or after Reject", { timeout: 180_00
     await page.locator("button[data-rd-consent]").click();
     await page.locator("#cc-main .pm").getByRole("button", { name: "Allow analytics" }).click();
     const regranted = events.length;
+    // Reject reloads the page once the X pixel ran, so PostHog may still be loading here.
+    await page.waitForFunction(() => window.posthog && window.posthog.heatmaps && window.posthog.heatmaps.isEnabled);
     await page.mouse.click(9, 400);
     await waitFor(
       () => events.slice(regranted).some((event) => event.event === "$$heatmap"),
@@ -355,7 +357,7 @@ test("the X pixel loads once, only for a consent given to the current banner tex
   const { context, close, xRequests } = await openDocs();
   const { id, visitEvent, cookies } = analytics.constants.xPixel;
   const since = Date.parse(analytics.constants.xPixelConsentSince);
-  await context.clock.setSystemTime(since + 3_600_000);
+  await context.clock.setSystemTime(Math.max(Date.now(), since + 3_600_000));
   const twqCalls = (page) => page.evaluate(() => (window.twq ? window.twq.queue.map((args) => [...args]) : null));
   const visits = (calls) => calls.filter(([kind, event]) => kind === "event" && event === visitEvent).length;
   try {
