@@ -208,8 +208,6 @@ Job definitions collect at least 10 responses per datapoint. Asking for fewer, i
 Requested 5 responses per datapoint (minimum 10). At least 10 responses per datapoint are required. To collect fewer, email info@rapidata.ai with your use case and we will enable it for your organization.
 ```
 
-Once your organization is enabled, the same call goes through; a new `RapidataClient` is not needed. Ranking jobs (`responses_per_comparison`) are not affected.
-
 ## Too many open files
 
 If uploads fail with `OSError: [Errno 24] Too many open files`, the process has hit its file-descriptor limit — the upload cache, worker pool, and HTTP connections all consume descriptors. When the SDK detects this it appends a hint to the `FailedUploadException` message pointing at the relevant knobs.
