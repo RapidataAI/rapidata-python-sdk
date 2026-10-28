@@ -38,10 +38,12 @@ class ExperimentManager:
         name: str,
         treatment_bps: int = 5000,
         flags: list[FeatureFlag] | None = None,
+        control_flags: list[FeatureFlag] | None = None,
         description: str = "",
     ) -> Experiment:
         """Creates an experiment.
 
+        ``flags`` go to treatment sessions, ``control_flags`` to control sessions.
         It is live as soon as a campaign references it — meant to be paired with
         :py:meth:`run_experiment`, which attaches it to the job's campaign.
         """
@@ -59,6 +61,7 @@ class ExperimentManager:
                     name=name,
                     description=description,
                     flags=flags or [],
+                    controlFlags=control_flags or [],
                     split=CreateExperimentEndpointSplit(treatmentBps=treatment_bps),
                 )
             )

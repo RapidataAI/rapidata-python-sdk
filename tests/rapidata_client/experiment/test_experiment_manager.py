@@ -11,6 +11,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
 from rapidata.rapidata_client.experiment.experiment_config import ExperimentConfig
 from rapidata.rapidata_client.experiment.experiment_manager import (
@@ -42,6 +43,26 @@ def test_create_posts_split_without_changing_state():
     api.campaign_experiments_experiment_id_state_post.assert_not_called()
 
     assert result == Experiment(id="exp-1", name="job-fast-ui")
+    assert posted_input.control_flags == []
+
+
+def test_create_posts_flags_per_arm():
+    manager, openapi_service = _make_manager()
+    api = openapi_service.campaign.experiment_api
+    api.campaign_experiments_post.return_value = MagicMock(id="exp-1")
+
+    treatment = [FeatureFlag(key="compare_reference_intro", value="true")]
+    control = [FeatureFlag(key="reference_overlay", value="true")]
+    manager.create(name="overlay-vs-intro", flags=treatment, control_flags=control)
+
+    posted_input = api.campaign_experiments_post.call_args.kwargs[
+        "create_experiment_endpoint_input"
+    ]
+    assert posted_input.flags == treatment
+    assert posted_input.control_flags == control
+    assert posted_input.to_dict()["controlFlags"] == [
+        {"key": "reference_overlay", "value": "true"}
+    ]
 
 
 def test_run_experiment_raises_on_empty_experiment_id():
