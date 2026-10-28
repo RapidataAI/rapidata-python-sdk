@@ -67,7 +67,10 @@
   const ISO_TIMESTAMP = /^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)\.(\d{3})Z$/;
 
   const SURFACE = "docs";
-  const CONSENT_COOKIE = { name: "cc_cookie", revision: 1, policyVersion: "2026-10-20" };
+  // Consents saved before the banner mentioned ad measurement must not load the X pixel; shared with rapidata.ai and app.
+  // cookieconsent keeps lastConsentTimestamp when a re-confirm changes nothing, so re-confirms stamp data.adConsentAt.
+  const X_PIXEL_CONSENT_SINCE = "2026-10-29T00:00:00Z";
+  const CONSENT_COOKIE = { name: "cc_cookie", revision: 1, policyVersion: "2026-10-29" };
   const PRIVACY_URL = "https://rapidata.ai/privacy";
   const POSTHOG_SCRIPT = {
     url: "https://cdn.jsdelivr.net/npm/posthog-js@1.436.1/dist/array.js",
@@ -76,6 +79,14 @@
   const CONSENT_SCRIPT = {
     url: "https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.umd.js",
     integrity: "sha384-xOY5eqzqHsjfa8YYAomICWjVJ3g9q1C1tWgRF09ut5PzRJjLFSpKH7gCsIN3hKcA",
+  };
+  const X_PIXEL = {
+    id: "ri3so",
+    visitEvent: "tw-ri3so-ri3tn",
+    url: "https://static.ads-twitter.com/uwt.js",
+    cookies: ["_twclid", "_twpid", "_twsid"],
+    // Off so only the visit event is sent: these scrape form PII and send dwell, leave and click events on timers.
+    disabledFeatures: ["autoConfig", "autoAdvancedMatching", "dataLayerTracking", "autoDwellTracking"],
   };
   const CONSENT_STYLE = {
     url: "https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3.1.0/dist/cookieconsent.css",
@@ -267,9 +278,11 @@
   }
 
   function consentConfig(cookieDomain, root, callbacks) {
-    const description =
-      "Allow analytics to connect your visits across our sites and understand how you use Rapidata. " +
-      "You can change this choice later.";
+    const choice =
+      "Allow analytics to connect your visits across our sites, understand how you use Rapidata and measure our advertising.";
+    const description = choice + " You can change this choice later.";
+    const analyticsDetails =
+      choice + " We use PostHog and the X Pixel, which tells X which of our sites you visited so we can measure our ads on X.";
     const privacyLink = '<a href="' + PRIVACY_URL + '" target="_blank" rel="noopener">Privacy policy</a>';
     return {
       root,
@@ -306,7 +319,7 @@
               closeIconLabel: "Close",
               sections: [
                 { title: "Necessary", description: "Required for the site to work.", linkedCategory: "necessary" },
-                { title: "Analytics", description, linkedCategory: "analytics" },
+                { title: "Analytics", description: analyticsDetails, linkedCategory: "analytics" },
                 { description: privacyLink },
               ],
             },
@@ -353,6 +366,7 @@
     let posthogScript = null;
     let current = null;
     let pendingConsentGranted = null;
+    let xVisitSent = false;
 
     function readCookie(name) {
       const prefix = name + "=";
@@ -381,8 +395,37 @@
       );
     }
 
+    function consentCoversXPixel() {
+      const since = Date.parse(X_PIXEL_CONSENT_SINCE);
+      const data = win.CookieConsent.getCookie("data");
+      const stamps = [win.CookieConsent.getCookie("lastConsentTimestamp"), data && data.adConsentAt];
+      return stamps.some((stamp) => Date.parse(stamp) >= since);
+    }
+
+    // Material's instant navigation keeps window, so twq persists and this runs once per full load.
+    function startXPixel() {
+      if (xVisitSent || !consentCoversXPixel()) return;
+      if (!win.twq) {
+        const twq = (win.twq = function () {
+          if (twq.exe) twq.exe.apply(twq, arguments);
+          else twq.queue.push(arguments);
+        });
+        twq.version = "1.1";
+        twq.queue = [];
+        const script = doc.createElement("script");
+        script.async = true;
+        script.src = X_PIXEL.url;
+        doc.body.appendChild(script);
+        X_PIXEL.disabledFeatures.forEach((feature) => twq("set", feature, "false", X_PIXEL.id));
+        twq("config", X_PIXEL.id);
+      }
+      xVisitSent = true;
+      win.twq("event", X_PIXEL.visitEvent, {});
+    }
+
     function grant() {
       consented = true;
+      startXPixel();
       const attribution = mergeAttribution(decodeAttributionCookie(readCookie(ATTRIBUTION_COOKIE)), entry);
       const encoded = encodeAttributionCookie(attribution);
       if (encoded.length <= ATTRIBUTION_MAX_CHARS) {
@@ -450,6 +493,7 @@
         posthog.opt_out_capturing();
       }
       expireCookie(ATTRIBUTION_COOKIE);
+      X_PIXEL.cookies.forEach(expireCookie);
       for (const pair of doc.cookie.split("; ")) {
         const name = pair.split("=")[0];
         if (name.startsWith("ph_")) expireCookie(name);
@@ -497,6 +541,14 @@
       );
     }
 
+    // Runs after the library's own button handler has saved the choice.
+    function stampAdConsent(event) {
+      const button = event.target && event.target.closest ? event.target.closest('[data-role="all"], [data-role="save"]') : null;
+      if (!button || !win.CookieConsent || !win.CookieConsent.acceptedCategory("analytics")) return;
+      win.CookieConsent.setCookieData({ value: { adConsentAt: new Date().toISOString() }, mode: "update" });
+      if (consented) startXPixel();
+    }
+
     function openPreferences(event) {
       const trigger = event.target && event.target.closest ? event.target.closest("[data-rd-consent]") : null;
       if (!trigger || !win.CookieConsent) return;
@@ -510,6 +562,7 @@
     doc.documentElement.classList.add("cc--darkmode");
     const consentRoot = doc.createElement("div");
     consentRoot.className = "ph-no-capture";
+    consentRoot.addEventListener("click", stampAdConsent);
     doc.body.appendChild(consentRoot);
 
     Promise.all([loadAsset(doc, CONSENT_STYLE, true), loadAsset(doc, CONSENT_SCRIPT, false)])
@@ -536,6 +589,8 @@
       handoffKey: HANDOFF_KEY,
       attributionCookie: { name: ATTRIBUTION_COOKIE, maxAgeSeconds: ATTRIBUTION_MAX_AGE_SECONDS, maxChars: ATTRIBUTION_MAX_CHARS },
       consentCookie: CONSENT_COOKIE,
+      xPixel: X_PIXEL,
+      xPixelConsentSince: X_PIXEL_CONSENT_SINCE,
       limits: { utmMaxChars: UTM_MAX, landingPathMaxChars: PATH_MAX, referrerHostMaxChars: HOST_MAX },
     },
     startJourneyAnalytics,

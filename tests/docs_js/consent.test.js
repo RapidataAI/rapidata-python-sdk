@@ -1,5 +1,5 @@
 const assert = require("node:assert/strict");
-const { describe, it } = require("node:test");
+const { afterEach, beforeEach, describe, it, mock } = require("node:test");
 
 const analytics = require("../../docs/js/analytics.js");
 
@@ -36,9 +36,14 @@ function fakeWindow(globals) {
       if (attributes.includes("Max-Age=0")) cookies.delete(name);
       else cookies.set(name, rest.join("="));
     },
-    createElement: () => ({}),
+    createElement: () => {
+      const listeners = [];
+      return { listeners, addEventListener: (type, listener) => listeners.push([type, listener]) };
+    },
     body: {
-      appendChild: (element) => {
+      appended: [],
+      appendChild(element) {
+        this.appended.push(element);
         setImmediate(() => element.onload && element.onload());
         return element;
       },
@@ -87,20 +92,28 @@ function fakePosthog(log) {
 }
 
 // Fires callbacks the way saveCookiePreferences does in vanilla-cookieconsent 3.1.0 (opt-in mode).
-function fakeCookieConsent(stored) {
+function fakeCookieConsent(stored, consentedAt) {
   let config = null;
   let analyticsAccepted = stored;
+  let lastConsentTimestamp = stored === null ? undefined : consentedAt;
+  let data = null;
   return {
     run(value) {
       config = value;
       if (analyticsAccepted !== null) config.onConsent({});
     },
     acceptedCategory: (name) => name === "analytics" && analyticsAccepted === true,
+    getCookie: (field) => ({ lastConsentTimestamp, data })[field],
+    setCookieData({ value, mode }) {
+      assert.equal(mode, "update");
+      data = Object.assign(data || {}, value);
+    },
     showPreferences() {},
     choose(allow) {
       const first = analyticsAccepted === null;
       const changed = !first && analyticsAccepted !== allow;
       analyticsAccepted = allow;
+      lastConsentTimestamp = new Date().toISOString();
       if (first) {
         config.onFirstConsent({});
         config.onConsent({});
@@ -111,10 +124,12 @@ function fakeCookieConsent(stored) {
   };
 }
 
-async function openDocs({ stored = null } = {}) {
+async function openDocs({ stored = null, consentedAt = new Date().toISOString(), cookies = [] } = {}) {
   const log = [];
-  const consent = fakeCookieConsent(stored);
-  analytics.startJourneyAnalytics(fakeWindow({ CookieConsent: consent, posthog: fakePosthog(log) }));
+  const consent = fakeCookieConsent(stored, consentedAt);
+  const win = fakeWindow({ CookieConsent: consent, posthog: fakePosthog(log) });
+  for (const name of cookies) win.document.cookie = `${name}=1`;
+  analytics.startJourneyAnalytics(win);
   await settle();
   const choose = async (allow) => {
     consent.choose(allow);
@@ -122,7 +137,14 @@ async function openDocs({ stored = null } = {}) {
   };
   const granted = () => log.filter(([kind, event]) => kind === "capture" && event === "consent_granted");
   const changes = () => granted().map(([, , properties]) => properties.change);
-  return { log, consent, choose, granted, changes };
+  const twq = () => (win.twq ? win.twq.queue.map((args) => [...args]) : []);
+  // Fires after the library's own handler, as the click bubbles from the button to the consent root.
+  const clickConsentButton = (role) => {
+    const root = win.document.body.appended.find((element) => element.className === "ph-no-capture");
+    const target = { closest: (selector) => (selector.includes(`"${role}"`) ? {} : null) };
+    for (const [type, listener] of root.listeners) if (type === "click") listener({ target });
+  };
+  return { log, consent, choose, granted, changes, twq, win, clickConsentButton };
 }
 
 describe("consent_granted", () => {
@@ -134,7 +156,7 @@ describe("consent_granted", () => {
     assert.equal(granted().length, 1);
     const [entry] = granted();
     const [, , properties, options, state] = entry;
-    assert.deepEqual(properties, { policy_version: "2026-10-20", change: "first" });
+    assert.deepEqual(properties, { policy_version: "2026-10-29", change: "first" });
     assert.deepEqual(Object.keys(options), ["$set_once"]);
     assert.equal(options.$set_once.first_consent_surface, "docs");
     assert.match(options.$set_once.first_consent_at, ISO_UTC);
@@ -201,5 +223,74 @@ describe("consent_granted", () => {
 
     await choose(true);
     assert.deepEqual(changes(), ["regrant"]);
+  });
+});
+
+describe("X pixel", () => {
+  const { id, visitEvent, cookies, disabledFeatures } = analytics.constants.xPixel;
+  const since = Date.parse(analytics.constants.xPixelConsentSince);
+  const before = new Date(since - 1).toISOString();
+  beforeEach(() => mock.timers.enable({ apis: ["Date"], now: since + 3_600_000 }));
+  afterEach(() => mock.timers.reset());
+  const LOAD = [
+    ...disabledFeatures.map((feature) => ["set", feature, "false", id]),
+    ["config", id],
+    ["event", visitEvent, {}],
+  ];
+
+  it("loads and sends one visit after a consent given on or after the new banner text", async () => {
+    const atRollout = await openDocs({ stored: true, consentedAt: new Date(since).toISOString() });
+    assert.deepEqual(atRollout.twq(), LOAD);
+
+    const fresh = await openDocs();
+    await fresh.choose(true);
+    assert.deepEqual(fresh.twq(), LOAD);
+  });
+
+  it("does not load for a consent given to the older banner text", async () => {
+    const stale = await openDocs({ stored: true, consentedAt: before });
+    assert.ok(stale.log.some(([kind]) => kind === "init"), "PostHog consent must stay valid");
+    assert.equal(stale.win.twq, undefined);
+  });
+
+  it("does not load before consent or after Reject", async () => {
+    const pending = await openDocs();
+    assert.equal(pending.win.twq, undefined);
+    await pending.choose(false);
+    assert.equal(pending.win.twq, undefined);
+
+    const rejected = await openDocs({ stored: false, consentedAt: new Date(since).toISOString() });
+    assert.equal(rejected.win.twq, undefined);
+  });
+
+  it("loads when an older consent is re-confirmed with Allow or Save", async () => {
+    for (const role of ["all", "save"]) {
+      const page = await openDocs({ stored: true, consentedAt: before });
+      page.clickConsentButton(role);
+      assert.deepEqual(page.twq(), LOAD, role);
+      assert.equal(Date.parse(page.consent.getCookie("data").adConsentAt), since + 3_600_000);
+    }
+  });
+
+  it("is not stamped by Reject, or by Save with analytics off", async () => {
+    const rejected = await openDocs({ stored: false, consentedAt: before });
+    rejected.clickConsentButton("necessary");
+    rejected.clickConsentButton("save");
+    assert.equal(rejected.consent.getCookie("data"), null);
+    assert.equal(rejected.win.twq, undefined);
+  });
+
+  it("sends the visit once per page load across Allow, Reject, Allow", async () => {
+    const page = await openDocs({ stored: true, consentedAt: new Date(since).toISOString() });
+    await page.choose(false);
+    await page.choose(true);
+    assert.deepEqual(page.twq(), LOAD);
+  });
+
+  it("expires its first-party cookies on Reject", async () => {
+    const page = await openDocs({ stored: true, consentedAt: new Date(since).toISOString(), cookies });
+    await page.choose(false);
+    const left = page.win.document.cookie.split("; ").map((pair) => pair.split("=")[0]);
+    assert.deepEqual(left.filter((name) => cookies.includes(name)), []);
   });
 });
