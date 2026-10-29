@@ -110,7 +110,7 @@ job_definition = client.job.create_compare_job_definition(
 2. For compare jobs, each datapoint is a pair of items. Supports URLs, local paths, or text.
 3. Optional text context shown alongside each datapoint (must match the length of `datapoints`).
 
-Compare jobs stop collecting votes on each pair once its winner — or that it is too close to call — is settled, using up to 100 responses per pair. Pass `responses_per_datapoint` to change that; see [Early Stopping](confidence_stopping.md).
+Compare jobs stop collecting votes on each pair once its winner — or that it is too close to call — is settled, after about 21 responses on average. Pass `responses_per_datapoint` to change that; see [Adaptive Stopping](confidence_stopping.md).
 
 !!! tip
     If some datapoints fail to upload, a `FailedUploadException` will be raised. Learn how to handle this in the [Error Handling Guide](error_handling.md).
@@ -221,5 +221,5 @@ print(results)
 - Create [Custom Audiences](audiences.md) for higher quality results
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
 - Understand the [Results Format](understanding_the_results.md)
-- Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
+- Configure [Adaptive Stopping](confidence_stopping.md) to stop each item once its answer is settled
 - Let your [AI agent](ai_agents.md) write the integration code for you — one-line install for Claude Code, Cursor, Copilot, and many more

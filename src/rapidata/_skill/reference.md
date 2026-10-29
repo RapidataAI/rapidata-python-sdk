@@ -12,7 +12,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `instruction` | str | Question shown to labelers: one criterion, under 80 characters (see **Task design rules** in the main guide). Over 250 characters raises `ValueError` |
 | `datapoints` | list | Data to label (URLs or local paths) |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
-| `responses_per_datapoint` | `int \| AdaptiveStopping \| QuorumStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()` (up to 100 votes, ~21 on average); classification default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` is compare-only. See **Early Stopping** |
+| `responses_per_datapoint` | `int \| AdaptiveStopping \| QuorumStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()` (~21 votes on average, ~31 for the hardest pairs); classification default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` is compare-only. See **Early Stopping** |
 | `contexts` | list[str] \| None | Text context per datapoint: one sentence under 150 characters with only what the instruction asks about (see **Task design rules** in the main guide). Max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually |
 | `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
 | `confidence_threshold` | float \| None | **Deprecated** (`DeprecationWarning`). Confidence-based early stopping threshold (0-1); needs an `int` `responses_per_datapoint` (10 when omitted) |
@@ -459,11 +459,11 @@ job_def = client.job.create_compare_job_definition(
 
 - Each vote is weighted by the voter's user score at the time it was cast.
 - After every vote the pair gets a verdict once it is settled: `"A"` / `"B"` (a winner, wrong with probability below `1 - min_confidence`), `"ambiguous"` (the true split lies within 20/80–80/20 for the default `ambiguity`), or `"undecided"` at `max_responses`. A winner takes priority over ambiguous.
-- Unanimous pairs stop after 7 votes, 50/50 pairs at about 16, ~21 on average.
+- Unanimous pairs stop after 7 votes, 50/50 pairs at about 16, ~21 on average, ~31 for the hardest pairs (split around 35/65). `max_responses` is a safety cap the defaults never reach (the longest possible run is under 80 votes) — don't tune it.
 - `min_confidence` must be in (0, 1), `ambiguity` in (0, 0.5), `max_responses` ≥ 1, else `ValueError`.
-- The defaults are calibrated; change them only if you know why. Raising `ambiguity` narrows the ambiguous band, so near-even pairs resolve to a winner at the cost of many more votes.
+- The defaults are calibrated; change them only if you know why. Raising `ambiguity` narrows the ambiguous band, so near-even pairs resolve to a winner at the cost of more votes: `ambiguity=0.375` (band 25/75–75/25) needs ~28 votes on average, ~49 for the hardest pairs.
 - Raises `ValueError` on classification jobs and together with `AllowNeitherBothSetting` (or a `compare_unsure` `CustomSetting`) — use an `int` or `QuorumStopping` there.
-- `CostEstimate.estimated_cost` is the expected cost; `max_cost` assumes every pair runs to `max_responses`.
+- `CostEstimate.estimated_cost` is the expected cost.
 
 ### Quorum Stopping
 
@@ -530,7 +530,7 @@ job_def = client.job.create_compare_job_definition(
 )
 
 estimate = job_def.estimated_cost   # blocks briefly until priced
-print(f"Expected {estimate.estimated_cost}, at most {estimate.max_cost}")
+print(f"Expected {estimate.estimated_cost} for {estimate.required_responses} responses")
 
 # The same property is available once the job is running
 job = audience.assign_job(job_def)
@@ -542,7 +542,6 @@ print(job.estimated_cost.estimated_cost)
 | Field | Type | Description |
 |-------|------|-------------|
 | `estimated_cost` | float | **Expected** total cost of running the job to completion, in your account's billing currency |
-| `max_cost` | float | Cost if every datapoint collects its maximum number of responses; equals `estimated_cost` for a fixed `int` |
 | `datapoint_count` | int | Number of datapoints the job will label |
 | `required_responses` | int | Total number of responses the job is expected to collect |
 

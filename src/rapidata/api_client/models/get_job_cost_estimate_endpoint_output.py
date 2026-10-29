@@ -30,8 +30,7 @@ class GetJobCostEstimateEndpointOutput(LazyValidatedModel):
     cost_per_response: Union[StrictFloat, StrictInt] = Field(description="The representative per-response cost the estimate is based on.", alias="costPerResponse")
     datapoint_count: StrictInt = Field(description="The number of datapoints in the job's dataset.", alias="datapointCount")
     required_responses: StrictInt = Field(description="The total number of responses the job's referee requires to complete.", alias="requiredResponses")
-    max_cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The cost if every datapoint used its maximum number of responses.", alias="maxCost")
-    __properties: ClassVar[List[str]] = ["estimatedCost", "costPerResponse", "datapointCount", "requiredResponses", "maxCost"]
+    __properties: ClassVar[List[str]] = ["estimatedCost", "costPerResponse", "datapointCount", "requiredResponses"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -83,8 +82,7 @@ class GetJobCostEstimateEndpointOutput(LazyValidatedModel):
             "estimatedCost": obj.get("estimatedCost"),
             "costPerResponse": obj.get("costPerResponse"),
             "datapointCount": obj.get("datapointCount"),
-            "requiredResponses": obj.get("requiredResponses"),
-            "maxCost": obj.get("maxCost")
+            "requiredResponses": obj.get("requiredResponses")
         }
         try:
             _obj = cls.model_validate(_data)

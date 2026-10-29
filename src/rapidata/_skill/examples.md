@@ -922,10 +922,10 @@ job_def = client.job.create_compare_job_definition(
 
 # Reading estimated_cost blocks briefly until the estimate is priced.
 estimate = job_def.estimated_cost
-# Compare jobs stop adaptively: estimated_cost is the expected cost, max_cost the upper bound.
+# Compare jobs stop adaptively, so estimated_cost is the expected cost.
 print(
-    f"Expected {estimate.estimated_cost}, at most {estimate.max_cost}, "
-    f"for {estimate.datapoint_count} datapoints"
+    f"Expected {estimate.estimated_cost} for {estimate.required_responses} responses "
+    f"across {estimate.datapoint_count} datapoints"
 )
 
 # The same property is available once the job is running.

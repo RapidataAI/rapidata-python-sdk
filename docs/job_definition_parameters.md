@@ -102,16 +102,16 @@ datapoints=[
 How many responses to collect for each datapoint.
 
 - An `int` collects exactly that many. The actual number may slightly exceed it due to concurrent labelers.
-- `AdaptiveStopping()` stops each compare pair once its verdict is settled, up to 100 responses.
+- `AdaptiveStopping()` stops each compare pair once its verdict is settled, after about 21 responses on average.
 - `QuorumStopping(threshold, max_responses)` stops once `threshold` responses agree.
 
-**Related:** [Early Stopping](confidence_stopping.md)
+**Related:** [Adaptive Stopping](confidence_stopping.md)
 
 ```python
 from rapidata import AdaptiveStopping, QuorumStopping
 
 responses_per_datapoint=15                                          # fixed
-responses_per_datapoint=AdaptiveStopping(max_responses=50)          # compare only
+responses_per_datapoint=AdaptiveStopping(ambiguity=0.375)           # compare only: ambiguous band 25/75–75/25
 responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)
 ```
 
@@ -281,7 +281,7 @@ job_definition = client.job.create_classification_job_definition(
 
 Deprecated: pass `responses_per_datapoint=QuorumStopping(threshold, max_responses)` instead.
 
-**Related:** [Early Stopping](confidence_stopping.md#quorum-stopping)
+**Related:** [Quorum Stopping](confidence_stopping.md#quorum-stopping)
 
 ```python
 from rapidata import QuorumStopping
@@ -347,7 +347,7 @@ job_definition = client.job.create_compare_job_definition(
 
 #### `AllowNeitherBothSetting()`
 
-For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice. It cannot be combined with adaptive stopping, the compare default, so pass a fixed `responses_per_datapoint` or a `QuorumStopping`.
+For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice.
 
 ```python
 from rapidata import AllowNeitherBothSetting

@@ -11,15 +11,11 @@ from rapidata import AdaptiveStopping, QuorumStopping
 from rapidata.api_client.models.create_job_revision_endpoint_output import (
     CreateJobRevisionEndpointOutput,
 )
-from rapidata.api_client.models.get_job_cost_estimate_endpoint_output import (
-    GetJobCostEstimateEndpointOutput,
-)
 from rapidata.api_client.models.get_job_revision_endpoint_output import (
     GetJobRevisionEndpointOutput,
 )
 from rapidata.api_client.models.i_referee import IReferee
 from rapidata.rapidata_client.job import rapidata_job_manager
-from rapidata.rapidata_client.job.cost import CostEstimate
 from rapidata.rapidata_client.job.rapidata_job_definition import (
     RapidataJobDefinition,
 )
@@ -300,18 +296,3 @@ def test_results_expose_verdict_and_responses():
     ]
     assert [r.get("responses") for r in rows] == [7, 16, 10, 10, None]
     assert "verdict" not in rows[4]
-
-
-def test_cost_estimate_carries_max_cost():
-    model = GetJobCostEstimateEndpointOutput.from_dict(
-        {
-            "estimatedCost": 20.9,
-            "costPerResponse": 1.0,
-            "datapointCount": 1,
-            "requiredResponses": 21,
-            "maxCost": 100.0,
-        }
-    )
-    estimate = CostEstimate._from_model(model)
-    assert estimate.estimated_cost == 20.9
-    assert estimate.max_cost == 100.0

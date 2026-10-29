@@ -36,19 +36,15 @@ class CostEstimate:
     collect, so the amount you are actually charged can differ.
 
     With adaptive stopping, each datapoint stops once its verdict is settled, so
-    ``estimated_cost`` is the expected cost and ``max_cost`` is the most the job
-    can cost if every datapoint runs to its maximum number of responses. With a
-    fixed number of responses the two are equal.
+    ``estimated_cost`` is the expected cost.
 
     Attributes:
         estimated_cost: The expected total cost of running the job to completion.
-        max_cost: The cost if every datapoint collects its maximum number of responses.
         datapoint_count: The number of datapoints the job will label.
         required_responses: The total number of responses the job is expected to collect.
     """
 
     estimated_cost: float
-    max_cost: float
     datapoint_count: int
     required_responses: int
 
@@ -62,9 +58,6 @@ class CostEstimate:
     ) -> CostEstimate:
         return cls(
             estimated_cost=model.estimated_cost,
-            max_cost=(
-                model.max_cost if model.max_cost is not None else model.estimated_cost
-            ),
             datapoint_count=model.datapoint_count,
             required_responses=model.required_responses,
         )

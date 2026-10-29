@@ -1,6 +1,6 @@
-# Early Stopping
+# Adaptive Stopping
 
-Early stopping ends response collection for a datapoint once a stopping condition is met, so you pay for the responses that change the outcome and not for the ones after it.
+Adaptive stopping ends response collection for a datapoint once a stopping condition is met, so you pay for the responses that change the outcome and not for the ones after it.
 
 You choose the stopping rule with `responses_per_datapoint`:
 
@@ -10,21 +10,17 @@ You choose the stopping rule with `responses_per_datapoint`:
 | `QuorumStopping(threshold, max_responses)` | Stops once `threshold` responses agree. | Classification, Compare |
 | an `int` | Collects exactly that many responses. Default (`10`) for every other job type. | All |
 
-## Adaptive Stopping
-
-### How it Works
+## How it Works
 
 Each vote on a compare pair is weighted by the voter's [user score](understanding_the_results.md#understanding-the-user-scores) at the time the vote was cast. After every vote, the pair is checked against three outcomes:
 
 - **`"A"` or `"B"`**: one side is preferred, with at least `min_confidence` certainty.
 - **`"ambiguous"`**: the pair is too close to call — the true preference lies between 20/80 and 80/20 by default — so further votes would not produce a winner.
-- **`"undecided"`**: neither happened before `max_responses` votes.
+- **`"undecided"`**: neither happened before `max_responses` votes. `max_responses` is a safety cap: with the defaults, no pair comes close to it.
 
-The pair stops at the first verdict. A clear pair stops after as few as 7 votes, a 50/50 pair after about 16, and a pair needs about 21 votes on average.
+The pair stops at the first verdict. A clear pair stops after as few as 7 votes and a 50/50 pair after about 16. On average a pair needs about 21 votes; the hardest pairs, split around 35/65, need about 31.
 
-The guarantee holds no matter when the pair stops: the chance that a verdict is wrong stays below `1 - min_confidence`.
-
-### Using Adaptive Stopping in Your Job
+## Using Adaptive Stopping in Your Job
 
 Compare jobs use adaptive stopping unless you pass something else:
 
@@ -42,18 +38,13 @@ job_definition = client.job.create_compare_job_definition(
 )
 ```
 
-1. The same as leaving the argument out. `AdaptiveStopping(max_responses=50)` lowers the cap.
+1. The same as leaving the argument out.
 
-The defaults (`min_confidence=0.9`, `ambiguity=0.32`, `max_responses=100`) are calibrated; change them only if you know why. Raising `ambiguity` narrows the ambiguous band, so near-even pairs resolve to a winner — at the cost of many more votes.
+Raising `ambiguity` narrows the ambiguous band, so near-even pairs resolve to a winner at the cost of more votes. For example, `AdaptiveStopping(ambiguity=0.375)` tightens the band from 20/80–80/20 to 25/75–75/25, which raises the average from about 21 to about 28 votes per pair, and to about 49 for the hardest pairs.
 
-!!! note
-    Adaptive stopping is only available for compare jobs, and cannot be combined with `AllowNeitherBothSetting` (the "Unsure" button). Use `QuorumStopping` or a fixed `int` there.
+Because each pair stops at a different point, the [cost estimate](cost_estimates.md) `estimated_cost` is the expected cost of the job.
 
-### Cost
-
-Because each pair stops at a different point, the [cost estimate](cost_estimates.md) reports `estimated_cost` (the expected cost) and `max_cost` (every pair running to `max_responses`).
-
-### Analyzing Adaptive Stopping Results
+## Analyzing Adaptive Stopping Results
 
 Each compare datapoint in the [results](understanding_the_results.md) gains:
 
@@ -131,7 +122,6 @@ Quorum Stopping is a good choice when:
 
 - **Classification**: Adaptive stopping is compare-only.
 - **Simplicity**: You want a straightforward stopping rule based on raw vote counts rather than statistical confidence.
-- **The "Unsure" button**: Compare jobs with `AllowNeitherBothSetting` cannot use adaptive stopping.
 
 ---
 
