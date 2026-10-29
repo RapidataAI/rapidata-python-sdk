@@ -113,7 +113,7 @@ def _get_responses(referee: IReferee) -> int | AdaptiveStopping | QuorumStopping
     if kind == "AdaptiveStoppingReferee":
         return AdaptiveStopping(
             min_confidence=data["minConfidence"],
-            ambiguity=data["ambiguity"],
+            ambiguity_range=data["ambiguityRange"],
             max_responses=data["maxVotes"],
         )
     raise ValueError(f"A '{kind}' referee has no responses per datapoint.")

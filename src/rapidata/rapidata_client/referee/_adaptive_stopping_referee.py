@@ -13,9 +13,11 @@ class AdaptiveStoppingReferee(Referee):
     Configured through :class:`~rapidata.AdaptiveStopping`; see there for the parameters.
     """
 
-    def __init__(self, min_confidence: float, ambiguity: float, max_responses: int):
+    def __init__(
+        self, min_confidence: float, ambiguity_range: float, max_responses: int
+    ):
         self.min_confidence = min_confidence
-        self.ambiguity = ambiguity
+        self.ambiguity_range = ambiguity_range
         self.max_responses = max_responses
 
     def _to_dict(self):
@@ -23,7 +25,7 @@ class AdaptiveStoppingReferee(Referee):
             "_t": "AdaptiveStoppingRefereeConfig",
             "maxVotes": self.max_responses,
             "minConfidence": self.min_confidence,
-            "ambiguity": self.ambiguity,
+            "ambiguityRange": self.ambiguity_range,
         }
 
     def _to_model(self) -> IReferee:
@@ -37,14 +39,14 @@ class AdaptiveStoppingReferee(Referee):
                 _t="AdaptiveStoppingReferee",
                 maxVotes=self.max_responses,
                 minConfidence=self.min_confidence,
-                ambiguity=self.ambiguity,
+                ambiguityRange=self.ambiguity_range,
             )
         )
 
     def __str__(self) -> str:
         return (
             f"AdaptiveStoppingReferee(min_confidence={self.min_confidence}, "
-            f"ambiguity={self.ambiguity}, max_responses={self.max_responses})"
+            f"ambiguity_range={self.ambiguity_range}, max_responses={self.max_responses})"
         )
 
     def __repr__(self) -> str:

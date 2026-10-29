@@ -27,7 +27,7 @@ ADAPTIVE_WIRE = {
     "_t": "AdaptiveStoppingReferee",
     "maxVotes": 100,
     "minConfidence": 0.9,
-    "ambiguity": 0.32,
+    "ambiguityRange": 0.6,
 }
 
 
@@ -82,8 +82,9 @@ def _classify(manager: RapidataJobManager, **kwargs) -> dict:
     [
         {"min_confidence": 0},
         {"min_confidence": 1},
-        {"ambiguity": 0},
-        {"ambiguity": 0.5},
+        {"ambiguity_range": 0},
+        {"ambiguity_range": 1},
+        {"ambiguity_range": 1.5},
         {"max_responses": 0},
         {"max_responses": 10.0},
     ],
@@ -110,12 +111,14 @@ def test_compare_int_stays_a_fixed_number_of_responses(manager):
 
 
 def test_compare_custom_adaptive_and_quorum(manager):
-    custom = AdaptiveStopping(min_confidence=0.95, ambiguity=0.4, max_responses=50)
+    custom = AdaptiveStopping(
+        min_confidence=0.95, ambiguity_range=0.5, max_responses=50
+    )
     assert _compare(manager, responses_per_datapoint=custom) == {
         "_t": "AdaptiveStoppingReferee",
         "maxVotes": 50,
         "minConfidence": 0.95,
-        "ambiguity": 0.4,
+        "ambiguityRange": 0.5,
     }
     assert _compare(manager, responses_per_datapoint=QuorumStopping(3, 5)) == {
         "_t": "QuorumReferee",

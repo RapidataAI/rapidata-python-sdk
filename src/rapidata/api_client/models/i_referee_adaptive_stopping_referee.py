@@ -29,8 +29,8 @@ class IRefereeAdaptiveStoppingReferee(LazyValidatedModel):
     t: StrictStr = Field(alias="_t")
     max_votes: StrictInt = Field(alias="maxVotes")
     min_confidence: Union[StrictFloat, StrictInt] = Field(alias="minConfidence")
-    ambiguity: Union[StrictFloat, StrictInt]
-    __properties: ClassVar[List[str]] = ["_t", "maxVotes", "minConfidence", "ambiguity"]
+    ambiguity_range: Union[StrictFloat, StrictInt] = Field(alias="ambiguityRange")
+    __properties: ClassVar[List[str]] = ["_t", "maxVotes", "minConfidence", "ambiguityRange"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -89,7 +89,7 @@ class IRefereeAdaptiveStoppingReferee(LazyValidatedModel):
             "_t": obj.get("_t"),
             "maxVotes": obj.get("maxVotes"),
             "minConfidence": obj.get("minConfidence"),
-            "ambiguity": obj.get("ambiguity")
+            "ambiguityRange": obj.get("ambiguityRange")
         }
         try:
             _obj = cls.model_validate(_data)

@@ -375,7 +375,7 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
       "summedUserScoresRatios": { "model_a.jpg": 0.286, "model_b.jpg": 0.714 },
       "stoppingState": {
         "weightA": 2.4, "weightB": 5.6, "csLower": 0.52, "csUpper": 0.97,
-        "verdict": "B", "decidedAtResponse": 8, "minConfidence": 0.9, "ambiguity": 0.32
+        "verdict": "B", "decidedAtResponse": 8, "minConfidence": 0.9, "ambiguityRange": 0.6
       },
       "verdict": "B",
       "responses": 8,
@@ -412,7 +412,7 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 | `confidencePerCategory` | Confidence level per category (with `confidence_threshold`) |
 | `verdict` | Adaptive stopping only (added by the SDK from `stoppingState`): `"A"`, `"B"`, `"ambiguous"` (too close to call), `"undecided"` (hit `max_responses`), or `None` while open. Prefer it over `winner` on adaptive results |
 | `responses` | Adaptive stopping only: number of votes the pair used |
-| `stoppingState` | Adaptive stopping only: raw state — weighted votes (`weightA`, `weightB`), confidence bounds on the share of B (`csLower`, `csUpper`), backend `verdict`, `decidedAtResponse`, and the `minConfidence` / `ambiguity` used |
+| `stoppingState` | Adaptive stopping only: raw state — weighted votes (`weightA`, `weightB`), confidence bounds on the share of B (`csLower`, `csUpper`), backend `verdict`, `decidedAtResponse`, and the `minConfidence` / `ambiguityRange` used |
 | `userScore` | 0-1 value indicating individual labeler reliability |
 
 A labeler's `demographics` may be empty when no demographic data was collected for them.
@@ -455,13 +455,13 @@ job_def = client.job.create_compare_job_definition(
 )
 ```
 
-`AdaptiveStopping(min_confidence=0.9, ambiguity=0.32, max_responses=100)` — a frozen dataclass:
+`AdaptiveStopping(min_confidence=0.9, ambiguity_range=0.6, max_responses=100)` — a frozen dataclass:
 
 - Each vote is weighted by the voter's user score at the time it was cast.
-- After every vote the pair gets a verdict once it is settled: `"A"` / `"B"` (a winner, wrong with probability below `1 - min_confidence`), `"ambiguous"` (the true split lies within 20/80–80/20 for the default `ambiguity`), or `"undecided"` at `max_responses`. A winner takes priority over ambiguous.
+- After every vote the pair gets a verdict once it is settled: `"A"` / `"B"` (a winner, wrong with probability below `1 - min_confidence`), `"ambiguous"` (the true split lies within `[0.5 - ambiguity_range/2, 0.5 + ambiguity_range/2]`, 20/80–80/20 by default), or `"undecided"` at `max_responses`. A winner takes priority over ambiguous, so a 70/30 pair can still return `"A"`/`"B"`; the range only decides which pairs may stop as ambiguous.
 - Unanimous pairs stop after 7 votes, 50/50 pairs at about 16, ~25 on average (measured on past compare jobs; `estimated_cost` is priced with it), ~31 for the hardest pairs (split around 35/65). `max_responses` is a safety cap the defaults never reach (the longest possible run is under 80 votes) — don't tune it.
-- `min_confidence` must be in (0, 1), `ambiguity` in (0, 0.5), `max_responses` ≥ 1, else `ValueError`.
-- The defaults are calibrated; change them only if you know why. Raising `ambiguity` narrows the ambiguous band, so near-even pairs resolve to a winner at the cost of more votes: `ambiguity=0.375` (band 25/75–75/25) needs about a third more votes on average, ~49 for the hardest pairs.
+- `min_confidence` must be in (0, 1), `ambiguity_range` in (0, 1), `max_responses` ≥ 1, else `ValueError`.
+- The defaults are calibrated; change them only if you know why. **Lowering** `ambiguity_range` narrows the band so closer pairs get a winner, at the cost of more votes: `ambiguity_range=0.5` (band 25/75–75/25) needs about a third more votes on average, ~49 for the hardest pairs; `0.3` gives 35/65–65/35.
 - Raises `ValueError` on classification jobs and together with `AllowNeitherBothSetting` (or a `compare_unsure` `CustomSetting`) — use an `int` or `QuorumStopping` there.
 - `CostEstimate.estimated_cost` is the expected cost.
 

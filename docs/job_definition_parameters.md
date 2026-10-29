@@ -111,7 +111,7 @@ How many responses to collect for each datapoint.
 from rapidata import AdaptiveStopping, QuorumStopping
 
 responses_per_datapoint=15                                          # fixed
-responses_per_datapoint=AdaptiveStopping(ambiguity=0.375)           # compare only: ambiguous band 25/75–75/25
+responses_per_datapoint=AdaptiveStopping(ambiguity_range=0.5)      # compare only: narrower ambiguous band (25/75–75/25), more votes
 responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)
 ```
 
