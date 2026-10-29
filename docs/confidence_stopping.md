@@ -18,7 +18,7 @@ Each vote on a compare pair is weighted by the voter's [user score](understandin
 - **`"ambiguous"`**: the pair is too close to call — the true preference lies between 20/80 and 80/20 by default — so further votes would not produce a winner.
 - **`"undecided"`**: neither happened before `max_responses` votes. `max_responses` is a safety cap: with the defaults, no pair comes close to it.
 
-The pair stops at the first verdict. A clear pair stops after as few as 7 votes and a 50/50 pair after about 16. On average a pair needs about 21 votes; the hardest pairs, split around 35/65, need about 31.
+The pair stops at the first verdict. A clear pair stops after as few as 7 votes and a 50/50 pair after about 16. On past compare jobs a pair needed about 25 votes on average, which is what the [cost estimate](cost_estimates.md) is priced with; the hardest pairs, split around 35/65, need about 31.
 
 ## Using Adaptive Stopping in Your Job
 
@@ -40,7 +40,7 @@ job_definition = client.job.create_compare_job_definition(
 
 1. The same as leaving the argument out.
 
-Raising `ambiguity` narrows the ambiguous band, so near-even pairs resolve to a winner at the cost of more votes. For example, `AdaptiveStopping(ambiguity=0.375)` tightens the band from 20/80–80/20 to 25/75–75/25, which raises the average from about 21 to about 28 votes per pair, and to about 49 for the hardest pairs.
+Raising `ambiguity` narrows the ambiguous band, so near-even pairs resolve to a winner at the cost of more votes. For example, `AdaptiveStopping(ambiguity=0.375)` tightens the band from 20/80–80/20 to 25/75–75/25, which takes about a third more votes per pair on average, and about 49 for the hardest pairs.
 
 Because each pair stops at a different point, the [cost estimate](cost_estimates.md) `estimated_cost` is the expected cost of the job.
 

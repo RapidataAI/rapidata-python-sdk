@@ -9,11 +9,11 @@ The current documentation uses audiences, job definitions, and jobs.
 
 ## Compare jobs stop adaptively (4.0)
 
-`create_compare_job_definition` now defaults to `responses_per_datapoint=AdaptiveStopping()`. Each pair stops once its verdict is settled instead of collecting exactly 10 responses: about 21 on average, about 31 for the hardest pairs.
+`create_compare_job_definition` now defaults to `responses_per_datapoint=AdaptiveStopping()`. Each pair stops once its verdict is settled instead of collecting exactly 10 responses: about 25 on average (measured on past compare jobs), about 31 for the hardest pairs.
 
 | Before | Now |
 |--------|-----|
-| no `responses_per_datapoint` on a compare job: 10 responses | adaptive stopping, about 21 responses per pair on average |
+| no `responses_per_datapoint` on a compare job: 10 responses | adaptive stopping, about 25 responses per pair on average |
 | `quorum_threshold=7, responses_per_datapoint=10` | `responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)` |
 | `confidence_threshold=0.99` on a compare job | `responses_per_datapoint=AdaptiveStopping()` |
 | `CostEstimate.estimated_cost`: cost of the fixed number of responses | expected cost |

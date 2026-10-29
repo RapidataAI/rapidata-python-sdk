@@ -102,7 +102,7 @@ datapoints=[
 How many responses to collect for each datapoint.
 
 - An `int` collects exactly that many. The actual number may slightly exceed it due to concurrent labelers.
-- `AdaptiveStopping()` stops each compare pair once its verdict is settled, after about 21 responses on average.
+- `AdaptiveStopping()` stops each compare pair once its verdict is settled, after about 25 responses on average (measured on past compare jobs).
 - `QuorumStopping(threshold, max_responses)` stops once `threshold` responses agree.
 
 **Related:** [Adaptive Stopping](confidence_stopping.md)
