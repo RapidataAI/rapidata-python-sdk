@@ -375,7 +375,7 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
       "summedUserScoresRatios": { "model_a.jpg": 0.286, "model_b.jpg": 0.714 },
       "stoppingState": {
         "weightA": 2.4, "weightB": 5.6, "csLower": 0.52, "csUpper": 0.97,
-        "verdict": "B", "decidedAtResponse": 8, "minConfidence": 0.9, "ambiguityRange": 0.6
+        "verdict": "B", "responseCount": 8, "minConfidence": 0.9, "ambiguityRange": 0.6
       },
       "verdict": "B",
       "responses": 8,
@@ -410,9 +410,9 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 | `summedUserScores` | Per-option sum of each choosing labeler's aggregated `userScore` |
 | `summedUserScoresRatios` | `summedUserScores` normalized to sum to 1 |
 | `confidencePerCategory` | Confidence level per category (with `confidence_threshold`) |
-| `verdict` | Adaptive stopping only (added by the SDK from `stoppingState`): `"A"`, `"B"`, `"ambiguous"` (too close to call), `"undecided"` (hit `max_responses`), or `None` while open. Prefer it over `winner` on adaptive results |
-| `responses` | Adaptive stopping only: number of votes the pair used |
-| `stoppingState` | Adaptive stopping only: raw state — weighted votes (`weightA`, `weightB`), confidence bounds on the share of B (`csLower`, `csUpper`), backend `verdict`, `decidedAtResponse`, and the `minConfidence` / `ambiguityRange` used |
+| `verdict` | Adaptive stopping only (added by the SDK from `stoppingState`): `"A"`, `"B"`, `"ambiguous"` (too close to call), `"undecided"` (hit `max_responses`), or `"open"` (no verdict yet: still collecting, or the job was paused or stopped first). Absent on non-adaptive datapoints. Prefer it over `winner` on adaptive results |
+| `responses` | Adaptive stopping only: `stoppingState.responseCount` — votes where the pair stopped, the cap for `"undecided"`, the count so far for `"open"` |
+| `stoppingState` | Adaptive stopping only: raw state — weighted votes (`weightA`, `weightB`), confidence bounds on the share of B (`csLower`, `csUpper`), backend `verdict`, `responseCount` (votes the rule counted), and the `minConfidence` / `ambiguityRange` used |
 | `userScore` | 0-1 value indicating individual labeler reliability |
 
 A labeler's `demographics` may be empty when no demographic data was collected for them.

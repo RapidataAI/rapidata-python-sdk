@@ -270,32 +270,40 @@ def test_job_definition_rejects_adaptive_with_unsure_flag_on_save():
 
 
 def test_results_expose_verdict_and_responses():
-    def row(state):
+    def row(verdict, count):
         return {
             "aggregatedResults": {"a.png": 9, "b.png": 1},
-            "stoppingState": state,
+            "stoppingState": {
+                "weightA": 1.0,
+                "weightB": 1.0,
+                "csLower": 0.1,
+                "csUpper": 0.9,
+                "verdict": verdict,
+                "responseCount": count,
+                "minConfidence": 0.9,
+                "ambiguityRange": 0.6,
+            },
         }
 
-    base = {"weightA": 1.0, "weightB": 1.0, "csLower": 0.1, "csUpper": 0.9}
     results = RapidataResults(
         {
             "info": {"type": "Compare"},
             "results": [
-                row({**base, "verdict": "A", "decidedAtResponse": 7}),
-                row({**base, "verdict": "Ambiguous", "decidedAtResponse": 16}),
-                row({**base, "verdict": "Undecided", "decidedAtResponse": None}),
-                row({**base, "verdict": None, "decidedAtResponse": None}),
+                row("A", 7),
+                row("Ambiguous", 16),
+                row("Undecided", 100),
+                row("Open", 4),
                 {"aggregatedResults": {"a.png": 5, "b.png": 5}},
             ],
         }
     )
     rows = results["results"]
-    assert [r.get("verdict") for r in rows] == [
+    assert [r.get("verdict") for r in rows[:4]] == [
         "A",
         "ambiguous",
         "undecided",
-        None,
-        None,
+        "open",
     ]
-    assert [r.get("responses") for r in rows] == [7, 16, 10, 10, None]
+    assert [r.get("responses") for r in rows[:4]] == [7, 16, 100, 4]
     assert "verdict" not in rows[4]
+    assert "responses" not in rows[4]

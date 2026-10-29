@@ -67,7 +67,8 @@ job.display_progress_bar()
 results = job.get_results()
 
 for datapoint in results["results"]:
-    # verdict: "A", "B", "ambiguous" (too close to call) or "undecided" (hit max_responses)
+    # verdict: "A", "B", "ambiguous" (too close to call), "undecided" (hit max_responses)
+    # or "open" (no verdict yet)
     print(datapoint["verdict"], datapoint["responses"])
 ```
 

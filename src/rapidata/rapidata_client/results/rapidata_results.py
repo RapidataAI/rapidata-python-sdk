@@ -13,8 +13,8 @@ class RapidataResults(dict):
     Extends the built-in dict class with specialized methods.
 
     Compare datapoints collected with adaptive stopping also carry ``verdict``
-    (``"A"``, ``"B"``, ``"ambiguous"``, ``"undecided"``, or ``None`` while still
-    open) and ``responses``, the number of votes the datapoint used.
+    (``"A"``, ``"B"``, ``"ambiguous"``, ``"undecided"`` or ``"open"``) and
+    ``responses``, the number of votes the stopping rule counted.
     """
 
     _VERDICTS = {
@@ -22,6 +22,7 @@ class RapidataResults(dict):
         "B": "B",
         "Ambiguous": "ambiguous",
         "Undecided": "undecided",
+        "Open": "open",
     }
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -35,19 +36,9 @@ class RapidataResults(dict):
         state = result.get("stoppingState")
         if not isinstance(state, dict):
             return
-        verdict = state.get("verdict")
-        result["verdict"] = (
-            cls._VERDICTS.get(verdict, verdict) if isinstance(verdict, str) else None
-        )
-        decided_at = state.get("decidedAtResponse")
-        if decided_at is None:
-            counts = result.get("aggregatedResults")
-            decided_at = (
-                sum(v for v in counts.values() if isinstance(v, (int, float)))
-                if isinstance(counts, dict)
-                else None
-            )
-        result["responses"] = decided_at
+        verdict = str(state.get("verdict"))
+        result["verdict"] = cls._VERDICTS.get(verdict, verdict)
+        result["responses"] = state.get("responseCount")
 
     def to_pandas(self, split_details: bool = False) -> "pd.DataFrame":
         """
