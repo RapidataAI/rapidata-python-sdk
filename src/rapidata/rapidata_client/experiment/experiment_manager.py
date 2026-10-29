@@ -37,7 +37,8 @@ class ExperimentManager:
         *,
         name: str,
         treatment_bps: int = 5000,
-        flags: list[FeatureFlag] | None = None,
+        treatment_flags: list[FeatureFlag] | None = None,
+        control_flags: list[FeatureFlag] | None = None,
         description: str = "",
     ) -> Experiment:
         """Creates an experiment.
@@ -58,7 +59,8 @@ class ExperimentManager:
                 create_experiment_endpoint_input=CreateExperimentEndpointInput(
                     name=name,
                     description=description,
-                    flags=flags or [],
+                    treatmentFlags=treatment_flags or [],
+                    controlFlags=control_flags or [],
                     split=CreateExperimentEndpointSplit(treatmentBps=treatment_bps),
                 )
             )
