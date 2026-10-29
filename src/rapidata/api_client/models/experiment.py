@@ -27,16 +27,17 @@ from typing_extensions import Self
 
 class Experiment(LazyValidatedModel):
     """
-    A serve-time A/B experiment. Every session it serves records its experiment id, name and arm;  treatment sessions additionally receive the experiment's feature flags.
+    A serve-time A/B experiment. Every session it serves records its experiment id, name and arm,  and receives the feature flags of that arm.
     """ # noqa: E501
     id: StrictStr = Field(description="The unique id of the experiment document.")
     name: StrictStr = Field(description="Human-readable name.")
     description: StrictStr = Field(description="Human-readable description of the hypothesis.")
-    flags: List[FeatureFlag]
+    treatment_flags: List[FeatureFlag] = Field(alias="treatmentFlags")
+    control_flags: List[FeatureFlag] = Field(alias="controlFlags")
     split: ExperimentSplit = Field(description="The traffic split and its server-generated salt.")
     created_by: StrictStr = Field(description="The email of the admin who created the experiment.", alias="createdBy")
     created_at: datetime = Field(description="When the experiment was created.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "flags", "split", "createdBy", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "treatmentFlags", "controlFlags", "split", "createdBy", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -73,13 +74,20 @@ class Experiment(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in flags (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in treatment_flags (list)
         _items = []
-        if self.flags:
-            for _item_flags in self.flags:
-                if _item_flags:
-                    _items.append(_item_flags.to_dict())
-            _dict['flags'] = _items
+        if self.treatment_flags:
+            for _item_treatment_flags in self.treatment_flags:
+                if _item_treatment_flags:
+                    _items.append(_item_treatment_flags.to_dict())
+            _dict['treatmentFlags'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in control_flags (list)
+        _items = []
+        if self.control_flags:
+            for _item_control_flags in self.control_flags:
+                if _item_control_flags:
+                    _items.append(_item_control_flags.to_dict())
+            _dict['controlFlags'] = _items
         # override the default output from pydantic by calling `to_dict()` of split
         if self.split:
             _dict['split'] = self.split.to_dict()
@@ -98,7 +106,8 @@ class Experiment(LazyValidatedModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "description": obj.get("description"),
-            "flags": [FeatureFlag.from_dict(_item) for _item in obj["flags"]] if obj.get("flags") is not None else None,
+            "treatmentFlags": [FeatureFlag.from_dict(_item) for _item in obj["treatmentFlags"]] if obj.get("treatmentFlags") is not None else None,
+            "controlFlags": [FeatureFlag.from_dict(_item) for _item in obj["controlFlags"]] if obj.get("controlFlags") is not None else None,
             "split": ExperimentSplit.from_dict(obj["split"]) if obj.get("split") is not None else None,
             "createdBy": obj.get("createdBy"),
             "createdAt": obj.get("createdAt")

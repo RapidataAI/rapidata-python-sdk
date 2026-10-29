@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.10.28.1818-6c9b5c8"
+    "version": "2026.10.29.0937-b8a03fd"
   },
   "servers": [
     {
@@ -5184,7 +5184,7 @@
           "Experiment"
         ],
         "summary": "Creates an immutable experiment that applies to every campaign referencing it.",
-        "description": "The split salt is generated server-side.",
+        "description": "The split salt is generated server-side. At least one flag is required across both arms,\n and the same key and value may not be stamped on both arms.",
         "requestBody": {
           "description": "The experiment to create.",
           "content": {
@@ -31782,6 +31782,73 @@
         ]
       }
     },
+    "/job/{jobId}/results/groups/{groupId}/head-to-head": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets a ranking group's context and the votes each of its datapoints received against every opponent.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the grouped-ranking job the group belongs to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "The id of the group whose head-to-head to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/job/{jobId}/results/groups/{groupId}": {
       "get": {
         "tags": [
@@ -50114,7 +50181,7 @@
         "required": [
           "name",
           "description",
-          "flags",
+          "treatmentFlags",
           "split"
         ],
         "type": "object",
@@ -50127,7 +50194,7 @@
             "type": "string",
             "description": "Human-readable description of the hypothesis."
           },
-          "flags": {
+          "treatmentFlags": {
             "allOf": [
               {
                 "type": "array",
@@ -50136,7 +50203,18 @@
                 }
               }
             ],
-            "description": "Feature flags stamped on treatment sessions only."
+            "description": "Feature flags stamped on treatment sessions."
+          },
+          "controlFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "Feature flags stamped on control sessions; none when omitted."
           },
           "split": {
             "allOf": [
@@ -50265,7 +50343,8 @@
           "id",
           "name",
           "description",
-          "flags",
+          "treatmentFlags",
+          "controlFlags",
           "split",
           "createdBy",
           "createdAt"
@@ -50284,7 +50363,7 @@
             "type": "string",
             "description": "Human-readable description of the hypothesis."
           },
-          "flags": {
+          "treatmentFlags": {
             "allOf": [
               {
                 "type": "array",
@@ -50293,7 +50372,18 @@
                 }
               }
             ],
-            "description": "Feature flags stamped on treatment sessions only."
+            "description": "Feature flags stamped on treatment sessions."
+          },
+          "controlFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "Feature flags stamped on control sessions."
           },
           "split": {
             "allOf": [
@@ -50313,7 +50403,7 @@
             "format": "date-time"
           }
         },
-        "description": "A serve-time A/B experiment. Every session it serves records its experiment id, name and arm;\n treatment sessions additionally receive the experiment's feature flags."
+        "description": "A serve-time A/B experiment. Every session it serves records its experiment id, name and arm,\n and receives the feature flags of that arm."
       },
       "ExperimentSplit": {
         "required": [
@@ -65662,6 +65752,107 @@
             "type": "integer",
             "description": "The number of accepted responses collected so far.",
             "format": "int64"
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "string",
+            "description": "The text context shared by every comparison in the group.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "description": "The asset context shared by every comparison in the group."
+          },
+          "headToHead": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid"
+              }
+            ],
+            "description": "The vote grid; null when the group has more than 100 datapoints."
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid": {
+        "required": [
+          "datapoints",
+          "rows"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Datapoint"
+            }
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row"
+            }
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Datapoint": {
+        "required": [
+          "datapointId",
+          "asset"
+        ],
+        "type": "object",
+        "properties": {
+          "datapointId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row": {
+        "required": [
+          "datapointId",
+          "cells"
+        ],
+        "type": "object",
+        "properties": {
+          "datapointId": {
+            "type": "string"
+          },
+          "cells": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row_Cell"
+            }
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row_Cell": {
+        "required": [
+          "opponentId",
+          "votesFor",
+          "votesAgainst"
+        ],
+        "type": "object",
+        "properties": {
+          "opponentId": {
+            "type": "string"
+          },
+          "votesFor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "votesAgainst": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
