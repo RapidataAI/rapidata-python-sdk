@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.10.29.0928-2164545"
+    "version": "2026.10.29.1652-7c8c031"
   },
   "servers": [
     {
@@ -361,7 +361,7 @@
           "Asset"
         ],
         "summary": "Uploads a file to our system and returns the new file name used internally.",
-        "description": "Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.",
+        "description": "Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.\n An HTML bundle (at most 1 MB) is stored as plain text and returns 403 unless the organization may upload bundles.",
         "parameters": [
           {
             "name": "compress",
@@ -29234,6 +29234,73 @@
         ]
       }
     },
+    "/job/{jobId}/results/groups/{groupId}/head-to-head": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets a ranking group's context and the votes each of its datapoints received against every opponent.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the grouped-ranking job the group belongs to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "The id of the group whose head-to-head to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email",
+              "offline_access",
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/job/{jobId}/results/groups/{groupId}": {
       "get": {
         "tags": [
@@ -50319,7 +50386,8 @@
           "UploadLongMedia",
           "Faucets",
           "BringYourOwnAudience",
-          "LowResponseCount"
+          "LowResponseCount",
+          "OpenRapids"
         ],
         "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
       },
@@ -60575,6 +60643,107 @@
             "type": "integer",
             "description": "The number of accepted responses collected so far.",
             "format": "int64"
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "string",
+            "description": "The text context shared by every comparison in the group.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "description": "The asset context shared by every comparison in the group."
+          },
+          "headToHead": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid"
+              }
+            ],
+            "description": "The vote grid; null when the group has more than 100 datapoints."
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid": {
+        "required": [
+          "datapoints",
+          "rows"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Datapoint"
+            }
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row"
+            }
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Datapoint": {
+        "required": [
+          "datapointId",
+          "asset"
+        ],
+        "type": "object",
+        "properties": {
+          "datapointId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row": {
+        "required": [
+          "datapointId",
+          "cells"
+        ],
+        "type": "object",
+        "properties": {
+          "datapointId": {
+            "type": "string"
+          },
+          "cells": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row_Cell"
+            }
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row_Cell": {
+        "required": [
+          "opponentId",
+          "votesFor",
+          "votesAgainst"
+        ],
+        "type": "object",
+        "properties": {
+          "opponentId": {
+            "type": "string"
+          },
+          "votesFor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "votesAgainst": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
