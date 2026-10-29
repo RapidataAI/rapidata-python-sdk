@@ -24,6 +24,7 @@ from rapidata.rapidata_client.job._revision_body import (
     _full_body,
     _get_answer_options,
     _get_instruction,
+    _check_adaptive_stopping,
     _get_responses,
     _with_answer_options,
     _with_instruction,
@@ -38,6 +39,10 @@ if TYPE_CHECKING:
         GetJobRevisionEndpointOutput,
     )
     from rapidata.rapidata_client.settings import RapidataSetting
+    from rapidata.rapidata_client.referee.stopping import (
+        AdaptiveStopping,
+        QuorumStopping,
+    )
 
 RevisionState = Literal["Pending", "Completed", "Failed"]
 
@@ -213,17 +218,39 @@ class RapidataJobDefinition:
         self._pending["answer_options"] = list(value)
 
     @property
-    def responses_per_datapoint(self) -> int:
-        """The maximum number of responses collected per datapoint."""
+    def responses_per_datapoint(self) -> int | AdaptiveStopping | QuorumStopping:
+        """How many responses are collected per datapoint.
+
+        An int for a fixed number of responses, or the ``AdaptiveStopping`` /
+        ``QuorumStopping`` the job definition stops by. Assigning one replaces the rule.
+        """
         return self._effective(
             "responses_per_datapoint", _get_responses(self._snapshot.referee)
         )
 
     @responses_per_datapoint.setter
-    def responses_per_datapoint(self, value: int) -> None:
-        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+    def responses_per_datapoint(
+        self, value: int | AdaptiveStopping | QuorumStopping
+    ) -> None:
+        from rapidata.rapidata_client.referee.stopping import (
+            AdaptiveStopping,
+            QuorumStopping,
+        )
+
+        if isinstance(value, bool) or not isinstance(
+            value, (int, AdaptiveStopping, QuorumStopping)
+        ):
+            raise ValueError(
+                "responses_per_datapoint must be a positive integer, "
+                "AdaptiveStopping or QuorumStopping"
+            )
+        if isinstance(value, int) and value < 1:
             raise ValueError("responses_per_datapoint must be a positive integer")
-        _with_responses(self._snapshot.referee, value)
+        _check_adaptive_stopping(
+            self._snapshot.workflow,
+            _with_responses(self._snapshot.referee, value),
+            [],
+        )
         self._pending["responses_per_datapoint"] = value
 
     @property

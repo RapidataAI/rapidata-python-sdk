@@ -332,6 +332,8 @@ class RapidataJob:
                 completion_percentage=(
                     float(job_progress.completion_percentage) if job_progress else 0.0
                 ),
+                completed=job_progress.completed if job_progress else 0,
+                total=job_progress.total if job_progress else 0,
                 recruiting=self._get_recruiting_metrics(),
             )
 

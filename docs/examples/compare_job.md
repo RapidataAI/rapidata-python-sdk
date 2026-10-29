@@ -35,7 +35,6 @@ In this example, we compare images from two image generation models (Flux and Mi
         name="Example Image Prompt Alignment Job",
         instruction="Which image follows the prompt more accurately?",
         datapoints=IMAGE_PAIRS,
-        responses_per_datapoint=25,
         contexts=PROMPTS
     )
 
@@ -117,7 +116,6 @@ In this example, we compare images from two image generation models (Flux and Mi
         name="Example Image Prompt Alignment Job",
         instruction="Which image follows the prompt more accurately?",
         datapoints=IMAGE_PAIRS,
-        responses_per_datapoint=25,
         contexts=PROMPTS
     )
 

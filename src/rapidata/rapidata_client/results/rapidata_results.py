@@ -11,7 +11,43 @@ class RapidataResults(dict):
     """
     A specialized dictionary class for handling Rapidata API results.
     Extends the built-in dict class with specialized methods.
+
+    Compare datapoints collected with adaptive stopping also carry ``verdict``
+    (``"A"``, ``"B"``, ``"ambiguous"``, ``"undecided"``, or ``None`` while still
+    open) and ``responses``, the number of votes the datapoint used.
     """
+
+    _VERDICTS = {
+        "A": "A",
+        "B": "B",
+        "Ambiguous": "ambiguous",
+        "Undecided": "undecided",
+    }
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        for result in self.get("results") or []:
+            if isinstance(result, dict):
+                self._add_stopping_fields(result)
+
+    @classmethod
+    def _add_stopping_fields(cls, result: dict[str, Any]) -> None:
+        state = result.get("stoppingState")
+        if not isinstance(state, dict):
+            return
+        verdict = state.get("verdict")
+        result["verdict"] = (
+            cls._VERDICTS.get(verdict, verdict) if isinstance(verdict, str) else None
+        )
+        decided_at = state.get("decidedAtResponse")
+        if decided_at is None:
+            counts = result.get("aggregatedResults")
+            decided_at = (
+                sum(v for v in counts.values() if isinstance(v, (int, float)))
+                if isinstance(counts, dict)
+                else None
+            )
+        result["responses"] = decided_at
 
     def to_pandas(self, split_details: bool = False) -> "pd.DataFrame":
         """

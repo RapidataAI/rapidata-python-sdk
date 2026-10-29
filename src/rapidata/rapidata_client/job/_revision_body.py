@@ -10,6 +10,10 @@ from rapidata.api_client.models.i_referee import IReferee
 
 if TYPE_CHECKING:
     from rapidata.api_client.models.feature_flag import FeatureFlag
+    from rapidata.rapidata_client.referee.stopping import (
+        AdaptiveStopping,
+        QuorumStopping,
+    )
     from rapidata.api_client.models.get_job_revision_endpoint_output import (
         GetJobRevisionEndpointOutput,
     )
@@ -28,11 +32,7 @@ _INSTRUCTION_FIELD_BY_RAPID = {
     "Scrub": "target",
 }
 
-_VOTES_FIELD_BY_REFEREE = {
-    "NaiveReferee": "totalVotes",
-    "QuorumReferee": "maxVotes",
-    "EarlyStoppingReferee": "maxVotes",
-}
+_COMPARE_UNSURE_KEY = "compare_unsure"
 
 
 def _as_dict(model: IOrderWorkflowInput | IReferee) -> dict[str, Any]:
@@ -94,25 +94,67 @@ def _with_answer_options(
     return IOrderWorkflowInput.from_dict(data)  # type: ignore[return-value]
 
 
-def _get_responses(referee: IReferee) -> int:
+def _get_responses(referee: IReferee) -> int | AdaptiveStopping | QuorumStopping:
+    from rapidata.rapidata_client.referee.stopping import (
+        AdaptiveStopping,
+        QuorumStopping,
+    )
+
     data = _as_dict(referee)
-    field = _VOTES_FIELD_BY_REFEREE.get(data.get("_t", ""))
-    if field is None:
-        raise ValueError(
-            f"A '{data.get('_t')}' referee has no responses per datapoint."
+    kind = data.get("_t")
+    if kind == "NaiveReferee":
+        return data["totalVotes"]
+    if kind == "EarlyStoppingReferee":
+        return data["maxVotes"]
+    if kind == "QuorumReferee":
+        return QuorumStopping(
+            threshold=data["threshold"], max_responses=data["maxVotes"]
         )
-    return data[field]
+    if kind == "AdaptiveStoppingReferee":
+        return AdaptiveStopping(
+            min_confidence=data["minConfidence"],
+            ambiguity=data["ambiguity"],
+            max_responses=data["maxVotes"],
+        )
+    raise ValueError(f"A '{kind}' referee has no responses per datapoint.")
 
 
-def _with_responses(referee: IReferee, responses: int) -> IReferee:
+def _with_responses(
+    referee: IReferee, responses: int | AdaptiveStopping | QuorumStopping
+) -> IReferee:
+    from rapidata.rapidata_client.referee import NaiveReferee
+
     data = _as_dict(referee)
-    field = _VOTES_FIELD_BY_REFEREE.get(data.get("_t", ""))
-    if field is None:
+    if data.get("_t") not in (
+        "NaiveReferee",
+        "EarlyStoppingReferee",
+        "QuorumReferee",
+        "AdaptiveStoppingReferee",
+    ):
         raise ValueError(
             f"A '{data.get('_t')}' referee has no responses per datapoint to change."
         )
-    data[field] = responses
-    return IReferee.from_dict(data)  # type: ignore[return-value]
+    if not isinstance(responses, int):
+        return responses._to_referee()._to_model()
+    # A legacy confidence-threshold referee has no config object; an int tunes its cap.
+    if data["_t"] == "EarlyStoppingReferee":
+        data["maxVotes"] = responses
+        return IReferee.from_dict(data)  # type: ignore[return-value]
+    return NaiveReferee(responses=responses)._to_model()
+
+
+def _check_adaptive_stopping(
+    workflow: IOrderWorkflowInput, referee: IReferee, rapid_flags: list[FeatureFlag]
+) -> None:
+    if _as_dict(referee).get("_t") != "AdaptiveStoppingReferee":
+        return
+    if _workflow_kind(_as_dict(workflow)) != "Compare":
+        raise ValueError("AdaptiveStopping is only supported for compare jobs.")
+    if any(flag.key == _COMPARE_UNSURE_KEY for flag in rapid_flags):
+        raise ValueError(
+            "AdaptiveStopping cannot be combined with AllowNeitherBothSetting. "
+            "Use QuorumStopping or a fixed int for responses_per_datapoint instead."
+        )
 
 
 def _split_settings(
@@ -143,6 +185,7 @@ def _full_body(
     else:
         rapid_flags = list(snapshot.feature_flags)
         campaign_flags = list(snapshot.campaign_feature_flags)
+    _check_adaptive_stopping(workflow, referee, rapid_flags)
 
     # Every field is passed explicitly: the server inherits any field left out
     # from the latest revision, and a None validationSetId must go out as null.

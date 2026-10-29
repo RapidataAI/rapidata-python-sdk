@@ -110,6 +110,8 @@ job_definition = client.job.create_compare_job_definition(
 2. For compare jobs, each datapoint is a pair of items. Supports URLs, local paths, or text.
 3. Optional text context shown alongside each datapoint (must match the length of `datapoints`).
 
+Compare jobs stop collecting votes on each pair once its winner — or that it is too close to call — is settled, using up to 100 responses per pair. Pass `responses_per_datapoint` to change that; see [Early Stopping](confidence_stopping.md).
+
 !!! tip
     If some datapoints fail to upload, a `FailedUploadException` will be raised. Learn how to handle this in the [Error Handling Guide](error_handling.md).
 
