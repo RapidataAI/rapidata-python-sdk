@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.10.28.1818-6c9b5c8"
+    "version": "2026.10.29.0928-2164545"
   },
   "servers": [
     {
@@ -5184,7 +5184,7 @@
           "Experiment"
         ],
         "summary": "Creates an immutable experiment that applies to every campaign referencing it.",
-        "description": "The split salt is generated server-side.",
+        "description": "The split salt is generated server-side. At least one flag is required across both arms,\n and the same key and value may not be stamped on both arms.",
         "requestBody": {
           "description": "The experiment to create.",
           "content": {
@@ -50114,7 +50114,7 @@
         "required": [
           "name",
           "description",
-          "flags",
+          "treatmentFlags",
           "split"
         ],
         "type": "object",
@@ -50127,7 +50127,7 @@
             "type": "string",
             "description": "Human-readable description of the hypothesis."
           },
-          "flags": {
+          "treatmentFlags": {
             "allOf": [
               {
                 "type": "array",
@@ -50136,7 +50136,18 @@
                 }
               }
             ],
-            "description": "Feature flags stamped on treatment sessions only."
+            "description": "Feature flags stamped on treatment sessions."
+          },
+          "controlFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "Feature flags stamped on control sessions; none when omitted."
           },
           "split": {
             "allOf": [
@@ -50265,7 +50276,8 @@
           "id",
           "name",
           "description",
-          "flags",
+          "treatmentFlags",
+          "controlFlags",
           "split",
           "createdBy",
           "createdAt"
@@ -50284,7 +50296,7 @@
             "type": "string",
             "description": "Human-readable description of the hypothesis."
           },
-          "flags": {
+          "treatmentFlags": {
             "allOf": [
               {
                 "type": "array",
@@ -50293,7 +50305,18 @@
                 }
               }
             ],
-            "description": "Feature flags stamped on treatment sessions only."
+            "description": "Feature flags stamped on treatment sessions."
+          },
+          "controlFlags": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureFlag"
+                }
+              }
+            ],
+            "description": "Feature flags stamped on control sessions."
           },
           "split": {
             "allOf": [
@@ -50313,7 +50336,7 @@
             "format": "date-time"
           }
         },
-        "description": "A serve-time A/B experiment. Every session it serves records its experiment id, name and arm;\n treatment sessions additionally receive the experiment's feature flags."
+        "description": "A serve-time A/B experiment. Every session it serves records its experiment id, name and arm,\n and receives the feature flags of that arm."
       },
       "ExperimentSplit": {
         "required": [

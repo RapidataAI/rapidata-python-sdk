@@ -16,7 +16,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.create_experiment_endpoint_split import CreateExperimentEndpointSplit
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from pydantic import ValidationError
@@ -30,9 +30,10 @@ class CreateExperimentEndpointInput(LazyValidatedModel):
     """ # noqa: E501
     name: StrictStr = Field(description="Human-readable name.")
     description: StrictStr = Field(description="Human-readable description of the hypothesis.")
-    flags: List[FeatureFlag]
+    treatment_flags: List[FeatureFlag] = Field(alias="treatmentFlags")
+    control_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="controlFlags")
     split: CreateExperimentEndpointSplit = Field(description="The traffic split; the salt is generated server-side.")
-    __properties: ClassVar[List[str]] = ["name", "description", "flags", "split"]
+    __properties: ClassVar[List[str]] = ["name", "description", "treatmentFlags", "controlFlags", "split"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -69,13 +70,20 @@ class CreateExperimentEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in flags (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in treatment_flags (list)
         _items = []
-        if self.flags:
-            for _item_flags in self.flags:
-                if _item_flags:
-                    _items.append(_item_flags.to_dict())
-            _dict['flags'] = _items
+        if self.treatment_flags:
+            for _item_treatment_flags in self.treatment_flags:
+                if _item_treatment_flags:
+                    _items.append(_item_treatment_flags.to_dict())
+            _dict['treatmentFlags'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in control_flags (list)
+        _items = []
+        if self.control_flags:
+            for _item_control_flags in self.control_flags:
+                if _item_control_flags:
+                    _items.append(_item_control_flags.to_dict())
+            _dict['controlFlags'] = _items
         # override the default output from pydantic by calling `to_dict()` of split
         if self.split:
             _dict['split'] = self.split.to_dict()
@@ -93,7 +101,8 @@ class CreateExperimentEndpointInput(LazyValidatedModel):
         _data = {
             "name": obj.get("name"),
             "description": obj.get("description"),
-            "flags": [FeatureFlag.from_dict(_item) for _item in obj["flags"]] if obj.get("flags") is not None else None,
+            "treatmentFlags": [FeatureFlag.from_dict(_item) for _item in obj["treatmentFlags"]] if obj.get("treatmentFlags") is not None else None,
+            "controlFlags": [FeatureFlag.from_dict(_item) for _item in obj["controlFlags"]] if obj.get("controlFlags") is not None else None,
             "split": CreateExperimentEndpointSplit.from_dict(obj["split"]) if obj.get("split") is not None else None
         }
         try:

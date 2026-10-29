@@ -576,7 +576,7 @@ class ExperimentApi:
     ) -> Experiment:
         """Creates an immutable experiment that applies to every campaign referencing it.
 
-        The split salt is generated server-side.
+        The split salt is generated server-side. At least one flag is required across both arms,  and the same key and value may not be stamped on both arms.
 
         :param create_experiment_endpoint_input: The experiment to create. (required)
         :type create_experiment_endpoint_input: CreateExperimentEndpointInput
@@ -646,7 +646,7 @@ class ExperimentApi:
     ) -> ApiResponse[Experiment]:
         """Creates an immutable experiment that applies to every campaign referencing it.
 
-        The split salt is generated server-side.
+        The split salt is generated server-side. At least one flag is required across both arms,  and the same key and value may not be stamped on both arms.
 
         :param create_experiment_endpoint_input: The experiment to create. (required)
         :type create_experiment_endpoint_input: CreateExperimentEndpointInput
@@ -716,7 +716,7 @@ class ExperimentApi:
     ) -> RESTResponseType:
         """Creates an immutable experiment that applies to every campaign referencing it.
 
-        The split salt is generated server-side.
+        The split salt is generated server-side. At least one flag is required across both arms,  and the same key and value may not be stamped on both arms.
 
         :param create_experiment_endpoint_input: The experiment to create. (required)
         :type create_experiment_endpoint_input: CreateExperimentEndpointInput
