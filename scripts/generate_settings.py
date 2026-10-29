@@ -23,6 +23,8 @@ GENERATED_HEADER = (
     "# To modify, update settings.json and re-run the generator.\n"
 )
 
+CLIENT_DIR = REPO_ROOT / "src" / "rapidata" / "rapidata_client"
+
 HANDWRITTEN_FILES = {
     "_rapidata_setting.py",
     "custom_setting.py",
@@ -365,6 +367,15 @@ def generate_types_all_block(settings: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def format_like_repo(path: Path, content: str) -> str:
+    """Black-format files under rapidata_client, so output matches the pre-commit rule."""
+    if not path.resolve().is_relative_to(CLIENT_DIR):
+        return content
+    import black
+
+    return black.format_str(content, mode=black.Mode())
+
+
 def replace_between_markers(
     file_path: Path,
     start_marker: str,
@@ -387,7 +398,9 @@ def replace_between_markers(
     if not text[end_line_start:end_idx].strip():
         end_idx = end_line_start
     after = text[end_idx:]
-    new_text = before + "\n" + new_content + "\n" + after
+    new_text = format_like_repo(
+        file_path, before + "\n" + new_content + "\n" + after
+    )
 
     if new_text == text:
         return False
@@ -399,6 +412,7 @@ def replace_between_markers(
 
 def write_if_changed(path: Path, content: str, check_mode: bool) -> bool:
     """Write content to path. Returns True if file changed (or would change in check mode)."""
+    content = format_like_repo(path, content)
     if path.exists():
         existing = path.read_text(encoding="utf-8")
         if existing == content:
