@@ -9,7 +9,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `name` | str | Job identifier (not shown to labelers) |
-| `instruction` | str | Task description shown to labelers (max 250 characters — longer raises `ValueError`) |
+| `instruction` | str | Question shown to labelers: one criterion, under 80 characters (see **Task design rules** in the main guide). Over 250 characters raises `ValueError` |
 | `datapoints` | list | Data to label (URLs or local paths) |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
 | `responses_per_datapoint` | int | Responses per item (default 10; never set it below 10 — see **Task design rules** in the main guide) |
@@ -23,7 +23,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 
 ### Instruction length
 
-`instruction` is capped at 250 characters (`Workflow.MAX_INSTRUCTION_LENGTH`) for every job definition type and for every audience qualification example. Over-long values raise `ValueError: instruction is <n> characters; maximum is 250` at construction time.
+`instruction` is capped at 250 characters (`Workflow.MAX_INSTRUCTION_LENGTH`) for every job definition type and for every audience qualification example. Over-long values raise `ValueError: instruction is <n> characters; maximum is 250` at construction time. This is a hard cap, not a target: write instructions under 80 characters (see **Task design rules** in the main guide).
 
 ### Classification-specific
 
