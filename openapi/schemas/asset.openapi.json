@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.10.29.0928-2164545"
+    "version": "2026.10.29.1652-7c8c031"
   },
   "servers": [
     {
@@ -96,7 +96,7 @@
           "Asset"
         ],
         "summary": "Uploads a file to our system and returns the new file name used internally.",
-        "description": "Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.",
+        "description": "Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.\n An HTML bundle (at most 1 MB) is stored as plain text and returns 403 unless the organization may upload bundles.",
         "parameters": [
           {
             "name": "compress",
