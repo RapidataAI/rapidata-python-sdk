@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import sys
@@ -24,9 +25,13 @@ class ClientCredential(BaseModel):
     endpoint: str
     created_at: datetime
     last_used: datetime
+    organization_id: Optional[str] = None
 
     def get_display_string(self):
-        return f"{self.display_name} - Client ID: {self.client_id} (Created: {self.created_at.strftime('%Y-%m-%d %H:%M:%S')})"
+        organization = (
+            f", Organization: {self.organization_id}" if self.organization_id else ""
+        )
+        return f"{self.display_name} - Client ID: {self.client_id}{organization} (Created: {self.created_at.strftime('%Y-%m-%d %H:%M:%S')})"
 
 
 class BridgeToken(BaseModel):
@@ -47,8 +52,10 @@ class CredentialManager:
         cert_path: str | None = None,
         poll_timeout: int = 300,
         poll_interval: int = 1,
+        organization_id: str | None = None,
     ):
         self.endpoint = endpoint
+        self.organization_id = organization_id
         self.cert_path = cert_path
         self.poll_timeout = poll_timeout
         self.poll_interval = poll_interval
@@ -131,47 +138,61 @@ class CredentialManager:
         credentials[credential.endpoint].append(credential)
         self._write_credentials(credentials)
 
-    @staticmethod
+    def _matches(self, credential: ClientCredential) -> bool:
+        # Without a pinned organization any credential of the environment is usable, legacy org-less ones included.
+        return (
+            self.organization_id is None
+            or credential.organization_id == self.organization_id
+        )
+
     def _select_credential(
+        self,
         credentials: List[ClientCredential],
     ) -> Optional[ClientCredential]:
-        if not credentials:
+        candidates = [c for c in credentials if self._matches(c)]
+        if not candidates:
             return None
 
-        if len(credentials) == 1:
-            return credentials[0]
-
-        return max(credentials, key=lambda c: c.last_used)
+        return max(candidates, key=lambda c: c.last_used)
 
     def stored_credential(self) -> Optional[ClientCredential]:
-        """Return the credential saved for this endpoint without starting a login."""
+        """Return the credential saved for this endpoint and organization without starting a login."""
         return self._select_credential(self._read_credentials().get(self.endpoint, []))
 
     def get_client_credentials(self) -> Optional[ClientCredential]:
         """Gets stored client credentials or create new ones via browser auth."""
         credentials = self._read_credentials()
         logger.debug("Stored credentials: %s", credentials)
-        env_credentials = credentials.get(self.endpoint, [])
+        credential = self._select_credential(credentials.get(self.endpoint, []))
+        logger.debug("Selected credential: %s", credential)
+        if credential:
+            credential.last_used = datetime.now(timezone.utc)
+            self._write_credentials(credentials)
+            return credential
 
-        if env_credentials:
-            logger.debug("Found credentials for %s: %s", self.endpoint, env_credentials)
-            credential = self._select_credential(env_credentials)
-            logger.debug("Selected credential: %s", credential)
-            if credential:
-                credential.last_used = datetime.now(timezone.utc)
-                self._write_credentials(credentials)
-                return credential
-
-        logger.debug("No credentials found for %s. Creating new ones.", self.endpoint)
+        logger.debug(
+            "No credentials found for %s (organization %s). Creating new ones.",
+            self.endpoint,
+            self.organization_id,
+        )
         return self._create_new_credentials()
 
     def reset_credentials(self) -> None:
-        """Reset the stored credentials for current environment."""
+        """Reset the stored credentials for the current environment and organization."""
         credentials = self._read_credentials()
-        if self.endpoint in credentials:
+        if self.endpoint not in credentials:
+            return
+        kept = [c for c in credentials[self.endpoint] if not self._matches(c)]
+        if kept:
+            credentials[self.endpoint] = kept
+        else:
             del credentials[self.endpoint]
-            self._write_credentials(credentials)
-            logger.info("Credentials for %s have been reset.", self.endpoint)
+        self._write_credentials(credentials)
+        logger.info(
+            "Credentials for %s (organization %s) have been reset.",
+            self.endpoint,
+            self.organization_id,
+        )
 
     def _get_bridge_tokens(self) -> Optional[BridgeToken]:
         """Get bridge tokens from the identity endpoint."""
@@ -280,18 +301,48 @@ class CredentialManager:
             logger.error("Failed to create client: %s", e)
             return None
 
+    @staticmethod
+    def _token_organization(access_token: str) -> Optional[str]:
+        """Read the unverified `org` claim; it only labels the stored credential, identity enforces it."""
+        try:
+            payload = access_token.split(".")[1]
+            claims = json.loads(
+                base64.urlsafe_b64decode(payload + "=" * (-len(payload) % 4))
+            )
+        except (IndexError, ValueError) as e:
+            logger.debug("Could not read the organization of the access token: %s", e)
+            return None
+        organization = claims.get("org") if isinstance(claims, dict) else None
+        return organization if isinstance(organization, str) else None
+
+    def _auth_url(self, write_key: str) -> str:
+        auth_url = f"{self.endpoint}/connect/authorize/external?clientId=rapidata-cli&scope=openid profile email api&writeKey={write_key}"
+        if self.organization_id:
+            auth_url += (
+                f"&organization={urllib.parse.quote(self.organization_id, safe='')}"
+            )
+        return auth_url
+
     def _create_new_credentials(self) -> Optional[ClientCredential]:
         bridge_endpoint = self._get_bridge_tokens()
         if not bridge_endpoint:
             return None
 
-        auth_url = f"{self.endpoint}/connect/authorize/external?clientId=rapidata-cli&scope=openid profile email api&writeKey={bridge_endpoint.write_key}"
+        auth_url = self._auth_url(bridge_endpoint.write_key)
         could_open_browser = webbrowser.open(auth_url)
         self._print_login_prompt(auth_url, could_open_browser)
 
         access_token = self._poll_read_key(bridge_endpoint.read_key)
         if not access_token:
             return None
+
+        # POST /Client pins the new key to the token's organization and returns only its id and secret.
+        organization_id = self._token_organization(access_token) or self.organization_id
+        if self.organization_id and organization_id != self.organization_id:
+            raise ValueError(
+                f"Logged in to organization {organization_id}, but organization {self.organization_id} was requested. "
+                "Log in again and pick that organization on the login page."
+            )
 
         client_state = self._create_client(access_token)
 
@@ -307,6 +358,7 @@ class CredentialManager:
             endpoint=self.endpoint,
             created_at=datetime.now(timezone.utc),
             last_used=datetime.now(timezone.utc),
+            organization_id=organization_id,
         )
 
         self._store_credential(credential)
