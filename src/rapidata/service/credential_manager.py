@@ -278,7 +278,9 @@ class CredentialManager:
         logger.error("Polling timed out")
         return None
 
-    def _create_client(self, access_token: str) -> Optional[Tuple[str, str, str]]:
+    def _create_client(
+        self, access_token: str
+    ) -> Optional[Tuple[str, str, str, Optional[str]]]:
         """Create a new client using the access token."""
         try:
             # set the display name to the hostname
@@ -296,7 +298,12 @@ class CredentialManager:
             )
             response.raise_for_status()
             data = response.json()
-            return data.get("clientId"), data.get("clientSecret"), display_name
+            return (
+                data.get("clientId"),
+                data.get("clientSecret"),
+                display_name,
+                data.get("organizationId"),
+            )
         except requests.RequestException as e:
             logger.error("Failed to create client: %s", e)
             return None
@@ -336,11 +343,11 @@ class CredentialManager:
         if not access_token:
             return None
 
-        # POST /Client pins the new key to the token's organization and returns only its id and secret.
-        organization_id = self._token_organization(access_token) or self.organization_id
-        if self.organization_id and organization_id != self.organization_id:
+        # Refuse before POST /Client so a login that landed elsewhere creates no key there.
+        token_organization = self._token_organization(access_token)
+        if self.organization_id and token_organization != self.organization_id:
             raise ValueError(
-                f"Logged in to organization {organization_id}, but organization {self.organization_id} was requested. "
+                f"Logged in to organization {token_organization}, but organization {self.organization_id} was requested. "
                 "Log in again and pick that organization on the login page."
             )
 
@@ -349,7 +356,8 @@ class CredentialManager:
         if not client_state:
             raise ValueError("Failed to create client")
 
-        client_id, client_secret, display_name = client_state
+        client_id, client_secret, display_name, organization_id = client_state
+        organization_id = organization_id or token_organization
 
         credential = ClientCredential(
             client_id=client_id,

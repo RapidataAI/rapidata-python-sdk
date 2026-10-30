@@ -71,8 +71,14 @@ def _jwt(claims: dict) -> str:
 class FakeIdentity:
     """Bridge-token login where the browser lands in `token_org`, as identity would."""
 
-    def __init__(self, monkeypatch: pytest.MonkeyPatch, token_org: str | None):
+    def __init__(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        token_org: str | None,
+        client_org: str | None = None,
+    ):
         self.token_org = token_org
+        self.client_org = client_org
         self.opened: list[str] = []
         self.created = 0
         monkeypatch.setattr(webbrowser, "open", self._open)
@@ -87,7 +93,15 @@ class FakeIdentity:
         if "/identity/bridge-token" in url:
             return _Response({"readKey": "read", "writeKey": "write"})
         self.created += 1
-        return _Response({"clientId": f"client-{self.created}", "clientSecret": "s"})
+        organization = self.client_org or self.token_org
+        return _Response(
+            {
+                "clientId": f"client-{self.created}",
+                "clientSecret": "s",
+                "organizationId": organization,
+                "organizationName": f"{organization} name",
+            }
+        )
 
     def _get(self, url: str, **kwargs):
         claims = {"org": self.token_org} if self.token_org else {}
@@ -216,3 +230,15 @@ def test_legacy_credentials_file_still_loads(
         "https://auth.rapidata.ai"
     ]
     assert {c["client_id"] for c in stored} == {"legacy-id", "client-1"}
+
+
+def test_stored_organization_comes_from_the_created_client(
+    home: Path, monkeypatch: pytest.MonkeyPatch
+):
+    FakeIdentity(monkeypatch, token_org=None, client_org="org_from_client")
+
+    credential = CredentialManager(
+        endpoint="https://auth.rapidata.ai"
+    ).get_client_credentials()
+
+    assert credential is not None and credential.organization_id == "org_from_client"
