@@ -27,7 +27,7 @@ class IRefereeAdaptiveStoppingReferee(LazyValidatedModel):
     IRefereeAdaptiveStoppingReferee
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    max_votes: StrictInt = Field(alias="maxVotes")
+    max_votes: Optional[StrictInt] = Field(default=None, alias="maxVotes")
     min_confidence: Union[StrictFloat, StrictInt] = Field(alias="minConfidence")
     ambiguity_range: Union[StrictFloat, StrictInt] = Field(alias="ambiguityRange")
     __properties: ClassVar[List[str]] = ["_t", "maxVotes", "minConfidence", "ambiguityRange"]

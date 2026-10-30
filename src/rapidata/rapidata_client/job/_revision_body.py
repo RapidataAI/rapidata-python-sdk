@@ -33,6 +33,7 @@ _INSTRUCTION_FIELD_BY_RAPID = {
 }
 
 _COMPARE_UNSURE_KEY = "compare_unsure"
+_DEFAULT_ADAPTIVE_MAX_VOTES = 100
 
 
 def _as_dict(model: IOrderWorkflowInput | IReferee) -> dict[str, Any]:
@@ -114,7 +115,7 @@ def _get_responses(referee: IReferee) -> int | AdaptiveStopping | QuorumStopping
         return AdaptiveStopping(
             min_confidence=data["minConfidence"],
             ambiguity_range=data["ambiguityRange"],
-            max_responses=data["maxVotes"],
+            max_responses=data.get("maxVotes", _DEFAULT_ADAPTIVE_MAX_VOTES),
         )
     raise ValueError(f"A '{kind}' referee has no responses per datapoint.")
 

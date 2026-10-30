@@ -229,6 +229,10 @@ def test_job_definition_reads_config_objects():
     jd, _ = _compare_revision(ADAPTIVE_WIRE)
     assert jd.responses_per_datapoint == AdaptiveStopping()
 
+    without_cap = {k: v for k, v in ADAPTIVE_WIRE.items() if k != "maxVotes"}
+    jd, _ = _compare_revision(without_cap)
+    assert jd.responses_per_datapoint == AdaptiveStopping(max_responses=100)
+
     jd, _ = _compare_revision({"_t": "QuorumReferee", "maxVotes": 5, "threshold": 3})
     assert jd.responses_per_datapoint == QuorumStopping(threshold=3, max_responses=5)
 
