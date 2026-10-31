@@ -26,6 +26,8 @@ from .rapidata_client import (
     CostEstimate,
     JobProgress,
     RevisionInfo,
+    AdaptiveStopping,
+    QuorumStopping,
     RapidataSignal,
     RapidataSignalManager,
     RapidataFlow,

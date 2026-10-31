@@ -98,7 +98,7 @@ The file is just one transport. To move the token over any transport (key-value 
 
 Follow these for every job definition and audience example. Design each task so a labeler can answer it in about 10 seconds, 15 at most: labelers also answer validation tasks in the same session, mostly on phones, and within that time they read the instruction and the context and look at the media. A task they can't take in at a glance gets guessed. If a task needs longer, contact Rapidata (info@rapidata.ai) before launching it. The SDK only rejects instructions over 250 characters and contexts over 400; a task that passes those checks can still be far too long. Design to the limits below, not to the SDK's.
 
-1. **Keep `responses_per_datapoint` at 10 or more.** 10 is the default; never lower it to cut cost. With 3 responses, a single labeler who misread the task can flip the result. To spend less, label fewer datapoints, or add `confidence_threshold` / `quorum_threshold` when the task has one correct answer.
+1. **Keep `responses_per_datapoint` at 10 or more.** 10 is the default for every job type except comparison; never lower it to cut cost. With 3 responses, a single labeler who misread the task can flip the result. Comparisons default to `AdaptiveStopping()`, which already stops each pair as soon as its verdict is settled — leave it on. For classification with one correct answer, `QuorumStopping(threshold, max_responses)` stops early; otherwise label fewer datapoints to spend less.
 2. **Ask one short question about one criterion, in under 80 characters.** The instruction is the question and nothing else. To judge several aspects (motion, on-screen text, sound, …), create one job definition per aspect. Definitions and edge cases ("what counts", "what does not count", which side is which) do not go into the instruction either: cover them with an answer option such as `"Can't tell"`, by marking the target in the media itself, or with qualification examples on a custom audience (see **Custom Audiences**).
    - ✅ `"Which video matches the description better?"`
    - ✅ `"Is there a real dog in the red circle?"` with options `["Yes", "No", "Can't tell"]`
@@ -146,7 +146,7 @@ job = audience.assign_job(job_def)
 job.view()
 
 # 5. Monitor and get results
-progress = job.get_progress()   # Non-blocking snapshot: state, completion_percentage, recruiting
+progress = job.get_progress()   # Non-blocking snapshot: state, completion_percentage, completed/total, recruiting
 job.display_progress_bar()      # Or block on a live progress bar
 results = job.get_results()
 df = results.to_pandas()
@@ -157,7 +157,7 @@ df = results.to_pandas()
 Select one category from multiple options.
 
 ```python
-from rapidata import NoShuffleSetting
+from rapidata import NoShuffleSetting, QuorumStopping
 
 job_def = client.job.create_classification_job_definition(
     name="Image Classification",
@@ -165,11 +165,9 @@ job_def = client.job.create_classification_job_definition(
     answer_options=["Cat", "Dog", "Bird", "Other"],
     datapoints=["img1.jpg", "img2.jpg"],
     data_type="media",              # "media" (default) or "text" — text assets are NOT translated unless TranslateTextAssetsSetting is added
-    responses_per_datapoint=10,
+    responses_per_datapoint=10,     # Fixed count, or QuorumStopping(threshold=7, max_responses=10) to stop once 7 agree
     contexts=["Optional text context per datapoint"],
     media_contexts=[["optional_reference.jpg"]],
-    confidence_threshold=0.99,      # Optional: confidence-based early stopping
-    # quorum_threshold=7,           # Alternative: quorum-based early stopping (cannot use both)
     settings=[NoShuffleSetting()],         # Keep answer order
     failure_tolerance=0.01,         # Optional: fraction of datapoints allowed to fail the upload
     private_metadata=[{"id": "abc"}],
@@ -183,22 +181,23 @@ job_def = client.job.create_classification_job_definition(
 Compare two items and choose the better one.
 
 ```python
-from rapidata import AllowNeitherBothSetting
+from rapidata import AdaptiveStopping
 
 job_def = client.job.create_compare_job_definition(
     name="Image Comparison",
     instruction="Which image is higher quality?",
     datapoints=[["img_a1.jpg", "img_b1.jpg"], ["img_a2.jpg", "img_b2.jpg"]],
     data_type="media",
-    responses_per_datapoint=10,
+    responses_per_datapoint=AdaptiveStopping(),  # The default; see below
     contexts=["Prompt that generated these"],
     media_contexts=[["reference.jpg"]],
     a_b_names=["Model A", "Model B"],
-    confidence_threshold=0.99,       # Optional: confidence-based early stopping
-    # quorum_threshold=7,            # Alternative: quorum-based early stopping (cannot use both)
-    settings=[AllowNeitherBothSetting()],   # Allow "Neither" or "Both" options
 )
 ```
+
+**Adaptive stopping (compare default).** `AdaptiveStopping(min_confidence=0.9, ambiguity_range=0.6, max_responses=100)` weights each vote by the voter's user score and stops a pair at the first settled verdict: `"A"` or `"B"` (a winner with ≥ 90% confidence), `"ambiguous"` (too close to call: inside the band of width `ambiguity_range` centred on 50/50, i.e. 20/80 to 80/20), or `"undecided"` at `max_responses`. Clear pairs stop after 7 votes, ~25 on average (measured on past compare jobs; `estimated_cost` is priced with it), ~31 for the hardest pairs (split around 35/65); `max_responses` is only a safety cap the defaults never reach — don't tune it. Keep the defaults unless you know why; **lowering** `ambiguity_range` narrows the band so closer pairs get a winner, at the cost of more votes (`0.5` → 25/75–75/25, about a third more votes on average; `0.3` → 35/65–65/35). A winner always beats ambiguous: a 70/30 pair can still return `"A"`/`"B"`. Each result datapoint gains `verdict` and `responses` (votes used). Other values: an `int` for a fixed count, or `QuorumStopping(threshold, max_responses)`.
+
+`AdaptiveStopping` raises with `AllowNeitherBothSetting()` (the "Unsure" button): pass `responses_per_datapoint=10` or a `QuorumStopping` when you need that button.
 
 ### Ranking
 
@@ -408,14 +407,14 @@ second = audience.assign_job(other_job_def, run_after=first)   # or run_after="j
 
 **Job / Job Definition methods:**
 - `job_def.preview()` — open browser preview of what labelers see
-- **Editing a job definition** — a `RapidataJobDefinition` holds one revision (`job_def.revision`; `create_*_job_definition` returns revision 1). Assigning `job_def.instruction`, `.answer_options` (classification only; one list for every datapoint), `.responses_per_datapoint`, `.settings` (replaces every setting) or `.validation_set_id` (None clears it) only stages the change. `job_def.save()` sends the whole revision in one request and returns the new revision number; the object moves to it. See **Editing a Job Definition** in examples.md
+- **Editing a job definition** — a `RapidataJobDefinition` holds one revision (`job_def.revision`; `create_*_job_definition` returns revision 1). Assigning `job_def.instruction`, `.answer_options` (classification only; one list for every datapoint), `.responses_per_datapoint` (an `int`, `AdaptiveStopping` or `QuorumStopping`; reading returns the same kinds), `.settings` (replaces every setting) or `.validation_set_id` (None clears it) only stages the change. `job_def.save()` sends the whole revision in one request and returns the new revision number; the object moves to it. See **Editing a Job Definition** in examples.md
 - `job_def.set_datapoints(datapoints=..., data_type=..., contexts=..., media_contexts=..., sentences=..., private_metadata=..., answer_options=...)` — upload a new dataset now and stage it for `save()`; raises `FailedUploadException` (nothing staged) if any datapoint fails. Pass `answer_options` for classification definitions whose options are set per datapoint. `update_dataset(...)` still works but is deprecated: it is `set_datapoints(...)` + `save()`
 - `job_def.has_unsaved_changes`, `job_def.discard_changes()`, `job_def.reload(revision=None)` (raises while changes are unsaved), `job_def.revisions()` (list of `RevisionInfo`: `revision`, `base_revision`, `state`, `created_at`), `job_def.state` (`Pending` until the new revision's preview is built, then `Completed` / `Failed`), `job_def.wait_until_ready(timeout=300)`
-- `job_def.estimated_cost` / `job.estimated_cost` — a `CostEstimate` (`estimated_cost`, `datapoint_count`, `required_responses`) for running to completion; available on a job definition *before* assigning it. The estimate is priced shortly after creation, so the first read blocks briefly until it's ready (raises `TimeoutError` if still unavailable after a few minutes), then caches. It's an estimate, not the final bill — early stopping can lower the actual cost.
+- `job_def.estimated_cost` / `job.estimated_cost` — a `CostEstimate` (`estimated_cost`, `datapoint_count`, `required_responses`) for running to completion; available on a job definition *before* assigning it. `estimated_cost` is the **expected** cost — with adaptive stopping (the compare default) each pair's response count varies. The estimate is priced shortly after creation, so the first read blocks briefly until it's ready (raises `TimeoutError` if still unavailable after a few minutes), then caches. It's an estimate, not the final bill.
 - `job_def.delete()` — delete a job definition and all its revisions
 - `job.display_progress_bar(refresh_rate=5)` — blocking progress bar
 - `job.get_status()` — current status string
-- `job.get_progress()` — non-blocking snapshot: a `JobProgress` with `state` (same value as `get_status()`), `completion_percentage` (0–100) and `recruiting` (a `RecruitingMetrics`, or `None` for curated audiences)
+- `job.get_progress()` — non-blocking snapshot: a `JobProgress` with `state` (same value as `get_status()`), `completion_percentage` (0–100, never decreases), `completed` / `total` (datapoints; comparisons for ranking) and `recruiting` (a `RecruitingMetrics`, or `None` for curated audiences)
 - `job.get_results(preliminary_results=False)` — with `preliminary_results=True` on an unfinished job, returns a snapshot of the responses collected so far without waiting (not final, may miss datapoints); on a completed job it returns the final results. Otherwise blocks until Completed/Failed (auto-regenerates if `StaleResults`), returns `RapidataResults`. If the job needs manual review (`ManualApproval`), runs out of funds mid-run (`SpendLimited`), is paused (`Paused`) or is blocked by a flagged rapid (`Blocked`) — none of these completes on its own — it raises an informative error naming the state instead of blocking; top up, wait for a reviewer, `resume()` or unflag the rapid on `job.job_details_page`, then call it again. It also raises up front when the job's audience **can never produce responses** (nobody graduated *and* nobody is being recruited); an audience that is merely still distilling does not raise.
 - `job.pause()` / `job.resume()` — stop collecting responses / continue; both return the job. While `Paused`, `get_results()` and `display_progress_bar()` raise instead of blocking
 - `job.view()` — open the job's details page in the browser
@@ -520,8 +519,8 @@ settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (ta
    - **One audience = one task.** A custom audience is qualified for the specific task its examples describe. Reusing it for a different, unrelated task is a misuse — the qualification no longer applies and the quality guarantee is lost. Reuse it only for repeated/scheduled runs of the *same* task; spin up a new audience for a new task.
 4. **10–15 seconds per task, instructions under 80 characters** — design tasks to be answered in about 10 seconds, 15 at most (contact Rapidata if one needs longer); keep instructions to one criterion and under 80 characters (see **Task design rules**). The SDK itself only rejects instructions over 250 characters (`ValueError: instruction is <n> characters; maximum is 250`), so an instruction between 80 and 250 characters is accepted without a warning but is still too long
 5. **Responses may exceed `responses_per_datapoint`** — concurrent labelers can cause slight overflow
-6. **Two early stopping strategies, mutually exclusive** — `confidence_threshold` (statistical, weighted by labeler trust scores) or `quorum_threshold` (stops when N responses agree); cannot use both at once
-7. **Early stopping only for unambiguous tasks** — both strategies work best when there's a clear correct answer
+6. **Stopping rules go in `responses_per_datapoint`** — `AdaptiveStopping()` (compare only, the compare default; raises on classification and with `AllowNeitherBothSetting`), `QuorumStopping(threshold, max_responses)` (classification and compare), or an `int` for a fixed count. `confidence_threshold` / `quorum_threshold` are deprecated (`DeprecationWarning`) and raise when combined with either config object
+7. **Compare jobs no longer collect a fixed 10 by default** — a pair uses ~25 votes on average, ~31 for the hardest pairs; pass `responses_per_datapoint=10` for the old behavior. Read `verdict` (`"A"` / `"B"` / `"ambiguous"` / `"undecided"` / `"open"`) rather than `winner` on adaptive results: `"ambiguous"` means the pair is genuinely close, not that too few votes came in
 8. **Failed uploads abort job-definition creation** — job definitions are created atomically: if more than `failure_tolerance` of the datapoints fail to upload, **no job definition is created** (`e.job_definition` is `None`) and at least one datapoint must always succeed. Fix the failing datapoints and call `e.retry()`, which re-uploads only the failed ones into the *same* dataset and finishes creating the definition; it raises `FailedUploadException` again if failures remain, so it can be looped. Within tolerance, the definition is created and a warning reports how many failed. Inspect failures via `e.failures_by_reason`, `e.failures_by_stage` (grouped by remote-URL ingestion stage — only `internal` is a Rapidata-side fault), and each `FailedUpload`'s `stage` / `http_status`
 9. **Preview link printed on job creation** — creating a job definition prints a dashboard preview link; suppress prints with `rapidata_config.logging.silent_mode = True`
 10. **Context length limit is 400 characters** — a cap, not a target: write one sentence under 150 characters (see **Task design rules**). The backend rejects contexts longer than 400 characters, so an over-long context is **always** shortened against the task instruction before upload (not optional; a warning reports how many were shortened). Set `rapidata_config.upload.contextShortening = True` to shorten *every* context, or use `client.context.shorten_context()` / `client.context.shorten_contexts()` to shorten manually.

@@ -130,7 +130,7 @@ nav:
       - Signals: signals.md
       - Parameter Reference: job_definition_parameters.md
       - Understanding Results: understanding_the_results.md
-      - Early Stopping: confidence_stopping.md
+      - Adaptive Stopping: confidence_stopping.md
       - Cost Estimates: cost_estimates.md
       - Billing: billing.md
       - Job Progress: job_progress.md

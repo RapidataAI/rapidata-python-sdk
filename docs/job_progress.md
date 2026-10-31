@@ -12,7 +12,7 @@ client = RapidataClient()
 job = client.job.get_job_by_id("...")
 progress = job.get_progress()
 
-print(f"{progress.state}: {progress.completion_percentage:.1f}% done")
+print(f"{progress.state}: {progress.completed}/{progress.total} datapoints done")
 
 if progress.recruiting:
     r = progress.recruiting
@@ -23,12 +23,14 @@ if progress.recruiting:
 
 ## What Progress Contains
 
-A `JobProgress` has three fields:
+A `JobProgress` has five fields:
 
 | Field | Description |
 |---|---|
 | `state` | The job's current state, the same value returned by `get_status()`. |
-| `completion_percentage` | How much of the requested labeling is done, from 0 to 100. |
+| `completion_percentage` | How much of the requested labeling is done, from 0 to 100. It never decreases. |
+| `completed` | The number of datapoints that are done (for ranking jobs: comparisons). |
+| `total` | The number of datapoints in the job (for ranking jobs: comparisons). |
 | `recruiting` | A `RecruitingMetrics` snapshot of the annotator pool, or `None` for curated audiences. |
 
 ## The Recruiting Funnel

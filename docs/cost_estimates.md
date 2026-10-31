@@ -40,9 +40,11 @@ A `CostEstimate` has three fields:
 
 | Field | Description |
 |---|---|
-| `estimated_cost` | The estimated total cost of running the job to completion, in your account's billing currency. |
+| `estimated_cost` | The expected total cost of running the job to completion, in your account's billing currency. |
 | `datapoint_count` | The number of datapoints the job will label. |
-| `required_responses` | The total number of responses the job collects to complete. |
+| `required_responses` | The total number of responses the job is expected to collect. |
+
+Compare jobs use [adaptive stopping](confidence_stopping.md) by default: each pair stops once its verdict is settled, so `estimated_cost` and `required_responses` are what the job is expected to need.
 
 !!! note
-    This is an **estimate, not the final bill**. It is based on a sample of the job's tasks scaled to the number of responses requested, so the amount you are actually charged can differ. Features like [Early Stopping](confidence_stopping.md) can also lower the final cost by collecting fewer responses than the maximum.
+    This is an **estimate, not the final bill**. It is based on a sample of the job's tasks scaled to the expected number of responses, so the amount you are actually charged can differ.

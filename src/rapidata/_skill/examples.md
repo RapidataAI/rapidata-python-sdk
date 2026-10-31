@@ -41,7 +41,9 @@ job_def = client.job.create_classification_job_definition(
 job = audience.assign_job(job_def)
 ```
 
-## Comparison with Early Stopping
+## Comparison with Adaptive Stopping
+
+Compare jobs stop each pair once its verdict is settled — `AdaptiveStopping()` is the default, so no stopping argument is needed.
 
 ```python
 from rapidata import RapidataClient
@@ -57,20 +59,23 @@ job_def = client.job.create_compare_job_definition(
         ["flux_sunset.jpg", "mj_sunset.jpg"],
     ],
     contexts=["A cat on a chair", "A sunset over mountains"],
-    responses_per_datapoint=50,
-    confidence_threshold=0.99,
     a_b_names=["Flux", "Midjourney"],
 )
 job = audience.assign_job(job_def)
 job.view()
 job.display_progress_bar()
 results = job.get_results()
+
+for datapoint in results["results"]:
+    # verdict: "A", "B", "ambiguous" (too close to call), "undecided" (hit max_responses)
+    # or "open" (no verdict yet)
+    print(datapoint["verdict"], datapoint["responses"])
 ```
 
 ## Classification with Quorum Stopping
 
 ```python
-from rapidata import RapidataClient
+from rapidata import RapidataClient, QuorumStopping
 
 client = RapidataClient()
 audience = client.audience.get_audience_by_id("global")
@@ -80,8 +85,8 @@ job_def = client.job.create_classification_job_definition(
     instruction="What animal is in this image?",
     answer_options=["Cat", "Dog"],
     datapoints=["pet1.jpg", "pet2.jpg"],
-    responses_per_datapoint=10,  # Maximum responses
-    quorum_threshold=7,          # Stop when 7 responses agree
+    # Stop when 7 responses agree, after 10 at most
+    responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10),
 )
 job = audience.assign_job(job_def)
 job.view()
@@ -106,6 +111,7 @@ job_def = client.job.create_compare_job_definition(
         "Have you tried turning it off and on again?",
     ]],
     data_type="text",
+    responses_per_datapoint=10,  # AdaptiveStopping (the default) does not support the "Unsure" button
     settings=[AllowNeitherBothSetting()],
 )
 job = audience.assign_job(job_def)
@@ -885,7 +891,7 @@ client = RapidataClient()
 job = client.job.get_job_by_id("job_id")
 
 progress = job.get_progress()
-print(f"{progress.state}: {progress.completion_percentage:.1f}% done")
+print(f"{progress.state}: {progress.completed}/{progress.total} datapoints done")
 
 # recruiting is None for curated audiences (e.g. "global"), which don't recruit.
 if progress.recruiting:
@@ -917,8 +923,9 @@ job_def = client.job.create_compare_job_definition(
 
 # Reading estimated_cost blocks briefly until the estimate is priced.
 estimate = job_def.estimated_cost
+# Compare jobs stop adaptively, so estimated_cost is the expected cost.
 print(
-    f"About {estimate.estimated_cost} for {estimate.required_responses} responses "
+    f"Expected {estimate.estimated_cost} for {estimate.required_responses} responses "
     f"across {estimate.datapoint_count} datapoints"
 )
 

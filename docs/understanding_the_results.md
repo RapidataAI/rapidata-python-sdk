@@ -165,6 +165,8 @@ Here's an example of the results you might receive when running a COMPARE task (
                 - `global`: The global userScore of the labeler, which is a measure of their overall reliability
             - `demographics`: Demographic attributes collected for the labeler, keyed by attribute name (e.g. `age`, `gender`, `occupation`). May be empty if no demographic data was collected for the labeler.
 
+    - `verdict`, `responses`, `stoppingState`: Present only for pairs collected with [adaptive stopping](confidence_stopping.md) (the compare default). `verdict` is `"A"`, `"B"`, `"ambiguous"`, `"undecided"`, or `"open"` (no verdict yet); `responses` is the number of votes the stopping rule counted. Prefer `verdict` over `winner` for these pairs: it only names a winner once the evidence is strong enough.
+
 3. `summary`
     - `A_wins_total`: The total number of comparisons won by option A (index 0) across all pairs
     - `B_wins_total`: The total number of comparisons won by option B (index 1) across all pairs
