@@ -38,6 +38,7 @@ class OpenAPIService:
         token: dict | None = None,
         token_file: str | None = None,
         leeway: int = 60,
+        organization_id: str | None = None,
     ):
         self.environment = environment
         endpoint = f"https://api.{environment}"
@@ -54,7 +55,7 @@ class OpenAPIService:
         )
         logger.debug("Initializing OpenAPIService")
         self.credential_manager = CredentialManager(
-            endpoint=auth_endpoint, cert_path=cert_path
+            endpoint=auth_endpoint, cert_path=cert_path, organization_id=organization_id
         )
         logger.debug("CredentialManager initialized")
 

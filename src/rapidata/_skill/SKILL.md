@@ -29,6 +29,9 @@ client = RapidataClient()  # Credentials resolved: env vars → ~/.config/rapida
 client = RapidataClient(client_id="...", client_secret="...")
 # Credentials are saved to ~/.config/rapidata/credentials.json
 
+# Pin the saved credentials to one organization; switching organization in the dashboard does not move them
+client = RapidataClient(organization_id="org_...")
+
 # Environment variables (useful for headless/container deployments):
 # RAPIDATA_CLIENT_ID, RAPIDATA_CLIENT_SECRET — authenticate without a browser
 # RAPIDATA_ENVIRONMENT — override the API endpoint (default: rapidata.ai)
@@ -39,11 +42,11 @@ client = RapidataClient(client_id="...", client_secret="...")
 Without saved credentials, `RapidataClient()` blocks on a browser login for up to 5 minutes. As a coding agent, check auth first from the CLI:
 
 ```bash
-python -m rapidata status [--environment ENV]  # exit 0: "Authenticated for {env} via {source}."; exit 1: not logged in. Never starts a login
-python -m rapidata login  [--environment ENV]  # browser login; saves credentials (no-op if already authenticated). Blocks up to 5 minutes
+python -m rapidata status [--environment ENV] [--organization ORG]  # exit 0: "Authenticated for {env} via {source}."; exit 1: not logged in. Never starts a login
+python -m rapidata login  [--environment ENV] [--organization ORG]  # browser login; saves credentials (no-op if already authenticated). Blocks up to 5 minutes
 ```
 
-- Both check `RAPIDATA_TOKEN_FILE` → `RAPIDATA_CLIENT_ID` + `RAPIDATA_CLIENT_SECRET` → credentials saved for `https://auth.{environment}`. `--environment` defaults to `RAPIDATA_ENVIRONMENT`, else `rapidata.ai`.
+- Both check `RAPIDATA_TOKEN_FILE` → `RAPIDATA_CLIENT_ID` + `RAPIDATA_CLIENT_SECRET` → credentials saved for `https://auth.{environment}` (and `--organization`, when given). `--environment` defaults to `RAPIDATA_ENVIRONMENT`, else `rapidata.ai`.
 - Run `python -m rapidata status` before the first `RapidataClient()`. If it reports not logged in, run `python -m rapidata login` in the background (or with a tool timeout above 5 minutes) and show the user the URL it prints — the login URL is always printed to stderr, even in silent mode. After the user logs in once, every later `RapidataClient()` reuses the saved credentials.
 - For headless runs, set `RAPIDATA_CLIENT_ID` and `RAPIDATA_CLIENT_SECRET` instead.
 

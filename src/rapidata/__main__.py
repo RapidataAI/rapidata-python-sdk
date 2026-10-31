@@ -55,31 +55,33 @@ def _environment(arg: str | None) -> str:
     return arg or os.environ.get("RAPIDATA_ENVIRONMENT") or "rapidata.ai"
 
 
-def _credential_manager(environment: str):
+def _credential_manager(environment: str, organization: str | None = None):
     from rapidata.service.credential_manager import CredentialManager
     from rapidata.service.openapi_service import _get_local_certificate
 
     cert_path = _get_local_certificate() if environment == "rapidata.dev" else None
     return CredentialManager(
-        endpoint=f"https://auth.{environment}", cert_path=cert_path
+        endpoint=f"https://auth.{environment}",
+        cert_path=cert_path,
+        organization_id=organization,
     )
 
 
-def _auth_source(environment: str) -> str | None:
+def _auth_source(environment: str, organization: str | None = None) -> str | None:
     if os.environ.get("RAPIDATA_TOKEN_FILE"):
         return f"the token file in RAPIDATA_TOKEN_FILE ({os.environ['RAPIDATA_TOKEN_FILE']})"
     if os.environ.get("RAPIDATA_CLIENT_ID") and os.environ.get(
         "RAPIDATA_CLIENT_SECRET"
     ):
         return "RAPIDATA_CLIENT_ID / RAPIDATA_CLIENT_SECRET"
-    credential = _credential_manager(environment).stored_credential()
+    credential = _credential_manager(environment, organization).stored_credential()
     if credential:
         return f"saved credentials ({credential.get_display_string()})"
     return None
 
 
-def status(environment: str) -> int:
-    source = _auth_source(environment)
+def status(environment: str, organization: str | None = None) -> int:
+    source = _auth_source(environment, organization)
     if source:
         print(f"Authenticated for {environment} via {source}.")
         return 0
@@ -90,12 +92,12 @@ def status(environment: str) -> int:
     return 1
 
 
-def login(environment: str) -> int:
-    source = _auth_source(environment)
+def login(environment: str, organization: str | None = None) -> int:
+    source = _auth_source(environment, organization)
     if source:
         print(f"Already authenticated for {environment} via {source}.")
         return 0
-    credential = _credential_manager(environment).get_client_credentials()
+    credential = _credential_manager(environment, organization).get_client_credentials()
     if not credential:
         print(
             "Login did not complete. Run `python -m rapidata login` again.",
@@ -152,6 +154,10 @@ def _build_parser() -> argparse.ArgumentParser:
             "--environment",
             help="Rapidata environment (default: RAPIDATA_ENVIRONMENT, else rapidata.ai)",
         )
+        auth.add_argument(
+            "--organization",
+            help="organization id (org_...) the saved credentials act in, as RapidataClient(organization_id=...)",
+        )
     return parser
 
 
@@ -159,9 +165,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
     if args.command == "login":
-        return login(_environment(args.environment))
+        return login(_environment(args.environment), args.organization)
     if args.command == "status":
-        return status(_environment(args.environment))
+        return status(_environment(args.environment), args.organization)
     if args.command != "skill":
         parser.print_help()
         return 0
