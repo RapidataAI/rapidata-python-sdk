@@ -9,8 +9,9 @@ extra_javascript:
   - js/login.js
   - js/ai-copy-button.js
   - js/preview-embed.js
+  - js/search-shortcut.js
 extra_css:
-  - https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap
+  - https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700&display=swap
   - stylesheets/extra.css
 
 hooks:
@@ -50,7 +51,6 @@ plugins:
         - scripts/gen_ref_pages.py
   - literate-nav:
       nav_file: SUMMARY.md
-  - section-index
   - redirects:
       redirect_maps:
         'starting_page.md': 'index.md'
@@ -163,8 +163,8 @@ theme:
   font: false
   palette:
     - scheme: slate
-      primary: black
-      accent: blue
+      primary: custom
+      accent: custom
 
   icon:
     repo: fontawesome/brands/github-alt
@@ -181,11 +181,8 @@ theme:
     - navigation.instant
     - navigation.instant.progress
     - navigation.sections
-    - navigation.tabs
-    - navigation.tabs.sticky
     - navigation.top
     - navigation.tracking
-    - navigation.indexes
     - toc.follow
     - search.suggest
     - search.highlight
