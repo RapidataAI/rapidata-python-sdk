@@ -279,8 +279,8 @@ audience.add_classification_example(
 ```
 
 1. Applies the setting as a feature flag on this single example. Use the same
-   `RapidataSetting` subclasses you would pass to `settings=` on a job or
-   order (e.g. `NoShuffleSetting`, `MarkdownSetting`,
+   `RapidataSetting` subclasses you would pass to `settings=` on a job
+   definition (e.g. `NoShuffleSetting`, `MarkdownSetting`,
    `AllowNeitherBothSetting`, `ComparePanoramaSetting`). All
    `add_*_example` methods accept `settings`.
 
