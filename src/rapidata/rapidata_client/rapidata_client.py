@@ -85,6 +85,7 @@ class RapidataClient:
         token: dict | None = None,
         token_file: str | None = None,
         leeway: int = 60,
+        organization_id: str | None = None,
     ):
         """Initialize the RapidataClient.
 
@@ -125,6 +126,7 @@ class RapidataClient:
             token (dict, optional): If you already have a token that the client should use for authentication. Important, if set, this needs to be the complete token object containing the access token, token type and expiration time.
             token_file (str, optional): Path to a JSON file containing the token object described above (with an absolute ``expires_at`` timestamp). The file is re-read whenever the current token expires, so an external process can keep it fresh — useful to share one token across many workers (e.g. distributed training). Falls back to the ``RAPIDATA_TOKEN_FILE`` environment variable when omitted.
             leeway (int, optional): How many seconds before its actual expiry a token is treated as expired — i.e. how early it is refreshed (or re-read from ``token_file``). Defaults to 60 seconds.
+            organization_id (str, optional): The organization (``org_...``) the saved credentials act in. The browser login opens on that organization, and credentials are saved per organization, so switching organization in the dashboard does not move this client. When omitted, any saved credentials for the environment are reused, and a new login picks the organization on the login page.
 
         Attributes:
             validation (ValidationSetManager): The ValidationSetManager instance.
@@ -178,6 +180,7 @@ class RapidataClient:
                 token=token,
                 token_file=token_file,
                 leeway=leeway,
+                organization_id=organization_id,
             )
 
             self._asset_uploader = AssetUploader(openapi_service=self._openapi_service)

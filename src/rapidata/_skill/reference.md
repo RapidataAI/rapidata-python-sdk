@@ -1428,13 +1428,13 @@ Governs compression of images **and** videos. Applies to single-asset uploads (`
 
 All config fields support environment-variable overrides with the `RAPIDATA_` prefix (e.g., `RAPIDATA_maxWorkers=10`, `RAPIDATA_failureTolerance=0.0`, `RAPIDATA_DISABLE_OTLP=1`).
 
-**Client authentication** is also resolved from environment variables: `RAPIDATA_CLIENT_ID` and `RAPIDATA_CLIENT_SECRET` are used before falling back to `~/.config/rapidata/credentials.json` and browser login. Without saved credentials, `RapidataClient()` blocks on a browser login for up to 5 minutes; the login URL is always printed to stderr (even in silent mode). `RAPIDATA_ENVIRONMENT` overrides the API endpoint (default: `rapidata.ai`). `RAPIDATA_TOKEN_FILE` points the client at a shared access-token file (equivalent to `token_file=`). Empty values are treated as unset and fall through to the next resolution layer.
+**Client authentication** is also resolved from environment variables: `RAPIDATA_CLIENT_ID` and `RAPIDATA_CLIENT_SECRET` are used before falling back to `~/.config/rapidata/credentials.json` and browser login. Without saved credentials, `RapidataClient()` blocks on a browser login for up to 5 minutes; the login URL is always printed to stderr (even in silent mode). `RAPIDATA_ENVIRONMENT` overrides the API endpoint (default: `rapidata.ai`). `RAPIDATA_TOKEN_FILE` points the client at a shared access-token file (equivalent to `token_file=`). `RapidataClient(organization_id="org_...")` pins the saved credentials to one organization: the browser login opens on it, credentials are saved per environment and organization, and a dashboard organization switch does not move them. Without it, any saved credential for the environment is reused. Empty values are treated as unset and fall through to the next resolution layer.
 
-**Checking and establishing auth from the CLI** (`--environment` defaults to `RAPIDATA_ENVIRONMENT`, else `rapidata.ai`). Both commands check `RAPIDATA_TOKEN_FILE`, then `RAPIDATA_CLIENT_ID` + `RAPIDATA_CLIENT_SECRET`, then the credentials saved for `https://auth.{environment}`:
+**Checking and establishing auth from the CLI** (`--environment` defaults to `RAPIDATA_ENVIRONMENT`, else `rapidata.ai`). Both commands check `RAPIDATA_TOKEN_FILE`, then `RAPIDATA_CLIENT_ID` + `RAPIDATA_CLIENT_SECRET`, then the credentials saved for `https://auth.{environment}` (and `--organization ORG`, when given):
 
 ```bash
-python -m rapidata status [--environment ENV]  # exit 0 "Authenticated for {env} via {source}."; exit 1 if not logged in. Never starts a login
-python -m rapidata login  [--environment ENV]  # browser login; saves credentials (exit 0), or "Login did not complete..." on stderr (exit 1).
+python -m rapidata status [--environment ENV] [--organization ORG]  # exit 0 "Authenticated for {env} via {source}."; exit 1 if not logged in. Never starts a login
+python -m rapidata login  [--environment ENV] [--organization ORG]  # browser login; saves credentials (exit 0), or "Login did not complete..." on stderr (exit 1).
                                                #   Exits 0 immediately if already authenticated; otherwise blocks up to 5 minutes
 ```
 
