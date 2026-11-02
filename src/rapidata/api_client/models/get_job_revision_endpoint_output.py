@@ -44,13 +44,16 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     campaign_feature_flags: List[FeatureFlag] = Field(alias="campaignFeatureFlags")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set pinned on this revision, or null when none is pinned.", alias="validationSetId")
+    audience_id: Optional[StrictStr] = Field(default=None, description="The audience that runs of this revision start their jobs on, or null when none  is set. POST /job ignores it.", alias="audienceId")
+    source_definition_id: Optional[StrictStr] = Field(default=None, description="The definition this revision was copied from, or null when it is not a copy.", alias="sourceDefinitionId")
+    source_revision_number: Optional[StrictInt] = Field(default=None, description="The source definition's revision number at the time of the copy, or null when it  is not a copy.", alias="sourceRevisionNumber")
     base_revision_number: Optional[StrictInt] = Field(default=None, description="The revision this one was edited from, when the caller supplied it.", alias="baseRevisionNumber")
     created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     created_by_id: UUID = Field(description="The id of the user who created the revision.", alias="createdById")
     created_by_mail: StrictStr = Field(description="The email of the user who created the revision.", alias="createdByMail")
     is_instruction_complex: Optional[StrictBool] = Field(default=None, description="Whether the instruction was flagged as too complex for the average annotator to  understand. Null until the asynchronous complexity check has completed.", alias="isInstructionComplex")
     instruction_complexity_reason: Optional[StrictStr] = Field(default=None, description="A short explanation of why the instruction was flagged, when applicable.", alias="instructionComplexityReason")
-    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "state", "pipelineId", "datasetId", "aggregatorType", "workflow", "referee", "featureFlags", "campaignFeatureFlags", "validationSetId", "baseRevisionNumber", "createdAt", "createdById", "createdByMail", "isInstructionComplex", "instructionComplexityReason"]
+    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "state", "pipelineId", "datasetId", "aggregatorType", "workflow", "referee", "featureFlags", "campaignFeatureFlags", "validationSetId", "audienceId", "sourceDefinitionId", "sourceRevisionNumber", "baseRevisionNumber", "createdAt", "createdById", "createdByMail", "isInstructionComplex", "instructionComplexityReason"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -117,6 +120,21 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
         if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
             _dict['validationSetId'] = None
 
+        # set to None if audience_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.audience_id is None and "audience_id" in self.model_fields_set:
+            _dict['audienceId'] = None
+
+        # set to None if source_definition_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.source_definition_id is None and "source_definition_id" in self.model_fields_set:
+            _dict['sourceDefinitionId'] = None
+
+        # set to None if source_revision_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.source_revision_number is None and "source_revision_number" in self.model_fields_set:
+            _dict['sourceRevisionNumber'] = None
+
         # set to None if base_revision_number (nullable) is None
         # and model_fields_set contains the field
         if self.base_revision_number is None and "base_revision_number" in self.model_fields_set:
@@ -155,6 +173,9 @@ class GetJobRevisionEndpointOutput(LazyValidatedModel):
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "campaignFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["campaignFeatureFlags"]] if obj.get("campaignFeatureFlags") is not None else None,
             "validationSetId": obj.get("validationSetId"),
+            "audienceId": obj.get("audienceId"),
+            "sourceDefinitionId": obj.get("sourceDefinitionId"),
+            "sourceRevisionNumber": obj.get("sourceRevisionNumber"),
             "baseRevisionNumber": obj.get("baseRevisionNumber"),
             "createdAt": obj.get("createdAt"),
             "createdById": obj.get("createdById"),

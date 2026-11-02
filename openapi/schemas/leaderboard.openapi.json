@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.10.30.0902-d6888a8"
+    "version": "2026.11.02.2043-d322c8d"
   },
   "servers": [
     {
@@ -67,7 +67,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/runs/custom": {
@@ -126,7 +138,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark": {
@@ -173,7 +197,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/participants": {
@@ -231,7 +267,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -532,7 +580,89 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/prompts/bulk": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Creates up to 5000 prompts at once; their text is translated afterwards, and sample generation answers 409 until then.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark to add the prompts to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The prompts to add.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}": {
@@ -572,7 +702,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -666,7 +808,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/participant/{participantId}": {
@@ -716,7 +870,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/fork": {
@@ -763,7 +929,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/demographics": {
@@ -3531,7 +3709,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/combined-standings": {
@@ -3591,7 +3781,79 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/prompts/processing": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Reports how many of the benchmark's prompts are still being processed or failed to.",
+        "description": "Find failed prompts with processing_status=Failed on GET .../prompts and retry each one.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark whose prompts to count.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptProcessingProgressEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/prompts": {
@@ -4041,6 +4303,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "processing_status",
+            "in": "query",
+            "description": "Filter by processing_status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -4129,7 +4440,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -4187,7 +4510,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/huggingface-sync/attempts": {
@@ -4632,7 +4967,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/prompt-embedding-map": {
@@ -4681,7 +5028,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -4721,7 +5080,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -4823,7 +5194,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/standings": {
@@ -5556,7 +5939,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/combined-matrix/query": {
@@ -6167,7 +6562,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/combined-standings/query": {
@@ -6778,7 +7185,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/leaderboards": {
@@ -7358,7 +7777,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/matchups/query": {
@@ -9939,6 +10370,15 @@
             }
           },
           {
+            "name": "includeDisabled",
+            "in": "query",
+            "description": "Whether disabled participants are listed; their kept votes still count toward the other scores.",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
             "name": "country",
             "in": "query",
             "description": "Filter by country.",
@@ -10625,7 +11065,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/sample-generation/preview": {
@@ -10685,7 +11137,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/participants/{participantId}/submit": {
@@ -10742,7 +11206,89 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/runs/top-up": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queues one same-seeded run per leaderboard pairing the participants with all others.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark whose participants are topped up.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The participants and the responses each receives.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopUpParticipantsEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopUpParticipantsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/name": {
@@ -10794,7 +11340,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/faucet/replicate/models/{modelOwner}/{modelName}": {
@@ -10852,7 +11410,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/faucet/replicate/models": {
@@ -10909,7 +11479,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/boost": {
@@ -10960,7 +11542,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/runs/custom": {
@@ -11019,7 +11613,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard": {
@@ -11067,7 +11673,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/participants": {
@@ -11126,7 +11744,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -11172,7 +11802,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/prompts": {
@@ -11231,7 +11873,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}": {
@@ -11271,7 +11925,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -11367,7 +12033,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/combined-matrix": {
@@ -11427,7 +12105,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/combined-standings": {
@@ -11487,7 +12177,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/matrix": {
@@ -12375,7 +13077,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/combined-standings/query": {
@@ -12937,7 +13651,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/runs": {
@@ -13279,7 +14005,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboards": {
@@ -13564,7 +14302,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/matrix/query": {
@@ -14150,6 +14900,15 @@
             "schema": {
               "type": "boolean",
               "default": false
+            }
+          },
+          {
+            "name": "includeDisabled",
+            "in": "query",
+            "description": "Whether disabled participants are listed; their kept votes still count toward the other scores.",
+            "schema": {
+              "type": "boolean",
+              "default": true
             }
           },
           {
@@ -15059,7 +15818,20 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/participants/{participantId}/submit": {
@@ -15116,7 +15888,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/name": {
@@ -15168,7 +15952,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/response-config": {
@@ -15220,7 +16016,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant/{participantId}/sample": {
@@ -15278,7 +16086,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant/{participantId}/sample-new": {
@@ -15337,7 +16157,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant/{participantId}": {
@@ -15377,7 +16209,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -15472,7 +16316,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant-sample/{sampleId}": {
@@ -15512,7 +16368,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant/{participantId}/disable": {
@@ -15562,7 +16430,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant/{participantId}/enable": {
@@ -15603,7 +16483,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant-sample/{sampleId}/exclude-votes": {
@@ -15644,7 +16536,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant/{participantId}/faucet": {
@@ -15685,7 +16589,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -15737,7 +16653,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant-sample/{sampleId}/restore-votes": {
@@ -15778,7 +16706,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participants/{participantId}/submit": {
@@ -15825,7 +16765,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participants/submit": {
@@ -15873,7 +16825,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant/{participantId}/name": {
@@ -15925,7 +16889,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark-prompt/{promptId}": {
@@ -15966,7 +16942,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark-prompt/{promptId}/segments": {
@@ -16018,7 +17006,72 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark-prompt/{promptId}/processing/retry": {
+      "post": {
+        "tags": [
+          "Prompt"
+        ],
+        "summary": "Queues processing again for a prompt that failed or is stuck pending.",
+        "description": "Responds with 400 when the prompt is already processed.",
+        "parameters": [
+          {
+            "name": "promptId",
+            "in": "path",
+            "description": "The id of the prompt to process.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark-prompt/{promptId}/tags": {
@@ -16070,7 +17123,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark-sample/{sampleId}": {
@@ -16737,7 +17802,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/sample-generation/{sampleGenerationId}/items": {
@@ -17077,7 +18154,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/sample-generations": {
@@ -17220,7 +18309,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/sample-generation/{sampleGenerationId}/retry": {
@@ -17284,7 +18385,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     }
   },
@@ -18002,6 +19115,93 @@
           "id": {
             "type": "string",
             "description": "The id of the created prompt."
+          }
+        }
+      },
+      "CreatePromptsForBenchmarkEndpoint_Input": {
+        "required": [
+          "prompts"
+        ],
+        "type": "object",
+        "properties": {
+          "prompts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Prompt"
+                }
+              }
+            ],
+            "description": "The prompts to create, at most 5000."
+          }
+        }
+      },
+      "CreatePromptsForBenchmarkEndpoint_Output": {
+        "required": [
+          "prompts"
+        ],
+        "type": "object",
+        "properties": {
+          "prompts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Output_CreatedPrompt"
+                }
+              }
+            ],
+            "description": "The created prompts, in request order."
+          }
+        }
+      },
+      "CreatePromptsForBenchmarkEndpoint_Output_CreatedPrompt": {
+        "required": [
+          "id",
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "CreatePromptsForBenchmarkEndpoint_Prompt": {
+        "required": [
+          "identifier",
+          "segments"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromptSegmentInput"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "nullable": true
+          },
+          "origin": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Origin"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -19769,13 +20969,33 @@
           }
         }
       },
+      "GetPromptProcessingProgressEndpoint_Output": {
+        "required": [
+          "pendingCount",
+          "failedCount"
+        ],
+        "type": "object",
+        "properties": {
+          "pendingCount": {
+            "type": "integer",
+            "description": "Prompts still being processed, e.g. translated to English.",
+            "format": "int32"
+          },
+          "failedCount": {
+            "type": "integer",
+            "description": "Prompts whose processing failed and needs a retry.",
+            "format": "int32"
+          }
+        }
+      },
       "GetPromptsByBenchmarkEndpoint_Output": {
         "required": [
           "id",
           "segments",
           "identifier",
           "createdAt",
-          "tags"
+          "tags",
+          "processingStatus"
         ],
         "type": "object",
         "properties": {
@@ -19846,6 +21066,14 @@
               }
             ],
             "description": "Where the prompt came from, if known."
+          },
+          "processingStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PromptProcessingStatus"
+              }
+            ],
+            "description": "Whether the prompt's English text is filled in; only Ready prompts reach generation and runs."
           }
         }
       },
@@ -21876,6 +23104,13 @@
           "Failed"
         ]
       },
+      "PromptProcessingStatus": {
+        "enum": [
+          "Ready",
+          "Pending",
+          "Failed"
+        ]
+      },
       "PromptSegment": {
         "required": [
           "key",
@@ -23399,6 +24634,7 @@
           "status",
           "votesExcluded",
           "coveredPromptCount",
+          "isEvaluating",
           "createdAt"
         ],
         "type": "object",
@@ -23477,6 +24713,10 @@
             "type": "integer",
             "description": "How many of the benchmark's prompts the participant has at least one sample for.",
             "format": "int32"
+          },
+          "isEvaluating": {
+            "type": "boolean",
+            "description": "True while the participant belongs to a run that is queued, running or paused."
           },
           "createdAt": {
             "type": "string",
@@ -25016,6 +26256,89 @@
           }
         }
       },
+      "TopUpParticipantsEndpoint_Input": {
+        "required": [
+          "participantIds",
+          "responsesPerParticipant"
+        ],
+        "type": "object",
+        "properties": {
+          "participantIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The evaluated participants to collect more responses for, 1 to 100 of them."
+          },
+          "responsesPerParticipant": {
+            "type": "integer",
+            "description": "The responses each participant receives on every targeted leaderboard.",
+            "format": "int32"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Optional seed for deterministic matchup selection; one is generated when omitted.",
+            "format": "int64",
+            "nullable": true
+          },
+          "leaderboardIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional leaderboards of the benchmark to run on. Omit to target every visible leaderboard\n included in the benchmark overall."
+          }
+        }
+      },
+      "TopUpParticipantsEndpoint_Output": {
+        "required": [
+          "runs",
+          "seed"
+        ],
+        "type": "object",
+        "properties": {
+          "runs": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TopUpParticipantsEndpoint_Output_Run"
+                }
+              }
+            ],
+            "description": "The created runs, one per targeted leaderboard."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "The seed every created run shares.",
+            "format": "int64"
+          }
+        }
+      },
+      "TopUpParticipantsEndpoint_Output_Run": {
+        "required": [
+          "leaderboardId",
+          "runId"
+        ],
+        "type": "object",
+        "properties": {
+          "leaderboardId": {
+            "type": "string"
+          },
+          "runId": {
+            "type": "string"
+          }
+        }
+      },
       "TranslatedString": {
         "required": [
           "englishText",
@@ -25436,10 +26759,6 @@
   "security": [
     {
       "OpenIdConnect": [
-        "openid",
-        "profile",
-        "email",
-        "offline_access",
         "api"
       ]
     }

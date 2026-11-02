@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.10.30.0902-d6888a8"
+    "version": "2026.11.02.2043-d322c8d"
   },
   "servers": [
     {
@@ -345,10 +345,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -440,10 +441,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -526,10 +528,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -578,10 +581,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -637,10 +641,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -695,10 +700,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -763,10 +769,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -821,10 +828,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -890,10 +898,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -941,10 +950,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -998,10 +1008,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1065,10 +1076,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1123,10 +1135,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1185,10 +1198,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1246,10 +1260,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1308,10 +1323,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1369,10 +1385,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1427,10 +1444,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1485,10 +1503,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1543,10 +1562,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1600,10 +1620,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1658,10 +1679,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1715,10 +1737,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1785,10 +1808,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -1836,10 +1860,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -2189,10 +2214,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -2593,10 +2619,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -2645,10 +2672,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -2685,10 +2713,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -2747,10 +2776,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -2788,10 +2818,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -2839,10 +2870,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -2900,10 +2932,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -2962,10 +2995,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3013,10 +3047,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3082,10 +3117,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3151,10 +3187,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3209,10 +3246,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3460,10 +3498,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3531,10 +3570,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3590,10 +3630,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3648,10 +3689,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3843,10 +3885,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3890,10 +3933,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3937,10 +3981,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -3989,10 +4034,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -4041,10 +4087,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -4100,10 +4147,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -4147,10 +4195,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -4194,10 +4243,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -4253,10 +4303,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -4313,10 +4364,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -4373,10 +4425,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -4442,10 +4495,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -4476,10 +4530,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -4527,10 +4577,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -4567,10 +4618,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -4962,10 +5014,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5003,10 +5056,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5054,10 +5108,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5105,10 +5160,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5168,10 +5224,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5227,10 +5284,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5275,10 +5333,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5333,10 +5392,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5579,10 +5639,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5619,10 +5680,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5678,10 +5740,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5726,10 +5789,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5777,10 +5841,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5838,10 +5903,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5897,10 +5963,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -5956,10 +6023,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6026,10 +6094,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6077,10 +6146,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6133,10 +6203,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6192,10 +6263,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6396,10 +6468,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6455,10 +6528,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6513,10 +6587,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6571,10 +6646,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6633,10 +6709,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6696,10 +6773,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6747,10 +6825,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6803,10 +6882,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6888,10 +6968,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -6973,10 +7054,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -7058,10 +7140,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -7143,10 +7226,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -7338,10 +7422,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -7389,10 +7474,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -7447,10 +7533,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -7509,10 +7596,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -7572,10 +7660,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -7641,10 +7730,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -7843,10 +7933,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -7901,10 +7992,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -7970,10 +8062,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8039,10 +8132,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8098,10 +8192,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8160,10 +8255,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8229,10 +8325,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8298,10 +8395,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "flow:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8321,10 +8419,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -8395,10 +8489,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8445,10 +8540,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8495,10 +8591,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8570,70 +8667,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
-              "api"
+              "organization:read"
             ]
-          }
-        ]
-      }
-    },
-    "/customers/{customerId}/capabilities": {
-      "get": {
-        "tags": [
-          "Capabilities"
-        ],
-        "summary": "Lists the capabilities a customer holds.",
-        "description": "capabilities are granted to an organization, so these are the grants of the\n organization the customer is currently acting under — the same set enforced for them. A\n customer without an organization holds none.",
-        "parameters": [
-          {
-            "name": "customerId",
-            "in": "path",
-            "description": "The customer to inspect.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCustomerCapabilitiesEndpoint_Output"
-                }
-              }
-            }
           },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -8689,10 +8727,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8750,10 +8789,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8809,10 +8849,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8860,10 +8901,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8910,10 +8952,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -8960,10 +9003,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -9012,10 +9056,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -9070,10 +9115,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "client:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -9121,10 +9167,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "client:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -9178,10 +9225,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -9423,10 +9466,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "client:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -9459,10 +9503,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -9512,10 +9552,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -9565,10 +9606,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -9859,10 +9901,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -9912,10 +9955,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -9995,10 +10039,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -10045,10 +10090,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -10095,10 +10141,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -10154,10 +10201,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -10215,10 +10258,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -10274,10 +10313,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -10309,10 +10344,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -10360,10 +10391,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -10411,10 +10438,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -10470,10 +10493,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -10529,10 +10553,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -10602,10 +10627,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -10661,10 +10687,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -10852,10 +10879,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -10904,10 +10932,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -10960,10 +10989,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11021,10 +11051,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11091,10 +11122,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11147,10 +11179,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11194,10 +11227,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11252,10 +11286,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11498,10 +11533,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11550,10 +11586,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11612,10 +11649,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11673,10 +11711,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11736,10 +11775,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11788,10 +11828,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11862,10 +11903,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11912,10 +11954,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -11962,10 +12005,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -12013,10 +12057,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "profile:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -12083,10 +12128,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -12153,10 +12199,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -12211,10 +12258,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -12280,10 +12328,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -12533,10 +12582,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -12603,10 +12648,81 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/prompts/bulk": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Creates up to 5000 prompts at once; their text is translated afterwards, and sample generation answers 409 until then.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark to add the prompts to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The prompts to add.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -12654,10 +12770,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -12710,10 +12827,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -12770,10 +12883,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -12831,10 +12945,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -12889,10 +13004,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -13499,10 +13615,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -14153,10 +14265,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -14512,10 +14620,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -15131,10 +15235,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -15652,10 +15752,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -15723,10 +15819,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -15794,10 +15891,71 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/prompts/processing": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Reports how many of the benchmark's prompts are still being processed or failed to.",
+        "description": "Find failed prompts with processing_status=Failed on GET .../prompts and retry each one.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark whose prompts to count.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptProcessingProgressEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -16251,6 +16409,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "processing_status",
+            "in": "query",
+            "description": "Filter by processing_status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -16294,10 +16501,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -16354,10 +16557,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -16423,10 +16627,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -16879,10 +17084,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -16939,10 +17145,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -16990,10 +17197,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -17051,10 +17259,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -17114,10 +17318,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -17472,10 +17677,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -17869,10 +18070,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -18491,10 +18693,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -19113,10 +19316,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -19318,10 +19522,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -19715,10 +19915,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -20629,10 +20830,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -21248,10 +21445,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -21913,10 +22106,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -22310,10 +22499,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -22344,6 +22529,15 @@
             "schema": {
               "type": "boolean",
               "default": false
+            }
+          },
+          {
+            "name": "includeDisabled",
+            "in": "query",
+            "description": "Whether disabled participants are listed; their kept votes still count toward the other scores.",
+            "schema": {
+              "type": "boolean",
+              "default": true
             }
           },
           {
@@ -22929,10 +23123,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -22988,10 +23178,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -23059,10 +23245,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23130,10 +23317,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23198,10 +23386,81 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/runs/top-up": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queues one same-seeded run per leaderboard pairing the participants with all others.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark whose participants are topped up.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The participants and the responses each receives.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopUpParticipantsEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopUpParticipantsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23261,10 +23520,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23330,10 +23590,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23398,10 +23659,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23460,10 +23722,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23530,10 +23793,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23589,10 +23853,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23659,10 +23924,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23716,10 +23982,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23786,10 +24053,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23837,10 +24105,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -23894,10 +24163,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -23955,10 +24220,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -24026,10 +24292,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -24097,10 +24364,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -24434,10 +24702,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -25007,10 +25271,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -25580,10 +25845,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -25933,10 +26199,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -26229,10 +26496,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -26799,10 +27067,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -26833,6 +27097,15 @@
             "schema": {
               "type": "boolean",
               "default": false
+            }
+          },
+          {
+            "name": "includeDisabled",
+            "in": "query",
+            "description": "Whether disabled participants are listed; their kept votes still count toward the other scores.",
+            "schema": {
+              "type": "boolean",
+              "default": true
             }
           },
           {
@@ -27369,10 +27642,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -27705,10 +27974,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -27765,13 +28030,15 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -27836,10 +28103,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -27899,10 +28167,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -27962,10 +28231,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28031,10 +28301,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28101,10 +28372,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28152,10 +28424,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28208,10 +28481,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -28269,10 +28538,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28320,10 +28590,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28381,10 +28652,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28433,10 +28705,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28485,10 +28758,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28537,10 +28811,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28600,10 +28875,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28652,10 +28928,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28710,10 +28987,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28769,10 +29047,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28832,10 +29111,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28884,10 +29164,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -28947,10 +29228,64 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark-prompt/{promptId}/processing/retry": {
+      "post": {
+        "tags": [
+          "Prompt"
+        ],
+        "summary": "Queues processing again for a prompt that failed or is stuck pending.",
+        "description": "Responds with 400 when the prompt is already processed.",
+        "parameters": [
+          {
+            "name": "promptId",
+            "in": "path",
+            "description": "The id of the prompt to process.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -29010,10 +29345,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -29068,10 +29404,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -29137,10 +29469,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -29400,10 +29728,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -29674,10 +29998,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -29732,10 +30052,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30083,10 +30404,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30237,10 +30559,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30312,10 +30635,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30363,10 +30687,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -30414,10 +30734,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30489,10 +30810,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30548,10 +30870,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30607,10 +30930,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30677,10 +31001,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30733,10 +31058,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30796,10 +31122,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30856,10 +31183,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30907,10 +31235,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -30963,10 +31292,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -31023,10 +31348,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -31074,10 +31400,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -31130,10 +31457,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -31190,10 +31513,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -31239,10 +31563,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -31307,10 +31632,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -31366,10 +31687,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -31461,10 +31783,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -31520,10 +31838,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -31582,10 +31901,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -31643,10 +31963,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -31713,10 +32034,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -31772,10 +32094,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -31839,10 +32157,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -31925,10 +32239,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -32010,10 +32320,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -32139,10 +32445,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -32251,10 +32553,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -32319,10 +32617,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -32378,10 +32677,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -32429,10 +32724,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -32677,10 +32973,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -33069,10 +33366,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -33322,10 +33620,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -33825,10 +34124,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34216,10 +34516,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34279,10 +34580,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34330,10 +34632,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34381,10 +34684,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34442,10 +34746,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34504,10 +34809,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34564,10 +34870,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34625,10 +34932,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34694,10 +35002,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34755,10 +35064,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34807,10 +35117,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34878,10 +35189,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34937,10 +35249,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -34997,10 +35310,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -35049,10 +35363,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -35101,10 +35416,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -35158,10 +35474,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -35219,10 +35531,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -35269,10 +35582,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -35319,10 +35633,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -35367,10 +35682,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -35428,10 +35739,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -35480,10 +35792,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -35548,10 +35861,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -35797,10 +36111,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36142,10 +36457,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36194,10 +36510,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36246,10 +36563,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36307,10 +36625,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36376,10 +36695,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36436,10 +36756,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36495,10 +36816,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36565,10 +36887,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36623,10 +36946,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36675,10 +36999,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36727,10 +37052,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36824,10 +37150,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36881,10 +37208,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -36988,10 +37316,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -37055,10 +37384,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -37113,10 +37443,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -37172,10 +37503,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -37276,10 +37608,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -37334,10 +37667,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -37781,10 +38115,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -37891,10 +38226,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38025,10 +38361,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38113,10 +38450,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38172,10 +38510,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38231,10 +38570,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38283,10 +38623,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38343,10 +38684,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38413,10 +38755,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38476,10 +38819,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38528,10 +38872,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38591,10 +38936,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38652,10 +38998,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38704,10 +39051,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38765,10 +39113,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38831,10 +39180,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38890,10 +39240,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -38952,10 +39303,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -39011,10 +39363,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -39070,10 +39423,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -39412,10 +39766,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -39464,10 +39819,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -39527,10 +39883,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -39589,10 +39946,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -39652,10 +40010,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -39710,10 +40069,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -39762,10 +40122,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -39818,10 +40179,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -39869,10 +40231,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40164,10 +40527,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40215,10 +40579,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40274,10 +40639,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40334,10 +40700,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40392,10 +40759,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40451,10 +40819,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40510,10 +40879,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40526,7 +40896,7 @@
           "Payment"
         ],
         "summary": "Processes an incoming Stripe webhook event.",
-        "description": "Reads the raw request body and the Stripe-Signature header, then dispatches a\n ProcessPaymentEventCommand.",
+        "description": "Returns 400 when the Stripe-Signature header does not verify.",
         "responses": {
           "200": {
             "description": "OK"
@@ -40535,10 +40905,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -40594,10 +40960,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -40657,10 +41019,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40727,10 +41090,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40785,10 +41149,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40836,10 +41201,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -40883,10 +41249,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -40941,10 +41303,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -41283,10 +41646,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -41544,10 +41908,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -41596,10 +41961,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -41658,10 +42024,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -41716,10 +42083,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -41761,10 +42129,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -41812,10 +42181,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -41872,10 +42242,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -41980,10 +42351,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -42032,10 +42404,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -42084,10 +42457,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -42125,10 +42499,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -42183,10 +42558,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -42241,10 +42612,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -42293,10 +42665,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -42645,10 +43013,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "platform:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -42707,10 +43076,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -42765,10 +43130,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -42827,10 +43188,6 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
               "api"
             ]
           }
@@ -43076,10 +43433,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -43134,10 +43492,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "signal:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -43676,10 +44035,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "signal:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -43728,10 +44088,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "signal:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -43784,10 +44145,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "signal:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -43844,10 +44206,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "signal:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -43902,10 +44265,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "signal:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -43954,10 +44318,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "signal:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44307,10 +44672,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "signal:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44358,10 +44724,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "signal:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44417,10 +44784,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "signal:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44475,10 +44843,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "profile:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44533,10 +44902,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "profile:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44595,10 +44965,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44653,10 +45024,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44704,10 +45076,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44760,10 +45133,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44820,10 +45194,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44855,10 +45230,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44902,10 +45278,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -44984,10 +45361,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -45065,10 +45443,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -45320,10 +45699,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -45858,10 +46238,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -45895,10 +46276,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -45958,10 +46340,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -46021,10 +46404,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -46082,10 +46466,11 @@
         "security": [
           {
             "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email",
-              "offline_access",
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
               "api"
             ]
           }
@@ -55514,7 +55899,7 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The organization to authorize the client for. Defaults to the caller's active organization.",
+            "description": "The organization to authorize the client for. Defaults to the organization of the calling token.",
             "nullable": true
           }
         }
@@ -55816,25 +56201,6 @@
           },
           "agentCeiling": {
             "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseAgentCeiling"
-          }
-        }
-      },
-      "GetCustomerCapabilitiesEndpoint_Output": {
-        "required": [
-          "capabilities"
-        ],
-        "type": "object",
-        "properties": {
-          "capabilities": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Capability"
-                }
-              }
-            ],
-            "description": "Capabilities granted to the organization the customer is acting under."
           }
         }
       },
@@ -57704,6 +58070,93 @@
           }
         }
       },
+      "CreatePromptsForBenchmarkEndpoint_Input": {
+        "required": [
+          "prompts"
+        ],
+        "type": "object",
+        "properties": {
+          "prompts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Prompt"
+                }
+              }
+            ],
+            "description": "The prompts to create, at most 5000."
+          }
+        }
+      },
+      "CreatePromptsForBenchmarkEndpoint_Output": {
+        "required": [
+          "prompts"
+        ],
+        "type": "object",
+        "properties": {
+          "prompts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Output_CreatedPrompt"
+                }
+              }
+            ],
+            "description": "The created prompts, in request order."
+          }
+        }
+      },
+      "CreatePromptsForBenchmarkEndpoint_Output_CreatedPrompt": {
+        "required": [
+          "id",
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "CreatePromptsForBenchmarkEndpoint_Prompt": {
+        "required": [
+          "identifier",
+          "segments"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromptSegmentInput"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "nullable": true
+          },
+          "origin": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Origin"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
       "CreateSampleEndpoint_Input": {
         "required": [
           "identifier",
@@ -59421,13 +59874,33 @@
           }
         }
       },
+      "GetPromptProcessingProgressEndpoint_Output": {
+        "required": [
+          "pendingCount",
+          "failedCount"
+        ],
+        "type": "object",
+        "properties": {
+          "pendingCount": {
+            "type": "integer",
+            "description": "Prompts still being processed, e.g. translated to English.",
+            "format": "int32"
+          },
+          "failedCount": {
+            "type": "integer",
+            "description": "Prompts whose processing failed and needs a retry.",
+            "format": "int32"
+          }
+        }
+      },
       "GetPromptsByBenchmarkEndpoint_Output": {
         "required": [
           "id",
           "segments",
           "identifier",
           "createdAt",
-          "tags"
+          "tags",
+          "processingStatus"
         ],
         "type": "object",
         "properties": {
@@ -59498,6 +59971,14 @@
               }
             ],
             "description": "Where the prompt came from, if known."
+          },
+          "processingStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PromptProcessingStatus"
+              }
+            ],
+            "description": "Whether the prompt's English text is filled in; only Ready prompts reach generation and runs."
           }
         }
       },
@@ -60961,6 +61442,13 @@
         "enum": [
           "Pending",
           "Ready",
+          "Failed"
+        ]
+      },
+      "PromptProcessingStatus": {
+        "enum": [
+          "Ready",
+          "Pending",
           "Failed"
         ]
       },
@@ -62487,6 +62975,7 @@
           "status",
           "votesExcluded",
           "coveredPromptCount",
+          "isEvaluating",
           "createdAt"
         ],
         "type": "object",
@@ -62565,6 +63054,10 @@
             "type": "integer",
             "description": "How many of the benchmark's prompts the participant has at least one sample for.",
             "format": "int32"
+          },
+          "isEvaluating": {
+            "type": "boolean",
+            "description": "True while the participant belongs to a run that is queued, running or paused."
           },
           "createdAt": {
             "type": "string",
@@ -64104,6 +64597,89 @@
           }
         }
       },
+      "TopUpParticipantsEndpoint_Input": {
+        "required": [
+          "participantIds",
+          "responsesPerParticipant"
+        ],
+        "type": "object",
+        "properties": {
+          "participantIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The evaluated participants to collect more responses for, 1 to 100 of them."
+          },
+          "responsesPerParticipant": {
+            "type": "integer",
+            "description": "The responses each participant receives on every targeted leaderboard.",
+            "format": "int32"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Optional seed for deterministic matchup selection; one is generated when omitted.",
+            "format": "int64",
+            "nullable": true
+          },
+          "leaderboardIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional leaderboards of the benchmark to run on. Omit to target every visible leaderboard\n included in the benchmark overall."
+          }
+        }
+      },
+      "TopUpParticipantsEndpoint_Output": {
+        "required": [
+          "runs",
+          "seed"
+        ],
+        "type": "object",
+        "properties": {
+          "runs": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TopUpParticipantsEndpoint_Output_Run"
+                }
+              }
+            ],
+            "description": "The created runs, one per targeted leaderboard."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "The seed every created run shares.",
+            "format": "int64"
+          }
+        }
+      },
+      "TopUpParticipantsEndpoint_Output_Run": {
+        "required": [
+          "leaderboardId",
+          "runId"
+        ],
+        "type": "object",
+        "properties": {
+          "leaderboardId": {
+            "type": "string"
+          },
+          "runId": {
+            "type": "string"
+          }
+        }
+      },
       "UpdateBenchmarkEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -64770,6 +65346,11 @@
             ],
             "description": "The aggregator type.",
             "nullable": true
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The audience that runs of this definition start their jobs on. POST /job ignores\n it. Must refer to an existing audience.",
+            "nullable": true
           }
         },
         "description": "The input for the create job definition endpoint."
@@ -64973,6 +65554,11 @@
           "validationSetId": {
             "type": "string",
             "description": "A validation set id to pin on this revision. When set, every job run from this\n revision uses the specified validation set as the source of validation rapids\n instead of audience-derived examples. If not provided, inherits from the previous\n revision. Provide a wrapped null value to clear a previously pinned set.",
+            "nullable": true
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The audience that runs of this revision start their jobs on. POST /job ignores it.\n Must refer to an existing audience. If not provided, inherits from the previous\n revision; a wrapped null clears it.",
             "nullable": true
           },
           "baseRevisionNumber": {
@@ -66100,6 +66686,22 @@
           "validationSetId": {
             "type": "string",
             "description": "The validation set pinned on this revision, or null when none is pinned.",
+            "nullable": true
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The audience that runs of this revision start their jobs on, or null when none\n is set. POST /job ignores it.",
+            "nullable": true
+          },
+          "sourceDefinitionId": {
+            "type": "string",
+            "description": "The definition this revision was copied from, or null when it is not a copy.",
+            "nullable": true
+          },
+          "sourceRevisionNumber": {
+            "type": "integer",
+            "description": "The source definition's revision number at the time of the copy, or null when it\n is not a copy.",
+            "format": "int32",
             "nullable": true
           },
           "baseRevisionNumber": {
