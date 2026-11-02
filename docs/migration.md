@@ -19,6 +19,6 @@ The current documentation uses audiences, job definitions, and jobs.
 | `CostEstimate.estimated_cost`: cost of the fixed number of responses | expected cost |
 
 - To keep exactly 10 responses per pair, pass `responses_per_datapoint=10`.
-- `confidence_threshold` and `quorum_threshold` still work with an `int` `responses_per_datapoint` but emit a `DeprecationWarning`.
+- `quorum_threshold` still works with an `int` `responses_per_datapoint` but emits a `DeprecationWarning`. `confidence_threshold` does the same on compare jobs; on classification it stays supported without a warning.
 - `job_definition.responses_per_datapoint` now returns `AdaptiveStopping` or `QuorumStopping` for definitions that use them. Assigning an `int` sets a fixed number of responses.
 - Compare results gain `verdict` and `responses` per datapoint — see [Adaptive Stopping](confidence_stopping.md#analyzing-adaptive-stopping-results).

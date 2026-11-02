@@ -241,7 +241,7 @@ media_contexts=[
 
 ## Quality Control Parameters
 
-### `confidence_threshold` (deprecated)
+### `confidence_threshold`
 
 | Property | Value |
 |----------|-------|
@@ -250,7 +250,7 @@ media_contexts=[
 | **Default** | `None` |
 | **Range** | `0.0` to `1.0` (typically `0.99` to `0.999`) |
 
-Deprecated: use `AdaptiveStopping` for compare jobs. Requires an `int` `responses_per_datapoint` as the cap (10 when omitted).
+Supported for classification. On compare jobs it is deprecated: use `AdaptiveStopping` instead. Requires an `int` `responses_per_datapoint` as the cap (10 when omitted).
 
 Enables early stopping when a specified confidence level is reached. The system stops collecting responses once consensus is achieved, reducing costs while maintaining quality.
 
@@ -347,7 +347,7 @@ job_definition = client.job.create_compare_job_definition(
 
 #### `AllowNeitherBothSetting()`
 
-For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice.
+For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice. With [adaptive stopping](confidence_stopping.md#unsure-votes), these votes push close pairs toward "ambiguous" and cost more votes.
 
 ```python
 from rapidata import AllowNeitherBothSetting
@@ -356,7 +356,6 @@ job_definition = client.job.create_compare_job_definition(
     name="Image Quality Comparison",
     instruction="Which image is higher quality?",
     datapoints=[["img_a.jpg", "img_b.jpg"]],
-    responses_per_datapoint=10,
     settings=[AllowNeitherBothSetting()]
 )
 ```
@@ -530,7 +529,7 @@ job_definition = client.job.create_ranking_job_definition(
 | `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
 | `AdaptiveStopping` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `QuorumStopping` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
-| `confidence_threshold` (deprecated) | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `confidence_threshold` (deprecated on compare) | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `quorum_threshold` (deprecated) | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | `answer_options` | :white_check_mark: | :x: | :x: | :x: | :x: | :x: | :x: |

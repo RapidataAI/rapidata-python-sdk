@@ -23,7 +23,6 @@ if TYPE_CHECKING:
 
 _DEFAULT_COMPARE_STOPPING = AdaptiveStopping()
 _LEGACY_DEFAULT_RESPONSES = 10
-_COMPARE_UNSURE_KEY = "compare_unsure"
 
 
 class RapidataJobManager:
@@ -72,6 +71,7 @@ class RapidataJobManager:
         responses_per_datapoint: int | AdaptiveStopping | QuorumStopping,
         confidence_threshold: float | None,
         quorum_threshold: int | None,
+        is_compare: bool = False,
     ) -> Referee:
         from rapidata.rapidata_client.referee import (
             EarlyStoppingReferee,
@@ -110,12 +110,13 @@ class RapidataJobManager:
             )
 
         assert confidence_threshold is not None
-        warnings.warn(
-            "confidence_threshold is deprecated; for compare jobs pass "
-            "responses_per_datapoint=AdaptiveStopping() instead.",
-            DeprecationWarning,
-            stacklevel=4,
-        )
+        if is_compare:
+            warnings.warn(
+                "confidence_threshold is deprecated for compare jobs; pass "
+                "responses_per_datapoint=AdaptiveStopping() instead.",
+                DeprecationWarning,
+                stacklevel=4,
+            )
         return EarlyStoppingReferee(
             threshold=confidence_threshold, max_responses=responses_per_datapoint
         )
@@ -140,15 +141,11 @@ class RapidataJobManager:
         self._warn_unsupported_settings(workflow, settings)
 
         referee = self._resolve_referee(
-            responses_per_datapoint, confidence_threshold, quorum_threshold
+            responses_per_datapoint,
+            confidence_threshold,
+            quorum_threshold,
+            is_compare=workflow.task_type == "Compare",
         )
-        if isinstance(responses_per_datapoint, AdaptiveStopping) and any(
-            s.key == _COMPARE_UNSURE_KEY for s in settings
-        ):
-            raise ValueError(
-                "AdaptiveStopping cannot be combined with AllowNeitherBothSetting. "
-                "Pass responses_per_datapoint=QuorumStopping(...) or a fixed int instead."
-            )
 
         self.__context_manager._apply_context_shortening(
             datapoints=datapoints,
@@ -233,7 +230,7 @@ class RapidataJobManager:
             media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the classification (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
-            confidence_threshold (float, optional): Deprecated. The probability threshold for the classification. Defaults to None.\n
+            confidence_threshold (float, optional): The probability threshold for the classification. Defaults to None.\n
                 If provided, the classification datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             quorum_threshold (int, optional): Deprecated, use ``responses_per_datapoint=QuorumStopping(...)``. Defaults to None.\n
                 The number of matching responses required to reach quorum.
@@ -318,7 +315,6 @@ class RapidataJobManager:
             responses_per_datapoint (int | AdaptiveStopping | QuorumStopping, optional): How many responses to collect per datapoint.
                 Defaults to ``AdaptiveStopping()``, which stops each pair once its verdict is settled (about 25 responses on average).\n
                 An int collects exactly that many. ``QuorumStopping(threshold, max_responses)`` stops once ``threshold`` responses agree.
-                ``AdaptiveStopping`` cannot be combined with ``AllowNeitherBothSetting``.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.

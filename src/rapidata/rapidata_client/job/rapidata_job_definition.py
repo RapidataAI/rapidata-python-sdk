@@ -247,9 +247,7 @@ class RapidataJobDefinition:
         if isinstance(value, int) and value < 1:
             raise ValueError("responses_per_datapoint must be a positive integer")
         _check_adaptive_stopping(
-            self._snapshot.workflow,
-            _with_responses(self._snapshot.referee, value),
-            [],
+            self._snapshot.workflow, _with_responses(self._snapshot.referee, value)
         )
         self._pending["responses_per_datapoint"] = value
 

@@ -111,7 +111,7 @@ job_def = client.job.create_compare_job_definition(
         "Have you tried turning it off and on again?",
     ]],
     data_type="text",
-    responses_per_datapoint=10,  # AdaptiveStopping (the default) does not support the "Unsure" button
+    # Unsure votes count half to each side, so close pairs end "ambiguous" more often.
     settings=[AllowNeitherBothSetting()],
 )
 job = audience.assign_job(job_def)

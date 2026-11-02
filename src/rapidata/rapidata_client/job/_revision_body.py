@@ -32,7 +32,6 @@ _INSTRUCTION_FIELD_BY_RAPID = {
     "Scrub": "target",
 }
 
-_COMPARE_UNSURE_KEY = "compare_unsure"
 _DEFAULT_ADAPTIVE_MAX_VOTES = 100
 
 
@@ -144,18 +143,11 @@ def _with_responses(
     return NaiveReferee(responses=responses)._to_model()
 
 
-def _check_adaptive_stopping(
-    workflow: IOrderWorkflowInput, referee: IReferee, rapid_flags: list[FeatureFlag]
-) -> None:
+def _check_adaptive_stopping(workflow: IOrderWorkflowInput, referee: IReferee) -> None:
     if _as_dict(referee).get("_t") != "AdaptiveStoppingReferee":
         return
     if _workflow_kind(_as_dict(workflow)) != "Compare":
         raise ValueError("AdaptiveStopping is only supported for compare jobs.")
-    if any(flag.key == _COMPARE_UNSURE_KEY for flag in rapid_flags):
-        raise ValueError(
-            "AdaptiveStopping cannot be combined with AllowNeitherBothSetting. "
-            "Use QuorumStopping or a fixed int for responses_per_datapoint instead."
-        )
 
 
 def _split_settings(
@@ -186,7 +178,7 @@ def _full_body(
     else:
         rapid_flags = list(snapshot.feature_flags)
         campaign_flags = list(snapshot.campaign_feature_flags)
-    _check_adaptive_stopping(workflow, referee, rapid_flags)
+    _check_adaptive_stopping(workflow, referee)
 
     # Every field is passed explicitly: the server inherits any field left out
     # from the latest revision, and a None validationSetId must go out as null.

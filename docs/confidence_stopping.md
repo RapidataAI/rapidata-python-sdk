@@ -16,8 +16,8 @@ Each vote on a compare pair is weighted by the voter's [user score](understandin
 
 - **`"A"` or `"B"`**: one side is preferred, with at least `min_confidence` certainty.
 - **`"ambiguous"`**: the pair is too close to call — the true preference lies inside the ambiguous band, 20/80 to 80/20 by default — so further votes would not produce a winner.
-- **`"undecided"`**: neither happened before `max_responses` votes.
-- **`"open"`**: no verdict yet — the pair is still collecting, or the job was paused or stopped before it finished. `max_responses` is a safety cap: with the defaults, no pair comes close to it.
+- **`"undecided"`**: neither happened before `max_responses` votes. `max_responses` is a safety cap: with the defaults, no pair comes close to it.
+- **`"open"`**: no verdict yet — the pair is still collecting, or the job was paused or stopped before it finished.
 
 The pair stops at the first verdict. A clear pair stops after as few as 7 votes and a 50/50 pair after about 16. On past compare jobs a pair needed about 25 votes on average, which is what the [cost estimate](cost_estimates.md) is priced with; the hardest pairs, split around 35/65, need about 31.
 
@@ -48,6 +48,10 @@ job_definition = client.job.create_compare_job_definition(
 The range only decides which pairs may stop as ambiguous. A winner always takes priority, so a 70/30 pair can still return `"A"` or `"B"` even though it lies inside the band.
 
 Because each pair stops at a different point, the [cost estimate](cost_estimates.md) `estimated_cost` is the expected cost of the job.
+
+### "Unsure" votes
+
+Adaptive stopping works with [`AllowNeitherBothSetting`](job_definition_parameters.md#allowneitherbothsetting). A "Both", "Neither" or "I don't know" vote counts half to each side. It never flips a winner, but it pushes close pairs toward `"ambiguous"` and costs more votes: for example, a 75/25 pair where 40% of the voters pick "Unsure" ends ambiguous about 60% of the time.
 
 ## Analyzing Adaptive Stopping Results
 
@@ -130,10 +134,12 @@ Quorum Stopping is a good choice when:
 
 ---
 
-## Confidence Stopping (deprecated)
+## Confidence Stopping
+
+Confidence stopping is the early-stopping option for **classification** jobs.
 
 !!! warning
-    The `confidence_threshold` parameter is deprecated and emits a `DeprecationWarning`. For compare jobs use `AdaptiveStopping`; for classification use `QuorumStopping`. It still works with an `int` `responses_per_datapoint` as the cap, and cannot be combined with `AdaptiveStopping` or `QuorumStopping`.
+    On compare jobs, `confidence_threshold` is deprecated and emits a `DeprecationWarning`: use `AdaptiveStopping` instead. On classification it is supported without a warning. In both cases it takes an `int` `responses_per_datapoint` as the cap (10 when omitted), and cannot be combined with `AdaptiveStopping` or `QuorumStopping`.
 
 ### How it Works
 

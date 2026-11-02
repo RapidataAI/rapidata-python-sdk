@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import warnings
 from unittest.mock import MagicMock
 
 import pytest
@@ -151,16 +152,21 @@ def test_deprecated_threshold_with_config_object_raises(manager, config):
 @pytest.mark.parametrize(
     "setting", [AllowNeitherBothSetting(), CustomSetting("compare_unsure", "0")]
 )
-def test_adaptive_with_unsure_button_raises(manager, setting):
-    with pytest.raises(ValueError, match="QuorumStopping"):
-        _compare(manager, settings=[setting])
+def test_adaptive_works_with_unsure_button(manager, setting):
+    assert _compare(manager, settings=[setting]) == ADAPTIVE_WIRE
 
 
-def test_unsure_button_with_fixed_responses_is_fine(manager):
-    wire = _compare(
-        manager, responses_per_datapoint=10, settings=[AllowNeitherBothSetting()]
-    )
-    assert wire["_t"] == "NaiveReferee"
+def test_confidence_threshold_is_not_deprecated_on_classification(manager):
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", DeprecationWarning)
+        wire = _classify(manager, confidence_threshold=0.99)
+    assert wire["_t"] == "EarlyStoppingReferee"
+    assert wire["maxVotes"] == 10
+
+
+def test_quorum_threshold_is_deprecated_on_classification(manager):
+    with pytest.warns(DeprecationWarning, match="quorum_threshold"):
+        _classify(manager, quorum_threshold=3)
 
 
 def test_classification_rejects_adaptive_stopping(manager):
@@ -262,15 +268,14 @@ def test_int_on_legacy_confidence_referee_tunes_its_cap():
     assert _sent_referee(service) == {**legacy, "maxVotes": 30}
 
 
-def test_job_definition_rejects_adaptive_with_unsure_flag_on_save():
+def test_job_definition_saves_adaptive_with_unsure_flag():
     jd, service = _compare_revision(
         {"_t": "NaiveReferee", "totalVotes": 10},
         flags=[{"key": "compare_unsure", "value": "5000"}],
     )
     jd.responses_per_datapoint = AdaptiveStopping()
-    with pytest.raises(ValueError, match="AllowNeitherBothSetting"):
-        jd.save()
-    service.order.job_api.job_definition_definition_id_revision_post.assert_not_called()
+    jd.save()
+    assert _sent_referee(service) == ADAPTIVE_WIRE
 
 
 def test_results_expose_verdict_and_responses():
