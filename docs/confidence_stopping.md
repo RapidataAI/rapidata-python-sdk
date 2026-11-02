@@ -138,9 +138,6 @@ Quorum Stopping is a good choice when:
 
 Confidence stopping is the early-stopping option for **classification** jobs.
 
-!!! warning
-    On compare jobs, `confidence_threshold` is deprecated and emits a `DeprecationWarning`: use `AdaptiveStopping` instead. On classification it is supported without a warning. In both cases it takes an `int` `responses_per_datapoint` as the cap (10 when omitted), and cannot be combined with `AdaptiveStopping` or `QuorumStopping`.
-
 ### How it Works
 
 The Early Stopping feature leverages the trustworthiness, quantified through their `userScores`, to calculate the confidence level of each category for any given datapoint.
