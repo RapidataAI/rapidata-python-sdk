@@ -19,7 +19,7 @@ Each vote on a compare pair is weighted by the voter's [user score](understandin
 - **`"undecided"`**: neither happened before `max_responses` votes. `max_responses` is a safety cap: with the defaults, no pair comes close to it.
 - **`"open"`**: no verdict yet — the pair is still collecting, or the job was paused or stopped before it finished.
 
-The pair stops at the first verdict. A clear pair stops after as few as 7 votes and a 50/50 pair after about 16. On past compare jobs a pair needed about 25 votes on average, which is what the [cost estimate](cost_estimates.md) is priced with; the hardest pairs, split around 35/65, need about 31.
+The pair stops at the first verdict. A clear pair stops after as few as 7 votes and a 50/50 pair after about 16. A pair needs about 21 votes on average, which is what the [cost estimate](cost_estimates.md) is priced with; the hardest pairs, split around 35/65, need about 31.
 
 ## Using Adaptive Stopping in Your Job
 

@@ -24,8 +24,7 @@ class AdaptiveStopping:
     (verdict ``"A"`` or ``"B"``), or that the pair is too close to call
     (verdict ``"ambiguous"``). A pair that reaches ``max_responses`` first ends
     as ``"undecided"``. Clear pairs stop after as few as 7 votes; on average a
-    pair needs about 25 (measured on past compare jobs), and the hardest pairs
-    (split around 35/65) about 31.
+    pair needs about 21, and the hardest pairs (split around 35/65) about 31.
 
     The defaults are calibrated. Change them only if you know why.
 
