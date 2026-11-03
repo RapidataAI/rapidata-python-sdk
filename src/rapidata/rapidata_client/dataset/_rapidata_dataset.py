@@ -38,7 +38,7 @@ from __future__ import annotations
 
 import threading
 from concurrent.futures import ThreadPoolExecutor, Future
-from typing import Callable, Iterable, TypeVar
+from typing import TYPE_CHECKING, Callable, Iterable, TypeVar
 
 from opentelemetry import context as otel_context
 from tqdm.auto import tqdm
@@ -52,6 +52,9 @@ from rapidata.rapidata_client.datapoints._asset_upload_orchestrator import (
 )
 from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
 from rapidata.rapidata_client.config import rapidata_config, logger
+
+if TYPE_CHECKING:
+    from rapidata.rapidata_client.datapoints.assets.uploaded_asset import UploadedAsset
 
 T = TypeVar("T")
 
@@ -526,7 +529,7 @@ class RapidataDataset:
         )
 
         # Collect unique groups (first occurrence per group wins for context)
-        groups: dict[str, tuple[str | None, list[str] | None]] = {}
+        groups: dict[str, tuple[str | None, list[str | UploadedAsset] | None]] = {}
         for dp in datapoints:
             if dp.group is not None and dp.group not in groups:
                 groups[dp.group] = (dp.context, dp.media_context)
@@ -537,10 +540,6 @@ class RapidataDataset:
         for group_id, (context, media_context) in groups.items():
             context_asset = None
             if media_context is not None:
-                # media_context is always a list (the Datapoint validator
-                # coerces). The shared upload+map helper bundles it into a
-                # MultiAssetInput (or ExistingAssetInput if a bare string slips
-                # through).
                 context_asset = (
                     self.datapoint_uploader.asset_uploader.upload_and_map_asset(
                         media_context
