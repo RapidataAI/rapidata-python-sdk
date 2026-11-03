@@ -43,8 +43,9 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
     status: ParticipantStatus = Field(description="The status of the participant.")
     votes_excluded: StrictBool = Field(description="Whether the participant's already-collected votes are dropped from the scores. Only meaningful while it is disabled.", alias="votesExcluded")
     covered_prompt_count: StrictInt = Field(description="How many of the benchmark's prompts the participant has at least one sample for.", alias="coveredPromptCount")
+    is_evaluating: StrictBool = Field(description="True while the participant belongs to a run that is queued, running or paused.", alias="isEvaluating")
     created_at: datetime = Field(description="When the participant was added to the benchmark.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "status", "votesExcluded", "coveredPromptCount", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "status", "votesExcluded", "coveredPromptCount", "isEvaluating", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -141,6 +142,7 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
             "status": obj.get("status"),
             "votesExcluded": obj.get("votesExcluded"),
             "coveredPromptCount": obj.get("coveredPromptCount"),
+            "isEvaluating": obj.get("isEvaluating"),
             "createdAt": obj.get("createdAt")
         }
         try:

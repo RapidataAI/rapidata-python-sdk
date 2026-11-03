@@ -27,7 +27,7 @@ class CreateClientEndpointInput(LazyValidatedModel):
     CreateClientEndpointInput
     """ # noqa: E501
     display_name: Optional[StrictStr] = Field(default=None, description="An optional display name for the client.", alias="displayName")
-    organization_id: Optional[StrictStr] = Field(default=None, description="The organization to authorize the client for. Defaults to the caller's active organization.", alias="organizationId")
+    organization_id: Optional[StrictStr] = Field(default=None, description="The organization to authorize the client for. Defaults to the organization of the calling token.", alias="organizationId")
     __properties: ClassVar[List[str]] = ["displayName", "organizationId"]
 
     # model_config is inherited from LazyValidatedModel

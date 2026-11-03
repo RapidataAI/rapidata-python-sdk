@@ -37,7 +37,8 @@ class CreateJobDefinitionEndpointInput(LazyValidatedModel):
     rapid_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="rapidFeatureFlags")
     campaign_feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="campaignFeatureFlags")
     aggregator_type: Optional[AggregatorType] = Field(default=None, description="The aggregator type.", alias="aggregatorType")
-    __properties: ClassVar[List[str]] = ["definitionName", "workflow", "referee", "datasetId", "rapidFeatureFlags", "campaignFeatureFlags", "aggregatorType"]
+    audience_id: Optional[StrictStr] = Field(default=None, description="The audience that runs of this definition start their jobs on. POST /job ignores  it. Must refer to an existing audience.", alias="audienceId")
+    __properties: ClassVar[List[str]] = ["definitionName", "workflow", "referee", "datasetId", "rapidFeatureFlags", "campaignFeatureFlags", "aggregatorType", "audienceId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -99,6 +100,11 @@ class CreateJobDefinitionEndpointInput(LazyValidatedModel):
         if self.aggregator_type is None and "aggregator_type" in self.model_fields_set:
             _dict['aggregatorType'] = None
 
+        # set to None if audience_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.audience_id is None and "audience_id" in self.model_fields_set:
+            _dict['audienceId'] = None
+
         return _dict
 
     @classmethod
@@ -117,7 +123,8 @@ class CreateJobDefinitionEndpointInput(LazyValidatedModel):
             "datasetId": obj.get("datasetId"),
             "rapidFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["rapidFeatureFlags"]] if obj.get("rapidFeatureFlags") is not None else None,
             "campaignFeatureFlags": [FeatureFlag.from_dict(_item) for _item in obj["campaignFeatureFlags"]] if obj.get("campaignFeatureFlags") is not None else None,
-            "aggregatorType": obj.get("aggregatorType")
+            "aggregatorType": obj.get("aggregatorType"),
+            "audienceId": obj.get("audienceId")
         }
         try:
             _obj = cls.model_validate(_data)

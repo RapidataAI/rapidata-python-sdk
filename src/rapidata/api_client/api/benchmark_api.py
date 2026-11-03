@@ -30,6 +30,8 @@ from rapidata.api_client.models.create_benchmark_participant_endpoint_output imp
 from rapidata.api_client.models.create_prompt_embedding_map_endpoint_output import CreatePromptEmbeddingMapEndpointOutput
 from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_input import CreatePromptForBenchmarkEndpointInput
 from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_output import CreatePromptForBenchmarkEndpointOutput
+from rapidata.api_client.models.create_prompts_for_benchmark_endpoint_input import CreatePromptsForBenchmarkEndpointInput
+from rapidata.api_client.models.create_prompts_for_benchmark_endpoint_output import CreatePromptsForBenchmarkEndpointOutput
 from rapidata.api_client.models.create_sample_generation_endpoint_input import CreateSampleGenerationEndpointInput
 from rapidata.api_client.models.create_sample_generation_endpoint_output import CreateSampleGenerationEndpointOutput
 from rapidata.api_client.models.fork_benchmark_endpoint_output import ForkBenchmarkEndpointOutput
@@ -42,6 +44,7 @@ from rapidata.api_client.models.get_benchmark_standings_breakdown_endpoint_outpu
 from rapidata.api_client.models.get_benchmark_standings_by_tag_endpoint_output import GetBenchmarkStandingsByTagEndpointOutput
 from rapidata.api_client.models.get_prompt_embedding_map_endpoint_output import GetPromptEmbeddingMapEndpointOutput
 from rapidata.api_client.models.get_prompt_embedding_map_status_endpoint_output import GetPromptEmbeddingMapStatusEndpointOutput
+from rapidata.api_client.models.get_prompt_processing_progress_endpoint_output import GetPromptProcessingProgressEndpointOutput
 from rapidata.api_client.models.get_prompts_by_benchmark_endpoint_paged_result_of_output import GetPromptsByBenchmarkEndpointPagedResultOfOutput
 from rapidata.api_client.models.matchup_zone import MatchupZone
 from rapidata.api_client.models.preview_sample_generation_endpoint_input import PreviewSampleGenerationEndpointInput
@@ -61,6 +64,8 @@ from rapidata.api_client.models.query_tags_by_benchmark_endpoint_output import Q
 from rapidata.api_client.models.rating_grouping import RatingGrouping
 from rapidata.api_client.models.start_benchmark_hugging_face_sync_endpoint_input import StartBenchmarkHuggingFaceSyncEndpointInput
 from rapidata.api_client.models.start_benchmark_hugging_face_sync_endpoint_output import StartBenchmarkHuggingFaceSyncEndpointOutput
+from rapidata.api_client.models.top_up_participants_endpoint_input import TopUpParticipantsEndpointInput
+from rapidata.api_client.models.top_up_participants_endpoint_output import TopUpParticipantsEndpointOutput
 from rapidata.api_client.models.update_benchmark_endpoint_input import UpdateBenchmarkEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -8459,6 +8464,301 @@ class BenchmarkApi:
 
 
     @validate_call
+    def benchmark_benchmark_id_prompts_bulk_post(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to add the prompts to.")],
+        create_prompts_for_benchmark_endpoint_input: Annotated[CreatePromptsForBenchmarkEndpointInput, Field(description="The prompts to add.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CreatePromptsForBenchmarkEndpointOutput:
+        """Creates up to 5000 prompts at once; their text is translated afterwards, and sample generation answers 409 until then.
+
+
+        :param benchmark_id: The id of the benchmark to add the prompts to. (required)
+        :type benchmark_id: str
+        :param create_prompts_for_benchmark_endpoint_input: The prompts to add. (required)
+        :type create_prompts_for_benchmark_endpoint_input: CreatePromptsForBenchmarkEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_bulk_post_serialize(
+            benchmark_id=benchmark_id,
+            create_prompts_for_benchmark_endpoint_input=create_prompts_for_benchmark_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreatePromptsForBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_prompts_bulk_post_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to add the prompts to.")],
+        create_prompts_for_benchmark_endpoint_input: Annotated[CreatePromptsForBenchmarkEndpointInput, Field(description="The prompts to add.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CreatePromptsForBenchmarkEndpointOutput]:
+        """Creates up to 5000 prompts at once; their text is translated afterwards, and sample generation answers 409 until then.
+
+
+        :param benchmark_id: The id of the benchmark to add the prompts to. (required)
+        :type benchmark_id: str
+        :param create_prompts_for_benchmark_endpoint_input: The prompts to add. (required)
+        :type create_prompts_for_benchmark_endpoint_input: CreatePromptsForBenchmarkEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_bulk_post_serialize(
+            benchmark_id=benchmark_id,
+            create_prompts_for_benchmark_endpoint_input=create_prompts_for_benchmark_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreatePromptsForBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_prompts_bulk_post_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to add the prompts to.")],
+        create_prompts_for_benchmark_endpoint_input: Annotated[CreatePromptsForBenchmarkEndpointInput, Field(description="The prompts to add.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Creates up to 5000 prompts at once; their text is translated afterwards, and sample generation answers 409 until then.
+
+
+        :param benchmark_id: The id of the benchmark to add the prompts to. (required)
+        :type benchmark_id: str
+        :param create_prompts_for_benchmark_endpoint_input: The prompts to add. (required)
+        :type create_prompts_for_benchmark_endpoint_input: CreatePromptsForBenchmarkEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_bulk_post_serialize(
+            benchmark_id=benchmark_id,
+            create_prompts_for_benchmark_endpoint_input=create_prompts_for_benchmark_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreatePromptsForBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_prompts_bulk_post_serialize(
+        self,
+        benchmark_id,
+        create_prompts_for_benchmark_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if create_prompts_for_benchmark_endpoint_input is not None:
+            _body_params = create_prompts_for_benchmark_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/benchmark/{benchmarkId}/prompts/bulk',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def benchmark_benchmark_id_prompts_get(
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to query.")],
@@ -8473,6 +8773,7 @@ class BenchmarkApi:
         tag_values: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_values.")] = None,
         tag_categories: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_categories.")] = None,
         origin_source: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by origin_source.")] = None,
+        processing_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by processing_status.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -8514,6 +8815,8 @@ class BenchmarkApi:
         :type tag_categories: AudienceAudienceIdJobsGetJobIdParameter
         :param origin_source: Filter by origin_source.
         :type origin_source: AudienceAudienceIdJobsGetJobIdParameter
+        :param processing_status: Filter by processing_status.
+        :type processing_status: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -8551,6 +8854,7 @@ class BenchmarkApi:
             tag_values=tag_values,
             tag_categories=tag_categories,
             origin_source=origin_source,
+            processing_status=processing_status,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -8590,6 +8894,7 @@ class BenchmarkApi:
         tag_values: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_values.")] = None,
         tag_categories: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_categories.")] = None,
         origin_source: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by origin_source.")] = None,
+        processing_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by processing_status.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -8631,6 +8936,8 @@ class BenchmarkApi:
         :type tag_categories: AudienceAudienceIdJobsGetJobIdParameter
         :param origin_source: Filter by origin_source.
         :type origin_source: AudienceAudienceIdJobsGetJobIdParameter
+        :param processing_status: Filter by processing_status.
+        :type processing_status: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -8668,6 +8975,7 @@ class BenchmarkApi:
             tag_values=tag_values,
             tag_categories=tag_categories,
             origin_source=origin_source,
+            processing_status=processing_status,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -8707,6 +9015,7 @@ class BenchmarkApi:
         tag_values: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_values.")] = None,
         tag_categories: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_categories.")] = None,
         origin_source: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by origin_source.")] = None,
+        processing_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by processing_status.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -8748,6 +9057,8 @@ class BenchmarkApi:
         :type tag_categories: AudienceAudienceIdJobsGetJobIdParameter
         :param origin_source: Filter by origin_source.
         :type origin_source: AudienceAudienceIdJobsGetJobIdParameter
+        :param processing_status: Filter by processing_status.
+        :type processing_status: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -8785,6 +9096,7 @@ class BenchmarkApi:
             tag_values=tag_values,
             tag_categories=tag_categories,
             origin_source=origin_source,
+            processing_status=processing_status,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -8819,6 +9131,7 @@ class BenchmarkApi:
         tag_values,
         tag_categories,
         origin_source,
+        processing_status,
         logic,
         _request_auth,
         _content_type,
@@ -8977,6 +9290,21 @@ class BenchmarkApi:
                             _query_params.append(('origin_source[' + _k + ']', _item))
                     else:
                         _query_params.append(('origin_source[' + _k + ']', _v))
+        if processing_status is not None:
+            _param_val = processing_status
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('processing_status[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('processing_status[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -9003,6 +9331,276 @@ class BenchmarkApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/benchmark/{benchmarkId}/prompts',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def benchmark_benchmark_id_prompts_processing_get(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose prompts to count.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetPromptProcessingProgressEndpointOutput:
+        """Reports how many of the benchmark's prompts are still being processed or failed to.
+
+        Find failed prompts with processing_status=Failed on GET .../prompts and retry each one.
+
+        :param benchmark_id: The benchmark whose prompts to count. (required)
+        :type benchmark_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_processing_get_serialize(
+            benchmark_id=benchmark_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetPromptProcessingProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_prompts_processing_get_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose prompts to count.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetPromptProcessingProgressEndpointOutput]:
+        """Reports how many of the benchmark's prompts are still being processed or failed to.
+
+        Find failed prompts with processing_status=Failed on GET .../prompts and retry each one.
+
+        :param benchmark_id: The benchmark whose prompts to count. (required)
+        :type benchmark_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_processing_get_serialize(
+            benchmark_id=benchmark_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetPromptProcessingProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_prompts_processing_get_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose prompts to count.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Reports how many of the benchmark's prompts are still being processed or failed to.
+
+        Find failed prompts with processing_status=Failed on GET .../prompts and retry each one.
+
+        :param benchmark_id: The benchmark whose prompts to count. (required)
+        :type benchmark_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_processing_get_serialize(
+            benchmark_id=benchmark_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetPromptProcessingProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_prompts_processing_get_serialize(
+        self,
+        benchmark_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/benchmark/{benchmarkId}/prompts/processing',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -9301,6 +9899,301 @@ class BenchmarkApi:
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/benchmark/{benchmarkId}/runs/custom',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def benchmark_benchmark_id_runs_top_up_post(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants are topped up.")],
+        top_up_participants_endpoint_input: Annotated[TopUpParticipantsEndpointInput, Field(description="The participants and the responses each receives.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> TopUpParticipantsEndpointOutput:
+        """Queues one same-seeded run per leaderboard pairing the participants with all others.
+
+
+        :param benchmark_id: The benchmark whose participants are topped up. (required)
+        :type benchmark_id: str
+        :param top_up_participants_endpoint_input: The participants and the responses each receives. (required)
+        :type top_up_participants_endpoint_input: TopUpParticipantsEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_runs_top_up_post_serialize(
+            benchmark_id=benchmark_id,
+            top_up_participants_endpoint_input=top_up_participants_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '202': "TopUpParticipantsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_runs_top_up_post_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants are topped up.")],
+        top_up_participants_endpoint_input: Annotated[TopUpParticipantsEndpointInput, Field(description="The participants and the responses each receives.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[TopUpParticipantsEndpointOutput]:
+        """Queues one same-seeded run per leaderboard pairing the participants with all others.
+
+
+        :param benchmark_id: The benchmark whose participants are topped up. (required)
+        :type benchmark_id: str
+        :param top_up_participants_endpoint_input: The participants and the responses each receives. (required)
+        :type top_up_participants_endpoint_input: TopUpParticipantsEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_runs_top_up_post_serialize(
+            benchmark_id=benchmark_id,
+            top_up_participants_endpoint_input=top_up_participants_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '202': "TopUpParticipantsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_runs_top_up_post_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants are topped up.")],
+        top_up_participants_endpoint_input: Annotated[TopUpParticipantsEndpointInput, Field(description="The participants and the responses each receives.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Queues one same-seeded run per leaderboard pairing the participants with all others.
+
+
+        :param benchmark_id: The benchmark whose participants are topped up. (required)
+        :type benchmark_id: str
+        :param top_up_participants_endpoint_input: The participants and the responses each receives. (required)
+        :type top_up_participants_endpoint_input: TopUpParticipantsEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_runs_top_up_post_serialize(
+            benchmark_id=benchmark_id,
+            top_up_participants_endpoint_input=top_up_participants_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '202': "TopUpParticipantsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_runs_top_up_post_serialize(
+        self,
+        benchmark_id,
+        top_up_participants_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if top_up_participants_endpoint_input is not None:
+            _body_params = top_up_participants_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/benchmark/{benchmarkId}/runs/top-up',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -11085,6 +11978,7 @@ class BenchmarkApi:
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
+        include_disabled: Annotated[Optional[StrictBool], Field(description="Whether disabled participants are listed; their kept votes still count toward the other scores.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -11118,6 +12012,8 @@ class BenchmarkApi:
         :type benchmark_id: str
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
+        :param include_disabled: Whether disabled participants are listed; their kept votes still count toward the other scores.
+        :type include_disabled: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -11167,6 +12063,7 @@ class BenchmarkApi:
         _param = self._benchmark_benchmark_id_standings_query_get_serialize(
             benchmark_id=benchmark_id,
             use_weighted_scoring=use_weighted_scoring,
+            include_disabled=include_disabled,
             country=country,
             language=language,
             gender=gender,
@@ -11207,6 +12104,7 @@ class BenchmarkApi:
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
+        include_disabled: Annotated[Optional[StrictBool], Field(description="Whether disabled participants are listed; their kept votes still count toward the other scores.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -11240,6 +12138,8 @@ class BenchmarkApi:
         :type benchmark_id: str
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
+        :param include_disabled: Whether disabled participants are listed; their kept votes still count toward the other scores.
+        :type include_disabled: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -11289,6 +12189,7 @@ class BenchmarkApi:
         _param = self._benchmark_benchmark_id_standings_query_get_serialize(
             benchmark_id=benchmark_id,
             use_weighted_scoring=use_weighted_scoring,
+            include_disabled=include_disabled,
             country=country,
             language=language,
             gender=gender,
@@ -11329,6 +12230,7 @@ class BenchmarkApi:
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
+        include_disabled: Annotated[Optional[StrictBool], Field(description="Whether disabled participants are listed; their kept votes still count toward the other scores.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -11362,6 +12264,8 @@ class BenchmarkApi:
         :type benchmark_id: str
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
+        :param include_disabled: Whether disabled participants are listed; their kept votes still count toward the other scores.
+        :type include_disabled: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -11411,6 +12315,7 @@ class BenchmarkApi:
         _param = self._benchmark_benchmark_id_standings_query_get_serialize(
             benchmark_id=benchmark_id,
             use_weighted_scoring=use_weighted_scoring,
+            include_disabled=include_disabled,
             country=country,
             language=language,
             gender=gender,
@@ -11446,6 +12351,7 @@ class BenchmarkApi:
         self,
         benchmark_id,
         use_weighted_scoring,
+        include_disabled,
         country,
         language,
         gender,
@@ -11485,6 +12391,10 @@ class BenchmarkApi:
         if use_weighted_scoring is not None:
             
             _query_params.append(('useWeightedScoring', use_weighted_scoring))
+            
+        if include_disabled is not None:
+            
+            _query_params.append(('includeDisabled', include_disabled))
             
         if country is not None:
             _param_val = country
