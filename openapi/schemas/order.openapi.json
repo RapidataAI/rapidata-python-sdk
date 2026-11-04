@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.11.03.1640-e1a36d4"
+    "version": "2026.11.04.1414-f4e9e6d"
   },
   "servers": [
     {
@@ -9214,6 +9214,85 @@
           }
         }
       },
+      "IOpenInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenOptionsInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenTextInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "OpenAssetInput": "#/components/schemas/IOpenInputOpenAssetInput",
+            "OpenOptionsInput": "#/components/schemas/IOpenInputOpenOptionsInput",
+            "OpenTextInput": "#/components/schemas/IOpenInputOpenTextInput"
+          }
+        }
+      },
+      "IOpenInputOpenAssetInput": {
+        "required": [
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenAssetInput"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          }
+        }
+      },
+      "IOpenInputOpenOptionsInput": {
+        "required": [
+          "options",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenOptionsInput"
+            ],
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenOptionsInput_Option"
+            }
+          }
+        }
+      },
+      "IOpenInputOpenTextInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenTextInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
       "IOrderWorkflowInput": {
         "required": [
           "_t"
@@ -10064,6 +10143,9 @@
             "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
           },
           {
+            "$ref": "#/components/schemas/IRapidPayloadOpenPayload"
+          },
+          {
             "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
           },
           {
@@ -10083,6 +10165,7 @@
             "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
             "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
             "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
+            "OpenPayload": "#/components/schemas/IRapidPayloadOpenPayload",
             "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
             "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
             "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload"
@@ -10229,6 +10312,30 @@
           }
         }
       },
+      "IRapidPayloadOpenPayload": {
+        "required": [
+          "bundleFileName",
+          "inputs",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenPayload"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IOpenInput"
+            }
+          }
+        }
+      },
       "IRapidPayloadPolygonPayload": {
         "required": [
           "target",
@@ -10315,6 +10422,9 @@
             "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
           },
           {
+            "$ref": "#/components/schemas/IRapidResultOpenResult"
+          },
+          {
             "$ref": "#/components/schemas/IRapidResultPolygonResult"
           },
           {
@@ -10337,6 +10447,7 @@
             "LineResult": "#/components/schemas/IRapidResultLineResult",
             "LocateResult": "#/components/schemas/IRapidResultLocateResult",
             "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
+            "OpenResult": "#/components/schemas/IRapidResultOpenResult",
             "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
             "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
             "SkipResult": "#/components/schemas/IRapidResultSkipResult",
@@ -10503,6 +10614,25 @@
               "$ref": "#/components/schemas/NamedEntityResult_NamedClassification"
             }
           }
+        }
+      },
+      "IRapidResultOpenResult": {
+        "required": [
+          "rapidId",
+          "answer",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "answer": { }
         }
       },
       "IRapidResultPolygonResult": {
@@ -12301,6 +12431,30 @@
           }
         }
       },
+      "OpenOptionsInput_Option": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
       "OptionsBinding": {
         "type": "object",
         "properties": {
@@ -13261,6 +13415,9 @@
             "type": "boolean"
           },
           "clearOnPause": {
+            "type": "boolean"
+          },
+          "releaseOnSkip": {
             "type": "boolean"
           }
         }

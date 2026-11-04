@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.03.1640-e1a36d4"
+    "version": "2026.11.04.1414-f4e9e6d"
   },
   "servers": [
     {
@@ -18907,7 +18907,7 @@
           "Benchmark"
         ],
         "summary": "Queries a benchmark's image matchups — a page of compared image pairs with how the responses\n split between them.",
-        "description": "An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards\n comes back once per board. Filters use the prompt-ratings query's field set, applied to the\n votes a matchup is tallied from, plus four outcome fields accepted only as top-level\n and leaves: WinnerParticipantId/LooserParticipantId pick the side that\n won the whole matchup (a tie matches neither), and Responses/Extremeness\n select on the evidence the matchup carries — together a fair-coin sign test, so\n extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would\n reproduce under 5% of the time. WinnerSigma is sigma signed from the winning\n side; sort by -winner_sigma to separate records the pooled data confirms from upsets.\n Matchups of leaderboards excluded from the benchmark overall are never returned.\n Each item's leaderboard carries the instruction annotators were asked plus an optional\n displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it\n when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to\n the winning side.",
+        "description": "An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards\n comes back once per board. Filters use the prompt-ratings query's field set, applied to the\n votes a matchup is tallied from, plus four outcome fields accepted only as top-level\n and leaves: WinnerParticipantId/LooserParticipantId pick the side that\n won the whole matchup (a tie matches neither), and Responses/Extremeness\n select on the evidence the matchup carries — together a fair-coin sign test, so\n extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would\n reproduce under 5% of the time. WinnerSigma is sigma signed from the winning\n side; sort by -winner_sigma to separate records the pooled data confirms from upsets.\n Matchups of leaderboards excluded from the benchmark overall are never returned.\n ParticipantStatus, also top-level and only, keeps matchups whose two participants both match it, so\n participant_status[neq]=Disabled hides disabled models without changing any other matchup's sigma.\n Each item's leaderboard carries the instruction annotators were asked plus an optional\n displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it\n when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to\n the winning side.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -19716,6 +19716,55 @@
             "name": "winner_sigma",
             "in": "query",
             "description": "Filter by winner_sigma.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "participant_status",
+            "in": "query",
+            "description": "Filter by participant_status.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -22514,69 +22563,7 @@
         ]
       }
     },
-    "/leaderboard/{leaderboardId}/boost": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Boosts a subset of participants within a leaderboard.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard to boost.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The payload describing the boost to apply.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BoostLeaderboardEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "benchmark:write"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      }
-    },
+    "/leaderboard/{leaderboardId}/boost": {},
     "/leaderboard/{leaderboardId}/runs/custom": {
       "post": {
         "tags": [
@@ -22709,7 +22696,6 @@
       }
     },
     "/leaderboard/{leaderboardId}/participants": {},
-    "/leaderboard/{leaderboardId}/prompts": {},
     "/leaderboard/{leaderboardId}": {
       "delete": {
         "tags": [
@@ -26388,65 +26374,7 @@
         ]
       }
     },
-    "/participants/{participantId}/submit": {
-      "post": {
-        "tags": [
-          "Participant"
-        ],
-        "summary": "Submits a participant to a benchmark.",
-        "parameters": [
-          {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant to submit.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubmitParticipantEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "benchmark:write"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      }
-    },
+    "/participants/{participantId}/submit": {},
     "/participants/submit": {
       "post": {
         "tags": [
@@ -26976,6 +26904,55 @@
             "name": "participant_id",
             "in": "query",
             "description": "Filter by participant_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "participant_status",
+            "in": "query",
+            "description": "Filter by participant_status.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -36674,7 +36651,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "validation:write"
+              "platform:admin"
             ]
           },
           {
@@ -36828,7 +36805,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "validation:read"
+              "job:read"
             ]
           },
           {
@@ -37171,7 +37148,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "validation:read"
+              "job:read"
             ]
           },
           {
@@ -37433,7 +37410,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "validation:read"
+              "job:read"
             ]
           },
           {
@@ -37486,7 +37463,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "validation:write"
+              "job:write"
             ]
           },
           {
@@ -37874,7 +37851,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:admin"
+              "job:write"
             ]
           },
           {
@@ -48295,6 +48272,9 @@
           },
           "clearOnPause": {
             "type": "boolean"
+          },
+          "releaseOnSkip": {
+            "type": "boolean"
           }
         }
       },
@@ -51066,7 +51046,8 @@
         "enum": [
           "ArgoCd",
           "Grafana",
-          "Headscale"
+          "Headscale",
+          "Poseidon"
         ],
         "description": "                The third-party applications that federate on our OIDC `groups` claim and can therefore\n                be administered through a grant here. Each maps to an `external_app` object in the\n                authorization graph.\n                A closed enum rather than a free-form id on purpose: an arbitrary string would let a typo\nwrite a grant against an object nothing consumes, which looks like access was granted but\nsilently is not. Adding an app is a value here plus a tuple — no model change.This is the app itself; the relation vocabulary defined on these objects is\nAuthorizationRelations.ExternalApp. The Id suffix here keeps the two\ndistinguishable: a file with using static AuthorizationRelations imports that\nnested enum, and identical short names would make every bare mention ambiguous."
       },
@@ -53054,18 +53035,6 @@
         }
       },
       "CreatePromptForBenchmarkEndpoint_Output": {
-        "required": [
-          "id"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The id of the created prompt."
-          }
-        }
-      },
-      "CreatePromptForLeaderboardEndpoint_Output": {
         "required": [
           "id"
         ],
@@ -62013,6 +61982,85 @@
         },
         "description": "Results for a simple or evaluation job: a paged grid of per-rapid cards."
       },
+      "IOpenInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenOptionsInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenTextInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "OpenAssetInput": "#/components/schemas/IOpenInputOpenAssetInput",
+            "OpenOptionsInput": "#/components/schemas/IOpenInputOpenOptionsInput",
+            "OpenTextInput": "#/components/schemas/IOpenInputOpenTextInput"
+          }
+        }
+      },
+      "IOpenInputOpenAssetInput": {
+        "required": [
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenAssetInput"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          }
+        }
+      },
+      "IOpenInputOpenOptionsInput": {
+        "required": [
+          "options",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenOptionsInput"
+            ],
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenOptionsInput_Option"
+            }
+          }
+        }
+      },
+      "IOpenInputOpenTextInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenTextInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
       "IOrderWorkflowInput": {
         "required": [
           "_t"
@@ -62839,6 +62887,9 @@
             "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
           },
           {
+            "$ref": "#/components/schemas/IRapidPayloadOpenPayload"
+          },
+          {
             "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
           },
           {
@@ -62858,6 +62909,7 @@
             "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
             "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
             "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
+            "OpenPayload": "#/components/schemas/IRapidPayloadOpenPayload",
             "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
             "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
             "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload"
@@ -63004,6 +63056,30 @@
           }
         }
       },
+      "IRapidPayloadOpenPayload": {
+        "required": [
+          "bundleFileName",
+          "inputs",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenPayload"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IOpenInput"
+            }
+          }
+        }
+      },
       "IRapidPayloadPolygonPayload": {
         "required": [
           "target",
@@ -63090,6 +63166,9 @@
             "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
           },
           {
+            "$ref": "#/components/schemas/IRapidResultOpenResult"
+          },
+          {
             "$ref": "#/components/schemas/IRapidResultPolygonResult"
           },
           {
@@ -63112,6 +63191,7 @@
             "LineResult": "#/components/schemas/IRapidResultLineResult",
             "LocateResult": "#/components/schemas/IRapidResultLocateResult",
             "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
+            "OpenResult": "#/components/schemas/IRapidResultOpenResult",
             "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
             "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
             "SkipResult": "#/components/schemas/IRapidResultSkipResult",
@@ -63278,6 +63358,25 @@
               "$ref": "#/components/schemas/NamedEntityResult_NamedClassification"
             }
           }
+        }
+      },
+      "IRapidResultOpenResult": {
+        "required": [
+          "rapidId",
+          "answer",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "answer": {}
         }
       },
       "IRapidResultPolygonResult": {
@@ -64858,6 +64957,30 @@
           },
           "classification": {
             "type": "string"
+          }
+        }
+      },
+      "OpenOptionsInput_Option": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -70694,6 +70817,9 @@
             "$ref": "#/components/schemas/IRapidNamedEntityRapid"
           },
           {
+            "$ref": "#/components/schemas/IRapidOpenRapid"
+          },
+          {
             "$ref": "#/components/schemas/IRapidPolygonRapid"
           },
           {
@@ -70713,6 +70839,7 @@
             "LineRapidModel": "#/components/schemas/IRapidLineRapid",
             "LocateRapidModel": "#/components/schemas/IRapidLocateRapid",
             "NamedEntityRapidModel": "#/components/schemas/IRapidNamedEntityRapid",
+            "OpenRapidModel": "#/components/schemas/IRapidOpenRapid",
             "PolygonRapidModel": "#/components/schemas/IRapidPolygonRapid",
             "ScrubRapidModel": "#/components/schemas/IRapidScrubRapid",
             "TranscriptionRapidModel": "#/components/schemas/IRapidTranscriptionRapid"
@@ -71067,6 +71194,66 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TranslatedString"
+            }
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAsset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "IRapidOpenRapid": {
+        "required": [
+          "bundleFileName",
+          "inputs",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenRapidModel"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OpenRapid_IInput"
             }
           },
           "asset": {
@@ -71767,6 +71954,114 @@
           },
           "classification": {
             "type": "string"
+          }
+        }
+      },
+      "OpenRapid_IInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/OpenRapid_IInputOpenRapid_TextInput"
+          },
+          {
+            "$ref": "#/components/schemas/OpenRapid_IInputOpenRapid_AssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/OpenRapid_IInputOpenRapid_OptionsInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "OpenTextInput": "#/components/schemas/OpenRapid_IInputOpenRapid_TextInput",
+            "OpenAssetInput": "#/components/schemas/OpenRapid_IInputOpenRapid_AssetInput",
+            "OpenOptionsInput": "#/components/schemas/OpenRapid_IInputOpenRapid_OptionsInput"
+          }
+        }
+      },
+      "OpenRapid_IInputOpenRapid_AssetInput": {
+        "required": [
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenAssetInput"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          }
+        }
+      },
+      "OpenRapid_IInputOpenRapid_OptionsInput": {
+        "required": [
+          "options",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenOptionsInput"
+            ],
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenRapid_Option"
+            }
+          }
+        }
+      },
+      "OpenRapid_IInputOpenRapid_TextInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenTextInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "$ref": "#/components/schemas/TranslatedString"
+          }
+        }
+      },
+      "OpenRapid_Option": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ],
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
           }
         }
       },

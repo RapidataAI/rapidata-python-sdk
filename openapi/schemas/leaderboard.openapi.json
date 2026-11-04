@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.11.03.1640-e1a36d4"
+    "version": "2026.11.04.1414-f4e9e6d"
   },
   "servers": [
     {
@@ -7798,7 +7798,7 @@
           "Benchmark"
         ],
         "summary": "Queries a benchmark's image matchups — a page of compared image pairs with how the responses\n split between them.",
-        "description": "An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards\n comes back once per board. Filters use the prompt-ratings query's field set, applied to the\n votes a matchup is tallied from, plus four outcome fields accepted only as top-level\n and leaves: WinnerParticipantId/LooserParticipantId pick the side that\n won the whole matchup (a tie matches neither), and Responses/Extremeness\n select on the evidence the matchup carries — together a fair-coin sign test, so\n extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would\n reproduce under 5% of the time. WinnerSigma is sigma signed from the winning\n side; sort by -winner_sigma to separate records the pooled data confirms from upsets.\n Matchups of leaderboards excluded from the benchmark overall are never returned.\n Each item's leaderboard carries the instruction annotators were asked plus an optional\n displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it\n when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to\n the winning side.",
+        "description": "An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards\n comes back once per board. Filters use the prompt-ratings query's field set, applied to the\n votes a matchup is tallied from, plus four outcome fields accepted only as top-level\n and leaves: WinnerParticipantId/LooserParticipantId pick the side that\n won the whole matchup (a tie matches neither), and Responses/Extremeness\n select on the evidence the matchup carries — together a fair-coin sign test, so\n extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would\n reproduce under 5% of the time. WinnerSigma is sigma signed from the winning\n side; sort by -winner_sigma to separate records the pooled data confirms from upsets.\n Matchups of leaderboards excluded from the benchmark overall are never returned.\n ParticipantStatus, also top-level and only, keeps matchups whose two participants both match it, so\n participant_status[neq]=Disabled hides disabled models without changing any other matchup's sigma.\n Each item's leaderboard carries the instruction annotators were asked plus an optional\n displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it\n when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to\n the winning side.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -8607,6 +8607,55 @@
             "name": "winner_sigma",
             "in": "query",
             "description": "Filter by winner_sigma.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "participant_status",
+            "in": "query",
+            "description": "Filter by participant_status.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -11543,6 +11592,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -11807,77 +11857,6 @@
           {
             "OpenIdConnect": [
               "benchmark:read"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      }
-    },
-    "/leaderboard/{leaderboardId}/prompts": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Adds a new prompt to a leaderboard.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard to add the prompt to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The prompt text.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatePromptForLeaderboardEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true,
-        "security": [
-          {
-            "OpenIdConnect": [
-              "benchmark:write"
             ]
           },
           {
@@ -16766,6 +16745,7 @@
             "description": "Forbidden"
           }
         },
+        "deprecated": true,
         "security": [
           {
             "OpenIdConnect": [
@@ -17358,6 +17338,55 @@
             "name": "participant_id",
             "in": "query",
             "description": "Filter by participant_id.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "participant_status",
+            "in": "query",
+            "description": "Filter by participant_status.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -19095,18 +19124,6 @@
         }
       },
       "CreatePromptForBenchmarkEndpoint_Output": {
-        "required": [
-          "id"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The id of the created prompt."
-          }
-        }
-      },
-      "CreatePromptForLeaderboardEndpoint_Output": {
         "required": [
           "id"
         ],

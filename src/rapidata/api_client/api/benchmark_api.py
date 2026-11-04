@@ -3682,6 +3682,7 @@ class BenchmarkApi:
         responses: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by responses.")] = None,
         extremeness: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by extremeness.")] = None,
         winner_sigma: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by winner_sigma.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3698,7 +3699,7 @@ class BenchmarkApi:
     ) -> QueryMatchupsByBenchmarkEndpointOutput:
         """Queries a benchmark's image matchups — a page of compared image pairs with how the responses  split between them.
 
-        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.
+        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  ParticipantStatus, also top-level and only, keeps matchups whose two participants both match it, so  participant_status[neq]=Disabled hides disabled models without changing any other matchup's sigma.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -3744,6 +3745,8 @@ class BenchmarkApi:
         :type extremeness: AudienceAudienceIdJobsGetJobIdParameter
         :param winner_sigma: Filter by winner_sigma.
         :type winner_sigma: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3791,6 +3794,7 @@ class BenchmarkApi:
             responses=responses,
             extremeness=extremeness,
             winner_sigma=winner_sigma,
+            participant_status=participant_status,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3840,6 +3844,7 @@ class BenchmarkApi:
         responses: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by responses.")] = None,
         extremeness: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by extremeness.")] = None,
         winner_sigma: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by winner_sigma.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3856,7 +3861,7 @@ class BenchmarkApi:
     ) -> ApiResponse[QueryMatchupsByBenchmarkEndpointOutput]:
         """Queries a benchmark's image matchups — a page of compared image pairs with how the responses  split between them.
 
-        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.
+        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  ParticipantStatus, also top-level and only, keeps matchups whose two participants both match it, so  participant_status[neq]=Disabled hides disabled models without changing any other matchup's sigma.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -3902,6 +3907,8 @@ class BenchmarkApi:
         :type extremeness: AudienceAudienceIdJobsGetJobIdParameter
         :param winner_sigma: Filter by winner_sigma.
         :type winner_sigma: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3949,6 +3956,7 @@ class BenchmarkApi:
             responses=responses,
             extremeness=extremeness,
             winner_sigma=winner_sigma,
+            participant_status=participant_status,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3998,6 +4006,7 @@ class BenchmarkApi:
         responses: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by responses.")] = None,
         extremeness: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by extremeness.")] = None,
         winner_sigma: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by winner_sigma.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -4014,7 +4023,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Queries a benchmark's image matchups — a page of compared image pairs with how the responses  split between them.
 
-        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.
+        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  ParticipantStatus, also top-level and only, keeps matchups whose two participants both match it, so  participant_status[neq]=Disabled hides disabled models without changing any other matchup's sigma.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -4060,6 +4069,8 @@ class BenchmarkApi:
         :type extremeness: AudienceAudienceIdJobsGetJobIdParameter
         :param winner_sigma: Filter by winner_sigma.
         :type winner_sigma: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4107,6 +4118,7 @@ class BenchmarkApi:
             responses=responses,
             extremeness=extremeness,
             winner_sigma=winner_sigma,
+            participant_status=participant_status,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4151,6 +4163,7 @@ class BenchmarkApi:
         responses,
         extremeness,
         winner_sigma,
+        participant_status,
         logic,
         _request_auth,
         _content_type,
@@ -4437,6 +4450,21 @@ class BenchmarkApi:
                             _query_params.append(('winner_sigma[' + _k + ']', _item))
                     else:
                         _query_params.append(('winner_sigma[' + _k + ']', _v))
+        if participant_status is not None:
+            _param_val = participant_status
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_status[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('participant_status[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
