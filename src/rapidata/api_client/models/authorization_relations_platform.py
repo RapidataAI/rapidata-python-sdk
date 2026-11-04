@@ -18,13 +18,14 @@ from typing_extensions import Self
 
 class AuthorizationRelationsPlatform(str, Enum):
     """
-    Relations on the singleton `platform` object. The model is hierarchical: `admin` folds into `viewer`.
+    Relations on the singleton `platform` object. The model is hierarchical: `admin` folds into `editor`, and `editor` into `viewer`.
     """
 
     """
     allowed enum values
     """
     ADMIN = 'Admin'
+    EDITOR = 'Editor'
     VIEWER = 'Viewer'
 
     @classmethod

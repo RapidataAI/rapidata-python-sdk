@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.11.02.2043-d322c8d"
+    "version": "2026.11.03.1640-e1a36d4"
   },
   "servers": [
     {
@@ -87,7 +87,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:read"
+              "platform:viewer"
             ]
           },
           {
@@ -138,7 +138,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -189,7 +189,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -499,7 +499,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:read"
+              "platform:viewer"
             ]
           },
           {
@@ -550,7 +550,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -601,7 +601,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -654,7 +654,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -1623,7 +1623,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:read"
+              "platform:viewer"
             ]
           },
           {
@@ -1674,7 +1674,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -1725,7 +1725,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -3445,7 +3445,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:read"
+              "platform:viewer"
             ]
           },
           {
@@ -3496,7 +3496,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -3547,7 +3547,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -3693,9 +3693,10 @@
       "AuthorizationRelations_Platform": {
         "enum": [
           "Admin",
+          "Editor",
           "Viewer"
         ],
-        "description": "Relations on the singleton `platform` object. The model is hierarchical: `admin`\nfolds into `viewer`."
+        "description": "Relations on the singleton `platform` object. The model is hierarchical: `admin`\nfolds into `editor`, and `editor` into `viewer`."
       },
       "AuthorizationScope": {
         "enum": [

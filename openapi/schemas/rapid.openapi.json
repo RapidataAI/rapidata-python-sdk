@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Rapid API",
     "description": "The API for the Rapidata Rapid service",
-    "version": "2026.11.02.2043-d322c8d"
+    "version": "2026.11.03.1640-e1a36d4"
   },
   "servers": [
     {
@@ -986,7 +986,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -1032,7 +1032,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:read"
+              "platform:viewer"
             ]
           },
           {
@@ -1084,7 +1084,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -1145,7 +1145,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -1307,7 +1307,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -1360,7 +1360,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -1402,7 +1402,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:write"
+              "platform:admin"
             ]
           },
           {
@@ -1508,7 +1508,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:read"
+              "platform:viewer"
             ]
           },
           {
@@ -1902,7 +1902,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:read"
+              "platform:viewer"
             ]
           },
           {
