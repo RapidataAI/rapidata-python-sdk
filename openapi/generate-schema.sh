@@ -164,6 +164,10 @@ jq '
          ))
       then .value["x-rapidata-adaptive-stopping-config"] = true
       else . end
+      | if (.value.properties | has("adaptiveStopping") or has("stoppingState") or has("cantSolve")
+            or (has("estimate") and has("lower") and has("upper")))
+        then .value["x-rapidata-preserve-field-presence"] = true
+        else . end
     )' \
    ${SCHEMA_DIR}/rapidata.openapi.json \
    > ${SCHEMA_DIR}/rapidata.filtered.openapi.json

@@ -266,6 +266,93 @@ def test_disabled_cant_solve_keeps_null_snapshot_threshold_and_estimates(tmp_pat
     json.dumps(saved, allow_nan=False)
 
 
+@pytest.mark.parametrize("task_type", ["Classify", "Classification"])
+@pytest.mark.parametrize("split_details", [False, True])
+@pytest.mark.parametrize("reordered", [False, True])
+@pytest.mark.parametrize(
+    "verdict, leading", [("Winner", ["o1"]), ("TopSet", ["o1", "o0"])]
+)
+def test_unmapped_ids_are_not_inferred_from_category_values_or_order(
+    task_type, split_details, reordered, verdict, leading, tmp_path
+):
+    values = ["group.with.dots", "分類 / 猫🐈", "o1"]
+    counts = dict(zip(values, [10, 7, 3]))
+    if reordered:
+        counts = {value: counts[value] for value in reversed(values)}
+    state = _snapshot(verdict, leading, count=20, outcome_count=3)
+    state["parameters"]["maxOutcomeCount"] = len(leading)
+    result = RapidataResults(
+        _payload(
+            task_type,
+            aggregatedResults=counts,
+            winner="group.with.dots",
+            weightedWinner="分類 / 猫🐈",
+            summedUserScores={},
+            adaptiveStopping=copy.deepcopy(state),
+            detailedResults=[{"selectedCategory": "分類 / 猫🐈"}],
+        )
+    )
+
+    frame = result.to_pandas(split_details=split_details)
+
+    for _, row in frame.iterrows():
+        assert row["adaptiveStopping"] == state
+        assert row["leadingOutcomeIds"] == leading
+        assert row["winner"] == "group.with.dots"
+        assert row["weightedWinner"] == "分類 / 猫🐈"
+        assert "leadingLabels" not in row
+        assert "leadingOutcomes" not in row
+    if split_details:
+        assert list(frame["selectedCategory"]) == ["分類 / 猫🐈"]
+    else:
+        assert list(frame["option"]) == list(counts)
+        assert dict(zip(frame["option"], frame["count"])) == counts
+    path = tmp_path / "unicode-results.json"
+    result.to_json(str(path))
+    decoded = json.loads(path.read_text())["results"][0]
+    assert decoded["adaptiveStopping"] == state
+    assert decoded["aggregatedResults"] == counts
+    assert decoded["detailedResults"][0]["selectedCategory"] == "分類 / 猫🐈"
+
+
+@pytest.mark.parametrize("preliminary", [False, True])
+@pytest.mark.parametrize("include_null", [False, True])
+def test_job_downloads_preserve_nonadaptive_missing_versus_explicit_null(
+    preliminary, include_null
+):
+    service = MagicMock()
+    service.environment = "rapidata.ai"
+    job = RapidataJob(
+        "job-1", "Job", "global", MagicMock(), "def-1", service, pipeline_id="pip-1"
+    )
+    job.get_status = MagicMock(return_value="Running" if preliminary else "Completed")
+    job._wait_for_status = MagicMock()
+    row = {"identifier": "fixed", "privateMetadata": {"empty": {}, "unicode": "猫"}}
+    if include_null:
+        row.update(adaptiveStopping=None, stoppingState=None)
+    payload = {"info": {"type": "Classify"}, "results": [row]}
+    service.order.job_api.job_job_id_download_results_get.return_value = json.dumps(
+        payload
+    )
+    pipeline_api = service.pipeline.pipeline_api
+    pipeline_api.pipeline_pipeline_id_preliminary_download_post.return_value.download_id = (
+        "download-1"
+    )
+    response = (
+        pipeline_api.pipeline_preliminary_download_preliminary_download_id_get_with_http_info.return_value
+    )
+    response.status_code = 200
+    response.raw_data = json.dumps(payload).encode()
+
+    result = job.get_results(preliminary_results=preliminary)
+
+    assert result == payload
+    assert ("adaptiveStopping" in result["results"][0]) == include_null
+    assert ("stoppingState" in result["results"][0]) == include_null
+    assert "verdict" not in result["results"][0]
+    assert "leadingOutcomeIds" not in result["results"][0]
+
+
 @pytest.mark.parametrize("preliminary", [False, True])
 def test_final_and_preliminary_job_downloads_keep_categorical_evidence(preliminary):
     service = MagicMock()

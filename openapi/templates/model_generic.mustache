@@ -380,6 +380,9 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}LazyValidatedModel{{
             {{/isContainer}}
             {{/allVars}}
         }
+        {{#vendorExtensions.x-rapidata-preserve-field-presence}}
+        _data = {key: value for key, value in _data.items() if key in obj or value is not None}
+        {{/vendorExtensions.x-rapidata-preserve-field-presence}}
         try:
             _obj = cls.model_validate(_data)
         except ValidationError as _val_error:
