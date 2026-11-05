@@ -5,6 +5,7 @@ import json
 from unittest.mock import MagicMock
 
 import pytest
+from pydantic import BaseModel, JsonValue
 
 from rapidata import RapidataJob
 from rapidata.rapidata_client.results import RapidataResults
@@ -263,6 +264,102 @@ def test_disabled_cant_solve_keeps_null_snapshot_threshold_and_estimates(tmp_pat
     assert saved["parameters"]["unsolvableThreshold"] is None
     assert saved["ambiguity"]["estimate"] is None
     assert all(outcome["share"]["estimate"] is None for outcome in saved["outcomes"])
+    json.dumps(saved, allow_nan=False)
+
+
+@pytest.mark.parametrize("kind", ["compare_file", "compare_text", "classify"])
+@pytest.mark.parametrize("preliminary", [False, True])
+@pytest.mark.parametrize("split_details", [False, True])
+def test_all_cant_solve_evidence_survives_dictionary_models_and_downloads(
+    kind, preliminary, split_details, tmp_path
+):
+    class OpaqueEnvelope(BaseModel):
+        payload: dict[str, JsonValue]
+        unused_model_field: str | None = None
+
+    state = _snapshot("Unsolvable", [], count=24)
+    state["parameters"]["unsolvableThreshold"] = 0.5
+    state["ambiguity"] = {"estimate": None, "lower": 0.0, "upper": 1.0}
+    state["cantSolve"] = {
+        "count": 24,
+        "userScoreSum": 18.0,
+        "share": {"estimate": 1.0, "lower": 0.6, "upper": 1.0},
+    }
+    state["future"] = {"nullable": None, "items": [None, {"empty": {}}]}
+    for outcome in state["outcomes"]:
+        outcome.update(
+            count=0,
+            userScoreSum=0.0,
+            share={"estimate": None, "lower": 0.0, "upper": 1.0},
+        )
+    values = (
+        ["first.png", "second.png"]
+        if kind == "compare_file"
+        else ["answer.with.dots", "猫 / arbitrary"]
+    )
+    payload = _payload(
+        "Classify" if kind == "classify" else "Compare",
+        aggregatedResults={value: 0 for value in values},
+        summedUserScores={value: 0.0 for value in values},
+        adaptiveStopping=copy.deepcopy(state),
+        detailedResults=[{"userDetails": {"country": "CH"}}],
+    )
+    if kind == "compare_file":
+        payload["results"][0]["assetUrls"] = {
+            value: f"https://assets/{value}" for value in values
+        }
+    else:
+        payload["results"][0].pop("assetUrls", None)
+
+    first = OpaqueEnvelope(payload=payload).model_dump(exclude_none=True)
+    assert "unused_model_field" not in first
+    wrapped = OpaqueEnvelope.model_validate(first)
+    exported = json.loads(wrapped.model_dump_json(exclude_none=True))["payload"]
+    assert exported == payload
+
+    service = MagicMock()
+    service.environment = "rapidata.ai"
+    job = RapidataJob(
+        "job-1", "Job", "global", MagicMock(), "def-1", service, pipeline_id="pip-1"
+    )
+    job.get_status = MagicMock(return_value="Running" if preliminary else "Completed")
+    job._wait_for_status = MagicMock()
+    service.order.job_api.job_job_id_download_results_get.return_value = json.dumps(
+        exported, allow_nan=False
+    )
+    pipeline_api = service.pipeline.pipeline_api
+    pipeline_api.pipeline_pipeline_id_preliminary_download_post.return_value.download_id = (
+        "download-1"
+    )
+    response = (
+        pipeline_api.pipeline_preliminary_download_preliminary_download_id_get_with_http_info.return_value
+    )
+    response.status_code = 200
+    response.raw_data = json.dumps(exported, allow_nan=False).encode()
+
+    result = job.get_results(preliminary_results=preliminary)
+    row = result["results"][0]
+    assert row["adaptiveStopping"] == state
+    assert row["verdict"] == "Unsolvable"
+    assert row["responses"] == 24
+    assert row["leadingOutcomeIds"] == []
+    frame = result.to_pandas(split_details=split_details)
+    assert not frame.empty
+    assert "selectedCategory" not in frame
+    for _, record in frame.iterrows():
+        assert record["adaptiveStopping"] == state
+        assert record["adaptiveStopping"]["ambiguity"]["estimate"] is None
+        assert all(
+            outcome["share"]["estimate"] is None
+            for outcome in record["adaptiveStopping"]["outcomes"]
+        )
+
+    path = tmp_path / "all-cant-solve.json"
+    result.to_json(str(path))
+    saved = json.loads(path.read_text())["results"][0]["adaptiveStopping"]
+    assert saved == state
+    assert "estimate" in saved["ambiguity"]
+    assert all("estimate" in outcome["share"] for outcome in saved["outcomes"])
     json.dumps(saved, allow_nan=False)
 
 
