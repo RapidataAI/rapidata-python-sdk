@@ -9,7 +9,6 @@ from rapidata.api_client.api_client import ApiClient
 from rapidata.api_client.models.get_pipeline_by_id_endpoint_output import (
     GetPipelineByIdEndpointOutput,
 )
-from rapidata.api_client.models.get_pipeline_by_id_result import GetPipelineByIdResult
 
 _DEFAULTS = {
     "_t": "AdaptiveStoppingRefereeConfig",
@@ -74,9 +73,7 @@ def _pipeline(config: dict, kind: str) -> dict:
     }
 
 
-@pytest.mark.parametrize(
-    "model_type", [GetPipelineByIdEndpointOutput, GetPipelineByIdResult]
-)
+@pytest.mark.parametrize("model_type", [GetPipelineByIdEndpointOutput])
 @pytest.mark.parametrize("kind", ["Compare", "Classify"])
 @pytest.mark.parametrize(
     "config,expected",

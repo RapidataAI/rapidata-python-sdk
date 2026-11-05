@@ -17,7 +17,6 @@ from rapidata.api_client.models.get_job_revision_endpoint_output import (
 )
 from rapidata.api_client.models.i_referee import IReferee
 from rapidata.api_client.models.i_referee_config import IRefereeConfig
-from rapidata.api_client.models.i_referee_config_model import IRefereeConfigModel
 from rapidata.rapidata_client.job import rapidata_job_manager
 from rapidata.rapidata_client.job.rapidata_job_definition import (
     RapidataJobDefinition,
@@ -246,7 +245,7 @@ def test_adaptive_referee_round_trips_through_the_generated_union():
     assert model.to_dict() == ADAPTIVE_WIRE
 
 
-@pytest.mark.parametrize("union", [IRefereeConfig, IRefereeConfigModel])
+@pytest.mark.parametrize("union", [IRefereeConfig])
 def test_workflow_config_unions_preserve_discriminator_and_all_settings(union):
     config = {
         "_t": "AdaptiveStoppingRefereeConfig",
@@ -259,7 +258,7 @@ def test_workflow_config_unions_preserve_discriminator_and_all_settings(union):
     assert union.from_dict(config).to_dict() == config
 
 
-@pytest.mark.parametrize("union", [IReferee, IRefereeConfig, IRefereeConfigModel])
+@pytest.mark.parametrize("union", [IReferee, IRefereeConfig])
 def test_legacy_wire_reads_write_only_canonical_fields(union):
     discriminator = (
         "AdaptiveStoppingReferee"

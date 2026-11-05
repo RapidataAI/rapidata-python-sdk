@@ -139,7 +139,7 @@ npx -y @redocly/cli join ./${SCHEMA_DIR}/*.openapi.json -o ./${SCHEMA_DIR}/rapid
 # partly-deprecated surfaces like a single deprecated field on a model.
 # Note: the `walk` builtin requires jq >= 1.6.
 jq '
-  del(.paths[][] | select(.deprecated == true))
+  del(.paths[][] | select(type == "object") | select(.deprecated == true))
   | walk(
       if type == "object" then
         ( if (.parameters | type) == "array"
@@ -156,25 +156,21 @@ jq '
       else . end
     )
   | .components.schemas |= with_entries(
-      if .key == "IReferee" or .key == "IRefereeConfig" or .key == "IRefereeConfigModel"
-      then .value["x-rapidata-adaptive-stopping-union"] = true
-      else . end
-      |
       if (.value.properties | has("ambiguityThreshold"))
-         and ((.value.properties._t.enum // []) | any(
+         and (((.value.properties._t.enum // []) + [.value.properties._t.const]) | any(
            . == "AdaptiveStoppingReferee"
            or . == "AdaptiveStoppingRefereeConfig"
            or . == "AdaptiveStoppingRefereeInfo"
          ))
       then .value["x-rapidata-adaptive-stopping-config"] = true
       else . end
-      | if ((.value.properties._t.enum // []) | any(
+      | if (((.value.properties._t.enum // []) + [.value.properties._t.const]) | any(
              . == "Compare" or . == "Classify"
              or . == "ComparePayload" or . == "ClassifyPayload"
              or . == "CompareBlueprint" or . == "ClassifyBlueprint"))
         then .value["x-rapidata-answer-controls"] = true
         else . end
-      | if ((.value.properties._t.enum // []) | any(
+      | if (((.value.properties._t.enum // []) + [.value.properties._t.const]) | any(
              . == "CompareResult" or . == "AttachCategoryResult"))
         then .value["x-rapidata-explicit-cs-result"] = true
         else . end
@@ -186,12 +182,16 @@ jq '
    ${SCHEMA_DIR}/rapidata.openapi.json \
    > ${SCHEMA_DIR}/rapidata.filtered.openapi.json
 
+python3 scripts/prepare_adaptive_schema.py ${SCHEMA_DIR}/rapidata.filtered.openapi.json
+
 # Regenerate SDK
 rm -rf ./openapi/out
 npx @openapitools/openapi-generator-cli generate \
   -g python \
   --global-property modelTests=false,modelDocs=false,apiTests=false,apiDocs=false \
   -i ${SCHEMA_DIR}/rapidata.filtered.openapi.json \
-  -o ./src \
+  -o ./openapi/out \
   -c openapi/config.yaml \
   -t openapi/templates
+
+python3 scripts/publish_generated_client.py ./openapi/out/rapidata/api_client ./src/rapidata/api_client

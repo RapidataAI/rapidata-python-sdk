@@ -2,16 +2,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import importlib
+import re
 import sys
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
-_UNIONS = {
-    "IReferee": "AdaptiveStoppingReferee",
-    "IRefereeConfig": "AdaptiveStoppingRefereeConfig",
-    "IRefereeConfigModel": "AdaptiveStoppingRefereeConfig",
-}
 _DEFAULTS = {
     "maxVotes": 100,
     "minConfidence": 0.9,
@@ -45,11 +42,50 @@ def _expand(
     return result
 
 
+def _kinds(document: dict[str, Any], schema: dict[str, Any]) -> set[str]:
+    marker = _expand(document, schema.get("properties", {}).get("_t", {}))
+    return set(marker.get("enum", [])) | (
+        {marker["const"]} if "const" in marker else set()
+    )
+
+
+def referee_unions(document: dict[str, Any]) -> dict[str, str]:
+    result = {}
+    for name, schema in document.get("components", {}).get("schemas", {}).items():
+        union = _expand(document, schema)
+        variants = union.get("oneOf", union.get("anyOf", []))
+        kinds = set().union(
+            *(_kinds(document, _expand(document, item)) for item in variants)
+        )
+        if any(kind.endswith("RefereeConfig") for kind in kinds):
+            result[name] = "AdaptiveStoppingRefereeConfig"
+        elif any(kind.endswith("Referee") for kind in kinds):
+            result[name] = "AdaptiveStoppingReferee"
+    return result
+
+
+def simple_workflows(document: dict[str, Any]) -> dict[str, str]:
+    result = {}
+    for name, schema in document.get("components", {}).get("schemas", {}).items():
+        expanded = _expand(document, schema)
+        kinds = _kinds(document, expanded) & {
+            "SimpleWorkflowConfig",
+            "SimpleWorkflowModel",
+        }
+        if kinds and "referee" in expanded.get("properties", {}):
+            result[name] = next(iter(kinds))
+    return result
+
+
 def audit_schema(document: dict[str, Any]) -> list[str]:
     errors = []
     schemas = document.get("components", {}).get("schemas", {})
-    for name, discriminator in _UNIONS.items():
-        try:
+    try:
+        unions = referee_unions(document)
+        for kind in ["AdaptiveStoppingReferee", "AdaptiveStoppingRefereeConfig"]:
+            if kind not in unions.values():
+                errors.append(f"source: no emitted union for {kind}")
+        for name, discriminator in unions.items():
             union = _expand(document, schemas[name])
             variants = [
                 _expand(document, item)
@@ -58,8 +94,7 @@ def audit_schema(document: dict[str, Any]) -> list[str]:
             matching = [
                 variant
                 for variant in variants
-                if discriminator in variant["properties"].get("_t", {}).get("enum", [])
-                or variant["properties"].get("_t", {}).get("const") == discriminator
+                if discriminator in _kinds(document, variant)
             ]
             if len(matching) != 1:
                 errors.append(
@@ -71,30 +106,39 @@ def audit_schema(document: dict[str, Any]) -> list[str]:
                 errors.append(
                     f"source {name}: missing canonical fields {', '.join(sorted(missing))}"
                 )
-        except (KeyError, TypeError, ValueError) as error:
-            errors.append(f"source {name}: {error}")
+    except (KeyError, TypeError, ValueError) as error:
+        errors.append(f"source: {error}")
     return errors
 
 
-def audit_generated() -> list[str]:
+def _model_type(schema_name: str) -> Any:
+    from rapidata.api_client.models import _MODEL_IMPORTS
+
+    normalise = lambda value: re.sub(r"[^a-z0-9]", "", value.lower())
+    matches = [
+        name for name in _MODEL_IMPORTS if normalise(name) == normalise(schema_name)
+    ]
+    if len(matches) != 1:
+        raise ValueError(
+            f"cannot locate generated export for emitted schema {schema_name}"
+        )
+    name = matches[0]
+    return getattr(importlib.import_module(_MODEL_IMPORTS[name]), name)
+
+
+def audit_generated(document: dict[str, Any]) -> list[str]:
     from rapidata.api_client.api_client import ApiClient
-    from rapidata.api_client.models.i_referee import IReferee
-    from rapidata.api_client.models.i_referee_config import IRefereeConfig
-    from rapidata.api_client.models.i_referee_config_model import IRefereeConfigModel
-    from rapidata.api_client.models.i_workflow_config import IWorkflowConfig
-    from rapidata.api_client.models.i_workflow_model import IWorkflowModel
 
     errors = []
-    models = [IReferee, IRefereeConfig, IRefereeConfigModel]
     # A fallback adapter must not hide omissions from the branch-built schema.
     with patch(
         "rapidata.rapidata_client.referee._adaptive_stopping_adapter.adapt_referee_model",
         return_value=None,
     ):
-        for model_type in models:
-            name = model_type.__name__
-            expected = {"_t": _UNIONS[name], **_DEFAULTS}
+        for name, discriminator in referee_unions(document).items():
+            expected = {"_t": discriminator, **_DEFAULTS}
             try:
+                model_type = _model_type(name)
                 parsed = model_type.from_dict(expected)
                 actual = parsed.actual_instance
                 aliases = {
@@ -117,9 +161,9 @@ def audit_generated() -> list[str]:
                 for incoming, outgoing in [
                     (expected, expected),
                     (custom, custom),
-                    ({"_t": _UNIONS[name]}, expected),
+                    ({"_t": discriminator}, expected),
                     (
-                        {"_t": _UNIONS[name], "ambiguityRange": 0.3},
+                        {"_t": discriminator, "ambiguityRange": 0.3},
                         {**expected, "ambiguityThreshold": 0.91},
                     ),
                     ({**expected, "ambiguityRange": "ignored"}, expected),
@@ -149,37 +193,26 @@ def audit_generated() -> list[str]:
             "criteria": "Which?",
             "indexIdentifiers": ["A", "B"],
         }
-        for model_type, wire in [
-            (
-                IWorkflowConfig,
-                {
-                    "_t": "SimpleWorkflowConfig",
-                    "blueprint": blueprint,
-                    "referee": config,
-                    "featureFlags": [],
-                },
-            ),
-            (
-                IWorkflowModel,
-                {
-                    "_t": "SimpleWorkflowModel",
-                    "id": "workflow-1",
-                    "state": "Created",
-                    "blueprint": blueprint,
-                    "referee": config,
-                    "name": "Job",
-                    "ownerMail": None,
-                },
-            ),
-        ]:
+        for name, kind in simple_workflows(document).items():
+            wire = {
+                "_t": kind,
+                "blueprint": blueprint,
+                "referee": config,
+                "featureFlags": [],
+                "id": "workflow-1",
+                "state": "Created",
+                "name": "Job",
+                "ownerMail": None,
+            }
             try:
+                model_type = _model_type(name)
                 model = model_type.from_dict(wire)
                 if model.to_dict()["referee"] != config:
                     raise ValueError(
                         "native workflow referee did not retain all five config fields"
                     )
             except (AttributeError, KeyError, TypeError, ValueError) as error:
-                errors.append(f"generated {model_type.__name__}: {error}")
+                errors.append(f"generated {name}: {error}")
     return errors
 
 
@@ -196,16 +229,17 @@ def main() -> int:
         help="Require native support without the compatibility adapter",
     )
     args = parser.parse_args()
-    errors = audit_schema(json.loads(args.schema.read_text()))
+    document = json.loads(args.schema.read_text())
+    errors = audit_schema(document)
     if not errors and args.check_generated:
-        errors.extend(audit_generated())
+        errors.extend(audit_generated(document))
     for error in errors:
         print(error, file=sys.stderr)
     if errors:
         return 1
     print(
-        "Adaptive contract verified in all three unions"
-        + (" and native workflow models" if args.check_generated else "")
+        "Adaptive contract verified in the emitted referee unions"
+        + (" and emitted native workflow models" if args.check_generated else "")
     )
     return 0
 

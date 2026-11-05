@@ -108,7 +108,7 @@ class IReferee(LazyValidatedModel):
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
         from rapidata.rapidata_client.referee._adaptive_stopping_adapter import adapt_referee_model
-        adapted = adapt_referee_model(cls, json.loads(json_str))
+        adapted = adapt_referee_model(cls, json.loads(json_str), "AdaptiveStoppingReferee")
         if adapted is not None:
             return adapted
 

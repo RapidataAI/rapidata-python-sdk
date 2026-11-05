@@ -15,7 +15,6 @@ from rapidata.api_client.models.create_job_definition_endpoint_input import (
 from rapidata.api_client.models.i_order_workflow_input import IOrderWorkflowInput
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.api_client.models.i_workflow_config import IWorkflowConfig
-from rapidata.api_client.models.i_workflow_model import IWorkflowModel
 from rapidata import AdaptiveStopping
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.job.rapidata_job_manager import RapidataJobManager
@@ -78,10 +77,7 @@ def test_classify_controls_preserve_exact_option_values_across_spec_and_payload(
 
 
 @pytest.mark.parametrize("kind", ["Compare", "Classify"])
-@pytest.mark.parametrize("read_model", [False, True])
-def test_saved_workflow_blueprint_preserves_controls_and_referee_together(
-    kind, read_model
-):
+def test_saved_workflow_blueprint_preserves_controls_and_referee_together(kind):
     blueprint = {"_t": f"{kind}Blueprint", "allowCantSolve": True}
     if kind == "Compare":
         blueprint.update(
@@ -99,25 +95,13 @@ def test_saved_workflow_blueprint_preserves_controls_and_referee_together(
             ],
         )
     config = AdaptiveStopping(unsolvable_threshold=0.7)._to_referee()._to_dict()
-    if read_model:
-        wire = {
-            "_t": "SimpleWorkflowModel",
-            "id": "wf-1",
-            "state": "Created",
-            "blueprint": blueprint,
-            "referee": config,
-            "name": "Job",
-            "ownerMail": None,
-        }
-        model = IWorkflowModel.from_dict(wire)
-    else:
-        wire = {
-            "_t": "SimpleWorkflowConfig",
-            "blueprint": blueprint,
-            "referee": config,
-            "featureFlags": [],
-        }
-        model = IWorkflowConfig.from_dict(wire)
+    wire = {
+        "_t": "SimpleWorkflowConfig",
+        "blueprint": blueprint,
+        "referee": config,
+        "featureFlags": [],
+    }
+    model = IWorkflowConfig.from_dict(wire)
     decoded = model.to_dict()
     assert {key: decoded["blueprint"][key] for key in blueprint} == blueprint
     assert decoded["referee"] == config

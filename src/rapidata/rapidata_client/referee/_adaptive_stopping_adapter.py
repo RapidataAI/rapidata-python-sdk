@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 from typing import Any, TypeVar, cast, get_args
 
 from pydantic import Field, model_serializer
 
 from rapidata.api_client.lazy_model import LazyValidatedModel
-from rapidata.api_client.models.i_referee import IReferee
-from rapidata.api_client.models.i_referee_config import IRefereeConfig
-from rapidata.api_client.models.i_referee_config_model import IRefereeConfigModel
 from rapidata.rapidata_client.referee._adaptive_stopping_compat import (
     normalise_adaptive_stopping_config,
 )
@@ -38,31 +36,23 @@ class _AdaptiveWireModel(LazyValidatedModel):
         return self.to_dict()
 
 
-class _AdaptiveRefereeModel(_AdaptiveWireModel, IReferee):
-    pass
-
-
-class _AdaptiveRefereeConfig(_AdaptiveWireModel, IRefereeConfig):
-    pass
-
-
-class _AdaptiveRefereeConfigModel(_AdaptiveWireModel, IRefereeConfigModel):
-    pass
-
-
-_ADAPTERS = {
-    IReferee: ("AdaptiveStoppingReferee", _AdaptiveRefereeModel),
-    IRefereeConfig: ("AdaptiveStoppingRefereeConfig", _AdaptiveRefereeConfig),
-    IRefereeConfigModel: ("AdaptiveStoppingRefereeConfig", _AdaptiveRefereeConfigModel),
-}
+@lru_cache(maxsize=None)
+def _adapter_type(model_type: type[RefereeModel]) -> type[RefereeModel]:
+    return cast(
+        type[RefereeModel],
+        type(
+            f"_Adaptive{model_type.__name__}",
+            (_AdaptiveWireModel, model_type),
+            {"__module__": __name__},
+        ),
+    )
 
 
 def adapt_referee_model(
-    model_type: type[RefereeModel], data: Any
+    model_type: type[RefereeModel], data: Any, discriminator: str
 ) -> RefereeModel | None:
     """Preserve canonical adaptive fields until the generated union supports them."""
-    adapter = _ADAPTERS.get(model_type)
-    if adapter is None or not isinstance(data, dict) or data.get("_t") != adapter[0]:
+    if not isinstance(data, dict) or data.get("_t") != discriminator:
         return None
     for variant in get_args(model_type.model_fields["actual_instance"].annotation):
         if isinstance(variant, type) and issubclass(variant, LazyValidatedModel):
@@ -74,4 +64,4 @@ def adapt_referee_model(
 
     wire = normalise_adaptive_stopping_config(data)
     AdaptiveStopping._from_dict(wire)
-    return cast(RefereeModel, adapter[1](wire=wire))
+    return cast(RefereeModel, _adapter_type(model_type)(wire=wire))

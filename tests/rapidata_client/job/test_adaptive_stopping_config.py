@@ -15,9 +15,7 @@ from rapidata.api_client.models.create_job_definition_endpoint_input import (
 from rapidata.api_client.models.i_referee import IReferee
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_referee_config import IRefereeConfig
-from rapidata.api_client.models.i_referee_config_model import IRefereeConfigModel
 from rapidata.api_client.models.i_workflow_config import IWorkflowConfig
-from rapidata.api_client.models.i_workflow_model import IWorkflowModel
 from rapidata.rapidata_client.referee import _adaptive_stopping_adapter as adapter
 from rapidata.rapidata_client.workflow import CompareWorkflow
 
@@ -124,7 +122,7 @@ def test_unmerged_range_keyword_is_replaced():
         AdaptiveStopping(ambiguity_range=0.6)
 
 
-@pytest.mark.parametrize("union", [IReferee, IRefereeConfig, IRefereeConfigModel])
+@pytest.mark.parametrize("union", [IReferee, IRefereeConfig])
 def test_union_json_and_pydantic_serialization_keep_canonical_settings(union):
     wire = {
         **CANONICAL_CONFIG,
@@ -164,37 +162,23 @@ def test_create_request_http_serializer_preserves_all_five_settings():
     assert json.loads(body.to_json())["referee"] == expected
 
 
-@pytest.mark.parametrize("read_model", [False, True])
-def test_nested_workflow_referee_config_roundtrips(read_model):
-    blueprint = {
-        "_t": "CompareBlueprint",
-        "criteria": "Which?",
-        "indexIdentifiers": ["A", "B"],
+def test_emitted_workflow_config_roundtrip():
+    wire = {
+        "_t": "SimpleWorkflowConfig",
+        "blueprint": {
+            "_t": "CompareBlueprint",
+            "criteria": "Which?",
+            "indexIdentifiers": ["A", "B"],
+        },
+        "referee": CANONICAL_CONFIG,
+        "featureFlags": [],
     }
-    if read_model:
-        wire = {
-            "_t": "SimpleWorkflowModel",
-            "id": "workflow-1",
-            "state": "Created",
-            "blueprint": blueprint,
-            "referee": CANONICAL_CONFIG,
-            "name": "Job",
-            "ownerMail": None,
-        }
-        model = IWorkflowModel.from_dict(wire)
-    else:
-        wire = {
-            "_t": "SimpleWorkflowConfig",
-            "blueprint": blueprint,
-            "referee": CANONICAL_CONFIG,
-            "featureFlags": [],
-        }
-        model = IWorkflowConfig.from_dict(wire)
+    model = IWorkflowConfig.from_dict(wire)
     assert model.to_dict()["referee"] == CANONICAL_CONFIG
     assert json.loads(model.to_json())["referee"] == CANONICAL_CONFIG
 
 
-def test_adapter_defers_to_native_canonical_variants_after_regeneration(monkeypatch):
+def test_adapter_defers_to_native_canonical_variants_after_regeneration():
     class NativeVariant(LazyValidatedModel):
         max_votes: int = Field(alias="maxVotes")
         min_confidence: float = Field(alias="minConfidence")
@@ -205,9 +189,26 @@ def test_adapter_defers_to_native_canonical_variants_after_regeneration(monkeypa
     class NativeUnion(LazyValidatedModel):
         actual_instance: NativeVariant | None = None
 
-    monkeypatch.setitem(
-        adapter._ADAPTERS,
-        NativeUnion,
-        ("AdaptiveStoppingRefereeConfig", adapter._AdaptiveRefereeConfig),
+    assert (
+        adapter.adapt_referee_model(
+            NativeUnion, CANONICAL_CONFIG, "AdaptiveStoppingRefereeConfig"
+        )
+        is None
     )
-    assert adapter.adapt_referee_model(NativeUnion, CANONICAL_CONFIG) is None
+
+
+def test_fallback_adapter_uses_the_emitted_union_type_and_owning_discriminator():
+    class RenamedConfigUnion(LazyValidatedModel):
+        actual_instance: None = None
+
+    adapted = adapter.adapt_referee_model(
+        RenamedConfigUnion, CANONICAL_CONFIG, "AdaptiveStoppingRefereeConfig"
+    )
+    assert isinstance(adapted, RenamedConfigUnion)
+    assert adapted.to_dict() == CANONICAL_CONFIG
+    assert (
+        adapter.adapt_referee_model(
+            RenamedConfigUnion, CANONICAL_CONFIG, "AdaptiveStoppingReferee"
+        )
+        is None
+    )

@@ -4,7 +4,11 @@ import copy
 
 import pytest
 
-from scripts.check_adaptive_stopping_contract import audit_schema
+from scripts.check_adaptive_stopping_contract import (
+    audit_schema,
+    referee_unions,
+    simple_workflows,
+)
 
 
 def _schema() -> dict:
@@ -12,33 +16,43 @@ def _schema() -> dict:
     for union, kind in [
         ("IReferee", "AdaptiveStoppingReferee"),
         ("IRefereeConfig", "AdaptiveStoppingRefereeConfig"),
-        ("IRefereeConfigModel", "AdaptiveStoppingRefereeConfig"),
     ]:
         name = f"{union}Adaptive"
         schemas[union] = {"oneOf": [{"$ref": f"#/components/schemas/{name}"}]}
         schemas[name] = {
-            "type": "object",
             "properties": {
-                "_t": {"type": "string", "enum": [kind]},
-                "maxVotes": {"type": "integer", "default": 100},
-                "minConfidence": {"type": "number", "default": 0.9},
-                "ambiguityThreshold": {"type": "number", "default": 0.64},
-                "unsolvableThreshold": {"type": "number", "default": 0.5},
-                "maxOutcomeCount": {"type": "integer", "default": 1},
-            },
+                "_t": {"enum": [kind]},
+                "maxVotes": {"type": "integer"},
+                "minConfidence": {"type": "number"},
+                "ambiguityThreshold": {"type": "number"},
+                "unsolvableThreshold": {"type": "number"},
+                "maxOutcomeCount": {"type": "integer"},
+            }
         }
-    return {"openapi": "3.1.0", "components": {"schemas": schemas}}
+    return {"components": {"schemas": schemas}}
 
 
-def test_all_three_canonical_unions_must_be_present():
+def test_model_suffix_is_not_required_unless_emitted():
     document = _schema()
     assert audit_schema(document) == []
-    del document["components"]["schemas"]["IRefereeConfigModel"]
-    assert len(audit_schema(document)) == 1
-    assert "IRefereeConfigModel" in audit_schema(document)[0]
+    schemas = document["components"]["schemas"]
+    schemas["IRefereeConfigModel"] = copy.deepcopy(schemas["IRefereeConfig"])
+    assert audit_schema(document) == []
+    assert (
+        referee_unions(document)["IRefereeConfigModel"]
+        == "AdaptiveStoppingRefereeConfig"
+    )
 
 
-@pytest.mark.parametrize("union", ["IReferee", "IRefereeConfig", "IRefereeConfigModel"])
+def test_schema_ids_are_discovered_from_emitted_discriminators():
+    document = _schema()
+    schemas = document["components"]["schemas"]
+    schemas["PipelineConfig"] = schemas.pop("IRefereeConfig")
+    assert audit_schema(document) == []
+    assert referee_unions(document)["PipelineConfig"] == "AdaptiveStoppingRefereeConfig"
+
+
+@pytest.mark.parametrize("union", ["IReferee", "IRefereeConfig"])
 @pytest.mark.parametrize(
     "field",
     [
@@ -49,9 +63,7 @@ def test_all_three_canonical_unions_must_be_present():
         "maxOutcomeCount",
     ],
 )
-def test_schema_rejects_each_missing_field_even_if_sdk_adapter_would_fill_it(
-    union, field
-):
+def test_missing_fields_in_emitted_variants_are_rejected(union, field):
     document = _schema()
     del document["components"]["schemas"][f"{union}Adaptive"]["properties"][field]
     assert audit_schema(document) == [
@@ -59,13 +71,11 @@ def test_schema_rejects_each_missing_field_even_if_sdk_adapter_would_fill_it(
     ]
 
 
-def test_discriminator_ownership_is_checked():
+def test_missing_config_union_is_rejected():
     document = _schema()
-    document["components"]["schemas"]["IRefereeConfigAdaptive"]["properties"]["_t"][
-        "enum"
-    ] = ["AdaptiveStoppingReferee"]
+    del document["components"]["schemas"]["IRefereeConfig"]
     assert audit_schema(document) == [
-        "source IRefereeConfig: expected one AdaptiveStoppingRefereeConfig variant, found 0"
+        "source: no emitted union for AdaptiveStoppingRefereeConfig"
     ]
 
 
@@ -88,11 +98,21 @@ def test_inherited_fields_and_const_discriminators_are_supported():
     assert audit_schema(document) == []
 
 
-def test_unresolved_external_schema_is_not_a_valid_joined_source():
+def test_unresolved_external_schema_is_not_a_joined_source():
     document = _schema()
     document["components"]["schemas"]["IReferee"]["oneOf"][0][
         "$ref"
     ] = "order.openapi.json#/components/schemas/Adaptive"
-    errors = audit_schema(document)
-    assert len(errors) == 1
-    assert "provide a joined schema" in errors[0]
+    assert "provide a joined schema" in audit_schema(document)[0]
+
+
+def test_workflow_readers_are_checked_only_when_emitted():
+    document = _schema()
+    assert simple_workflows(document) == {}
+    document["components"]["schemas"]["ReturnedWorkflow"] = {
+        "properties": {
+            "_t": {"const": "SimpleWorkflowModel"},
+            "referee": {"$ref": "#/components/schemas/IRefereeConfig"},
+        }
+    }
+    assert simple_workflows(document) == {"ReturnedWorkflow": "SimpleWorkflowModel"}
