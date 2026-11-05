@@ -626,3 +626,23 @@ def test_results_expose_verdict_and_responses():
     assert [r.get("responses") for r in rows[:4]] == [7, 16, 100, 4]
     assert "verdict" not in rows[4]
     assert "responses" not in rows[4]
+
+
+@pytest.mark.parametrize(
+    "legacy,threshold",
+    [
+        ({"ambiguityRange": 0.6}, 0.64),
+        ({"ambiguityRange": 0.3}, 0.91),
+        ({"ambiguityRange": "ignored", "ambiguityThreshold": 0.73}, 0.73),
+    ],
+)
+def test_saved_definition_legacy_config_reads_and_unrelated_edits_write_canonical_input(
+    legacy, threshold
+):
+    wire = {"_t": "AdaptiveStoppingReferee", **legacy}
+    jd, service = _compare_revision(wire, allowCantSolve=False)
+    assert jd.responses_per_datapoint == AdaptiveStopping(ambiguity_threshold=threshold)
+    assert jd.allow_cant_solve is False
+    jd.instruction = "Which response fits the instruction?"
+    jd.save()
+    assert _sent_referee(service) == {**ADAPTIVE_WIRE, "ambiguityThreshold": threshold}
