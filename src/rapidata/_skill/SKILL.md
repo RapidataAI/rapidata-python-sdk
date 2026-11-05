@@ -107,6 +107,7 @@ Follow these for every job definition and audience example. Design each task so 
    - ✅ `"Is there a real dog in the red circle?"` with options `["Yes", "No", "Can't tell"]`
    - ❌ `"Which video is better overall? Consider the motion, timing, camera, style, on-screen text and sound."` (several criteria)
    - ❌ `"Is there a real dog in the red circle? It is small and often blurred. A dog on a poster or a toy dog does not count."` (one criterion, but definitions and edge cases make it 116 characters)
+   - ❌ `"Which option best describes the image? Select one answer."` (classification and comparison already accept exactly one answer, so "Select one answer" only adds words to translate and read)
 3. **Keep each context to one sentence under 150 characters, holding only what the question checks.** Don't pass the full generation prompt: nobody reads 300 characters and judges two videos in 15 seconds. Context shortening (see **Context Management**) focuses a context on the question but rarely gets it under 150 characters, so write the short version yourself.
 4. **Write the instruction, context and answer options in plain words that translate cleanly.** All three are machine-translated into each labeler's device language by default (see **Key Gotchas** #12), so most labelers read a translation, not your English. Use common words and literal phrasing; avoid idioms, slang, wordplay, abbreviations and words with several meanings, which come out wrong or meaningless in translation.
    - ✅ `"Does the video match the description?"` with options `["Yes", "No"]`
@@ -157,7 +158,7 @@ df = results.to_pandas()
 
 ### Classification
 
-Select one category from multiple options.
+Labelers pick exactly one of the answer options; the task screen allows only one, so the instruction never needs to say so.
 
 ```python
 from rapidata import NoShuffleSetting
