@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Rapid API",
     "description": "The API for the Rapidata Rapid service",
-    "version": "2026.11.03.1640-e1a36d4"
+    "version": "2026.11.04.1414-f4e9e6d"
   },
   "servers": [
     {
@@ -59,7 +59,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "validation:write"
+              "platform:admin"
             ]
           },
           {
@@ -206,7 +206,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "validation:read"
+              "job:read"
             ]
           },
           {
@@ -549,7 +549,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "validation:read"
+              "job:read"
             ]
           },
           {
@@ -811,7 +811,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "validation:read"
+              "job:read"
             ]
           },
           {
@@ -864,7 +864,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "validation:write"
+              "job:write"
             ]
           },
           {
@@ -1360,7 +1360,7 @@
         "security": [
           {
             "OpenIdConnect": [
-              "platform:admin"
+              "job:write"
             ]
           },
           {
@@ -3792,6 +3792,85 @@
           }
         }
       },
+      "IOpenInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenOptionsInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenTextInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "OpenAssetInput": "#/components/schemas/IOpenInputOpenAssetInput",
+            "OpenOptionsInput": "#/components/schemas/IOpenInputOpenOptionsInput",
+            "OpenTextInput": "#/components/schemas/IOpenInputOpenTextInput"
+          }
+        }
+      },
+      "IOpenInputOpenAssetInput": {
+        "required": [
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenAssetInput"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          }
+        }
+      },
+      "IOpenInputOpenOptionsInput": {
+        "required": [
+          "options",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenOptionsInput"
+            ],
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenOptionsInput_Option"
+            }
+          }
+        }
+      },
+      "IOpenInputOpenTextInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenTextInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
       "IRapid": {
         "required": [
           "_t"
@@ -3820,6 +3899,9 @@
             "$ref": "#/components/schemas/IRapidNamedEntityRapid"
           },
           {
+            "$ref": "#/components/schemas/IRapidOpenRapid"
+          },
+          {
             "$ref": "#/components/schemas/IRapidPolygonRapid"
           },
           {
@@ -3839,6 +3921,7 @@
             "LineRapidModel": "#/components/schemas/IRapidLineRapid",
             "LocateRapidModel": "#/components/schemas/IRapidLocateRapid",
             "NamedEntityRapidModel": "#/components/schemas/IRapidNamedEntityRapid",
+            "OpenRapidModel": "#/components/schemas/IRapidOpenRapid",
             "PolygonRapidModel": "#/components/schemas/IRapidPolygonRapid",
             "ScrubRapidModel": "#/components/schemas/IRapidScrubRapid",
             "TranscriptionRapidModel": "#/components/schemas/IRapidTranscriptionRapid"
@@ -4230,6 +4313,66 @@
           }
         }
       },
+      "IRapidOpenRapid": {
+        "required": [
+          "bundleFileName",
+          "inputs",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenRapidModel"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OpenRapid_IInput"
+            }
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAsset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
+          }
+        }
+      },
       "IRapidPayload": {
         "required": [
           "_t"
@@ -4258,6 +4401,9 @@
             "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
           },
           {
+            "$ref": "#/components/schemas/IRapidPayloadOpenPayload"
+          },
+          {
             "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
           },
           {
@@ -4277,6 +4423,7 @@
             "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
             "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
             "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
+            "OpenPayload": "#/components/schemas/IRapidPayloadOpenPayload",
             "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
             "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
             "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload"
@@ -4423,6 +4570,30 @@
           }
         }
       },
+      "IRapidPayloadOpenPayload": {
+        "required": [
+          "bundleFileName",
+          "inputs",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenPayload"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IOpenInput"
+            }
+          }
+        }
+      },
       "IRapidPayloadPolygonPayload": {
         "required": [
           "target",
@@ -4562,6 +4733,9 @@
             "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
           },
           {
+            "$ref": "#/components/schemas/IRapidResultOpenResult"
+          },
+          {
             "$ref": "#/components/schemas/IRapidResultPolygonResult"
           },
           {
@@ -4584,6 +4758,7 @@
             "LineResult": "#/components/schemas/IRapidResultLineResult",
             "LocateResult": "#/components/schemas/IRapidResultLocateResult",
             "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
+            "OpenResult": "#/components/schemas/IRapidResultOpenResult",
             "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
             "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
             "SkipResult": "#/components/schemas/IRapidResultSkipResult",
@@ -4750,6 +4925,25 @@
               "$ref": "#/components/schemas/NamedEntityResult_NamedClassification"
             }
           }
+        }
+      },
+      "IRapidResultOpenResult": {
+        "required": [
+          "rapidId",
+          "answer",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "answer": { }
         }
       },
       "IRapidResultPolygonResult": {
@@ -5818,6 +6012,138 @@
           },
           "classification": {
             "type": "string"
+          }
+        }
+      },
+      "OpenOptionsInput_Option": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "OpenRapid_IInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/OpenRapid_IInputOpenRapid_TextInput"
+          },
+          {
+            "$ref": "#/components/schemas/OpenRapid_IInputOpenRapid_AssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/OpenRapid_IInputOpenRapid_OptionsInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "OpenTextInput": "#/components/schemas/OpenRapid_IInputOpenRapid_TextInput",
+            "OpenAssetInput": "#/components/schemas/OpenRapid_IInputOpenRapid_AssetInput",
+            "OpenOptionsInput": "#/components/schemas/OpenRapid_IInputOpenRapid_OptionsInput"
+          }
+        }
+      },
+      "OpenRapid_IInputOpenRapid_AssetInput": {
+        "required": [
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenAssetInput"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          }
+        }
+      },
+      "OpenRapid_IInputOpenRapid_OptionsInput": {
+        "required": [
+          "options",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenOptionsInput"
+            ],
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenRapid_Option"
+            }
+          }
+        }
+      },
+      "OpenRapid_IInputOpenRapid_TextInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenTextInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "$ref": "#/components/schemas/TranslatedString"
+          }
+        }
+      },
+      "OpenRapid_Option": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ],
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
           }
         }
       },

@@ -22,6 +22,7 @@ from rapidata.api_client.models.i_rapid_result_free_text_result import IRapidRes
 from rapidata.api_client.models.i_rapid_result_line_result import IRapidResultLineResult
 from rapidata.api_client.models.i_rapid_result_locate_result import IRapidResultLocateResult
 from rapidata.api_client.models.i_rapid_result_named_entity_result import IRapidResultNamedEntityResult
+from rapidata.api_client.models.i_rapid_result_open_result import IRapidResultOpenResult
 from rapidata.api_client.models.i_rapid_result_polygon_result import IRapidResultPolygonResult
 from rapidata.api_client.models.i_rapid_result_scrub_result import IRapidResultScrubResult
 from rapidata.api_client.models.i_rapid_result_skip_result import IRapidResultSkipResult
@@ -31,7 +32,7 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IRAPIDRESULT_ONE_OF_SCHEMAS = ["IRapidResultAttachCategoryResult", "IRapidResultBoundingBoxResult", "IRapidResultCompareResult", "IRapidResultFreeTextResult", "IRapidResultLineResult", "IRapidResultLocateResult", "IRapidResultNamedEntityResult", "IRapidResultPolygonResult", "IRapidResultScrubResult", "IRapidResultSkipResult", "IRapidResultTranscriptionResult"]
+IRAPIDRESULT_ONE_OF_SCHEMAS = ["IRapidResultAttachCategoryResult", "IRapidResultBoundingBoxResult", "IRapidResultCompareResult", "IRapidResultFreeTextResult", "IRapidResultLineResult", "IRapidResultLocateResult", "IRapidResultNamedEntityResult", "IRapidResultOpenResult", "IRapidResultPolygonResult", "IRapidResultScrubResult", "IRapidResultSkipResult", "IRapidResultTranscriptionResult"]
 
 class IRapidResult(LazyValidatedModel):
     """
@@ -51,16 +52,18 @@ class IRapidResult(LazyValidatedModel):
     oneof_schema_6_validator: Optional[IRapidResultLocateResult] = None
     # data type: IRapidResultNamedEntityResult
     oneof_schema_7_validator: Optional[IRapidResultNamedEntityResult] = None
+    # data type: IRapidResultOpenResult
+    oneof_schema_8_validator: Optional[IRapidResultOpenResult] = None
     # data type: IRapidResultPolygonResult
-    oneof_schema_8_validator: Optional[IRapidResultPolygonResult] = None
+    oneof_schema_9_validator: Optional[IRapidResultPolygonResult] = None
     # data type: IRapidResultScrubResult
-    oneof_schema_9_validator: Optional[IRapidResultScrubResult] = None
+    oneof_schema_10_validator: Optional[IRapidResultScrubResult] = None
     # data type: IRapidResultSkipResult
-    oneof_schema_10_validator: Optional[IRapidResultSkipResult] = None
+    oneof_schema_11_validator: Optional[IRapidResultSkipResult] = None
     # data type: IRapidResultTranscriptionResult
-    oneof_schema_11_validator: Optional[IRapidResultTranscriptionResult] = None
-    actual_instance: Optional[Union[IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult]] = None
-    one_of_schemas: Set[str] = { "IRapidResultAttachCategoryResult", "IRapidResultBoundingBoxResult", "IRapidResultCompareResult", "IRapidResultFreeTextResult", "IRapidResultLineResult", "IRapidResultLocateResult", "IRapidResultNamedEntityResult", "IRapidResultPolygonResult", "IRapidResultScrubResult", "IRapidResultSkipResult", "IRapidResultTranscriptionResult" }
+    oneof_schema_12_validator: Optional[IRapidResultTranscriptionResult] = None
+    actual_instance: Optional[Union[IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultOpenResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult]] = None
+    one_of_schemas: Set[str] = { "IRapidResultAttachCategoryResult", "IRapidResultBoundingBoxResult", "IRapidResultCompareResult", "IRapidResultFreeTextResult", "IRapidResultLineResult", "IRapidResultLocateResult", "IRapidResultNamedEntityResult", "IRapidResultOpenResult", "IRapidResultPolygonResult", "IRapidResultScrubResult", "IRapidResultSkipResult", "IRapidResultTranscriptionResult" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -118,6 +121,11 @@ class IRapidResult(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultNamedEntityResult`")
         else:
             match += 1
+        # validate data type: IRapidResultOpenResult
+        if not isinstance(v, IRapidResultOpenResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultOpenResult`")
+        else:
+            match += 1
         # validate data type: IRapidResultPolygonResult
         if not isinstance(v, IRapidResultPolygonResult):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidResultPolygonResult`")
@@ -140,10 +148,10 @@ class IRapidResult(LazyValidatedModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IRapidResult with oneOf schemas: IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IRapidResult with oneOf schemas: IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultOpenResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IRapidResult with oneOf schemas: IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IRapidResult with oneOf schemas: IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultOpenResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -200,6 +208,12 @@ class IRapidResult(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IRapidResultOpenResult
+        try:
+            instance.actual_instance = IRapidResultOpenResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IRapidResultPolygonResult
         try:
             instance.actual_instance = IRapidResultPolygonResult.from_json(json_str)
@@ -227,10 +241,10 @@ class IRapidResult(LazyValidatedModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IRapidResult with oneOf schemas: IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IRapidResult with oneOf schemas: IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultOpenResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IRapidResult with oneOf schemas: IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IRapidResult with oneOf schemas: IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultOpenResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -244,7 +258,7 @@ class IRapidResult(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRapidResultAttachCategoryResult, IRapidResultBoundingBoxResult, IRapidResultCompareResult, IRapidResultFreeTextResult, IRapidResultLineResult, IRapidResultLocateResult, IRapidResultNamedEntityResult, IRapidResultOpenResult, IRapidResultPolygonResult, IRapidResultScrubResult, IRapidResultSkipResult, IRapidResultTranscriptionResult]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

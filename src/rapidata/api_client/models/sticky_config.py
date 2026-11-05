@@ -32,7 +32,8 @@ class StickyConfig(LazyValidatedModel):
     bypass_priority_selection: Optional[StrictBool] = Field(default=None, alias="bypassPrioritySelection")
     block_other_sticky_campaigns: Optional[StrictBool] = Field(default=None, alias="blockOtherStickyCampaigns")
     clear_on_pause: Optional[StrictBool] = Field(default=None, alias="clearOnPause")
-    __properties: ClassVar[List[str]] = ["isEnabled", "dimension", "bypassFilters", "bypassPrioritySelection", "blockOtherStickyCampaigns", "clearOnPause"]
+    release_on_skip: Optional[StrictBool] = Field(default=None, alias="releaseOnSkip")
+    __properties: ClassVar[List[str]] = ["isEnabled", "dimension", "bypassFilters", "bypassPrioritySelection", "blockOtherStickyCampaigns", "clearOnPause", "releaseOnSkip"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -86,7 +87,8 @@ class StickyConfig(LazyValidatedModel):
             "bypassFilters": obj.get("bypassFilters"),
             "bypassPrioritySelection": obj.get("bypassPrioritySelection"),
             "blockOtherStickyCampaigns": obj.get("blockOtherStickyCampaigns"),
-            "clearOnPause": obj.get("clearOnPause")
+            "clearOnPause": obj.get("clearOnPause"),
+            "releaseOnSkip": obj.get("releaseOnSkip")
         }
         try:
             _obj = cls.model_validate(_data)

@@ -22,6 +22,7 @@ from rapidata.api_client.models.i_rapid_payload_free_text_payload import IRapidP
 from rapidata.api_client.models.i_rapid_payload_line_payload import IRapidPayloadLinePayload
 from rapidata.api_client.models.i_rapid_payload_locate_payload import IRapidPayloadLocatePayload
 from rapidata.api_client.models.i_rapid_payload_named_entity_payload import IRapidPayloadNamedEntityPayload
+from rapidata.api_client.models.i_rapid_payload_open_payload import IRapidPayloadOpenPayload
 from rapidata.api_client.models.i_rapid_payload_polygon_payload import IRapidPayloadPolygonPayload
 from rapidata.api_client.models.i_rapid_payload_scrub_payload import IRapidPayloadScrubPayload
 from rapidata.api_client.models.i_rapid_payload_transcription_payload import IRapidPayloadTranscriptionPayload
@@ -30,7 +31,7 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IRAPIDPAYLOAD_ONE_OF_SCHEMAS = ["IRapidPayloadBoundingBoxPayload", "IRapidPayloadClassifyPayload", "IRapidPayloadComparePayload", "IRapidPayloadFreeTextPayload", "IRapidPayloadLinePayload", "IRapidPayloadLocatePayload", "IRapidPayloadNamedEntityPayload", "IRapidPayloadPolygonPayload", "IRapidPayloadScrubPayload", "IRapidPayloadTranscriptionPayload"]
+IRAPIDPAYLOAD_ONE_OF_SCHEMAS = ["IRapidPayloadBoundingBoxPayload", "IRapidPayloadClassifyPayload", "IRapidPayloadComparePayload", "IRapidPayloadFreeTextPayload", "IRapidPayloadLinePayload", "IRapidPayloadLocatePayload", "IRapidPayloadNamedEntityPayload", "IRapidPayloadOpenPayload", "IRapidPayloadPolygonPayload", "IRapidPayloadScrubPayload", "IRapidPayloadTranscriptionPayload"]
 
 class IRapidPayload(LazyValidatedModel):
     """
@@ -50,14 +51,16 @@ class IRapidPayload(LazyValidatedModel):
     oneof_schema_6_validator: Optional[IRapidPayloadLocatePayload] = None
     # data type: IRapidPayloadNamedEntityPayload
     oneof_schema_7_validator: Optional[IRapidPayloadNamedEntityPayload] = None
+    # data type: IRapidPayloadOpenPayload
+    oneof_schema_8_validator: Optional[IRapidPayloadOpenPayload] = None
     # data type: IRapidPayloadPolygonPayload
-    oneof_schema_8_validator: Optional[IRapidPayloadPolygonPayload] = None
+    oneof_schema_9_validator: Optional[IRapidPayloadPolygonPayload] = None
     # data type: IRapidPayloadScrubPayload
-    oneof_schema_9_validator: Optional[IRapidPayloadScrubPayload] = None
+    oneof_schema_10_validator: Optional[IRapidPayloadScrubPayload] = None
     # data type: IRapidPayloadTranscriptionPayload
-    oneof_schema_10_validator: Optional[IRapidPayloadTranscriptionPayload] = None
-    actual_instance: Optional[Union[IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload]] = None
-    one_of_schemas: Set[str] = { "IRapidPayloadBoundingBoxPayload", "IRapidPayloadClassifyPayload", "IRapidPayloadComparePayload", "IRapidPayloadFreeTextPayload", "IRapidPayloadLinePayload", "IRapidPayloadLocatePayload", "IRapidPayloadNamedEntityPayload", "IRapidPayloadPolygonPayload", "IRapidPayloadScrubPayload", "IRapidPayloadTranscriptionPayload" }
+    oneof_schema_11_validator: Optional[IRapidPayloadTranscriptionPayload] = None
+    actual_instance: Optional[Union[IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadOpenPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload]] = None
+    one_of_schemas: Set[str] = { "IRapidPayloadBoundingBoxPayload", "IRapidPayloadClassifyPayload", "IRapidPayloadComparePayload", "IRapidPayloadFreeTextPayload", "IRapidPayloadLinePayload", "IRapidPayloadLocatePayload", "IRapidPayloadNamedEntityPayload", "IRapidPayloadOpenPayload", "IRapidPayloadPolygonPayload", "IRapidPayloadScrubPayload", "IRapidPayloadTranscriptionPayload" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -115,6 +118,11 @@ class IRapidPayload(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadNamedEntityPayload`")
         else:
             match += 1
+        # validate data type: IRapidPayloadOpenPayload
+        if not isinstance(v, IRapidPayloadOpenPayload):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadOpenPayload`")
+        else:
+            match += 1
         # validate data type: IRapidPayloadPolygonPayload
         if not isinstance(v, IRapidPayloadPolygonPayload):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPayloadPolygonPayload`")
@@ -132,10 +140,10 @@ class IRapidPayload(LazyValidatedModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IRapidPayload with oneOf schemas: IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IRapidPayload with oneOf schemas: IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadOpenPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IRapidPayload with oneOf schemas: IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IRapidPayload with oneOf schemas: IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadOpenPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -192,6 +200,12 @@ class IRapidPayload(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IRapidPayloadOpenPayload
+        try:
+            instance.actual_instance = IRapidPayloadOpenPayload.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IRapidPayloadPolygonPayload
         try:
             instance.actual_instance = IRapidPayloadPolygonPayload.from_json(json_str)
@@ -213,10 +227,10 @@ class IRapidPayload(LazyValidatedModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IRapidPayload with oneOf schemas: IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IRapidPayload with oneOf schemas: IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadOpenPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IRapidPayload with oneOf schemas: IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IRapidPayload with oneOf schemas: IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadOpenPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -230,7 +244,7 @@ class IRapidPayload(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRapidPayloadBoundingBoxPayload, IRapidPayloadClassifyPayload, IRapidPayloadComparePayload, IRapidPayloadFreeTextPayload, IRapidPayloadLinePayload, IRapidPayloadLocatePayload, IRapidPayloadNamedEntityPayload, IRapidPayloadOpenPayload, IRapidPayloadPolygonPayload, IRapidPayloadScrubPayload, IRapidPayloadTranscriptionPayload]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

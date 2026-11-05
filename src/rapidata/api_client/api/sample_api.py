@@ -51,6 +51,7 @@ class SampleApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
@@ -84,6 +85,8 @@ class SampleApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param participant_id: Filter by participant_id.
         :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
@@ -118,6 +121,7 @@ class SampleApi:
             sort=sort,
             id=id,
             participant_id=participant_id,
+            participant_status=participant_status,
             created_at=created_at,
             logic=logic,
             _request_auth=_request_auth,
@@ -153,6 +157,7 @@ class SampleApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
@@ -186,6 +191,8 @@ class SampleApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param participant_id: Filter by participant_id.
         :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
@@ -220,6 +227,7 @@ class SampleApi:
             sort=sort,
             id=id,
             participant_id=participant_id,
+            participant_status=participant_status,
             created_at=created_at,
             logic=logic,
             _request_auth=_request_auth,
@@ -255,6 +263,7 @@ class SampleApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
@@ -288,6 +297,8 @@ class SampleApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param participant_id: Filter by participant_id.
         :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
@@ -322,6 +333,7 @@ class SampleApi:
             sort=sort,
             id=id,
             participant_id=participant_id,
+            participant_status=participant_status,
             created_at=created_at,
             logic=logic,
             _request_auth=_request_auth,
@@ -352,6 +364,7 @@ class SampleApi:
         sort,
         id,
         participant_id,
+        participant_status,
         created_at,
         logic,
         _request_auth,
@@ -423,6 +436,21 @@ class SampleApi:
                             _query_params.append(('participant_id[' + _k + ']', _item))
                     else:
                         _query_params.append(('participant_id[' + _k + ']', _v))
+        if participant_status is not None:
+            _param_val = participant_status
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_status[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('participant_status[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
             if hasattr(_param_val, 'to_dict'):
