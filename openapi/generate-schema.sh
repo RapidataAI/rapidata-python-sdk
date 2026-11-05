@@ -174,6 +174,10 @@ jq '
              or . == "CompareBlueprint" or . == "ClassifyBlueprint"))
         then .value["x-rapidata-answer-controls"] = true
         else . end
+      | if ((.value.properties._t.enum // []) | any(
+             . == "CompareResult" or . == "AttachCategoryResult"))
+        then .value["x-rapidata-explicit-cs-result"] = true
+        else . end
       | if (.value.properties | has("adaptiveStopping") or has("stoppingState") or has("cantSolve")
             or (has("estimate") and has("lower") and has("upper")))
         then .value["x-rapidata-preserve-field-presence"] = true

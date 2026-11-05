@@ -270,6 +270,13 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}LazyValidatedModel{{
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
+        {{#vendorExtensions.x-rapidata-explicit-cs-result}}
+        from rapidata.rapidata_client.results._explicit_cant_solve import adapt_response_model
+        adapted = adapt_response_model(cls, obj)
+        if adapted is not None:
+            return adapted
+
+        {{/vendorExtensions.x-rapidata-explicit-cs-result}}
         {{#vendorExtensions.x-rapidata-answer-controls}}
         from rapidata.rapidata_client.workflow._answer_controls import adapt_answer_controls
         adapted = adapt_answer_controls(cls, obj)

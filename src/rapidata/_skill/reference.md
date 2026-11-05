@@ -438,6 +438,8 @@ In `adaptiveStopping.outcomes`, each entry has `outcomeId`, integer `count`, `us
 
 `ambiguity` also has nullable `estimate` and required finite numeric `lower`/`upper` bounds. Null estimate keys are retained. `parameters` contains resolved `maxVotes`, `minConfidence`, `ambiguityThreshold`, `unsolvableThreshold` (`null` in a snapshot with CS disabled), and `maxOutcomeCount`. The workflow referee config always stores its resolved threshold, default `0.5`; disabled `cantSolve` is omitted, while explicit `null` is accepted defensively. The model is currently `score-weighted-categorical-v1`; weighted confidence is heuristic, not a proven 90% coverage guarantee. A backend can't-solve option does not imply its annotator UI has shipped.
 
+Individual response models retain the boolean `cantSolve` marker (default false), separately from the snapshot tally. Classify CS may omit `category`; ordinary classification still requires its exact configured value. Resolve `cN` only with immutable definitions for that same rapid, never mutable/global categories or aggregate dictionary order; leave IDs unknown when definitions are unavailable.
+
 Flow items have a different result shape — see the Flows section.
 
 ## Early Stopping

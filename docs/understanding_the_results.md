@@ -186,7 +186,9 @@ New adaptive compare and single-select classification exports use the same `adap
 | `ambiguity` | Normalized disagreement with nullable `estimate` and required finite numeric `lower`/`upper` bounds. |
 | `parameters` | Resolved `maxVotes`, `minConfidence`, `ambiguityThreshold`, nullable `unsolvableThreshold`, and `maxOutcomeCount`. |
 
-Outcome IDs are identities, not category values or asset names. Keep them with the outcome definitions supplied by the backend; do not infer their meaning from their position or spelling. BothGood and BothBad are separate substantive outcomes, never half a vote for each asset. Can't solve is excluded from leading sets.
+Outcome IDs are identities, not category values or asset names. Resolve them only with immutable definitions for the same rapid. Per-rapid categories can differ; mutable job-level options and aggregate dictionary order cannot resolve `c0`, `c1`, … correctly. Keep unknown IDs unchanged until the matching definitions are available. BothGood and BothBad are separate substantive outcomes, never half a vote for each asset. Can't solve is excluded from leading sets.
+
+An individual response's `cantSolve` is a boolean marker, distinct from the snapshot's `cantSolve` tally. Compare CS has `winners: []` and `cantSolve: true`; classification CS has `cantSolve: true` with its category omitted or empty. Missing markers default to false in typed response decoding. Empty answers alone never imply CS; ordinary compare empty winners represent BothBad only when enabled.
 
 The model weights responses by the user score captured at response time. Raw counts and weighted shares describe different quantities; `share.estimate` is not the raw count ratio. These confidence bounds are heuristic for weighted responses; `minConfidence=0.9` is not a proven 90% coverage guarantee.
 
