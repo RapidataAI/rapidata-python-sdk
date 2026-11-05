@@ -270,6 +270,11 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}LazyValidatedModel{{
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
+        {{#vendorExtensions.x-rapidata-adaptive-stopping-config}}
+        from rapidata.rapidata_client.referee._adaptive_stopping_compat import normalise_adaptive_stopping_config
+        obj = normalise_adaptive_stopping_config(obj)
+
+        {{/vendorExtensions.x-rapidata-adaptive-stopping-config}}
         {{#disallowAdditionalPropertiesIfNotPresent}}
         {{^isAdditionalPropertiesTrue}}
         # raise errors for additional fields in the input

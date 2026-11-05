@@ -248,6 +248,24 @@ def test_long_counts_are_preserved():
     )
 
 
+def test_disabled_cant_solve_keeps_null_snapshot_threshold_and_estimates(tmp_path):
+    state = _snapshot("Open", [], count=0)
+    state["ambiguity"]["estimate"] = None
+    for outcome in state["outcomes"]:
+        outcome["share"]["estimate"] = None
+    result = RapidataResults(_payload(adaptiveStopping=state))
+    path = tmp_path / "results.json"
+
+    result.to_json(str(path))
+    saved = json.loads(path.read_text())["results"][0]["adaptiveStopping"]
+
+    assert "cantSolve" not in saved
+    assert saved["parameters"]["unsolvableThreshold"] is None
+    assert saved["ambiguity"]["estimate"] is None
+    assert all(outcome["share"]["estimate"] is None for outcome in saved["outcomes"])
+    json.dumps(saved, allow_nan=False)
+
+
 @pytest.mark.parametrize("preliminary", [False, True])
 def test_final_and_preliminary_job_downloads_keep_categorical_evidence(preliminary):
     service = MagicMock()

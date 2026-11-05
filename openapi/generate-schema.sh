@@ -154,6 +154,16 @@ jq '
                   else . end )
             else . end )
       else . end
+    )
+  | .components.schemas |= with_entries(
+      if (.value.properties | has("ambiguityThreshold"))
+         and ((.value.properties._t.enum // []) | any(
+           . == "AdaptiveStoppingReferee"
+           or . == "AdaptiveStoppingRefereeConfig"
+           or . == "AdaptiveStoppingRefereeInfo"
+         ))
+      then .value["x-rapidata-adaptive-stopping-config"] = true
+      else . end
     )' \
    ${SCHEMA_DIR}/rapidata.openapi.json \
    > ${SCHEMA_DIR}/rapidata.filtered.openapi.json

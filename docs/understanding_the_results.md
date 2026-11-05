@@ -181,16 +181,16 @@ New adaptive compare and single-select classification exports use the same `adap
 | `verdict` | `Open`, `Winner`, `TopSet`, `Ambiguous`, `Unsolvable`, or `Undecided`. |
 | `leadingOutcomeIds` | Stable outcome IDs named by the decision. A `TopSet` is a leading set of alternatives; it does not assert that multiple single-select labels are independently true. |
 | `responseCount` | Responses counted by this snapshot, which can differ from later aggregate counts. |
-| `outcomes` | Each substantive outcome's `outcomeId`, raw `count`, `userScoreSum`, and weighted `share` with nullable `estimate` and `lower`/`upper` bounds. |
-| `cantSolve` | Optional separate tally with `count`, `userScoreSum`, and `share`; omitted and `null` are both accepted. Explicit can't solve is distinct from Neither, Both, skipped responses, and empty selections. |
-| `ambiguity` | Normalized disagreement with nullable `estimate` and `lower`/`upper` bounds. |
+| `outcomes` | Each substantive outcome's `outcomeId`, raw `count`, `userScoreSum`, and weighted `share` with nullable `estimate` and required finite numeric `lower`/`upper` bounds. |
+| `cantSolve` | Separate tally with `count`, `userScoreSum`, and `share`; omitted when disabled, with `null` accepted defensively. Explicit can't solve is distinct from Neither, Both, skipped responses, and empty selections. |
+| `ambiguity` | Normalized disagreement with nullable `estimate` and required finite numeric `lower`/`upper` bounds. |
 | `parameters` | Resolved `maxVotes`, `minConfidence`, `ambiguityThreshold`, nullable `unsolvableThreshold`, and `maxOutcomeCount`. |
 
 Outcome IDs are identities, not category values or asset names. Keep them with the outcome definitions supplied by the backend; do not infer their meaning from their position or spelling. BothGood and BothBad are separate substantive outcomes, never half a vote for each asset. Can't solve is excluded from leading sets.
 
 The model weights responses by the user score captured at response time. Raw counts and weighted shares describe different quantities; `share.estimate` is not the raw count ratio. These confidence bounds are heuristic for weighted responses; `minConfidence=0.9` is not a proven 90% coverage guarantee.
 
-Normalized ambiguity is \(K/(K-1)(1-\sum_i p_i^2)\), where \(K\) counts configured substantive outcomes, excluding can't solve, and \(p_i\) are conditional weighted shares among those outcomes. The default threshold is `0.64`; for binary comparisons this matches the earlier raw threshold `0.32` or range `0.6`. Undefined estimates remain `null`.
+Normalized ambiguity is \(K/(K-1)(1-\sum_i p_i^2)\), where \(K\) counts configured substantive outcomes, excluding can't solve, and \(p_i\) are conditional weighted shares among those outcomes. The default threshold is `0.64`; for binary comparisons this matches the earlier raw threshold `0.32` or range `0.6`. Undefined estimates remain explicit `null` values; their keys are retained.
 
 ```python
 for datapoint in results["results"]:
@@ -200,6 +200,8 @@ for datapoint in results["results"]:
 ```
 
 `Open` means no terminal decision yet; `Undecided` means the response cap was reached without another decision. `Winner` names one leading outcome and `TopSet` names multiple alternatives. `Ambiguous` certifies the model's disagreement condition, while `Unsolvable` uses the separate can't-solve threshold and solvability gate. Enabling backend can't-solve configuration does not establish that an annotator button has been deployed.
+
+Workflow referee configuration always stores the resolved `unsolvableThreshold` (default `0.5`). Snapshot `parameters.unsolvableThreshold` is `null` when can't solve is disabled. Non-adaptive API results omit `adaptiveStopping`; rapid exports contain `adaptiveStopping: null`.
 
 Older exports may contain `stoppingState`. The SDK retains its legacy `verdict` aliases (`A`, `B`, `ambiguous`, `undecided`, `open`) and `responses` decoding. When both snapshots exist, `adaptiveStopping` determines the convenience fields; both raw blocks remain available. Raw/weighted aggregate `winner` fields keep their original meanings.
 
