@@ -205,6 +205,8 @@ Compare accepts `allow_both_good=False`, `allow_both_bad=False`, and `allow_cant
 
 A `TopSet` identifies leading alternatives, not multiple independently true single-select labels. Stable outcome IDs must be interpreted using the backend's outcome definitions, never assumed to equal category values or asset names. BothGood and BothBad are distinct substantive categories, not half-votes for A/B. Explicit can't solve is separate from Both, Neither, skips, and empty selections; backend configuration alone does not mean its annotator button is deployed.
 
+An optional result-level `cantSolve: {count, userScoreSum}` is a raw export tally, separate from the frozen `adaptiveStopping.cantSolve` evidence; it can include late or non-adaptive CS responses. DataFrames preserve it as a dictionary column, while split response booleans use `responseCantSolve`. Do not sum the per-datapoint tally across repeated option/detail rows.
+
 Legacy exports with `stoppingState` still decode to `A`, `B`, `ambiguous`, `undecided`, or `open`. Fixed integer response counts and `QuorumStopping(threshold, max_responses)` remain available. See **Results Format** in the reference for snapshot fields.
 
 ### Ranking

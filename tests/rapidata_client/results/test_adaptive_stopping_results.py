@@ -516,8 +516,11 @@ def test_explicit_cant_solve_marker_is_preserved_without_reinterpreting_empty_an
     assert frame.iloc[0]["adaptiveStopping"]["cantSolve"] == state["cantSolve"]
     assert result["results"][0]["detailedResults"] == details
     if split_details:
-        assert frame.iloc[0]["cantSolve"] == True
-        assert frame.iloc[2 if task_type == "Classify" else 1]["cantSolve"] == False
+        assert frame.iloc[0]["responseCantSolve"] == True
+        assert (
+            frame.iloc[2 if task_type == "Classify" else 1]["responseCantSolve"]
+            == False
+        )
     path = tmp_path / "markers.json"
     result.to_json(str(path))
     assert json.loads(path.read_text())["results"][0]["detailedResults"] == details

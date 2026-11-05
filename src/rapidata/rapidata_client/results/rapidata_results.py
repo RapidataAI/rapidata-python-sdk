@@ -66,6 +66,8 @@ class RapidataResults(dict):
         columns. For other results, flattens nested dictionaries into columns
         with underscore-separated names. ``adaptiveStopping`` remains a complete
         dictionary column; ``leadingOutcomeIds`` remains a list of stable IDs.
+        A result-level ``cantSolve`` summary stays separate from the snapshot;
+        detailed boolean markers use the ``responseCantSolve`` column.
 
         Args:
             split_details: If True, splits each datapoint by its detailed results,
@@ -137,9 +139,9 @@ class RapidataResults(dict):
         if not self.get("results"):
             return False
 
-        first_result = self["results"][0]
-        return "detailedResults" in first_result and isinstance(
-            first_result["detailedResults"], list
+        return any(
+            isinstance(result, dict) and isinstance(result.get("detailedResults"), list)
+            for result in self["results"]
         )
 
     def _to_pandas_with_detailed_results(self) -> "pd.DataFrame":
@@ -156,16 +158,23 @@ class RapidataResults(dict):
         for result in self["results"]:
             base_data = {k: v for k, v in result.items() if k != "detailedResults"}
 
-            for detailed_result in result["detailedResults"]:
+            detailed = result.get("detailedResults")
+            if not isinstance(detailed, list) or not detailed:
+                rows.append(base_data)
+                continue
+            for detailed_result in detailed:
                 row = base_data.copy()
-
-                flattened = self._flatten_dict(detailed_result)
-                for key, value in flattened.items():
-                    row[key] = value
-
+                if isinstance(detailed_result, dict):
+                    row.update(self._flatten_detailed_result(detailed_result))
                 rows.append(row)
 
         return pd.DataFrame(rows)
+
+    def _flatten_detailed_result(self, detail: dict[str, Any]) -> dict[str, Any]:
+        fields = self._flatten_dict(detail)
+        if "cantSolve" in fields:
+            fields["responseCantSolve"] = fields.pop("cantSolve")
+        return fields
 
     def _flatten_dict(self, d: dict[str, Any], parent_key: str = "") -> dict[str, Any]:
         """
@@ -183,7 +192,7 @@ class RapidataResults(dict):
         for key, value in d.items():
             new_key = f"{parent_key}_{key}" if parent_key else key
 
-            if isinstance(value, dict) and key != "adaptiveStopping":
+            if isinstance(value, dict) and key not in ("adaptiveStopping", "cantSolve"):
                 items.extend(self._flatten_dict(value, new_key).items())
             else:
                 items.append((new_key, value))
@@ -215,7 +224,7 @@ class RapidataResults(dict):
             new_key = f"{parent_key}_{key}" if parent_key else key
             new_path: list[str] = current_path + [key]
 
-            if isinstance(value, dict) and key != "adaptiveStopping":
+            if isinstance(value, dict) and key not in ("adaptiveStopping", "cantSolve"):
                 self._build_column_structure(
                     value, columns, path_map, new_key, new_path
                 )
@@ -289,7 +298,7 @@ class RapidataResults(dict):
                 key: value
                 for key, value in result.items()
                 if not isinstance(value, (dict, list))
-                or key in ("adaptiveStopping", "leadingOutcomeIds")
+                or key in ("adaptiveStopping", "cantSolve", "leadingOutcomeIds")
             }
 
             if is_compare:
@@ -302,7 +311,7 @@ class RapidataResults(dict):
             asset_set = set(assets)
             for key, values in result.items():
                 if (
-                    key == "adaptiveStopping"
+                    key in ("adaptiveStopping", "cantSolve")
                     or not isinstance(values, dict)
                     or not values
                 ):
@@ -326,7 +335,7 @@ class RapidataResults(dict):
                 for detailed_result in detailed:
                     row = base_row.copy()
                     if isinstance(detailed_result, dict):
-                        row.update(self._flatten_dict(detailed_result))
+                        row.update(self._flatten_detailed_result(detailed_result))
                     rows.append(row)
             else:
                 rows.append(base_row)
@@ -355,7 +364,10 @@ class RapidataResults(dict):
                 if key in self._CLASSIFICATION_OPTION_METRICS:
                     if isinstance(value, dict):
                         metrics[self._CLASSIFICATION_OPTION_METRICS[key]] = value
-                elif isinstance(value, dict) and key != "adaptiveStopping":
+                elif isinstance(value, dict) and key not in (
+                    "adaptiveStopping",
+                    "cantSolve",
+                ):
                     base_row.update(self._flatten_dict(value, parent_key=key))
                 else:
                     base_row[key] = value

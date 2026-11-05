@@ -1138,3 +1138,21 @@ worker = RapidataClient(token=token)
 fresh_token = coordinator.get_token()  # in practice received over your transport
 worker.set_token(fresh_token)  # used from the next request on
 ```
+
+## Raw and adaptive can't-solve evidence
+
+```python
+results = job.get_results()
+for item in results["results"]:
+    raw_cs = item.get("cantSolve")
+    snapshot = item.get("adaptiveStopping")
+    if isinstance(raw_cs, dict):
+        print(raw_cs["count"], raw_cs["userScoreSum"])
+    if isinstance(snapshot, dict):
+        print(snapshot["verdict"], snapshot.get("cantSolve"))
+
+responses = results.to_pandas(split_details=True)
+# cantSolve is the per-datapoint summary; responseCantSolve is each response's marker.
+```
+
+The raw summary may include late responses beyond the frozen evidence, or come from a fixed-response job. The SDK preserves the snapshot and its verdict independently.

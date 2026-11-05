@@ -188,7 +188,11 @@ New adaptive compare and single-select classification exports use the same `adap
 
 Outcome IDs are identities, not category values or asset names. Resolve them only with immutable definitions for the same rapid. Per-rapid categories can differ; mutable job-level options and aggregate dictionary order cannot resolve `c0`, `c1`, … correctly. Keep unknown IDs unchanged until the matching definitions are available. BothGood and BothBad are separate substantive outcomes, never half a vote for each asset. Can't solve is excluded from leading sets.
 
-An individual response's `cantSolve` is a boolean marker, distinct from the snapshot's `cantSolve` tally. Compare CS has `winners: []` and `cantSolve: true`; classification CS has `cantSolve: true` with its category omitted or empty. Missing markers default to false in typed response decoding. Empty answers alone never imply CS; ordinary compare empty winners represent BothBad only when enabled.
+An individual response's `cantSolve` is a boolean marker, distinct from both result-level and snapshot tallies. Compare CS has `winners: []` and `cantSolve: true`; classification CS has `cantSolve: true` with its category omitted or empty. Missing markers default to false in typed response decoding. Empty answers alone never imply CS; ordinary compare empty winners represent BothBad only when enabled.
+
+An optional result-level `cantSolve: {count, userScoreSum}` summarizes actual exported CS responses, including non-adaptive and late responses. It can differ from the frozen `adaptiveStopping.cantSolve` tally; the SDK preserves both and does not revise the snapshot's verdict. Exports omit the raw summary when no CS responses exist; the SDK never infers it from empty selections.
+
+`to_pandas()` retains the raw summary as the `cantSolve` dictionary column. With `split_details=True`, per-response boolean markers use `responseCantSolve`, so they cannot overwrite that summary. These are DataFrame names only; raw JSON keeps `detailedResults[].cantSolve`. The per-datapoint summary repeats on option/detail rows; count it once per datapoint rather than summing repeated rows.
 
 The model weights responses by the user score captured at response time. Raw counts and weighted shares describe different quantities; `share.estimate` is not the raw count ratio. These confidence bounds are heuristic for weighted responses; `minConfidence=0.9` is not a proven 90% coverage guarantee.
 
