@@ -343,7 +343,7 @@ def test_job_definition_reads_config_objects():
     assert jd.responses_per_datapoint == QuorumStopping(threshold=3, max_responses=5)
 
 
-def test_fixed_replacement_does_not_decode_obsolete_adaptive_fields():
+def test_fixed_replacement_does_not_decode_obsolete_adaptive_fields(monkeypatch):
     jd, service = _compare_revision(
         {
             "_t": "AdaptiveStoppingReferee",
@@ -355,11 +355,18 @@ def test_fixed_replacement_does_not_decode_obsolete_adaptive_fields():
         }
     )
 
+    decode = MagicMock(
+        side_effect=AssertionError("Saved adaptive decoder must not run")
+    )
+    monkeypatch.setattr(
+        "rapidata.rapidata_client.job.rapidata_job_definition._get_responses", decode
+    )
     jd.responses_per_datapoint = 12
 
     assert jd.responses_per_datapoint == 12
     jd.save()
     assert _sent_referee(service) == {"_t": "NaiveReferee", "totalVotes": 12}
+    decode.assert_not_called()
 
 
 def test_instruction_edit_preserves_every_resolved_adaptive_setting():
