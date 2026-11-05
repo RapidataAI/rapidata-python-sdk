@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.04.1414-f4e9e6d"
+    "version": "2026.11.05.1709-7244247"
   },
   "servers": [
     {
@@ -9073,6 +9073,7 @@
           "Client"
         ],
         "summary": "Creates a new client for the current customer.",
+        "description": "The client never holds more than the calling token; asking for more is refused with 403 insufficient_scope.",
         "requestBody": {
           "description": "The client creation payload.",
           "content": {
@@ -50797,6 +50798,11 @@
             "type": "string",
             "description": "The routing that owns the work; its completion moves the campaign to analysis.",
             "nullable": true
+          },
+          "experimentId": {
+            "type": "string",
+            "description": "The A/B experiment that splits the campaign's sessions into control and treatment.",
+            "nullable": true
           }
         }
       },
@@ -55994,6 +56000,18 @@
             "type": "string",
             "description": "The organization to authorize the client for. Defaults to the organization of the calling token.",
             "nullable": true
+          },
+          "scopes": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The scopes to give the client, each held by the calling token. Defaults to everything the calling token holds."
           }
         }
       },
@@ -65938,7 +65956,8 @@
           "Scrub",
           "Ranking",
           "GroupedRanking",
-          "Evaluation"
+          "Evaluation",
+          "Open"
         ]
       },
       "EloConfig": {
@@ -67246,6 +67265,96 @@
             "OpenAssetInput": "#/components/schemas/IOpenInputOpenAssetInput",
             "OpenOptionsInput": "#/components/schemas/IOpenInputOpenOptionsInput",
             "OpenTextInput": "#/components/schemas/IOpenInputOpenTextInput"
+          }
+        }
+      },
+      "IOpenInputBinding": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOpenInputBindingAssetBinding"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputBindingOptionsBinding"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputBindingTextBinding"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "Asset": "#/components/schemas/IOpenInputBindingAssetBinding",
+            "Options": "#/components/schemas/IOpenInputBindingOptionsBinding",
+            "Text": "#/components/schemas/IOpenInputBindingTextBinding"
+          }
+        }
+      },
+      "IOpenInputBindingAssetBinding": {
+        "required": [
+          "segment",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Asset"
+            ],
+            "type": "string"
+          },
+          "segment": {
+            "type": "string"
+          }
+        }
+      },
+      "IOpenInputBindingOptionsBinding": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Options"
+            ],
+            "type": "string"
+          },
+          "literal": {},
+          "segment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IOpenInputBindingTextBinding": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Text"
+            ],
+            "type": "string"
+          },
+          "literal": {
+            "type": "string",
+            "nullable": true
+          },
+          "segment": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SegmentTextLanguage"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -68763,6 +68872,9 @@
             "$ref": "#/components/schemas/IRapidSpecNamedEntityRapidSpec"
           },
           {
+            "$ref": "#/components/schemas/IRapidSpecOpenRapidSpec"
+          },
+          {
             "$ref": "#/components/schemas/IRapidSpecPolygonRapidSpec"
           },
           {
@@ -68782,6 +68894,7 @@
             "Line": "#/components/schemas/IRapidSpecLineRapidSpec",
             "Locate": "#/components/schemas/IRapidSpecLocateRapidSpec",
             "NamedEntity": "#/components/schemas/IRapidSpecNamedEntityRapidSpec",
+            "Open": "#/components/schemas/IRapidSpecOpenRapidSpec",
             "Polygon": "#/components/schemas/IRapidSpecPolygonRapidSpec",
             "Scrub": "#/components/schemas/IRapidSpecScrubRapidSpec",
             "Transcription": "#/components/schemas/IRapidSpecTranscriptionRapidSpec"
@@ -69069,6 +69182,30 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidSpecOpenRapidSpec": {
+        "required": [
+          "bundleFileName",
+          "inputs",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Open"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IOpenInputBinding"
             }
           }
         }
@@ -75461,7 +75598,6 @@
       "IWorkflowConfigSimpleWorkflowConfig": {
         "required": [
           "referee",
-          "blueprint",
           "_t"
         ],
         "properties": {
@@ -75475,7 +75611,13 @@
             "$ref": "#/components/schemas/IRefereeConfig"
           },
           "blueprint": {
-            "$ref": "#/components/schemas/IRapidBlueprint"
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IRapidBlueprint"
+              }
+            ],
+            "nullable": true
           },
           "batchSize": {
             "type": "integer",

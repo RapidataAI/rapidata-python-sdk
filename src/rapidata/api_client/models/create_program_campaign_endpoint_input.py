@@ -34,7 +34,8 @@ class CreateProgramCampaignEndpointInput(LazyValidatedModel):
     max_rapids: StrictInt = Field(description="The session ends after this many counted responses.", alias="maxRapids")
     max_duration_seconds: StrictInt = Field(description="The session ends after this many seconds.", alias="maxDurationSeconds")
     routing_id: Optional[StrictStr] = Field(default=None, description="The routing that owns the work; its completion moves the campaign to analysis.", alias="routingId")
-    __properties: ClassVar[List[str]] = ["name", "priority", "rootNodeId", "nodes", "maxRapids", "maxDurationSeconds", "routingId"]
+    experiment_id: Optional[StrictStr] = Field(default=None, description="The A/B experiment that splits the campaign's sessions into control and treatment.", alias="experimentId")
+    __properties: ClassVar[List[str]] = ["name", "priority", "rootNodeId", "nodes", "maxRapids", "maxDurationSeconds", "routingId", "experimentId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -83,6 +84,11 @@ class CreateProgramCampaignEndpointInput(LazyValidatedModel):
         if self.routing_id is None and "routing_id" in self.model_fields_set:
             _dict['routingId'] = None
 
+        # set to None if experiment_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.experiment_id is None and "experiment_id" in self.model_fields_set:
+            _dict['experimentId'] = None
+
         return _dict
 
     @classmethod
@@ -106,7 +112,8 @@ class CreateProgramCampaignEndpointInput(LazyValidatedModel):
             else None,
             "maxRapids": obj.get("maxRapids"),
             "maxDurationSeconds": obj.get("maxDurationSeconds"),
-            "routingId": obj.get("routingId")
+            "routingId": obj.get("routingId"),
+            "experimentId": obj.get("experimentId")
         }
         try:
             _obj = cls.model_validate(_data)

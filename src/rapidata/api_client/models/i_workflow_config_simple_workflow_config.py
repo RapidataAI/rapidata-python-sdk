@@ -31,7 +31,7 @@ class IWorkflowConfigSimpleWorkflowConfig(LazyValidatedModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     referee: IRefereeConfig
-    blueprint: IRapidBlueprint
+    blueprint: Optional[IRapidBlueprint] = None
     batch_size: Optional[StrictInt] = Field(default=None, alias="batchSize")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "batchSize", "featureFlags"]
@@ -91,6 +91,11 @@ class IWorkflowConfigSimpleWorkflowConfig(LazyValidatedModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if blueprint (nullable) is None
+        # and model_fields_set contains the field
+        if self.blueprint is None and "blueprint" in self.model_fields_set:
+            _dict['blueprint'] = None
+
         # set to None if batch_size (nullable) is None
         # and model_fields_set contains the field
         if self.batch_size is None and "batch_size" in self.model_fields_set:

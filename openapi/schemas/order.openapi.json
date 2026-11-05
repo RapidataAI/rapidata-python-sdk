@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.11.04.1414-f4e9e6d"
+    "version": "2026.11.05.1709-7244247"
   },
   "servers": [
     {
@@ -7360,7 +7360,8 @@
           "Scrub",
           "Ranking",
           "GroupedRanking",
-          "Evaluation"
+          "Evaluation",
+          "Open"
         ]
       },
       "DeviceType": {
@@ -9239,6 +9240,96 @@
           }
         }
       },
+      "IOpenInputBinding": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOpenInputBindingAssetBinding"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputBindingOptionsBinding"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputBindingTextBinding"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "Asset": "#/components/schemas/IOpenInputBindingAssetBinding",
+            "Options": "#/components/schemas/IOpenInputBindingOptionsBinding",
+            "Text": "#/components/schemas/IOpenInputBindingTextBinding"
+          }
+        }
+      },
+      "IOpenInputBindingAssetBinding": {
+        "required": [
+          "segment",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Asset"
+            ],
+            "type": "string"
+          },
+          "segment": {
+            "type": "string"
+          }
+        }
+      },
+      "IOpenInputBindingOptionsBinding": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Options"
+            ],
+            "type": "string"
+          },
+          "literal": { },
+          "segment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IOpenInputBindingTextBinding": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Text"
+            ],
+            "type": "string"
+          },
+          "literal": {
+            "type": "string",
+            "nullable": true
+          },
+          "segment": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SegmentTextLanguage"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
       "IOpenInputOpenAssetInput": {
         "required": [
           "asset",
@@ -10753,6 +10844,9 @@
             "$ref": "#/components/schemas/IRapidSpecNamedEntityRapidSpec"
           },
           {
+            "$ref": "#/components/schemas/IRapidSpecOpenRapidSpec"
+          },
+          {
             "$ref": "#/components/schemas/IRapidSpecPolygonRapidSpec"
           },
           {
@@ -10772,6 +10866,7 @@
             "Line": "#/components/schemas/IRapidSpecLineRapidSpec",
             "Locate": "#/components/schemas/IRapidSpecLocateRapidSpec",
             "NamedEntity": "#/components/schemas/IRapidSpecNamedEntityRapidSpec",
+            "Open": "#/components/schemas/IRapidSpecOpenRapidSpec",
             "Polygon": "#/components/schemas/IRapidSpecPolygonRapidSpec",
             "Scrub": "#/components/schemas/IRapidSpecScrubRapidSpec",
             "Transcription": "#/components/schemas/IRapidSpecTranscriptionRapidSpec"
@@ -11059,6 +11154,30 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidSpecOpenRapidSpec": {
+        "required": [
+          "bundleFileName",
+          "inputs",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Open"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IOpenInputBinding"
             }
           }
         }

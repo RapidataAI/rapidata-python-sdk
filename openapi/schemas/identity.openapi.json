@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.11.04.1414-f4e9e6d"
+    "version": "2026.11.05.1709-7244247"
   },
   "servers": [
     {
@@ -671,6 +671,7 @@
           "Client"
         ],
         "summary": "Creates a new client for the current customer.",
+        "description": "The client never holds more than the calling token; asking for more is refused with 403 insufficient_scope.",
         "requestBody": {
           "description": "The client creation payload.",
           "content": {
@@ -3885,6 +3886,18 @@
             "type": "string",
             "description": "The organization to authorize the client for. Defaults to the organization of the calling token.",
             "nullable": true
+          },
+          "scopes": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The scopes to give the client, each held by the calling token. Defaults to everything the calling token holds."
           }
         }
       },

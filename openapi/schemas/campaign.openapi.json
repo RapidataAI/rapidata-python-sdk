@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.11.04.1414-f4e9e6d"
+    "version": "2026.11.05.1709-7244247"
   },
   "servers": [
     {
@@ -2622,6 +2622,11 @@
           "routingId": {
             "type": "string",
             "description": "The routing that owns the work; its completion moves the campaign to analysis.",
+            "nullable": true
+          },
+          "experimentId": {
+            "type": "string",
+            "description": "The A/B experiment that splits the campaign's sessions into control and treatment.",
             "nullable": true
           }
         }

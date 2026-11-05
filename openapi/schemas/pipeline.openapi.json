@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Pipeline API",
     "description": "The API for the Rapidata Pipeline service",
-    "version": "2026.11.04.1414-f4e9e6d"
+    "version": "2026.11.05.1709-7244247"
   },
   "servers": [
     {
@@ -1528,7 +1528,6 @@
       "IWorkflowConfigSimpleWorkflowConfig": {
         "required": [
           "referee",
-          "blueprint",
           "_t"
         ],
         "properties": {
@@ -1542,7 +1541,13 @@
             "$ref": "#/components/schemas/IRefereeConfig"
           },
           "blueprint": {
-            "$ref": "#/components/schemas/IRapidBlueprint"
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IRapidBlueprint"
+              }
+            ],
+            "nullable": true
           },
           "batchSize": {
             "type": "integer",
