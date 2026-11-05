@@ -32,8 +32,6 @@ _INSTRUCTION_FIELD_BY_RAPID = {
     "Scrub": "target",
 }
 
-_DEFAULT_ADAPTIVE_MAX_VOTES = 100
-
 
 def _as_dict(model: IOrderWorkflowInput | IReferee) -> dict[str, Any]:
     return cast(dict[str, Any], model.to_dict())
@@ -111,11 +109,7 @@ def _get_responses(referee: IReferee) -> int | AdaptiveStopping | QuorumStopping
             threshold=data["threshold"], max_responses=data["maxVotes"]
         )
     if kind == "AdaptiveStoppingReferee":
-        return AdaptiveStopping(
-            min_confidence=data["minConfidence"],
-            ambiguity_range=data["ambiguityRange"],
-            max_responses=data.get("maxVotes", _DEFAULT_ADAPTIVE_MAX_VOTES),
-        )
+        return AdaptiveStopping._from_dict(data)
     raise ValueError(f"A '{kind}' referee has no responses per datapoint.")
 
 
@@ -146,8 +140,10 @@ def _with_responses(
 def _check_adaptive_stopping(workflow: IOrderWorkflowInput, referee: IReferee) -> None:
     if _as_dict(referee).get("_t") != "AdaptiveStoppingReferee":
         return
-    if _workflow_kind(_as_dict(workflow)) != "Compare":
-        raise ValueError("AdaptiveStopping is only supported for compare jobs.")
+    if _workflow_kind(_as_dict(workflow)) not in ("Compare", "Classify"):
+        raise ValueError(
+            "AdaptiveStopping supports compare and single-select classification jobs."
+        )
 
 
 def _split_settings(
@@ -179,6 +175,19 @@ def _full_body(
         rapid_flags = list(snapshot.feature_flags)
         campaign_flags = list(snapshot.campaign_feature_flags)
     _check_adaptive_stopping(workflow, referee)
+    if _as_dict(referee).get("_t") == "AdaptiveStoppingReferee":
+        from rapidata.rapidata_client.referee.stopping import AdaptiveStopping
+
+        config = AdaptiveStopping._from_dict(_as_dict(referee))
+        workflow_data = _as_dict(workflow)
+        if _workflow_kind(workflow_data) == "Compare":
+            config._validate_outcome_count(
+                4 if any(flag.key == "compare_unsure" for flag in rapid_flags) else 2
+            )
+        else:
+            categories = (workflow_data["rapid"].get("categories") or {}).get("literal")
+            if categories is not None:
+                config._validate_outcome_count(len(categories))
 
     # Every field is passed explicitly: the server inherits any field left out
     # from the latest revision, and a None validationSetId must go out as null.

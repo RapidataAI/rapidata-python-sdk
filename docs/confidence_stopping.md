@@ -6,7 +6,7 @@ You choose the stopping rule with `responses_per_datapoint`:
 
 | Value | Rule | Job types |
 |-------|------|-----------|
-| `AdaptiveStopping()` | Stops each pair once its verdict is statistically settled. **Default for compare jobs.** | Compare |
+| `AdaptiveStopping()` | Stops each pair once its verdict is statistically settled. **Default for compare jobs.** | Compare, single-select classification |
 | `QuorumStopping(threshold, max_responses)` | Stops once `threshold` responses agree. | Classification, Compare |
 | an `int` | Collects exactly that many responses. Default (`10`) for every other job type. | All |
 
@@ -37,6 +37,22 @@ job_definition = client.job.create_compare_job_definition(
 ```
 
 1. The same as leaving the argument out.
+
+The public configuration is `AdaptiveStopping(min_confidence=0.9, ambiguity_threshold=0.64, max_responses=100, max_outcome_count=1, unsolvable_threshold=0.5)`. Thresholds must be between 0 and 1, and counts must be positive integers. `max_outcome_count` must also be smaller than the number of substantive outcomes; a larger leading set expresses alternatives in a single-select task. Setting the can't-solve threshold does not enable its response by itself.
+
+Single-select classification opts in explicitly; its default remains a fixed 10:
+
+```python
+job_definition = client.job.create_classification_job_definition(
+    name="Animal category",
+    instruction="Which animal is shown?",
+    answer_options=["Cat", "Dog", "Bird", "Horse", "Fish", "Other"],
+    datapoints=["animal.jpg"],
+    responses_per_datapoint=AdaptiveStopping(max_outcome_count=3),
+)
+```
+
+This permits a leading set of up to three of six alternatives. It does not make the task multi-select. The set limit must be smaller than every datapoint's substantive category count; can't solve is excluded.
 
 The resolved configuration is included in each new snapshot's `parameters`. Normalized ambiguity is \(K/(K-1)(1-\sum_i p_i^2)\), with \(K\) configured substantive outcomes excluding can't solve and \(p_i\) conditional weighted shares. Its default threshold `0.64` preserves the binary raw threshold `0.32` / range `0.6`.
 
@@ -124,7 +140,7 @@ print(results)
 
 Quorum Stopping is a good choice when:
 
-- **Classification**: Adaptive stopping is compare-only.
+- **Classification**: `AdaptiveStopping()` is available for single-select tasks; a fixed 10 remains the default.
 - **Simplicity**: You want a straightforward stopping rule based on raw vote counts rather than statistical confidence.
 
 ---

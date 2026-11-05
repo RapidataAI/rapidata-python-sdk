@@ -156,6 +156,10 @@ jq '
       else . end
     )
   | .components.schemas |= with_entries(
+      if .key == "IReferee" or .key == "IRefereeConfig" or .key == "IRefereeConfigModel"
+      then .value["x-rapidata-adaptive-stopping-union"] = true
+      else . end
+      |
       if (.value.properties | has("ambiguityThreshold"))
          and ((.value.properties._t.enum // []) | any(
            . == "AdaptiveStoppingReferee"

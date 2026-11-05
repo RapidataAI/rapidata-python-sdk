@@ -74,6 +74,22 @@ for datapoint in results["results"]:
         print(datapoint.get("verdict"), datapoint.get("responses"))
 ```
 
+## Single-select classification with adaptive leading sets
+
+```python
+from rapidata import AdaptiveStopping
+
+job_def = client.job.create_classification_job_definition(
+    name="Animal category",
+    instruction="Which animal is shown?",
+    answer_options=["Cat", "Dog", "Bird", "Horse", "Fish", "Other"],
+    datapoints=["animal.jpg"],
+    responses_per_datapoint=AdaptiveStopping(max_outcome_count=3),
+)
+```
+
+Classification defaults to a fixed 10 when the argument is omitted. This config permits up to three leading alternatives out of six, not several independently true labels. An integer still selects a fixed count; explicit can't-solve enablement is separate from `unsolvable_threshold`.
+
 ## Classification with Quorum Stopping
 
 ```python

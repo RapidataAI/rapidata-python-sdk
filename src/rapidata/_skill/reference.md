@@ -12,7 +12,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `instruction` | str | Question shown to labelers: one criterion, under 80 characters (see **Task design rules** in the main guide). Over 250 characters raises `ValueError` |
 | `datapoints` | list | Data to label (URLs or local paths) |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
-| `responses_per_datapoint` | `int \| AdaptiveStopping \| QuorumStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()`; classification default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` is compare-only. See **Early Stopping** |
+| `responses_per_datapoint` | `int \| AdaptiveStopping \| QuorumStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()`; classification default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` supports compare and single-select classification. See **Early Stopping** |
 | `contexts` | list[str] \| None | Text context per datapoint: one sentence under 150 characters with only what the instruction asks about (see **Task design rules** in the main guide). Max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually |
 | `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
 | `confidence_threshold` | float \| None | Confidence-based early stopping threshold (0-1) for classification; needs an `int` `responses_per_datapoint` (10 when omitted). **Deprecated on compare jobs** (`DeprecationWarning`) — use `AdaptiveStopping` |
@@ -436,7 +436,7 @@ results.to_json("results.json")           # writes the file (default "./results.
 
 In `adaptiveStopping.outcomes`, each entry has `outcomeId`, integer `count`, `userScoreSum`, and weighted `share` (`estimate`, `lower`, `upper`). `estimate` can be `null`; preserve it. `cantSolve` has the same tally/share fields without an outcome ID, and can be absent or `null`. Raw counts and weighted shares are not interchangeable. BothGood/BothBad remain distinct categories; can't solve is an explicit exclusive response, not a skip, empty selection, Both, or Neither.
 
-`ambiguity` also has nullable `estimate` and `lower`/`upper` bounds. `parameters` contains resolved `maxVotes`, `minConfidence`, `ambiguityThreshold`, nullable `unsolvableThreshold`, and `maxOutcomeCount`. The model is currently `score-weighted-categorical-v1`; weighted confidence is heuristic, not a proven 90% coverage guarantee. A backend can't-solve option does not imply its annotator UI has shipped.
+`ambiguity` also has nullable `estimate` and required finite numeric `lower`/`upper` bounds. Null estimate keys are retained. `parameters` contains resolved `maxVotes`, `minConfidence`, `ambiguityThreshold`, `unsolvableThreshold` (`null` in a snapshot with CS disabled), and `maxOutcomeCount`. The workflow referee config always stores its resolved threshold, default `0.5`; disabled `cantSolve` is omitted, while explicit `null` is accepted defensively. The model is currently `score-weighted-categorical-v1`; weighted confidence is heuristic, not a proven 90% coverage guarantee. A backend can't-solve option does not imply its annotator UI has shipped.
 
 Flow items have a different result shape — see the Flows section.
 
@@ -446,7 +446,7 @@ The stopping rule is the value of `responses_per_datapoint`:
 
 | Value | Rule | Job types |
 |-------|------|-----------|
-| `AdaptiveStopping()` | Stop each pair at its first settled verdict. **Compare default** | Compare |
+| `AdaptiveStopping()` | Stop each pair at its first settled verdict. **Compare default** | Compare, single-select classification |
 | `QuorumStopping(threshold, max_responses)` | Stop once `threshold` responses agree | Classification, Compare |
 | `int` | Exactly that many responses. Default `10` for all other job types | All |
 
@@ -462,6 +462,8 @@ job_def = client.job.create_compare_job_definition(
     responses_per_datapoint=AdaptiveStopping(),   # same as omitting it
 )
 ```
+
+`AdaptiveStopping(min_confidence=0.9, ambiguity_threshold=0.64, max_responses=100, max_outcome_count=1, unsolvable_threshold=0.5)` is a frozen config. Thresholds must be in (0, 1), counts must be positive integers, and the allowed leading-set size must be smaller than the number of substantive outcomes. The unmerged `ambiguity_range` keyword is replaced; legacy wire ranges remain readable with normalized threshold \(1-r^2\).
 
 `AdaptiveStopping()` weights each response by the labeler's user score at response time. New results use `adaptiveStopping.verdict` and stable `leadingOutcomeIds`, with the full snapshot described in **Results Format**. `Winner` names one leading outcome; `TopSet` names leading alternatives, not several independently true single-select labels. `Open` and `Undecided` remain explicit strings. Weighted confidence is heuristic; binary response-count estimates and mathematical coverage claims do not generalize to this model.
 
@@ -492,7 +494,7 @@ A datapoint stops when:
 
 ### `confidence_threshold` and deprecated `quorum_threshold`
 
-`quorum_threshold` is deprecated everywhere and `confidence_threshold` is deprecated on compare jobs; both emit a `DeprecationWarning` there. `confidence_threshold` on classification is supported without a warning (no multi-class adaptive rule exists yet). They take an `int` `responses_per_datapoint` as the cap (10 when omitted, also on compare jobs), cannot be set together, and raise `ValueError` combined with `AdaptiveStopping` or `QuorumStopping`. Replace `quorum_threshold=7, responses_per_datapoint=10` with `responses_per_datapoint=QuorumStopping(7, 10)`, and `confidence_threshold` on compare jobs with `AdaptiveStopping()`.
+`quorum_threshold` is deprecated everywhere and `confidence_threshold` is deprecated on compare jobs; both emit a `DeprecationWarning` there. `confidence_threshold` on classification is supported without a warning (retained for compatibility). They take an `int` `responses_per_datapoint` as the cap (10 when omitted, also on compare jobs), cannot be set together, and raise `ValueError` combined with `AdaptiveStopping` or `QuorumStopping`. Replace `quorum_threshold=7, responses_per_datapoint=10` with `responses_per_datapoint=QuorumStopping(7, 10)`, and `confidence_threshold` on compare jobs with `AdaptiveStopping()`.
 
 ### Reading and editing the rule
 

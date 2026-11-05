@@ -22,3 +22,11 @@ The current documentation uses audiences, job definitions, and jobs.
 - `quorum_threshold` still works with an `int` `responses_per_datapoint` but emits a `DeprecationWarning`. `confidence_threshold` does the same on compare jobs; on classification it stays supported without a warning.
 - `job_definition.responses_per_datapoint` now returns `AdaptiveStopping` or `QuorumStopping` for definitions that use them. Assigning an `int` sets a fixed number of responses.
 - New adaptive results retain `adaptiveStopping` and expose canonical `verdict`, `responses`, and `leadingOutcomeIds` per datapoint. Older `stoppingState` exports keep their legacy decoding — see [Adaptive Stopping](confidence_stopping.md#analyzing-adaptive-stopping-results).
+
+## Categorical adaptive stopping
+
+`ambiguity_threshold=0.64` replaces the unmerged `ambiguity_range=0.6` argument; the old keyword is not a public alias. For an earlier binary range \(r\), the equivalent normalized threshold is \(1-r^2\). Saved legacy wire `ambiguityRange` is accepted on reads and converted; new writes use `ambiguityThreshold`.
+
+`AdaptiveStopping` also exposes `max_outcome_count=1` and `unsolvable_threshold=0.5`. The resolved workflow config always contains the latter, while snapshot `parameters.unsolvableThreshold` is `null` if can't solve is disabled. Blueprint enablement and the annotator response are separate from the threshold.
+
+Single-select classification now accepts explicit `AdaptiveStopping()` while retaining the fixed-10 default. Leading-set limits are checked against each datapoint's category count. Existing integer configurations remain fixed counts.

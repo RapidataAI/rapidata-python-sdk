@@ -135,6 +135,27 @@ class RapidataJobManager:
         if settings is None:
             settings = []
 
+        if isinstance(responses_per_datapoint, AdaptiveStopping):
+            if workflow.task_type == "Compare":
+                outcome_count = (
+                    4
+                    if any(
+                        s.target == "rapids" and s.key == "compare_unsure"
+                        for s in settings
+                    )
+                    else 2
+                )
+                responses_per_datapoint._validate_outcome_count(outcome_count)
+            elif workflow.task_type == "Classification":
+                for datapoint in datapoints:
+                    responses_per_datapoint._validate_outcome_count(
+                        len(datapoint.answer_options or [])
+                    )
+            else:
+                raise ValueError(
+                    "AdaptiveStopping supports compare and single-select classification jobs."
+                )
+
         if failure_tolerance is not None and not 0.0 <= failure_tolerance <= 1.0:
             raise ValueError("failure_tolerance must be between 0.0 and 1.0")
 
@@ -198,7 +219,7 @@ class RapidataJobManager:
         answer_options: list[str] | list[list[str]],
         datapoints: list[str],
         data_type: Literal["media", "text"] = "media",
-        responses_per_datapoint: int | QuorumStopping = 10,
+        responses_per_datapoint: int | AdaptiveStopping | QuorumStopping = 10,
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         confidence_threshold: float | None = None,
@@ -222,8 +243,8 @@ class RapidataJobManager:
             datapoints (list[str]): The list of datapoints for the classification - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
-            responses_per_datapoint (int | QuorumStopping, optional): How many responses to collect per datapoint. Defaults to 10.\n
-                An int collects exactly that many. ``QuorumStopping(threshold, max_responses)`` stops a datapoint once ``threshold`` responses agree.
+            responses_per_datapoint (int | AdaptiveStopping | QuorumStopping, optional): How many responses to collect per datapoint. Defaults to 10.\n
+                An int collects exactly that many. ``AdaptiveStopping()`` uses score-weighted categorical stopping; ``QuorumStopping(threshold, max_responses)`` stops once ``threshold`` responses agree.
             contexts (list[str], optional): The list of contexts for the classification. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
@@ -241,11 +262,6 @@ class RapidataJobManager:
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
         with tracer.start_as_current_span("JobManager.create_classification_job"):
-            if isinstance(responses_per_datapoint, AdaptiveStopping):
-                raise ValueError(
-                    "AdaptiveStopping is only supported for compare jobs. Use a fixed int "
-                    "or QuorumStopping for classification."
-                )
             if not isinstance(datapoints, list) or not all(
                 isinstance(datapoint, str) for datapoint in datapoints
             ):

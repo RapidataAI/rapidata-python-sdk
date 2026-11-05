@@ -16,6 +16,8 @@ from rapidata.api_client.models.get_job_revision_endpoint_output import (
     GetJobRevisionEndpointOutput,
 )
 from rapidata.api_client.models.i_referee import IReferee
+from rapidata.api_client.models.i_referee_config import IRefereeConfig
+from rapidata.api_client.models.i_referee_config_model import IRefereeConfigModel
 from rapidata.rapidata_client.job import rapidata_job_manager
 from rapidata.rapidata_client.job.rapidata_job_definition import (
     RapidataJobDefinition,
@@ -28,7 +30,9 @@ ADAPTIVE_WIRE = {
     "_t": "AdaptiveStoppingReferee",
     "maxVotes": 100,
     "minConfidence": 0.9,
-    "ambiguityRange": 0.6,
+    "ambiguityThreshold": 0.64,
+    "unsolvableThreshold": 0.5,
+    "maxOutcomeCount": 1,
 }
 
 
@@ -83,9 +87,9 @@ def _classify(manager: RapidataJobManager, **kwargs) -> dict:
     [
         {"min_confidence": 0},
         {"min_confidence": 1},
-        {"ambiguity_range": 0},
-        {"ambiguity_range": 1},
-        {"ambiguity_range": 1.5},
+        {"ambiguity_threshold": 0},
+        {"ambiguity_threshold": 1},
+        {"ambiguity_threshold": 1.5},
         {"max_responses": 0},
         {"max_responses": 10.0},
     ],
@@ -113,13 +117,15 @@ def test_compare_int_stays_a_fixed_number_of_responses(manager):
 
 def test_compare_custom_adaptive_and_quorum(manager):
     custom = AdaptiveStopping(
-        min_confidence=0.95, ambiguity_range=0.5, max_responses=50
+        min_confidence=0.95, ambiguity_threshold=0.75, max_responses=50
     )
     assert _compare(manager, responses_per_datapoint=custom) == {
         "_t": "AdaptiveStoppingReferee",
         "maxVotes": 50,
         "minConfidence": 0.95,
-        "ambiguityRange": 0.5,
+        "ambiguityThreshold": 0.75,
+        "unsolvableThreshold": 0.5,
+        "maxOutcomeCount": 1,
     }
     assert _compare(manager, responses_per_datapoint=QuorumStopping(3, 5)) == {
         "_t": "QuorumReferee",
@@ -169,9 +175,62 @@ def test_quorum_threshold_is_deprecated_on_classification(manager):
         _classify(manager, quorum_threshold=3)
 
 
-def test_classification_rejects_adaptive_stopping(manager):
-    with pytest.raises(ValueError, match="only supported for compare"):
-        _classify(manager, responses_per_datapoint=AdaptiveStopping())
+def test_classification_accepts_explicit_adaptive_stopping(manager):
+    assert (
+        _classify(manager, responses_per_datapoint=AdaptiveStopping()) == ADAPTIVE_WIRE
+    )
+
+
+def test_binary_compare_rejects_leading_sets_of_two(manager):
+    with pytest.raises(ValueError, match="max_outcome_count"):
+        _compare(manager, responses_per_datapoint=AdaptiveStopping(max_outcome_count=2))
+
+
+def test_both_neither_compare_allows_three_of_four_outcomes(manager):
+    assert _compare(
+        manager,
+        responses_per_datapoint=AdaptiveStopping(max_outcome_count=3),
+        settings=[AllowNeitherBothSetting()],
+    ) == {**ADAPTIVE_WIRE, "maxOutcomeCount": 3}
+
+
+def test_campaign_flag_cannot_expand_the_compare_outcome_count(manager):
+    with pytest.raises(ValueError, match="max_outcome_count"):
+        _compare(
+            manager,
+            responses_per_datapoint=AdaptiveStopping(max_outcome_count=3),
+            settings=[CustomSetting("compare_unsure", "5000", target="campaign")],
+        )
+
+
+def test_classify_accepts_three_of_six_but_rejects_a_set_covering_every_outcome(
+    manager,
+):
+    manager.create_classification_job_definition(
+        name="Job",
+        instruction="Which?",
+        answer_options=["a", "b", "c", "d", "e", "f"],
+        datapoints=["text"],
+        data_type="text",
+        responses_per_datapoint=AdaptiveStopping(max_outcome_count=3),
+    )
+    assert _wire(_FakeMachine.referee) == {**ADAPTIVE_WIRE, "maxOutcomeCount": 3}
+    with pytest.raises(ValueError, match="max_outcome_count"):
+        _classify(
+            manager, responses_per_datapoint=AdaptiveStopping(max_outcome_count=2)
+        )
+
+
+def test_classify_validates_the_set_limit_for_every_datapoint(manager):
+    with pytest.raises(ValueError, match="max_outcome_count"):
+        manager.create_classification_job_definition(
+            name="Job",
+            instruction="Which?",
+            answer_options=[["a", "b", "c", "d", "e", "f"], ["yes", "no"]],
+            datapoints=["first", "second"],
+            data_type="text",
+            responses_per_datapoint=AdaptiveStopping(max_outcome_count=3),
+        )
 
 
 def test_classification_accepts_quorum_stopping(manager):
@@ -182,11 +241,43 @@ def test_classification_accepts_quorum_stopping(manager):
 
 def test_adaptive_referee_round_trips_through_the_generated_union():
     model = IReferee.from_dict(ADAPTIVE_WIRE)
-    assert type(model.actual_instance).__name__ == "IRefereeAdaptiveStoppingReferee"
+    assert isinstance(model, IReferee)
     assert model.to_dict() == ADAPTIVE_WIRE
 
 
-def _compare_revision(referee: dict, flags: list | None = None):
+@pytest.mark.parametrize("union", [IRefereeConfig, IRefereeConfigModel])
+def test_workflow_config_unions_preserve_discriminator_and_all_settings(union):
+    config = {
+        "_t": "AdaptiveStoppingRefereeConfig",
+        "maxVotes": 47,
+        "minConfidence": 0.95,
+        "ambiguityThreshold": 0.73,
+        "unsolvableThreshold": 0.6,
+        "maxOutcomeCount": 3,
+    }
+    assert union.from_dict(config).to_dict() == config
+
+
+@pytest.mark.parametrize("union", [IReferee, IRefereeConfig, IRefereeConfigModel])
+def test_legacy_wire_reads_write_only_canonical_fields(union):
+    discriminator = (
+        "AdaptiveStoppingReferee"
+        if union is IReferee
+        else "AdaptiveStoppingRefereeConfig"
+    )
+    legacy = {
+        "_t": discriminator,
+        "maxVotes": 100,
+        "minConfidence": 0.9,
+        "ambiguityRange": 0.6,
+    }
+
+    assert union.from_dict(legacy).to_dict() == {**ADAPTIVE_WIRE, "_t": discriminator}
+
+
+def _compare_revision(
+    referee: dict, flags: list | None = None, workflow: dict | None = None
+):
     data = {
         "definitionId": "jd-1",
         "revisionNumber": 3,
@@ -194,7 +285,8 @@ def _compare_revision(referee: dict, flags: list | None = None):
         "pipelineId": "pip-1",
         "datasetId": "ds-1",
         "aggregatorType": None,
-        "workflow": {
+        "workflow": workflow
+        or {
             "_t": "SimpleWorkflow",
             "rapid": {
                 "_t": "Compare",
@@ -260,6 +352,73 @@ def test_fixed_replacement_does_not_decode_obsolete_adaptive_fields():
     assert jd.responses_per_datapoint == 12
     jd.save()
     assert _sent_referee(service) == {"_t": "NaiveReferee", "totalVotes": 12}
+
+
+def test_instruction_edit_preserves_every_resolved_adaptive_setting():
+    wire = {
+        "_t": "AdaptiveStoppingReferee",
+        "maxVotes": 47,
+        "minConfidence": 0.95,
+        "ambiguityThreshold": 0.73,
+        "unsolvableThreshold": 0.6,
+        "maxOutcomeCount": 3,
+    }
+    jd, service = _compare_revision(
+        wire, flags=[{"key": "compare_unsure", "value": "5000"}]
+    )
+
+    assert jd.responses_per_datapoint == AdaptiveStopping(
+        min_confidence=0.95,
+        ambiguity_threshold=0.73,
+        max_responses=47,
+        max_outcome_count=3,
+        unsolvable_threshold=0.6,
+    )
+    jd.instruction = "Which fits the description?"
+    jd.save()
+
+    assert _sent_referee(service) == wire
+
+
+def test_classification_revisions_validate_the_final_category_count():
+    workflow = {
+        "_t": "SimpleWorkflow",
+        "rapid": {
+            "_t": "Classify",
+            "asset": {"segment": "asset"},
+            "title": {"literal": "Which?"},
+            "categories": {
+                "literal": [{"label": str(i), "value": f"value.{i}"} for i in range(6)]
+            },
+        },
+        "featureFlags": [],
+    }
+    wire = {**ADAPTIVE_WIRE, "maxOutcomeCount": 3}
+    jd, service = _compare_revision(wire, workflow=workflow)
+    assert jd.responses_per_datapoint.max_outcome_count == 3
+    jd.instruction = "Which category fits?"
+    jd.save()
+    assert _sent_referee(service) == wire
+
+    jd, service = _compare_revision(wire, workflow=workflow)
+    jd.answer_options = ["yes", "no"]
+    with pytest.raises(ValueError, match="max_outcome_count"):
+        jd.save()
+    service.order.job_api.job_definition_definition_id_revision_post.assert_not_called()
+
+
+def test_removing_both_neither_requires_a_smaller_leading_set():
+    jd, service = _compare_revision(
+        {**ADAPTIVE_WIRE, "maxOutcomeCount": 3},
+        flags=[{"key": "compare_unsure", "value": "5000"}],
+    )
+    jd.settings = []
+    with pytest.raises(ValueError, match="max_outcome_count"):
+        jd.save()
+    service.order.job_api.job_definition_definition_id_revision_post.assert_not_called()
+    jd.responses_per_datapoint = AdaptiveStopping()
+    jd.save()
+    assert _sent_referee(service) == ADAPTIVE_WIRE
 
 
 @pytest.mark.parametrize(

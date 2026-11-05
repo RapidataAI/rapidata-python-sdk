@@ -95,14 +95,14 @@ datapoints=[
 
 | Property | Value |
 |----------|-------|
-| **Type** | `int`, `AdaptiveStopping` (compare only) or `QuorumStopping` (classification and compare) |
+| **Type** | `int`, `AdaptiveStopping` (compare and single-select classification) or `QuorumStopping` (classification and compare) |
 | **Required** | No |
 | **Default** | `AdaptiveStopping()` for compare jobs, `10` otherwise |
 
 How many responses to collect for each datapoint.
 
 - An `int` collects exactly that many. The actual number may slightly exceed it due to concurrent labelers.
-- `AdaptiveStopping()` stops each compare pair once a decision is reached or the response cap is met.
+- `AdaptiveStopping()` stops each supported datapoint once a decision is reached or the response cap is met.
 - `QuorumStopping(threshold, max_responses)` stops once `threshold` responses agree.
 
 **Related:** [Adaptive Stopping](confidence_stopping.md)
@@ -111,7 +111,7 @@ How many responses to collect for each datapoint.
 from rapidata import AdaptiveStopping, QuorumStopping
 
 responses_per_datapoint=15                                          # fixed
-responses_per_datapoint=AdaptiveStopping(ambiguity_range=0.5)      # compare only: narrower ambiguous band (25/75–75/25), more votes
+responses_per_datapoint=AdaptiveStopping(ambiguity_threshold=0.75)  # normalized disagreement threshold
 responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)
 ```
 
