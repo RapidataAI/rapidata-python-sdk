@@ -14,7 +14,19 @@ has not deployed. Production specs cannot generate unreleased models.
    ./openapi/generate-schema.sh --schema-dir /tmp/backend-openapi
    ```
 
-3. Record the backend commit and artifact source in the PR. Review both the
+3. Validate all three adaptive referee unions and both native simple-workflow
+   paths, with the compatibility fallback disabled:
+
+   ```sh
+   uv run python scripts/check_adaptive_stopping_contract.py \
+     openapi/schemas/rapidata.filtered.openapi.json --check-generated
+   ```
+
+   The check requires the canonical variant and all five fields in `IReferee`,
+   `IRefereeConfig`, and `IRefereeConfigModel`. It verifies owning discriminators,
+   resolved defaults, nondefault values, legacy range conversion and canonical-only
+   serialization. Existing adapter-backed tests alone cannot prove the schema is complete.
+4. Record the backend commit and artifact source in the PR. Review both the
    service specs and generated models, then run the repository checks.
 
 The script validates that every required service document is present before
