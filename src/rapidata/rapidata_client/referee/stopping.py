@@ -17,29 +17,18 @@ def _is_number(value: object) -> bool:
 
 @dataclass(frozen=True)
 class AdaptiveStopping:
-    """Stop collecting votes on a compare pair as soon as its outcome is settled.
+    """Stop collecting responses when the configured decision rule is met.
 
-    Each vote is weighted by the voter's quality score at the time it was cast.
-    After every vote, the pair stops once it is confident that one side wins
-    (verdict ``"A"`` or ``"B"``), or that the pair is too close to call
-    (verdict ``"ambiguous"``). A pair that reaches ``max_responses`` first ends
-    as ``"undecided"``. Clear pairs stop after as few as 7 votes; on average a
-    pair needs about 21, and the hardest pairs (split around 35/65) about 31.
-
-    The defaults are calibrated. Change them only if you know why.
+    Responses are weighted by the labeler's user score at response time.
+    Confidence for weighted evidence is heuristic, not a coverage guarantee.
 
     Args:
-        min_confidence (float, optional): The lower bound on the probability that a
-            verdict is correct, between 0 and 1. Defaults to 0.9.
-        ambiguity_range (float, optional): The width of the ambiguous band centred on
-            an even split, between 0 and 1. Defaults to 0.6, the band 20/80 to 80/20.
-            Pairs whose split lies in the band may stop as ambiguous. Lowering it
-            narrows the band, so closer pairs resolve to a winner, at the cost of more
-            votes: 0.5 (25/75 to 75/25) needs about a third more votes on average, 0.3
-            gives 35/65 to 65/35. A winner still beats ambiguous, so a 70/30 pair can
-            return ``"A"`` or ``"B"`` at any range.
-        max_responses (int, optional): A safety cap on votes per pair. Defaults to 100,
-            which the default settings never reach.
+        min_confidence (float, optional): Model confidence threshold in (0, 1).
+            Defaults to 0.9.
+        ambiguity_range (float, optional): Legacy binary ambiguity band width
+            centered on an even split, in (0, 1). Defaults to 0.6.
+        max_responses (int, optional): Maximum responses per datapoint.
+            Defaults to 100.
     """
 
     min_confidence: float = 0.9

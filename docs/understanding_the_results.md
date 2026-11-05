@@ -165,11 +165,43 @@ Here's an example of the results you might receive when running a COMPARE task (
                 - `global`: The global userScore of the labeler, which is a measure of their overall reliability
             - `demographics`: Demographic attributes collected for the labeler, keyed by attribute name (e.g. `age`, `gender`, `occupation`). May be empty if no demographic data was collected for the labeler.
 
-    - `verdict`, `responses`, `stoppingState`: Present only for pairs collected with [adaptive stopping](confidence_stopping.md) (the compare default). `verdict` is `"A"`, `"B"`, `"ambiguous"`, `"undecided"`, or `"open"` (no verdict yet); `responses` is the number of votes the stopping rule counted. Prefer `verdict` over `winner` for these pairs: it only names a winner once the evidence is strong enough.
+    - `adaptiveStopping`: The decision and evidence snapshot for adaptive results. The SDK exposes its `verdict`, `responseCount` as `responses`, and `leadingOutcomeIds` at the datapoint level. See [Adaptive evidence](#adaptive-evidence).
 
 3. `summary`
     - `A_wins_total`: The total number of comparisons won by option A (index 0) across all pairs
     - `B_wins_total`: The total number of comparisons won by option B (index 1) across all pairs
+
+## Adaptive evidence
+
+New adaptive compare and single-select classification exports use the same `adaptiveStopping` snapshot. Non-adaptive datapoints omit it or contain `null`. The SDK preserves the complete snapshot in its dictionary, JSON export, and the `adaptiveStopping` DataFrame column, including unknown fields and future verdict strings.
+
+| Field | Meaning |
+| --- | --- |
+| `modelVersion` | Inference model identifier; currently `score-weighted-categorical-v1`. |
+| `verdict` | `Open`, `Winner`, `TopSet`, `Ambiguous`, `Unsolvable`, or `Undecided`. |
+| `leadingOutcomeIds` | Stable outcome IDs named by the decision. A `TopSet` is a leading set of alternatives; it does not assert that multiple single-select labels are independently true. |
+| `responseCount` | Responses counted by this snapshot, which can differ from later aggregate counts. |
+| `outcomes` | Each substantive outcome's `outcomeId`, raw `count`, `userScoreSum`, and weighted `share` with nullable `estimate` and `lower`/`upper` bounds. |
+| `cantSolve` | Optional separate tally with `count`, `userScoreSum`, and `share`; omitted and `null` are both accepted. Explicit can't solve is distinct from Neither, Both, skipped responses, and empty selections. |
+| `ambiguity` | Normalized disagreement with nullable `estimate` and `lower`/`upper` bounds. |
+| `parameters` | Resolved `maxVotes`, `minConfidence`, `ambiguityThreshold`, nullable `unsolvableThreshold`, and `maxOutcomeCount`. |
+
+Outcome IDs are identities, not category values or asset names. Keep them with the outcome definitions supplied by the backend; do not infer their meaning from their position or spelling. BothGood and BothBad are separate substantive outcomes, never half a vote for each asset. Can't solve is excluded from leading sets.
+
+The model weights responses by the user score captured at response time. Raw counts and weighted shares describe different quantities; `share.estimate` is not the raw count ratio. These confidence bounds are heuristic for weighted responses; `minConfidence=0.9` is not a proven 90% coverage guarantee.
+
+Normalized ambiguity is \(K/(K-1)(1-\sum_i p_i^2)\), where \(K\) counts configured substantive outcomes, excluding can't solve, and \(p_i\) are conditional weighted shares among those outcomes. The default threshold is `0.64`; for binary comparisons this matches the earlier raw threshold `0.32` or range `0.6`. Undefined estimates remain `null`.
+
+```python
+for datapoint in results["results"]:
+    state = datapoint.get("adaptiveStopping")
+    if state is not None:
+        print(state["verdict"], state["leadingOutcomeIds"], state["responseCount"])
+```
+
+`Open` means no terminal decision yet; `Undecided` means the response cap was reached without another decision. `Winner` names one leading outcome and `TopSet` names multiple alternatives. `Ambiguous` certifies the model's disagreement condition, while `Unsolvable` uses the separate can't-solve threshold and solvability gate. Enabling backend can't-solve configuration does not establish that an annotator button has been deployed.
+
+Older exports may contain `stoppingState`. The SDK retains its legacy `verdict` aliases (`A`, `B`, `ambiguous`, `undecided`, `open`) and `responses` decoding. When both snapshots exist, `adaptiveStopping` determines the convenience fields; both raw blocks remain available. Raw/weighted aggregate `winner` fields keep their original meanings.
 
 ## Understanding the User Scores
 

@@ -9,11 +9,11 @@ The current documentation uses audiences, job definitions, and jobs.
 
 ## Compare jobs stop adaptively (4.0)
 
-`create_compare_job_definition` now defaults to `responses_per_datapoint=AdaptiveStopping()`. Each pair stops once its verdict is settled instead of collecting exactly 10 responses: about 21 per pair on average, about 31 for the hardest pairs.
+`create_compare_job_definition` now defaults to `responses_per_datapoint=AdaptiveStopping()`. Each pair stops when a decision is reached or its response cap is met, instead of collecting exactly 10 responses.
 
 | Before | Now |
 |--------|-----|
-| no `responses_per_datapoint` on a compare job: 10 responses | adaptive stopping, about 21 responses per pair on average |
+| no `responses_per_datapoint` on a compare job: 10 responses | adaptive stopping, with a variable response count |
 | `quorum_threshold=7, responses_per_datapoint=10` | `responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)` |
 | `confidence_threshold=0.99` on a compare job | `responses_per_datapoint=AdaptiveStopping()` |
 | `CostEstimate.estimated_cost`: cost of the fixed number of responses | expected cost |
@@ -21,4 +21,4 @@ The current documentation uses audiences, job definitions, and jobs.
 - To keep exactly 10 responses per pair, pass `responses_per_datapoint=10`.
 - `quorum_threshold` still works with an `int` `responses_per_datapoint` but emits a `DeprecationWarning`. `confidence_threshold` does the same on compare jobs; on classification it stays supported without a warning.
 - `job_definition.responses_per_datapoint` now returns `AdaptiveStopping` or `QuorumStopping` for definitions that use them. Assigning an `int` sets a fixed number of responses.
-- Compare results gain `verdict` and `responses` per datapoint — see [Adaptive Stopping](confidence_stopping.md#analyzing-adaptive-stopping-results).
+- New adaptive results retain `adaptiveStopping` and expose canonical `verdict`, `responses`, and `leadingOutcomeIds` per datapoint. Older `stoppingState` exports keep their legacy decoding — see [Adaptive Stopping](confidence_stopping.md#analyzing-adaptive-stopping-results).

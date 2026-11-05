@@ -67,9 +67,11 @@ job.display_progress_bar()
 results = job.get_results()
 
 for datapoint in results["results"]:
-    # verdict: "A", "B", "ambiguous" (too close to call), "undecided" (hit max_responses)
-    # or "open" (no verdict yet)
-    print(datapoint["verdict"], datapoint["responses"])
+    state = datapoint.get("adaptiveStopping")
+    if state is not None:
+        print(state["verdict"], state["leadingOutcomeIds"], state["responseCount"])
+    else:
+        print(datapoint.get("verdict"), datapoint.get("responses"))
 ```
 
 ## Classification with Quorum Stopping
@@ -111,7 +113,7 @@ job_def = client.job.create_compare_job_definition(
         "Have you tried turning it off and on again?",
     ]],
     data_type="text",
-    # Unsure votes count half to each side, so close pairs end "ambiguous" more often.
+    # New categorical evidence keeps Both and Neither separate from A/B.
     settings=[AllowNeitherBothSetting()],
 )
 job = audience.assign_job(job_def)

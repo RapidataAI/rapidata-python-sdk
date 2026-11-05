@@ -12,14 +12,11 @@ You choose the stopping rule with `responses_per_datapoint`:
 
 ## How it Works
 
-Each vote on a compare pair is weighted by the voter's [user score](understanding_the_results.md#understanding-the-user-scores) at the time the vote was cast. After every vote, the pair is checked against three outcomes:
+Each response is weighted by the labeler's [user score](understanding_the_results.md#understanding-the-user-scores) at response time. The categorical model reports one leading outcome (`Winner`), a set of leading alternatives (`TopSet`), disagreement (`Ambiguous`), explicit can't solve (`Unsolvable`), no decision yet (`Open`), or the response cap without a decision (`Undecided`).
 
-- **`"A"` or `"B"`**: one side is preferred, with at least `min_confidence` certainty.
-- **`"ambiguous"`**: the pair is too close to call — the true preference lies inside the ambiguous band, 20/80 to 80/20 by default — so further votes would not produce a winner.
-- **`"undecided"`**: neither happened before `max_responses` votes. `max_responses` is a safety cap: with the defaults, no pair comes close to it.
-- **`"open"`**: no verdict yet — the pair is still collecting, or the job was paused or stopped before it finished.
+A `TopSet` does not assert that multiple labels are independently true in a single-select task. BothGood and BothBad remain distinct substantive outcomes. Can't solve is an explicit exclusive response, separate from Both, Neither, skips, or empty selections, and has its own threshold and solvability gate.
 
-The pair stops at the first verdict. A clear pair stops after as few as 7 votes and a 50/50 pair after about 16. A pair needs about 21 votes on average, which is what the [cost estimate](cost_estimates.md) is priced with; the hardest pairs, split around 35/65, need about 31.
+Confidence bounds are heuristic for score-weighted responses. A confidence parameter of `0.9` does not establish proven 90% coverage. Response counts vary with the configured outcomes and stopping conditions; binary averages and worst-case bounds do not generalize to additional categories or can't solve.
 
 ## Using Adaptive Stopping in Your Job
 
@@ -41,31 +38,29 @@ job_definition = client.job.create_compare_job_definition(
 
 1. The same as leaving the argument out.
 
-`ambiguity_range` is the width of the ambiguous band, centred on an even split: the default 0.6 gives 20/80–80/20.
+The resolved configuration is included in each new snapshot's `parameters`. Normalized ambiguity is \(K/(K-1)(1-\sum_i p_i^2)\), with \(K\) configured substantive outcomes excluding can't solve and \(p_i\) conditional weighted shares. Its default threshold `0.64` preserves the binary raw threshold `0.32` / range `0.6`.
 
-**Lower `ambiguity_range` to push closer pairs to a winner, at the cost of more votes.** For example, `AdaptiveStopping(ambiguity_range=0.5)` narrows the band to 25/75–75/25, which takes about a third more votes per pair on average, and about 49 for the hardest pairs; `0.3` narrows it to 35/65–65/35.
-
-The range only decides which pairs may stop as ambiguous. A winner always takes priority, so a 70/30 pair can still return `"A"` or `"B"` even though it lies inside the band.
-
-Because each pair stops at a different point, the [cost estimate](cost_estimates.md) `estimated_cost` is the expected cost of the job.
+The [cost estimate](cost_estimates.md) is the expected cost, not the final bill.
 
 ### "Unsure" votes
 
-Adaptive stopping works with [`AllowNeitherBothSetting`](job_definition_parameters.md#allowneitherbothsetting). A "Both", "Neither" or "I don't know" vote counts half to each side. It never flips a winner, but it pushes close pairs toward `"ambiguous"` and costs more votes: for example, a 75/25 pair where 40% of the voters pick "Unsure" ends ambiguous about 60% of the time.
+[`AllowNeitherBothSetting`](job_definition_parameters.md#allowneitherbothsetting) enables additional compare choices. New categorical evidence retains BothGood and BothBad separately rather than splitting their scores into A/B. Explicit can't solve has its own evidence and is never inferred from either choice. Backend can't-solve configuration does not mean an annotator button is deployed.
 
 ## Analyzing Adaptive Stopping Results
 
-Each compare datapoint in the [results](understanding_the_results.md) gains:
-
-- `verdict`: `"A"`, `"B"`, `"ambiguous"`, `"undecided"`, or `"open"`.
-- `responses`: the number of votes the rule counted — where the pair stopped, or the count so far for an open pair.
-- `stoppingState`: the raw state behind the verdict — the weighted votes for each side (`weightA`, `weightB`), the confidence bounds on the share of B (`csLower`, `csUpper`), and the `minConfidence` and `ambiguityRange` used.
+New compare and single-select classification exports use the same `adaptiveStopping` evidence block. The SDK preserves the entire dictionary, including future metadata and verdicts, and exposes `verdict`, `responses`, and `leadingOutcomeIds` on each adaptive datapoint. Non-adaptive snapshots may be absent or `null`.
 
 ```python
 results = job.get_results()
 for datapoint in results["results"]:
-    print(datapoint["verdict"], datapoint["responses"])
+    state = datapoint.get("adaptiveStopping")
+    if state is not None:
+        print(state["verdict"], state["leadingOutcomeIds"], state["responseCount"])
 ```
+
+`leadingOutcomeIds` are stable identities that require the backend outcome definitions; their spelling or position does not supply an asset name or category value. `outcomes` keeps raw counts separate from weighted scores and shares. See [Adaptive evidence](understanding_the_results.md#adaptive-evidence) for every field and verdict.
+
+Older `stoppingState` exports still decode to the legacy `A`, `B`, `ambiguous`, `undecided`, or `open` aliases. In a mixed export, `adaptiveStopping` takes precedence; both raw blocks remain available. `to_pandas()` keeps the new snapshot as one dictionary column, including when splitting detailed responses.
 
 ---
 

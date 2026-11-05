@@ -102,7 +102,7 @@ datapoints=[
 How many responses to collect for each datapoint.
 
 - An `int` collects exactly that many. The actual number may slightly exceed it due to concurrent labelers.
-- `AdaptiveStopping()` stops each compare pair once its verdict is settled, after about 21 responses per pair on average.
+- `AdaptiveStopping()` stops each compare pair once a decision is reached or the response cap is met.
 - `QuorumStopping(threshold, max_responses)` stops once `threshold` responses agree.
 
 **Related:** [Adaptive Stopping](confidence_stopping.md)
@@ -347,7 +347,7 @@ job_definition = client.job.create_compare_job_definition(
 
 #### `AllowNeitherBothSetting()`
 
-For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice. With [adaptive stopping](confidence_stopping.md#unsure-votes), these votes push close pairs toward "ambiguous" and cost more votes.
+For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice. New [adaptive evidence](understanding_the_results.md#adaptive-evidence) keeps these outcomes distinct from A/B and explicit can't solve.
 
 ```python
 from rapidata import AllowNeitherBothSetting

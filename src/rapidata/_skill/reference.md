@@ -12,7 +12,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `instruction` | str | Question shown to labelers: one criterion, under 80 characters (see **Task design rules** in the main guide). Over 250 characters raises `ValueError` |
 | `datapoints` | list | Data to label (URLs or local paths) |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
-| `responses_per_datapoint` | `int \| AdaptiveStopping \| QuorumStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()` (~21 votes per pair on average, ~31 for the hardest pairs); classification default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` is compare-only. See **Early Stopping** |
+| `responses_per_datapoint` | `int \| AdaptiveStopping \| QuorumStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()`; classification default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` is compare-only. See **Early Stopping** |
 | `contexts` | list[str] \| None | Text context per datapoint: one sentence under 150 characters with only what the instruction asks about (see **Task design rules** in the main guide). Max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually |
 | `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
 | `confidence_threshold` | float \| None | Confidence-based early stopping threshold (0-1) for classification; needs an `int` `responses_per_datapoint` (10 when omitted). **Deprecated on compare jobs** (`DeprecationWarning`) — use `AdaptiveStopping` |
@@ -354,6 +354,8 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 
 ### Comparison Results
 
+This example shows an older binary `stoppingState` export; new categorical exports use `adaptiveStopping` as described below.
+
 ```json
 {
   "info": { "type": "Compare", "name": "Image Comparison", "instruction": "Which image is higher quality?", "version": "4.1.0" },
@@ -410,9 +412,11 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 | `summedUserScores` | Per-option sum of each choosing labeler's aggregated `userScore` |
 | `summedUserScoresRatios` | `summedUserScores` normalized to sum to 1 |
 | `confidencePerCategory` | Confidence level per category (with `confidence_threshold`) |
-| `verdict` | Adaptive stopping only (added by the SDK from `stoppingState`): `"A"`, `"B"`, `"ambiguous"` (too close to call), `"undecided"` (hit `max_responses`), or `"open"` (no verdict yet: still collecting, or the job was paused or stopped first). Absent on non-adaptive datapoints. Prefer it over `winner` on adaptive results |
-| `responses` | Adaptive stopping only: `stoppingState.responseCount` — votes where the pair stopped, the cap for `"undecided"`, the count so far for `"open"` |
-| `stoppingState` | Adaptive stopping only: raw state — weighted votes (`weightA`, `weightB`), confidence bounds on the share of B (`csLower`, `csUpper`), backend `verdict`, `responseCount` (votes the rule counted), and the `minConfidence` / `ambiguityRange` used |
+| `adaptiveStopping` | New adaptive compare/classification evidence: `modelVersion`, canonical `verdict`, `leadingOutcomeIds`, `responseCount`, `outcomes`, optional `cantSolve`, `ambiguity`, and resolved `parameters`. The full dictionary, including future fields, remains intact in JSON and the DataFrame column |
+| `verdict` | SDK alias of `adaptiveStopping.verdict`: `Open`, `Winner`, `TopSet`, `Ambiguous`, `Unsolvable`, `Undecided`, or a future string. Absent on non-adaptive datapoints |
+| `leadingOutcomeIds` | SDK alias of the snapshot's stable IDs. Interpret with backend outcome definitions, never as category values or asset names. A `TopSet` lists alternatives, not independently true labels |
+| `responses` | Adaptive stopping only: the snapshot's `responseCount`, distinct from later aggregate vote counts |
+| `stoppingState` | Legacy binary evidence. Still decoded into `verdict` (`A`, `B`, `ambiguous`, `undecided`, `open`) and `responses`; new `adaptiveStopping` takes precedence if both exist |
 | `userScore` | 0-1 value indicating individual labeler reliability |
 
 A labeler's `demographics` may be empty when no demographic data was collected for them.
@@ -429,6 +433,10 @@ df = results.to_pandas()                  # one row per datapoint; compare resul
 df = results.to_pandas(split_details=True)  # one row per individual response
 results.to_json("results.json")           # writes the file (default "./results.json"); returns None
 ```
+
+In `adaptiveStopping.outcomes`, each entry has `outcomeId`, integer `count`, `userScoreSum`, and weighted `share` (`estimate`, `lower`, `upper`). `estimate` can be `null`; preserve it. `cantSolve` has the same tally/share fields without an outcome ID, and can be absent or `null`. Raw counts and weighted shares are not interchangeable. BothGood/BothBad remain distinct categories; can't solve is an explicit exclusive response, not a skip, empty selection, Both, or Neither.
+
+`ambiguity` also has nullable `estimate` and `lower`/`upper` bounds. `parameters` contains resolved `maxVotes`, `minConfidence`, `ambiguityThreshold`, nullable `unsolvableThreshold`, and `maxOutcomeCount`. The model is currently `score-weighted-categorical-v1`; weighted confidence is heuristic, not a proven 90% coverage guarantee. A backend can't-solve option does not imply its annotator UI has shipped.
 
 Flow items have a different result shape — see the Flows section.
 
@@ -455,16 +463,9 @@ job_def = client.job.create_compare_job_definition(
 )
 ```
 
-`AdaptiveStopping(min_confidence=0.9, ambiguity_range=0.6, max_responses=100)` — a frozen dataclass:
+`AdaptiveStopping()` weights each response by the labeler's user score at response time. New results use `adaptiveStopping.verdict` and stable `leadingOutcomeIds`, with the full snapshot described in **Results Format**. `Winner` names one leading outcome; `TopSet` names leading alternatives, not several independently true single-select labels. `Open` and `Undecided` remain explicit strings. Weighted confidence is heuristic; binary response-count estimates and mathematical coverage claims do not generalize to this model.
 
-- Each vote is weighted by the voter's user score at the time it was cast.
-- After every vote the pair gets a verdict once it is settled: `"A"` / `"B"` (a winner, wrong with probability below `1 - min_confidence`), `"ambiguous"` (the true split lies within `[0.5 - ambiguity_range/2, 0.5 + ambiguity_range/2]`, 20/80–80/20 by default), or `"undecided"` at `max_responses`. A winner takes priority over ambiguous, so a 70/30 pair can still return `"A"`/`"B"`; the range only decides which pairs may stop as ambiguous.
-- Unanimous pairs stop after 7 votes, 50/50 pairs at about 16, ~21 per pair on average (`estimated_cost` is priced with it), ~31 for the hardest pairs (split around 35/65). `max_responses` is a safety cap the defaults never reach (the longest possible run is under 80 votes) — don't tune it.
-- `min_confidence` must be in (0, 1), `ambiguity_range` in (0, 1), `max_responses` ≥ 1, else `ValueError`.
-- The defaults are calibrated; change them only if you know why. **Lowering** `ambiguity_range` narrows the band so closer pairs get a winner, at the cost of more votes: `ambiguity_range=0.5` (band 25/75–75/25) needs about a third more votes on average, ~49 for the hardest pairs; `0.3` gives 35/65–65/35.
-- Raises `ValueError` on classification jobs.
-- Works with `AllowNeitherBothSetting`: a "Both" / "Neither" / "I don't know" vote counts half to each side. It never flips a winner, but pushes close pairs toward `"ambiguous"` and costs more votes (a 75/25 pair with 40% unsure votes ends ambiguous about 60% of the time).
-- `CostEstimate.estimated_cost` is the expected cost.
+BothGood and BothBad remain separate categories in the evidence. Explicit can't solve has a separate tally and threshold, and is never inferred from Both, Neither, skipped responses, or empty selections. Keep counts separate from weighted shares. `CostEstimate.estimated_cost` remains the expected cost.
 
 ### Quorum Stopping
 
@@ -601,7 +602,7 @@ Settings with a `()` constructor are on/off: adding one turns the behavior on, l
 | Class | Constructor | Effect |
 |-------|-------------|--------|
 | `NoShuffleSetting` | `()` | Disable shuffling of answer options (Likert scales) |
-| `AllowNeitherBothSetting` | `(delay_ms: int = 5000)` — ≥ 0 | Comparison: show an "Unsure" button (answers "Neither" / "Both") after `delay_ms` milliseconds. With `AdaptiveStopping` (the compare default), unsure votes count half to each side and push close pairs toward `"ambiguous"` |
+| `AllowNeitherBothSetting` | `(delay_ms: int = 5000)` — ≥ 0 | Comparison: show an "Unsure" button (answers "Neither" / "Both") after `delay_ms` milliseconds. New categorical adaptive evidence keeps BothGood and BothBad separate from A/B and explicit can't solve |
 | `MarkdownSetting` | `()` | Render markdown in text |
 | `MuteVideoSetting` | `()` | Start videos muted |
 | `FreeTextMinimumCharactersSetting` | `(value: int)` — must be ≥ 1 (prints a warning above 40) | Min chars for free-text tasks. Use with caution — see note below the table |

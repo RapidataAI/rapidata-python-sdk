@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Any
 from rapidata.rapidata_client.config import managed_print
 import json
@@ -12,9 +14,10 @@ class RapidataResults(dict):
     A specialized dictionary class for handling Rapidata API results.
     Extends the built-in dict class with specialized methods.
 
-    Compare datapoints collected with adaptive stopping also carry ``verdict``
-    (``"A"``, ``"B"``, ``"ambiguous"``, ``"undecided"`` or ``"open"``) and
-    ``responses``, the number of votes the stopping rule counted.
+    Adaptive compare and classification datapoints retain their complete
+    ``adaptiveStopping`` snapshot, including unknown metadata. ``verdict``,
+    ``responses`` and ``leadingOutcomeIds`` expose its decision and evidence IDs.
+    Legacy ``stoppingState`` exports remain readable.
     """
 
     _VERDICTS = {
@@ -33,10 +36,17 @@ class RapidataResults(dict):
 
     @classmethod
     def _add_stopping_fields(cls, result: dict[str, Any]) -> None:
+        state = result.get("adaptiveStopping")
+        if isinstance(state, dict):
+            verdict = state.get("verdict")
+            result["verdict"] = verdict if isinstance(verdict, str) else "Open"
+            result["responses"] = state.get("responseCount")
+            result["leadingOutcomeIds"] = state.get("leadingOutcomeIds", [])
+            return
         state = result.get("stoppingState")
         if not isinstance(state, dict):
             return
-        verdict = str(state.get("verdict"))
+        verdict = state.get("verdict") or "Open"
         result["verdict"] = cls._VERDICTS.get(verdict, verdict)
         result["responses"] = state.get("responseCount")
 
@@ -54,7 +64,8 @@ class RapidataResults(dict):
         creates one row per datapoint and answer option, with ``option``,
         ``count``, ``ratio``, ``summedUserScore`` and ``summedUserScoreRatio``
         columns. For other results, flattens nested dictionaries into columns
-        with underscore-separated names.
+        with underscore-separated names. ``adaptiveStopping`` remains a complete
+        dictionary column; ``leadingOutcomeIds`` remains a list of stable IDs.
 
         Args:
             split_details: If True, splits each datapoint by its detailed results,
@@ -81,27 +92,21 @@ class RapidataResults(dict):
         if split_details and not self._has_detailed_results():
             raise ValueError("No detailed results found in the data")
 
-        # Compare/Ranking have an asset-aware shape; route them to the
-        # compare-specific path even when split_details=True so we keep the
-        # A_/B_ (or per-asset) column splitting.
         if task_type in ("Compare", "Ranking"):
             return self._compare_to_pandas(split_details=split_details)
 
         if split_details:
             return self._to_pandas_with_detailed_results()
 
-        if task_type == "Classification":
+        if task_type in ("Classification", "Classify"):
             return self._classification_to_pandas()
 
-        # Get the structure from first item
-        first_item = self["results"][0]
         columns = []
-        path_map = {}  # Maps flattened column names to paths to reach the values
+        path_map = {}
 
-        # Build the column structure once
-        self._build_column_structure(first_item, columns, path_map)
+        for item in self["results"]:
+            self._build_column_structure(item, columns, path_map)
 
-        # Extract data using the known structure
         data = []
         for item in self["results"]:
             row = []
@@ -149,14 +154,11 @@ class RapidataResults(dict):
         rows = []
 
         for result in self["results"]:
-            # Get all non-detailed results fields
             base_data = {k: v for k, v in result.items() if k != "detailedResults"}
 
-            # Process each detailed result
             for detailed_result in result["detailedResults"]:
-                row = base_data.copy()  # Copy base data for each detailed result
+                row = base_data.copy()
 
-                # Add flattened detailed result data
                 flattened = self._flatten_dict(detailed_result)
                 for key, value in flattened.items():
                     row[key] = value
@@ -181,7 +183,7 @@ class RapidataResults(dict):
         for key, value in d.items():
             new_key = f"{parent_key}_{key}" if parent_key else key
 
-            if isinstance(value, dict):
+            if isinstance(value, dict) and key != "adaptiveStopping":
                 items.extend(self._flatten_dict(value, new_key).items())
             else:
                 items.append((new_key, value))
@@ -213,12 +215,13 @@ class RapidataResults(dict):
             new_key = f"{parent_key}_{key}" if parent_key else key
             new_path: list[str] = current_path + [key]
 
-            if isinstance(value, dict):
+            if isinstance(value, dict) and key != "adaptiveStopping":
                 self._build_column_structure(
                     value, columns, path_map, new_key, new_path
                 )
             else:
-                columns.append(new_key)
+                if new_key not in path_map:
+                    columns.append(new_key)
                 path_map[new_key] = new_path
 
     def _get_value_from_path(self, d: dict[str, Any], path: list[str]) -> Any:
@@ -233,7 +236,10 @@ class RapidataResults(dict):
             The value at the specified path, or None if the path doesn't exist
         """
         for key in path[:-1]:
-            d = d.get(key, {})
+            value = d.get(key)
+            if not isinstance(value, dict):
+                return None
+            d = value
         return d.get(path[-1])
 
     @staticmethod
@@ -277,18 +283,13 @@ class RapidataResults(dict):
         rows = []
         for result in self["results"]:
             assets = self._extract_compare_assets(result)
-            if len(assets) < 2:
-                continue
-
             is_compare = len(assets) == 2
 
-            # Non-comparative fields. Skip dicts (asset metrics, handled below)
-            # and lists (e.g. detailedResults — handled separately when
-            # split_details=True, otherwise omitted from the tabular export).
             base_row: dict[str, Any] = {
                 key: value
                 for key, value in result.items()
                 if not isinstance(value, (dict, list))
+                or key in ("adaptiveStopping", "leadingOutcomeIds")
             }
 
             if is_compare:
@@ -298,15 +299,13 @@ class RapidataResults(dict):
                 for i, asset in enumerate(assets):
                     base_row[f"asset_{i + 1}"] = asset
 
-            # Per-metric asset columns. Dicts keyed by asset names are
-            # treated as comparative metrics and split into A_/B_ (compare) or
-            # per-asset (ranking) columns. Other dicts (e.g. ``privateMetadata``
-            # whose keys are arbitrary user data, not asset identifiers) are
-            # flattened with their field name as the prefix so their values
-            # still make it into the dataframe.
             asset_set = set(assets)
             for key, values in result.items():
-                if not isinstance(values, dict) or not values:
+                if (
+                    key == "adaptiveStopping"
+                    or not isinstance(values, dict)
+                    or not values
+                ):
                     continue
                 if asset_set.intersection(values.keys()):
                     if is_compare:
@@ -356,7 +355,7 @@ class RapidataResults(dict):
                 if key in self._CLASSIFICATION_OPTION_METRICS:
                     if isinstance(value, dict):
                         metrics[self._CLASSIFICATION_OPTION_METRICS[key]] = value
-                elif isinstance(value, dict):
+                elif isinstance(value, dict) and key != "adaptiveStopping":
                     base_row.update(self._flatten_dict(value, parent_key=key))
                 else:
                     base_row[key] = value

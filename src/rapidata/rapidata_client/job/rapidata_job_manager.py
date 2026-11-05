@@ -313,7 +313,7 @@ class RapidataJobManager:
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
             responses_per_datapoint (int | AdaptiveStopping | QuorumStopping, optional): How many responses to collect per datapoint.
-                Defaults to ``AdaptiveStopping()``, which stops each pair once its verdict is settled (about 21 responses per pair on average).\n
+                Defaults to ``AdaptiveStopping()``, which stops each pair when a decision is reached or its response cap is met.\n
                 An int collects exactly that many. ``QuorumStopping(threshold, max_responses)`` stops once ``threshold`` responses agree.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
