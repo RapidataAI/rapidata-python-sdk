@@ -224,9 +224,9 @@ class RapidataJobDefinition:
         An int for a fixed number of responses, or the ``AdaptiveStopping`` /
         ``QuorumStopping`` the job definition stops by. Assigning one replaces the rule.
         """
-        return self._effective(
-            "responses_per_datapoint", _get_responses(self._snapshot.referee)
-        )
+        if "responses_per_datapoint" in self._pending:
+            return self._pending["responses_per_datapoint"]
+        return _get_responses(self._snapshot.referee)
 
     @responses_per_datapoint.setter
     def responses_per_datapoint(

@@ -243,6 +243,25 @@ def test_job_definition_reads_config_objects():
     assert jd.responses_per_datapoint == QuorumStopping(threshold=3, max_responses=5)
 
 
+def test_fixed_replacement_does_not_decode_obsolete_adaptive_fields():
+    jd, service = _compare_revision(
+        {
+            "_t": "AdaptiveStoppingReferee",
+            "maxVotes": 47,
+            "minConfidence": 0.95,
+            "ambiguityThreshold": 0.73,
+            "unsolvableThreshold": 0.6,
+            "maxOutcomeCount": 3,
+        }
+    )
+
+    jd.responses_per_datapoint = 12
+
+    assert jd.responses_per_datapoint == 12
+    jd.save()
+    assert _sent_referee(service) == {"_t": "NaiveReferee", "totalVotes": 12}
+
+
 @pytest.mark.parametrize(
     "value, wire",
     [
