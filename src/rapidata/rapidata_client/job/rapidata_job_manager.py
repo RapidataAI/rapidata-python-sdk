@@ -137,14 +137,11 @@ class RapidataJobManager:
 
         if isinstance(responses_per_datapoint, AdaptiveStopping):
             if workflow.task_type == "Compare":
-                outcome_count = (
-                    4
-                    if any(
-                        s.target == "rapids" and s.key == "compare_unsure"
-                        for s in settings
-                    )
-                    else 2
+                from rapidata.rapidata_client.workflow._answer_controls import (
+                    compare_outcome_count,
                 )
+
+                outcome_count = compare_outcome_count(workflow._to_dict())
                 responses_per_datapoint._validate_outcome_count(outcome_count)
             elif workflow.task_type == "Classification":
                 for datapoint in datapoints:
@@ -227,13 +224,18 @@ class RapidataJobManager:
         settings: Sequence[RapidataSetting] | None = None,
         failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        *,
+        allow_cant_solve: bool = False,
     ) -> RapidataJobDefinition:
         """Create a classification job definition.
 
         With this order you can have a datapoint (image, text, video, audio) be classified into one of the answer options.
-        Each response will be exactly one of the answer options.
+        Each substantive response selects one answer option. Explicit can't solve
+        is a separate response when enabled.
 
         Args:
+            allow_cant_solve (bool): Permit an explicit can't-solve response. Defaults to False.
+                Requires annotator UI support; this control does not deploy the button.
             name (str): The name of the job. (Will not be shown to the labeler)
             instruction (str): The instruction for how the data should be classified.
             answer_options (list[str] | list[list[str]]): The options for the classification.\n
@@ -291,7 +293,9 @@ class RapidataJobManager:
             )
             return self._create_general_job_definition(
                 name=name,
-                workflow=ClassifyWorkflow(instruction=instruction),
+                workflow=ClassifyWorkflow(
+                    instruction=instruction, allow_cant_solve=allow_cant_solve
+                ),
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 confidence_threshold=confidence_threshold,
@@ -317,12 +321,20 @@ class RapidataJobManager:
         settings: Sequence[RapidataSetting] | None = None,
         failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        *,
+        allow_both_good: bool = False,
+        allow_both_bad: bool = False,
+        allow_cant_solve: bool = False,
     ) -> RapidataJobDefinition:
         """Create a compare job definition.
 
         With this order you compare two datapoints (image, text, video, audio) and the annotators will choose one of the two based on the instruction.
 
         Args:
+            allow_both_good (bool): Permit BothGood as a distinct substantive outcome. Defaults to False.
+            allow_both_bad (bool): Permit BothBad as a distinct substantive outcome. Defaults to False.
+            allow_cant_solve (bool): Permit an explicit can't-solve response. Defaults to False.
+                Requires annotator UI support; this control does not deploy the button.
             name (str): The name of the job. (Will not be shown to the labeler)
             instruction (str): The instruction for the comparison. Will be shown along side each datapoint.
             datapoints (list[list[str]]): Outher list is the datapoints, inner list is the options for the comparison - each datapoint will be labeled.
@@ -383,7 +395,13 @@ class RapidataJobManager:
             )
             return self._create_general_job_definition(
                 name=name,
-                workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
+                workflow=CompareWorkflow(
+                    instruction=instruction,
+                    a_b_names=a_b_names,
+                    allow_both_good=allow_both_good,
+                    allow_both_bad=allow_both_bad,
+                    allow_cant_solve=allow_cant_solve,
+                ),
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 confidence_threshold=confidence_threshold,

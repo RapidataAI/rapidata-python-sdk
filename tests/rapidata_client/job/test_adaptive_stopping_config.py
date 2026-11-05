@@ -151,7 +151,9 @@ def test_create_request_http_serializer_preserves_all_five_settings():
     body = CreateJobDefinitionEndpointInput(
         definitionName="Job",
         datasetId="dataset-1",
-        workflow=CompareWorkflow(instruction="Which?")._to_model(),
+        workflow=CompareWorkflow(
+            instruction="Which?", allow_both_good=True, allow_both_bad=True
+        )._to_model(),
         referee=config._to_referee()._to_model(),
         rapidFeatureFlags=[FeatureFlag(key="compare_unsure", value="5000")],
     )

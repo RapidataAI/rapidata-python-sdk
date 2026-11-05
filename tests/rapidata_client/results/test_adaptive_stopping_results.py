@@ -480,3 +480,44 @@ def test_final_and_preliminary_job_downloads_keep_categorical_evidence(prelimina
     assert row["adaptiveStopping"] == state
     assert row["verdict"] == "FutureVerdict"
     assert row["leadingOutcomeIds"] == ["o0", "o2"]
+
+
+@pytest.mark.parametrize("split_details", [False, True])
+@pytest.mark.parametrize("task_type", ["Compare", "Classify"])
+def test_explicit_cant_solve_marker_is_preserved_without_reinterpreting_empty_answers(
+    task_type, split_details, tmp_path
+):
+    if task_type == "Compare":
+        details = [
+            {"winners": [], "cantSolve": True},
+            {"winners": [], "cantSolve": False},
+            {"winners": []},
+            {"winners": ["left.png", "right.png"], "cantSolve": False},
+        ]
+    else:
+        details = [
+            {"cantSolve": True},
+            {"category": "", "cantSolve": True},
+            {"category": "雪.category", "cantSolve": False},
+            {"category": ""},
+        ]
+    state = _snapshot("Unsolvable", [], count=4)
+    state["cantSolve"] = {
+        "count": 1,
+        "userScoreSum": 0.8,
+        "share": {"estimate": 0.6, "lower": 0.1, "upper": 0.9},
+    }
+    result = RapidataResults(
+        _payload(
+            task_type, adaptiveStopping=state, detailedResults=copy.deepcopy(details)
+        )
+    )
+    frame = result.to_pandas(split_details=split_details)
+    assert frame.iloc[0]["adaptiveStopping"]["cantSolve"] == state["cantSolve"]
+    assert result["results"][0]["detailedResults"] == details
+    if split_details:
+        assert frame.iloc[0]["cantSolve"] == True
+        assert frame.iloc[2 if task_type == "Classify" else 1]["cantSolve"] == False
+    path = tmp_path / "markers.json"
+    result.to_json(str(path))
+    assert json.loads(path.read_text())["results"][0]["detailedResults"] == details

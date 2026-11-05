@@ -190,7 +190,8 @@ def test_both_neither_compare_allows_three_of_four_outcomes(manager):
     assert _compare(
         manager,
         responses_per_datapoint=AdaptiveStopping(max_outcome_count=3),
-        settings=[AllowNeitherBothSetting()],
+        allow_both_good=True,
+        allow_both_bad=True,
     ) == {**ADAPTIVE_WIRE, "maxOutcomeCount": 3}
 
 
@@ -276,7 +277,10 @@ def test_legacy_wire_reads_write_only_canonical_fields(union):
 
 
 def _compare_revision(
-    referee: dict, flags: list | None = None, workflow: dict | None = None
+    referee: dict,
+    flags: list | None = None,
+    workflow: dict | None = None,
+    **controls,
 ):
     data = {
         "definitionId": "jd-1",
@@ -292,6 +296,10 @@ def _compare_revision(
                 "_t": "Compare",
                 "asset": {"segment": "asset"},
                 "criteria": {"literal": "Which is better?"},
+                "allowBothGood": False,
+                "allowBothBad": False,
+                "allowCantSolve": False,
+                **controls,
             },
             "featureFlags": [],
         },
@@ -364,7 +372,11 @@ def test_instruction_edit_preserves_every_resolved_adaptive_setting():
         "maxOutcomeCount": 3,
     }
     jd, service = _compare_revision(
-        wire, flags=[{"key": "compare_unsure", "value": "5000"}]
+        wire,
+        flags=[{"key": "compare_unsure", "value": "5000"}],
+        allowBothGood=True,
+        allowBothBad=True,
+        allowCantSolve=True,
     )
 
     assert jd.responses_per_datapoint == AdaptiveStopping(
@@ -407,18 +419,138 @@ def test_classification_revisions_validate_the_final_category_count():
     service.order.job_api.job_definition_definition_id_revision_post.assert_not_called()
 
 
-def test_removing_both_neither_requires_a_smaller_leading_set():
+def test_removing_a_rendering_hint_keeps_explicit_outcome_eligibility():
+    wire = {**ADAPTIVE_WIRE, "maxOutcomeCount": 3}
     jd, service = _compare_revision(
-        {**ADAPTIVE_WIRE, "maxOutcomeCount": 3},
+        wire,
         flags=[{"key": "compare_unsure", "value": "5000"}],
+        allowBothGood=True,
+        allowBothBad=True,
     )
     jd.settings = []
+    jd.save()
+    assert _sent_referee(service) == wire
+    body = service.order.job_api.job_definition_definition_id_revision_post.call_args.kwargs[
+        "create_job_revision_endpoint_input"
+    ].to_dict()
+    assert body["workflow"]["rapid"]["allowBothGood"] is True
+    assert body["workflow"]["rapid"]["allowBothBad"] is True
+
+
+def test_disabling_a_substantive_outcome_requires_a_smaller_leading_set():
+    jd, service = _compare_revision(
+        {**ADAPTIVE_WIRE, "maxOutcomeCount": 3},
+        allowBothGood=True,
+        allowBothBad=True,
+    )
+    assert jd.allow_both_good is True
+    assert jd.allow_both_bad is True
+    assert jd.allow_cant_solve is False
+    jd.allow_both_bad = False
+    assert jd.allow_both_bad is False
     with pytest.raises(ValueError, match="max_outcome_count"):
         jd.save()
     service.order.job_api.job_definition_definition_id_revision_post.assert_not_called()
     jd.responses_per_datapoint = AdaptiveStopping()
     jd.save()
     assert _sent_referee(service) == ADAPTIVE_WIRE
+
+
+@pytest.mark.parametrize(
+    "setting", [AllowNeitherBothSetting(), CustomSetting("compare_unsure", "0")]
+)
+def test_rendering_hints_never_enable_extra_outcomes(manager, setting):
+    with pytest.raises(ValueError, match="max_outcome_count"):
+        _compare(
+            manager,
+            responses_per_datapoint=AdaptiveStopping(max_outcome_count=2),
+            settings=[setting],
+        )
+
+
+@pytest.mark.parametrize(
+    "controls",
+    [
+        {"allow_both_good": True},
+        {"allow_both_bad": True},
+        {"allow_both_good": True, "allow_cant_solve": True},
+    ],
+)
+def test_one_additional_compare_outcome_permits_two_leading_alternatives(
+    manager, controls
+):
+    assert (
+        _compare(
+            manager,
+            responses_per_datapoint=AdaptiveStopping(max_outcome_count=2),
+            **controls,
+        )["maxOutcomeCount"]
+        == 2
+    )
+    with pytest.raises(ValueError, match="max_outcome_count"):
+        _compare(
+            manager,
+            responses_per_datapoint=AdaptiveStopping(max_outcome_count=3),
+            **controls,
+        )
+
+
+@pytest.mark.parametrize("task", [_compare, _classify])
+def test_cant_solve_is_excluded_from_the_substantive_outcome_count(manager, task):
+    with pytest.raises(ValueError, match="max_outcome_count"):
+        task(
+            manager,
+            allow_cant_solve=True,
+            responses_per_datapoint=AdaptiveStopping(max_outcome_count=2),
+        )
+
+
+@pytest.mark.parametrize(
+    "control", ["allow_both_good", "allow_both_bad", "allow_cant_solve"]
+)
+@pytest.mark.parametrize("value", [None, 0, 1, "false", [], {}])
+def test_answer_controls_require_actual_booleans(manager, control, value):
+    with pytest.raises(ValueError, match="must be a bool"):
+        _compare(manager, **{control: value})
+    if control == "allow_cant_solve":
+        with pytest.raises(ValueError, match="must be a bool"):
+            _classify(manager, **{control: value})
+
+
+def test_classification_revision_preserves_cant_solve_and_exact_category_values():
+    values = ["arbitrary.string", "雪❄️", "a0", "bothGood", "value 4", "c0"]
+    workflow = {
+        "_t": "SimpleWorkflow",
+        "rapid": {
+            "_t": "Classify",
+            "asset": {"segment": "asset"},
+            "title": {"literal": "Which?"},
+            "allowCantSolve": True,
+            "categories": {
+                "literal": [
+                    {"label": label, "value": value}
+                    for label, value in zip(reversed(values), values)
+                ]
+            },
+        },
+    }
+    wire = {**ADAPTIVE_WIRE, "maxOutcomeCount": 3}
+    jd, service = _compare_revision(wire, workflow=workflow)
+    assert jd.allow_cant_solve is True
+    assert jd.allow_both_good is None
+    assert jd.allow_both_bad is None
+    jd.instruction = "Revised question"
+    jd.allow_cant_solve = False
+    jd.save()
+    body = service.order.job_api.job_definition_definition_id_revision_post.call_args.kwargs[
+        "create_job_revision_endpoint_input"
+    ].to_dict()
+    rapid = body["workflow"]["rapid"]
+    assert rapid["allowCantSolve"] is False
+    assert rapid["categories"]["literal"] == workflow["rapid"]["categories"]["literal"]
+    assert body["referee"] == wire
+    with pytest.raises(ValueError, match="no allow_both_good"):
+        jd.allow_both_good = True
 
 
 @pytest.mark.parametrize(

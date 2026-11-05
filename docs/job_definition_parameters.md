@@ -347,7 +347,7 @@ job_definition = client.job.create_compare_job_definition(
 
 #### `AllowNeitherBothSetting()`
 
-For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice. New [adaptive evidence](understanding_the_results.md#adaptive-evidence) keeps these outcomes distinct from A/B and explicit can't solve.
+For Compare jobs, hints that the annotator UI should show "Neither" / "Both" after a delay. Enable answer eligibility separately with `allow_both_bad=True` and `allow_both_good=True`. New [adaptive evidence](understanding_the_results.md#adaptive-evidence) keeps these outcomes distinct from A/B and explicit can't solve.
 
 ```python
 from rapidata import AllowNeitherBothSetting
@@ -356,6 +356,8 @@ job_definition = client.job.create_compare_job_definition(
     name="Image Quality Comparison",
     instruction="Which image is higher quality?",
     datapoints=[["img_a.jpg", "img_b.jpg"]],
+    allow_both_good=True,
+    allow_both_bad=True,
     settings=[AllowNeitherBothSetting()]
 )
 ```

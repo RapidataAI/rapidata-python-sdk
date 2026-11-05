@@ -129,7 +129,8 @@ job_def = client.job.create_compare_job_definition(
         "Have you tried turning it off and on again?",
     ]],
     data_type="text",
-    # New categorical evidence keeps Both and Neither separate from A/B.
+    allow_both_good=True,
+    allow_both_bad=True,
     settings=[AllowNeitherBothSetting()],
 )
 job = audience.assign_job(job_def)

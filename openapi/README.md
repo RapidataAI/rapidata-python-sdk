@@ -25,3 +25,8 @@ The schema directory can be `openapi/schemas` itself. npm tools can still requir
 network access; `--schema-dir` only disables service-spec downloads.
 
 Use `--environment prod` or `--environment local` to download deployed specs.
+
+The canonical adaptive-referee and explicit answer-control adapters defer to
+native generated models once the branch specs declare their fields. Their
+narrow deserialization hooks live in the matching mustache templates; do not
+add guessed fields to generated models while awaiting an artifact.

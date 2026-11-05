@@ -446,7 +446,7 @@ The stopping rule is the value of `responses_per_datapoint`:
 
 | Value | Rule | Job types |
 |-------|------|-----------|
-| `AdaptiveStopping()` | Stop each pair at its first settled verdict. **Compare default** | Compare, single-select classification |
+| `AdaptiveStopping()` | Stop when the categorical model reaches a terminal decision. **Compare default** | Compare, single-select classification |
 | `QuorumStopping(threshold, max_responses)` | Stop once `threshold` responses agree | Classification, Compare |
 | `int` | Exactly that many responses. Default `10` for all other job types | All |
 
@@ -467,7 +467,9 @@ job_def = client.job.create_compare_job_definition(
 
 `AdaptiveStopping()` weights each response by the labeler's user score at response time. New results use `adaptiveStopping.verdict` and stable `leadingOutcomeIds`, with the full snapshot described in **Results Format**. `Winner` names one leading outcome; `TopSet` names leading alternatives, not several independently true single-select labels. `Open` and `Undecided` remain explicit strings. Weighted confidence is heuristic; binary response-count estimates and mathematical coverage claims do not generalize to this model.
 
-BothGood and BothBad remain separate categories in the evidence. Explicit can't solve has a separate tally and threshold, and is never inferred from Both, Neither, skipped responses, or empty selections. Keep counts separate from weighted shares. `CostEstimate.estimated_cost` remains the expected cost.
+Compare creation accepts `allow_both_good=False`, `allow_both_bad=False`, and `allow_cant_solve=False`; classification accepts `allow_cant_solve=False`. Set the explicit booleans to permit those responses. `AllowNeitherBothSetting` is only a UI hint; it never increases the substantive outcome count (two plus enabled BothGood/BothBad). Can't solve is excluded from that count and from leading sets. The same controls can be staged on saved definitions and persisted with `save()`.
+
+BothGood and BothBad remain separate categories in the evidence. Explicit can't solve has a separate tally and threshold, and is never inferred from Both, Neither, skipped responses, or empty selections. Compare `winners: []` is BothBad only when enabled; both asset winners are BothGood only when enabled. CS uses `cantSolve: true` exclusively with no winners/category. Normal classification selects the exact configured category value. Backend enablement does not deploy the annotator UI button. Keep counts separate from weighted shares. `CostEstimate.estimated_cost` remains the expected cost.
 
 ### Quorum Stopping
 
@@ -604,7 +606,7 @@ Settings with a `()` constructor are on/off: adding one turns the behavior on, l
 | Class | Constructor | Effect |
 |-------|-------------|--------|
 | `NoShuffleSetting` | `()` | Disable shuffling of answer options (Likert scales) |
-| `AllowNeitherBothSetting` | `(delay_ms: int = 5000)` — ≥ 0 | Comparison: show an "Unsure" button (answers "Neither" / "Both") after `delay_ms` milliseconds. New categorical adaptive evidence keeps BothGood and BothBad separate from A/B and explicit can't solve |
+| `AllowNeitherBothSetting` | `(delay_ms: int = 5000)` — ≥ 0 | Comparison UI hint: show "Neither" / "Both" after `delay_ms`. Eligibility requires explicit `allow_both_bad` / `allow_both_good`; this setting never changes the outcome count |
 | `MarkdownSetting` | `()` | Render markdown in text |
 | `MuteVideoSetting` | `()` | Start videos muted |
 | `FreeTextMinimumCharactersSetting` | `(value: int)` — must be ≥ 1 (prints a warning above 40) | Min chars for free-text tasks. Use with caution — see note below the table |

@@ -201,6 +201,8 @@ Single-select classification can also opt into `AdaptiveStopping()`; its default
 
 Workflow config always stores resolved `unsolvableThreshold` (default `0.5`), even when CS is disabled. Snapshot `parameters.unsolvableThreshold` is `null` in that case and `cantSolve` is omitted (accept `null` defensively). Keep null `estimate` keys; `lower` and `upper` must be finite numbers. Non-adaptive API results omit `adaptiveStopping`; rapid exports set it to `null`. The unmerged `ambiguity_range` keyword is replaced by `ambiguity_threshold`; saved legacy range reads convert via \(1-r^2\), and writes use the canonical field.
 
+Compare accepts `allow_both_good=False`, `allow_both_bad=False`, and `allow_cant_solve=False`; classification accepts `allow_cant_solve=False`. Set explicit booleans to permit these responses; UI settings alone never grant eligibility. The substantive compare outcome count is two plus the enabled BothGood/BothBad choices; exclude can't solve. Saved definitions expose the same controls for edits followed by `save()`.
+
 A `TopSet` identifies leading alternatives, not multiple independently true single-select labels. Stable outcome IDs must be interpreted using the backend's outcome definitions, never assumed to equal category values or asset names. BothGood and BothBad are distinct substantive categories, not half-votes for A/B. Explicit can't solve is separate from Both, Neither, skips, and empty selections; backend configuration alone does not mean its annotator button is deployed.
 
 Legacy exports with `stoppingState` still decode to `A`, `B`, `ambiguous`, `undecided`, or `open`. Fixed integer response counts and `QuorumStopping(threshold, max_responses)` remain available. See **Results Format** in the reference for snapshot fields.
@@ -492,7 +494,7 @@ from rapidata import (
 )
 
 settings=[NoShuffleSetting()]                             # Keep answer options in order (use for Likert scales)
-settings=[AllowNeitherBothSetting()]                      # Comparison: "Unsure" (neither/both) button, shown after delay_ms (default 5000)
+settings=[AllowNeitherBothSetting()]                      # UI hint only; enable allow_both_good / allow_both_bad separately
 settings=[MarkdownSetting()]                              # Render markdown in text
 settings=[MuteVideoSetting()]                             # Start videos muted
 settings=[FreeTextMinimumCharactersSetting(50)]           # Min text length for free-text tasks (use with caution — see note below)

@@ -1,12 +1,12 @@
 # Adaptive Stopping
 
-Adaptive stopping ends response collection for a datapoint once a stopping condition is met, so you pay for the responses that change the outcome and not for the ones after it.
+Adaptive stopping evaluates the latest admitted evidence for each datapoint and freezes it when a terminal decision is reached or its response cap is met.
 
 You choose the stopping rule with `responses_per_datapoint`:
 
 | Value | Rule | Job types |
 |-------|------|-----------|
-| `AdaptiveStopping()` | Stops each pair once its verdict is statistically settled. **Default for compare jobs.** | Compare, single-select classification |
+| `AdaptiveStopping()` | Stops when the categorical model reaches a terminal decision. **Default for compare jobs.** | Compare, single-select classification |
 | `QuorumStopping(threshold, max_responses)` | Stops once `threshold` responses agree. | Classification, Compare |
 | an `int` | Collects exactly that many responses. Default (`10`) for every other job type. | All |
 
@@ -60,7 +60,23 @@ The [cost estimate](cost_estimates.md) is the expected cost, not the final bill.
 
 ### "Unsure" votes
 
-[`AllowNeitherBothSetting`](job_definition_parameters.md#allowneitherbothsetting) enables additional compare choices. New categorical evidence retains BothGood and BothBad separately rather than splitting their scores into A/B. Explicit can't solve has its own evidence and is never inferred from either choice. Backend can't-solve configuration does not mean an annotator button is deployed.
+Pass `allow_both_good=True` and/or `allow_both_bad=True` to compare creation to permit those substantive outcomes. They default to `False`; the number of substantive outcomes is two plus the explicitly enabled choices. [`AllowNeitherBothSetting`](job_definition_parameters.md#allowneitherbothsetting) remains a UI display hint and does not grant answer eligibility.
+
+```python
+job_definition = client.job.create_compare_job_definition(
+    name="Compare with alternatives",
+    instruction="Which response answers the question better?",
+    datapoints=[["First response", "Second response"]],
+    data_type="text",
+    allow_both_good=True,
+    allow_both_bad=True,
+    responses_per_datapoint=AdaptiveStopping(max_outcome_count=3),
+)
+```
+
+Compare and single-select classification also accept `allow_cant_solve=True` (default `False`). This permits an explicit response with `cantSolve: true`, separate from substantive selections and excluded from the outcome count. An empty selection alone is never can't solve. Compare empty winners mean BothBad only when enabled; both winners mean BothGood only when enabled. These outcomes are never split into half-votes for A/B. Backend configuration does not deploy an annotator button; compatible UI support is required.
+
+Saved definitions expose the same `allow_both_good`, `allow_both_bad` and `allow_cant_solve` properties. Stage changes and call `save()`; reducing eligible outcomes can also require reducing `max_outcome_count`.
 
 ## Analyzing Adaptive Stopping Results
 
@@ -74,7 +90,7 @@ for datapoint in results["results"]:
         print(state["verdict"], state["leadingOutcomeIds"], state["responseCount"])
 ```
 
-`leadingOutcomeIds` are stable identities that require the backend outcome definitions; their spelling or position does not supply an asset name or category value. `outcomes` keeps raw counts separate from weighted scores and shares. See [Adaptive evidence](understanding_the_results.md#adaptive-evidence) for every field and verdict.
+`leadingOutcomeIds` use `a0`/`a1` for immutable compare asset positions, `bothGood`/`bothBad` for those distinct outcomes, and `c0`, `c1`, … for immutable category order. Resolve them using the matching backend outcome definitions; category identity is the exact configured value, not its label or the order of an aggregate dictionary. Unknown IDs remain unchanged. The SDK retains opaque IDs when that mapping is unavailable. `outcomes` keeps raw counts separate from weighted scores and shares. See [Adaptive evidence](understanding_the_results.md#adaptive-evidence) for every field and verdict.
 
 Older `stoppingState` exports still decode to the legacy `A`, `B`, `ambiguous`, `undecided`, or `open` aliases. In a mixed export, `adaptiveStopping` takes precedence; both raw blocks remain available. `to_pandas()` keeps the new snapshot as one dictionary column, including when splitting detailed responses.
 

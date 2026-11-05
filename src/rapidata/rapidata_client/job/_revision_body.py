@@ -92,6 +92,39 @@ def _with_answer_options(
     return IOrderWorkflowInput.from_dict(data)  # type: ignore[return-value]
 
 
+_ANSWER_CONTROLS = {
+    "allow_both_good": ("allowBothGood", {"Compare"}),
+    "allow_both_bad": ("allowBothBad", {"Compare"}),
+    "allow_cant_solve": ("allowCantSolve", {"Compare", "Classify"}),
+}
+
+
+def _get_answer_control(workflow: IOrderWorkflowInput, name: str) -> bool | None:
+    data = _as_dict(workflow)
+    field, kinds = _ANSWER_CONTROLS[name]
+    if _workflow_kind(data) not in kinds:
+        return None
+    return data["rapid"].get(field, False)
+
+
+def _with_answer_control(
+    workflow: IOrderWorkflowInput, name: str, value: bool
+) -> IOrderWorkflowInput:
+    from rapidata.rapidata_client.workflow._answer_controls import (
+        validate_answer_control,
+    )
+
+    validate_answer_control(name, value)
+    data = _as_dict(workflow)
+    field, kinds = _ANSWER_CONTROLS[name]
+    if _workflow_kind(data) not in kinds:
+        raise ValueError(
+            f"A '{_workflow_kind(data)}' job definition has no {name} control."
+        )
+    data["rapid"][field] = value
+    return IOrderWorkflowInput.from_dict(data)  # type: ignore[return-value]
+
+
 def _get_responses(referee: IReferee) -> int | AdaptiveStopping | QuorumStopping:
     from rapidata.rapidata_client.referee.stopping import (
         AdaptiveStopping,
@@ -165,6 +198,10 @@ def _full_body(
     if "answer_options" in pending:
         workflow = _with_answer_options(workflow, pending["answer_options"])
 
+    for name in _ANSWER_CONTROLS:
+        if name in pending:
+            workflow = _with_answer_control(workflow, name, pending[name])
+
     referee = snapshot.referee
     if "responses_per_datapoint" in pending:
         referee = _with_responses(referee, pending["responses_per_datapoint"])
@@ -181,8 +218,12 @@ def _full_body(
         config = AdaptiveStopping._from_dict(_as_dict(referee))
         workflow_data = _as_dict(workflow)
         if _workflow_kind(workflow_data) == "Compare":
+            from rapidata.rapidata_client.workflow._answer_controls import (
+                compare_outcome_count,
+            )
+
             config._validate_outcome_count(
-                4 if any(flag.key == "compare_unsure" for flag in rapid_flags) else 2
+                compare_outcome_count(workflow_data["rapid"])
             )
         else:
             categories = (workflow_data["rapid"].get("categories") or {}).get("literal")
