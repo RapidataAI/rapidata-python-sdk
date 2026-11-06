@@ -7,6 +7,10 @@ from rapidata.rapidata_client.audience.rapidata_audience_manager import (
     RapidataAudienceManager,
 )
 
+# Asset Types
+from rapidata.rapidata_client.asset.rapidata_asset_manager import RapidataAssetManager
+from rapidata.rapidata_client.datapoints.assets.uploaded_asset import UploadedAsset
+
 # Benchmark Types
 from rapidata.rapidata_client.benchmark.rapidata_benchmark import RapidataBenchmark
 from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import (
@@ -111,6 +115,9 @@ __all__ = [
     # Audience Types
     "RapidataAudience",
     "RapidataAudienceManager",
+    # Asset Types
+    "RapidataAssetManager",
+    "UploadedAsset",
     # Benchmark Types
     "RapidataBenchmark",
     "RapidataBenchmarkManager",

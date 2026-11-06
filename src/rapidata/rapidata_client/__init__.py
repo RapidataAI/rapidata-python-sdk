@@ -25,6 +25,7 @@ from .flow import (
     RapidataClassifyFlow,
 )
 from .billing import BillingPeriod, RapidataBillingManager
+from .asset import RapidataAssetManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box
 from .results import RapidataResults
 from rapidata.api_client.models.benchmark_demographic_dimension import (
@@ -44,6 +45,7 @@ from .benchmark.prompt_metadata import Origin, Tag
 from .benchmark.leaderboard.vote_aggregation import VoteAggregation
 from .benchmark.participant.sample_upload import SampleUpload
 from .datapoints import Datapoint
+from .datapoints.assets.uploaded_asset import UploadedAsset
 from .context import ContextManager
 from .datapoints.metadata import (
     PrivateTextMetadata,

@@ -95,6 +95,7 @@ The file is just one transport. To move the token over any transport (key-value 
 - `client.signals` — run a labeling job on a repeating schedule
 - `client.context` — shorten over-long datapoint contexts against a specific question
 - `client.billing` — read the current billing period's cost and remaining credit, and the outstanding balance owed (organization-level)
+- `client.asset` — upload media once (`client.asset.upload(path_or_url)` → `UploadedAsset`) and reuse the reference in any job definition
 - `client.validation` — validation sets (`create_classification_set`, `create_compare_set`, …, `get_validation_set_by_id`, `find_validation_sets`); only needed for a flow's `validation_set_id` — jobs qualify labelers through audience examples instead
 
 ## Task design rules
@@ -294,6 +295,26 @@ job_def = client.job.create_free_text_job_definition(
     contexts=["Optional text context"],
 )
 ```
+
+### Upload once, reuse the reference
+
+`client.asset.upload(path_or_url)` uploads a local file or URL and returns an `UploadedAsset`. Every `create_*_job_definition` and `set_datapoints` accepts it wherever it takes a media datapoint or media context, alone or mixed with paths and URLs, and uses it as-is: it is never uploaded again.
+
+```python
+from rapidata import UploadedAsset
+
+baseline = client.asset.upload("baseline.png")  # UploadedAsset(name='<uuid>.png')
+job_def = client.job.create_compare_job_definition(
+    name="Baseline vs candidates",
+    instruction="Which image looks better?",
+    datapoints=[[baseline, "candidate_1.png"], [baseline, "https://example.com/candidate_2.png"]],
+)
+
+saved_name = baseline.name               # keep the name to reuse this upload later,
+baseline = UploadedAsset(saved_name)     # e.g. in another session
+```
+
+An `UploadedAsset` is media, so it cannot be a `data_type="text"` datapoint. Audience examples, validation sets, flows and benchmarks still take paths and URLs only.
 
 ### Custom Audiences
 
