@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.05.1709-7244247"
+    "version": "2026.11.06.1913-feab628"
   },
   "servers": [
     {
@@ -525,6 +525,207 @@
           }
         ]
       }
+    },
+    "/asset/upload-session": {
+      "post": {
+        "tags": [
+          "UploadSession"
+        ],
+        "summary": "Creates an upload session and returns the token that authorizes uploads to it.",
+        "description": "The token is returned only once. The session accepts uploads for one hour and stays readable for seven days.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUploadSessionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/asset/upload-session/{uploadSessionId}/files": {
+      "get": {
+        "tags": [
+          "UploadSession"
+        ],
+        "summary": "Gets a page of the files uploaded to an upload session, oldest first, with their asset references.",
+        "parameters": [
+          {
+            "name": "uploadSessionId",
+            "in": "path",
+            "description": "The identifier of the upload session.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUploadSessionFilesEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/asset/upload-session/{uploadSessionId}/file": {
+      "post": {
+        "tags": [
+          "UploadSession"
+        ],
+        "summary": "Uploads the multipart parts named file and returns their asset references; one rejected file fails them all.",
+        "parameters": [
+          {
+            "name": "uploadSessionId",
+            "in": "path",
+            "description": "The identifier of the upload session.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Upload-Token",
+            "in": "header",
+            "description": "The upload token returned when the session was created.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadFilesToUploadSessionEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadFilesToUploadSessionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -604,6 +805,41 @@
           "batchUploadId": {
             "type": "string",
             "description": "The identifier of the created batch upload."
+          }
+        }
+      },
+      "CreateUploadSessionEndpoint_Output": {
+        "required": [
+          "id",
+          "uploadToken",
+          "expiresAt",
+          "maxFiles",
+          "maxFileSizeBytes"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The identifier of the upload session."
+          },
+          "uploadToken": {
+            "type": "string",
+            "description": "The secret to send in the X-Upload-Token header of every upload."
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "When the session stops accepting uploads.",
+            "format": "date-time"
+          },
+          "maxFiles": {
+            "type": "integer",
+            "description": "The number of files the session accepts in total.",
+            "format": "int32"
+          },
+          "maxFileSizeBytes": {
+            "type": "integer",
+            "description": "The size limit for a single file, in bytes.",
+            "format": "int64"
           }
         }
       },
@@ -742,9 +978,97 @@
           }
         }
       },
+      "GetUploadSessionFilesEndpoint_Output": {
+        "required": [
+          "originalName",
+          "fileName",
+          "uploadedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "originalName": {
+            "type": "string",
+            "description": "The name of the file as it was uploaded."
+          },
+          "fileName": {
+            "type": "string",
+            "description": "The asset reference to use for the file in job definitions."
+          },
+          "uploadedAt": {
+            "type": "string",
+            "description": "When the file was uploaded.",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetUploadSessionFilesEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetUploadSessionFilesEndpoint_Output"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "IFormFile": {
         "type": "string",
         "format": "binary"
+      },
+      "IFormFileCollection": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IFormFile"
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        }
       },
       "UploadFileEndpoint_Output": {
         "required": [
@@ -825,6 +1149,56 @@
             "description": "The final size of the stored file in bytes after processing (e.g., compression), if available.\n This may be smaller than the original size if compression was applied.",
             "format": "int64",
             "nullable": true
+          }
+        }
+      },
+      "UploadFilesToUploadSessionEndpoint_FileOutput": {
+        "required": [
+          "originalName",
+          "fileName"
+        ],
+        "type": "object",
+        "properties": {
+          "originalName": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          }
+        }
+      },
+      "UploadFilesToUploadSessionEndpoint_Input": {
+        "required": [
+          "file"
+        ],
+        "type": "object",
+        "properties": {
+          "file": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IFormFileCollection"
+              }
+            ],
+            "description": "The files to upload, one multipart part named file per file."
+          }
+        }
+      },
+      "UploadFilesToUploadSessionEndpoint_Output": {
+        "required": [
+          "files"
+        ],
+        "type": "object",
+        "properties": {
+          "files": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UploadFilesToUploadSessionEndpoint_FileOutput"
+                }
+              }
+            ],
+            "description": "The uploaded files, in the order they were sent."
           }
         }
       },

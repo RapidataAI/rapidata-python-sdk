@@ -14,8 +14,7 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBool, StrictStr
-from typing import Optional
+from pydantic import Field, StrictStr
 from typing_extensions import Annotated
 from rapidata.api_client.models.create_sample_endpoint_input import CreateSampleEndpointInput
 from rapidata.api_client.models.create_sample_endpoint_output import CreateSampleEndpointOutput
@@ -312,8 +311,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_disable_post(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to disable.")],
-        keep_votes: Annotated[Optional[StrictBool], Field(description="Whether the votes the participant already collected keep counting toward the scores while  it is disabled. Defaults to true.")] = None,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to deprecate.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -327,14 +325,11 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Disables a participant in a benchmark.
+        """Deprecates a participant: reads leave it and its votes out unless they filter on include_deprecated_participants[eq]=true. Fails with 400 unless it is submitted.
 
-        The participant is no longer matched up and collects no further results, but stays listed in  the standings. By default its already-collected votes keep counting toward every model's  score; pass keepVotes=false to drop them from the scores and the matchups instead.  The choice can be changed later through the participant update endpoint. Fails with 400 if  the participant is not currently submitted.
 
-        :param participant_id: The id of the participant to disable. (required)
+        :param participant_id: The id of the participant to deprecate. (required)
         :type participant_id: str
-        :param keep_votes: Whether the votes the participant already collected keep counting toward the scores while  it is disabled. Defaults to true.
-        :type keep_votes: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -359,7 +354,6 @@ class ParticipantApi:
 
         _param = self._participant_participant_id_disable_post_serialize(
             participant_id=participant_id,
-            keep_votes=keep_votes,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -386,8 +380,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_disable_post_with_http_info(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to disable.")],
-        keep_votes: Annotated[Optional[StrictBool], Field(description="Whether the votes the participant already collected keep counting toward the scores while  it is disabled. Defaults to true.")] = None,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to deprecate.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -401,14 +394,11 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Disables a participant in a benchmark.
+        """Deprecates a participant: reads leave it and its votes out unless they filter on include_deprecated_participants[eq]=true. Fails with 400 unless it is submitted.
 
-        The participant is no longer matched up and collects no further results, but stays listed in  the standings. By default its already-collected votes keep counting toward every model's  score; pass keepVotes=false to drop them from the scores and the matchups instead.  The choice can be changed later through the participant update endpoint. Fails with 400 if  the participant is not currently submitted.
 
-        :param participant_id: The id of the participant to disable. (required)
+        :param participant_id: The id of the participant to deprecate. (required)
         :type participant_id: str
-        :param keep_votes: Whether the votes the participant already collected keep counting toward the scores while  it is disabled. Defaults to true.
-        :type keep_votes: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -433,7 +423,6 @@ class ParticipantApi:
 
         _param = self._participant_participant_id_disable_post_serialize(
             participant_id=participant_id,
-            keep_votes=keep_votes,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -460,8 +449,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_disable_post_without_preload_content(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to disable.")],
-        keep_votes: Annotated[Optional[StrictBool], Field(description="Whether the votes the participant already collected keep counting toward the scores while  it is disabled. Defaults to true.")] = None,
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to deprecate.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -475,14 +463,11 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Disables a participant in a benchmark.
+        """Deprecates a participant: reads leave it and its votes out unless they filter on include_deprecated_participants[eq]=true. Fails with 400 unless it is submitted.
 
-        The participant is no longer matched up and collects no further results, but stays listed in  the standings. By default its already-collected votes keep counting toward every model's  score; pass keepVotes=false to drop them from the scores and the matchups instead.  The choice can be changed later through the participant update endpoint. Fails with 400 if  the participant is not currently submitted.
 
-        :param participant_id: The id of the participant to disable. (required)
+        :param participant_id: The id of the participant to deprecate. (required)
         :type participant_id: str
-        :param keep_votes: Whether the votes the participant already collected keep counting toward the scores while  it is disabled. Defaults to true.
-        :type keep_votes: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -507,7 +492,6 @@ class ParticipantApi:
 
         _param = self._participant_participant_id_disable_post_serialize(
             participant_id=participant_id,
-            keep_votes=keep_votes,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -530,7 +514,6 @@ class ParticipantApi:
     def _participant_participant_id_disable_post_serialize(
         self,
         participant_id,
-        keep_votes,
         _request_auth,
         _content_type,
         _headers,
@@ -555,10 +538,6 @@ class ParticipantApi:
         if participant_id is not None:
             _path_params['participantId'] = participant_id
         # process the query parameters
-        if keep_votes is not None:
-            
-            _query_params.append(('keepVotes', keep_votes))
-            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -599,7 +578,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_enable_post(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to enable.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to restore.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -613,11 +592,11 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Enables a previously disabled participant in a benchmark.
+        """Restores a deprecated participant in a benchmark.
 
-        Fails with 400 if the participant is not currently disabled. Votes that were excluded from  the scores while it was disabled count again.
+        Fails with 400 if the participant is not currently deprecated.
 
-        :param participant_id: The id of the participant to enable. (required)
+        :param participant_id: The id of the participant to restore. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -669,7 +648,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_enable_post_with_http_info(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to enable.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to restore.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -683,11 +662,11 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Enables a previously disabled participant in a benchmark.
+        """Restores a deprecated participant in a benchmark.
 
-        Fails with 400 if the participant is not currently disabled. Votes that were excluded from  the scores while it was disabled count again.
+        Fails with 400 if the participant is not currently deprecated.
 
-        :param participant_id: The id of the participant to enable. (required)
+        :param participant_id: The id of the participant to restore. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -739,7 +718,7 @@ class ParticipantApi:
     @validate_call
     def participant_participant_id_enable_post_without_preload_content(
         self,
-        participant_id: Annotated[StrictStr, Field(description="The id of the participant to enable.")],
+        participant_id: Annotated[StrictStr, Field(description="The id of the participant to restore.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -753,11 +732,11 @@ class ParticipantApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Enables a previously disabled participant in a benchmark.
+        """Restores a deprecated participant in a benchmark.
 
-        Fails with 400 if the participant is not currently disabled. Votes that were excluded from  the scores while it was disabled count again.
+        Fails with 400 if the participant is not currently deprecated.
 
-        :param participant_id: The id of the participant to enable. (required)
+        :param participant_id: The id of the participant to restore. (required)
         :type participant_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1683,6 +1662,276 @@ class ParticipantApi:
         return self.api_client.param_serialize(
             method='PATCH',
             resource_path='/participant/{participantId}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def participant_participant_id_promote_post(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the candidate to promote.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Promotes a candidate, so participants submitted from then on are paired against it.
+
+        Fails with 400 unless the participant is a candidate. Starts no matchups.
+
+        :param participant_id: The id of the candidate to promote. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_promote_post_serialize(
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def participant_participant_id_promote_post_with_http_info(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the candidate to promote.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Promotes a candidate, so participants submitted from then on are paired against it.
+
+        Fails with 400 unless the participant is a candidate. Starts no matchups.
+
+        :param participant_id: The id of the candidate to promote. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_promote_post_serialize(
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def participant_participant_id_promote_post_without_preload_content(
+        self,
+        participant_id: Annotated[StrictStr, Field(description="The id of the candidate to promote.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Promotes a candidate, so participants submitted from then on are paired against it.
+
+        Fails with 400 unless the participant is a candidate. Starts no matchups.
+
+        :param participant_id: The id of the candidate to promote. (required)
+        :type participant_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._participant_participant_id_promote_post_serialize(
+            participant_id=participant_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _participant_participant_id_promote_post_serialize(
+        self,
+        participant_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if participant_id is not None:
+            _path_params['participantId'] = participant_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/participant/{participantId}/promote',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2819,7 +3068,7 @@ class ParticipantApi:
     ) -> SubmitParticipantsEndpointOutput:
         """Submits several participants of one benchmark together, so they are evaluated as one batch.
 
-        A batch is compared symmetrically — every participant against every other and against the  benchmark's already-submitted field — where the same participants submitted one by one would  be compared in submission order. All participants must belong to the same benchmark, be  ready for evaluation, and appear at most once; at most 100 per request.
+        A batch is compared symmetrically — every participant against every other and against the  benchmark's public submitted non-candidates, but never two non-public or candidate ones together.  All participants must belong to the same benchmark, be ready for evaluation, and appear at  most once; at most 100 per request.
 
         :param submit_participants_endpoint_input: The participants to submit. (required)
         :type submit_participants_endpoint_input: SubmitParticipantsEndpointInput
@@ -2889,7 +3138,7 @@ class ParticipantApi:
     ) -> ApiResponse[SubmitParticipantsEndpointOutput]:
         """Submits several participants of one benchmark together, so they are evaluated as one batch.
 
-        A batch is compared symmetrically — every participant against every other and against the  benchmark's already-submitted field — where the same participants submitted one by one would  be compared in submission order. All participants must belong to the same benchmark, be  ready for evaluation, and appear at most once; at most 100 per request.
+        A batch is compared symmetrically — every participant against every other and against the  benchmark's public submitted non-candidates, but never two non-public or candidate ones together.  All participants must belong to the same benchmark, be ready for evaluation, and appear at  most once; at most 100 per request.
 
         :param submit_participants_endpoint_input: The participants to submit. (required)
         :type submit_participants_endpoint_input: SubmitParticipantsEndpointInput
@@ -2959,7 +3208,7 @@ class ParticipantApi:
     ) -> RESTResponseType:
         """Submits several participants of one benchmark together, so they are evaluated as one batch.
 
-        A batch is compared symmetrically — every participant against every other and against the  benchmark's already-submitted field — where the same participants submitted one by one would  be compared in submission order. All participants must belong to the same benchmark, be  ready for evaluation, and appear at most once; at most 100 per request.
+        A batch is compared symmetrically — every participant against every other and against the  benchmark's public submitted non-candidates, but never two non-public or candidate ones together.  All participants must belong to the same benchmark, be ready for evaluation, and appear at  most once; at most 100 per request.
 
         :param submit_participants_endpoint_input: The participants to submit. (required)
         :type submit_participants_endpoint_input: SubmitParticipantsEndpointInput

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.11.05.1709-7244247"
+    "version": "2026.11.06.1913-feab628"
   },
   "servers": [
     {
@@ -1239,7 +1239,9 @@
                   "email",
                   "-email",
                   "organization_name",
-                  "-organization_name"
+                  "-organization_name",
+                  "created_at",
+                  "-created_at"
                 ],
                 "type": "string"
               }
@@ -3329,59 +3331,6 @@
         ]
       }
     },
-    "/organizations/active": {
-      "put": {
-        "tags": [
-          "Organization"
-        ],
-        "summary": "Switches the calling customer's active organization to the given one.",
-        "description": "The active organization determines the token's org claim; the change takes effect the next time\n the client refreshes its token. Responds with 403 when the caller is not a member of the target\n organization.",
-        "requestBody": {
-          "description": "The organization to activate.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SwitchActiveOrganizationEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "organization:write"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      }
-    },
     "/authorization/relations/platform": {
       "get": {
         "tags": [
@@ -5303,18 +5252,6 @@
           "token": {
             "type": "string",
             "description": "The recaptcha token used to verify the caller is not a bot."
-          }
-        }
-      },
-      "SwitchActiveOrganizationEndpoint_Input": {
-        "required": [
-          "organizationId"
-        ],
-        "type": "object",
-        "properties": {
-          "organizationId": {
-            "type": "string",
-            "description": "The id of the organization to activate."
           }
         }
       },

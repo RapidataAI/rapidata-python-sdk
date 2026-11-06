@@ -64,6 +64,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -80,7 +81,7 @@ class LeaderboardApi:
     ) -> QueryCombinedMatrixByLeaderboardsEndpointOutput:
         """Queries the combined win matrix of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -106,6 +107,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -143,6 +146,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -182,6 +186,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -198,7 +203,7 @@ class LeaderboardApi:
     ) -> ApiResponse[QueryCombinedMatrixByLeaderboardsEndpointOutput]:
         """Queries the combined win matrix of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -224,6 +229,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -261,6 +268,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -300,6 +308,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -316,7 +325,7 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Queries the combined win matrix of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -342,6 +351,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -379,6 +390,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -413,6 +425,7 @@ class LeaderboardApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -595,6 +608,21 @@ class LeaderboardApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -651,6 +679,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -667,7 +696,7 @@ class LeaderboardApi:
     ) -> QueryCombinedStandingsByLeaderboardsEndpointOutput:
         """Queries the combined standings of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -693,6 +722,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -730,6 +761,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -769,6 +801,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -785,7 +818,7 @@ class LeaderboardApi:
     ) -> ApiResponse[QueryCombinedStandingsByLeaderboardsEndpointOutput]:
         """Queries the combined standings of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -811,6 +844,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -848,6 +883,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -887,6 +923,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -903,7 +940,7 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Queries the combined standings of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -929,6 +966,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -966,6 +1005,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1000,6 +1040,7 @@ class LeaderboardApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -1182,6 +1223,21 @@ class LeaderboardApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -1775,6 +1831,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -1791,7 +1848,7 @@ class LeaderboardApi:
     ) -> QueryMatrixByLeaderboardEndpointOutput:
         """Queries the win matrix of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
@@ -1817,6 +1874,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1854,6 +1913,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1893,6 +1953,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -1909,7 +1970,7 @@ class LeaderboardApi:
     ) -> ApiResponse[QueryMatrixByLeaderboardEndpointOutput]:
         """Queries the win matrix of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
@@ -1935,6 +1996,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1972,6 +2035,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2011,6 +2075,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -2027,7 +2092,7 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Queries the win matrix of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
@@ -2053,6 +2118,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2090,6 +2157,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2124,6 +2192,7 @@ class LeaderboardApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -2303,6 +2372,21 @@ class LeaderboardApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -3421,7 +3505,6 @@ class LeaderboardApi:
         self,
         leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
-        include_disabled: Annotated[Optional[StrictBool], Field(description="Whether disabled participants are listed; their kept votes still count toward the other scores.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -3432,6 +3515,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3448,14 +3532,12 @@ class LeaderboardApi:
     ) -> QueryStandingsByLeaderboardEndpointOutput:
         """Queries the standings of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_disabled: Whether disabled participants are listed; their kept votes still count toward the other scores.
-        :type include_disabled: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -3476,6 +3558,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3503,7 +3587,6 @@ class LeaderboardApi:
         _param = self._leaderboard_leaderboard_id_standings_query_get_serialize(
             leaderboard_id=leaderboard_id,
             use_weighted_scoring=use_weighted_scoring,
-            include_disabled=include_disabled,
             country=country,
             language=language,
             gender=gender,
@@ -3514,6 +3597,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3543,7 +3627,6 @@ class LeaderboardApi:
         self,
         leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
-        include_disabled: Annotated[Optional[StrictBool], Field(description="Whether disabled participants are listed; their kept votes still count toward the other scores.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -3554,6 +3637,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3570,14 +3654,12 @@ class LeaderboardApi:
     ) -> ApiResponse[QueryStandingsByLeaderboardEndpointOutput]:
         """Queries the standings of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_disabled: Whether disabled participants are listed; their kept votes still count toward the other scores.
-        :type include_disabled: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -3598,6 +3680,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3625,7 +3709,6 @@ class LeaderboardApi:
         _param = self._leaderboard_leaderboard_id_standings_query_get_serialize(
             leaderboard_id=leaderboard_id,
             use_weighted_scoring=use_weighted_scoring,
-            include_disabled=include_disabled,
             country=country,
             language=language,
             gender=gender,
@@ -3636,6 +3719,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3665,7 +3749,6 @@ class LeaderboardApi:
         self,
         leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard.")],
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring based on user scores.")] = None,
-        include_disabled: Annotated[Optional[StrictBool], Field(description="Whether disabled participants are listed; their kept votes still count toward the other scores.")] = None,
         country: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by country.")] = None,
         language: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by language.")] = None,
         gender: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by gender.")] = None,
@@ -3676,6 +3759,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3692,14 +3776,12 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Queries the standings of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
         :param use_weighted_scoring: Whether to apply weighted scoring based on user scores.
         :type use_weighted_scoring: bool
-        :param include_disabled: Whether disabled participants are listed; their kept votes still count toward the other scores.
-        :type include_disabled: bool
         :param country: Filter by country.
         :type country: AudienceAudienceIdJobsGetJobIdParameter
         :param language: Filter by language.
@@ -3720,6 +3802,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3747,7 +3831,6 @@ class LeaderboardApi:
         _param = self._leaderboard_leaderboard_id_standings_query_get_serialize(
             leaderboard_id=leaderboard_id,
             use_weighted_scoring=use_weighted_scoring,
-            include_disabled=include_disabled,
             country=country,
             language=language,
             gender=gender,
@@ -3758,6 +3841,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3782,7 +3866,6 @@ class LeaderboardApi:
         self,
         leaderboard_id,
         use_weighted_scoring,
-        include_disabled,
         country,
         language,
         gender,
@@ -3793,6 +3876,7 @@ class LeaderboardApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -3821,10 +3905,6 @@ class LeaderboardApi:
         if use_weighted_scoring is not None:
             
             _query_params.append(('useWeightedScoring', use_weighted_scoring))
-            
-        if include_disabled is not None:
-            
-            _query_params.append(('includeDisabled', include_disabled))
             
         if country is not None:
             _param_val = country
@@ -3976,6 +4056,21 @@ class LeaderboardApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
