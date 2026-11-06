@@ -22,6 +22,7 @@ from rapidata.api_client.models.i_rapid_spec_free_text_rapid_spec import IRapidS
 from rapidata.api_client.models.i_rapid_spec_line_rapid_spec import IRapidSpecLineRapidSpec
 from rapidata.api_client.models.i_rapid_spec_locate_rapid_spec import IRapidSpecLocateRapidSpec
 from rapidata.api_client.models.i_rapid_spec_named_entity_rapid_spec import IRapidSpecNamedEntityRapidSpec
+from rapidata.api_client.models.i_rapid_spec_open_rapid_spec import IRapidSpecOpenRapidSpec
 from rapidata.api_client.models.i_rapid_spec_polygon_rapid_spec import IRapidSpecPolygonRapidSpec
 from rapidata.api_client.models.i_rapid_spec_scrub_rapid_spec import IRapidSpecScrubRapidSpec
 from rapidata.api_client.models.i_rapid_spec_transcription_rapid_spec import IRapidSpecTranscriptionRapidSpec
@@ -30,7 +31,7 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IRAPIDSPEC_ONE_OF_SCHEMAS = ["IRapidSpecBoundingBoxRapidSpec", "IRapidSpecClassifyRapidSpec", "IRapidSpecCompareRapidSpec", "IRapidSpecFreeTextRapidSpec", "IRapidSpecLineRapidSpec", "IRapidSpecLocateRapidSpec", "IRapidSpecNamedEntityRapidSpec", "IRapidSpecPolygonRapidSpec", "IRapidSpecScrubRapidSpec", "IRapidSpecTranscriptionRapidSpec"]
+IRAPIDSPEC_ONE_OF_SCHEMAS = ["IRapidSpecBoundingBoxRapidSpec", "IRapidSpecClassifyRapidSpec", "IRapidSpecCompareRapidSpec", "IRapidSpecFreeTextRapidSpec", "IRapidSpecLineRapidSpec", "IRapidSpecLocateRapidSpec", "IRapidSpecNamedEntityRapidSpec", "IRapidSpecOpenRapidSpec", "IRapidSpecPolygonRapidSpec", "IRapidSpecScrubRapidSpec", "IRapidSpecTranscriptionRapidSpec"]
 
 class IRapidSpec(LazyValidatedModel):
     """
@@ -50,14 +51,16 @@ class IRapidSpec(LazyValidatedModel):
     oneof_schema_6_validator: Optional[IRapidSpecLocateRapidSpec] = None
     # data type: IRapidSpecNamedEntityRapidSpec
     oneof_schema_7_validator: Optional[IRapidSpecNamedEntityRapidSpec] = None
+    # data type: IRapidSpecOpenRapidSpec
+    oneof_schema_8_validator: Optional[IRapidSpecOpenRapidSpec] = None
     # data type: IRapidSpecPolygonRapidSpec
-    oneof_schema_8_validator: Optional[IRapidSpecPolygonRapidSpec] = None
+    oneof_schema_9_validator: Optional[IRapidSpecPolygonRapidSpec] = None
     # data type: IRapidSpecScrubRapidSpec
-    oneof_schema_9_validator: Optional[IRapidSpecScrubRapidSpec] = None
+    oneof_schema_10_validator: Optional[IRapidSpecScrubRapidSpec] = None
     # data type: IRapidSpecTranscriptionRapidSpec
-    oneof_schema_10_validator: Optional[IRapidSpecTranscriptionRapidSpec] = None
-    actual_instance: Optional[Union[IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec]] = None
-    one_of_schemas: Set[str] = { "IRapidSpecBoundingBoxRapidSpec", "IRapidSpecClassifyRapidSpec", "IRapidSpecCompareRapidSpec", "IRapidSpecFreeTextRapidSpec", "IRapidSpecLineRapidSpec", "IRapidSpecLocateRapidSpec", "IRapidSpecNamedEntityRapidSpec", "IRapidSpecPolygonRapidSpec", "IRapidSpecScrubRapidSpec", "IRapidSpecTranscriptionRapidSpec" }
+    oneof_schema_11_validator: Optional[IRapidSpecTranscriptionRapidSpec] = None
+    actual_instance: Optional[Union[IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecOpenRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec]] = None
+    one_of_schemas: Set[str] = { "IRapidSpecBoundingBoxRapidSpec", "IRapidSpecClassifyRapidSpec", "IRapidSpecCompareRapidSpec", "IRapidSpecFreeTextRapidSpec", "IRapidSpecLineRapidSpec", "IRapidSpecLocateRapidSpec", "IRapidSpecNamedEntityRapidSpec", "IRapidSpecOpenRapidSpec", "IRapidSpecPolygonRapidSpec", "IRapidSpecScrubRapidSpec", "IRapidSpecTranscriptionRapidSpec" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -115,6 +118,11 @@ class IRapidSpec(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidSpecNamedEntityRapidSpec`")
         else:
             match += 1
+        # validate data type: IRapidSpecOpenRapidSpec
+        if not isinstance(v, IRapidSpecOpenRapidSpec):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidSpecOpenRapidSpec`")
+        else:
+            match += 1
         # validate data type: IRapidSpecPolygonRapidSpec
         if not isinstance(v, IRapidSpecPolygonRapidSpec):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidSpecPolygonRapidSpec`")
@@ -132,10 +140,10 @@ class IRapidSpec(LazyValidatedModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IRapidSpec with oneOf schemas: IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IRapidSpec with oneOf schemas: IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecOpenRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IRapidSpec with oneOf schemas: IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IRapidSpec with oneOf schemas: IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecOpenRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -192,6 +200,12 @@ class IRapidSpec(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IRapidSpecOpenRapidSpec
+        try:
+            instance.actual_instance = IRapidSpecOpenRapidSpec.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IRapidSpecPolygonRapidSpec
         try:
             instance.actual_instance = IRapidSpecPolygonRapidSpec.from_json(json_str)
@@ -213,10 +227,10 @@ class IRapidSpec(LazyValidatedModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IRapidSpec with oneOf schemas: IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IRapidSpec with oneOf schemas: IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecOpenRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IRapidSpec with oneOf schemas: IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IRapidSpec with oneOf schemas: IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecOpenRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -230,7 +244,7 @@ class IRapidSpec(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRapidSpecBoundingBoxRapidSpec, IRapidSpecClassifyRapidSpec, IRapidSpecCompareRapidSpec, IRapidSpecFreeTextRapidSpec, IRapidSpecLineRapidSpec, IRapidSpecLocateRapidSpec, IRapidSpecNamedEntityRapidSpec, IRapidSpecOpenRapidSpec, IRapidSpecPolygonRapidSpec, IRapidSpecScrubRapidSpec, IRapidSpecTranscriptionRapidSpec]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

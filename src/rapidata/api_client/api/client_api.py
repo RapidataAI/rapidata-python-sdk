@@ -328,6 +328,7 @@ class ClientApi:
     ) -> CreateClientEndpointOutput:
         """Creates a new client for the current customer.
 
+        The client never holds more than the calling token; asking for more is refused with 403 insufficient_scope.
 
         :param create_client_endpoint_input: The client creation payload. (required)
         :type create_client_endpoint_input: CreateClientEndpointInput
@@ -397,6 +398,7 @@ class ClientApi:
     ) -> ApiResponse[CreateClientEndpointOutput]:
         """Creates a new client for the current customer.
 
+        The client never holds more than the calling token; asking for more is refused with 403 insufficient_scope.
 
         :param create_client_endpoint_input: The client creation payload. (required)
         :type create_client_endpoint_input: CreateClientEndpointInput
@@ -466,6 +468,7 @@ class ClientApi:
     ) -> RESTResponseType:
         """Creates a new client for the current customer.
 
+        The client never holds more than the calling token; asking for more is refused with 403 insufficient_scope.
 
         :param create_client_endpoint_input: The client creation payload. (required)
         :type create_client_endpoint_input: CreateClientEndpointInput
