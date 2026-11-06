@@ -11,6 +11,7 @@ from rapidata.rapidata_client.config import logger, rapidata_config, tracer
 from rapidata.rapidata_client.config.upload_config import CompressionConfig
 from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache
+from rapidata.rapidata_client.datapoints._string_only_disk import StringOnlyDisk
 from rapidata.rapidata_client.exceptions.asset_warning import AssetWarning
 from diskcache import FanoutCache
 
@@ -54,6 +55,7 @@ class AssetUploader:
                     rapidata_config.upload.cacheLocation,
                     shards=rapidata_config.upload.cacheShards,
                     timeout=rapidata_config.upload.cacheTimeout,
+                    disk=StringOnlyDisk,
                 )
                 logger.debug("Initialized file cache with disk storage")
             else:
