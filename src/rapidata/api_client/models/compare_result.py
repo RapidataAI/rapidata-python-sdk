@@ -88,6 +88,11 @@ class CompareResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
+        from rapidata.rapidata_client.results._explicit_cant_solve import adapt_response_model
+        adapted = adapt_response_model(cls, obj)
+        if adapted is not None:
+            return adapted
+
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareResult',
             "winners": obj.get("winners"),

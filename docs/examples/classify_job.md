@@ -144,3 +144,22 @@ identifier option  count  ratio  summedUserScore  summedUserScoreRatio
      A dog   Woof      9    0.9              7.2                  0.95
      A dog   Meow      1    0.1              0.4                  0.05
 ```
+
+## Adaptive single-select classification
+
+Classification keeps a fixed 10 responses by default. Opt in to score-weighted adaptive stopping explicitly:
+
+```python
+from rapidata import AdaptiveStopping
+
+job_definition = client.job.create_classification_job_definition(
+    name="Animal category",
+    instruction="Which animal is shown?",
+    answer_options=["Cat", "Dog", "Bird", "Horse", "Fish", "Other"],
+    datapoints=["animal.jpg"],
+    responses_per_datapoint=AdaptiveStopping(max_outcome_count=3),
+    allow_cant_solve=True,
+)
+```
+
+This permits up to three leading alternatives among six, while each substantive response still selects one category. Explicit can't solve is separate and requires annotator UI support; enabling the backend control does not deploy its button.

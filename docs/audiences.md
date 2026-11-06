@@ -384,4 +384,4 @@ leaderboard = benchmark.create_leaderboard(
 
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
 - Understand the [Results Format](understanding_the_results.md)
-- Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
+- Configure [Adaptive Stopping](confidence_stopping.md) to stop each item once its answer is settled

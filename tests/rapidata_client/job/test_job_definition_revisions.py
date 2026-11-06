@@ -107,6 +107,32 @@ def test_getters_read_the_loaded_revision():
     assert not jd.has_unsaved_changes
 
 
+@pytest.mark.parametrize("reordered", [False, True])
+def test_instruction_edit_preserves_category_values_when_labels_are_reordered(
+    reordered,
+):
+    categories = [
+        {"label": "First shown", "value": "category.with.dots"},
+        {"label": "猫 / second", "value": "value / arbitrary 🐈"},
+        {"label": "Last shown", "value": "o1"},
+    ]
+    if reordered:
+        categories = list(reversed(categories))
+    snapshot = _revision()
+    workflow = snapshot.workflow.to_dict()
+    workflow["rapid"]["categories"] = {"literal": categories}
+    jd, service = _loaded(_revision(workflow=workflow))
+    _respond_with(service, 4)
+
+    assert jd.answer_options == [category["label"] for category in categories]
+    jd.instruction = "Which category fits?"
+    jd.save()
+
+    assert (
+        _sent_body(service)["workflow"]["rapid"]["categories"]["literal"] == categories
+    )
+
+
 def test_setters_stage_locally_without_a_request():
     jd, service = _loaded()
 
@@ -220,9 +246,7 @@ def test_require_latest_conflict_raises_and_keeps_changes():
 def test_other_errors_propagate_unchanged():
     jd, service = _loaded()
     error = RapidataError(status_code=400, message="bad")
-    service.order.job_api.job_definition_definition_id_revision_post.side_effect = (
-        error
-    )
+    service.order.job_api.job_definition_definition_id_revision_post.side_effect = error
 
     with pytest.raises(RapidataError):
         jd.save()
@@ -284,9 +308,7 @@ def test_assign_job_pins_the_objects_revision():
 
     audience.assign_job(jd)
 
-    sent = service.order.job_api.job_post.call_args.kwargs[
-        "create_job_endpoint_input"
-    ]
+    sent = service.order.job_api.job_post.call_args.kwargs["create_job_endpoint_input"]
     assert sent.revision_number == 3
 
 

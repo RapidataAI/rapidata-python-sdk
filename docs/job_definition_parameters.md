@@ -9,7 +9,7 @@ When creating a job definition, you'll use parameters to control:
 - **What data** is shown to labelers (datapoints, contexts)
 - **How many responses** you need (responses_per_datapoint)
 - **How tasks are displayed** (settings)
-- **Quality assurance** (confidence_threshold, quorum_threshold)
+- **When to stop collecting** (`AdaptiveStopping`, `QuorumStopping`)
 
 ---
 
@@ -95,19 +95,24 @@ datapoints=[
 
 | Property | Value |
 |----------|-------|
-| **Type** | `int` |
+| **Type** | `int`, `AdaptiveStopping` (compare and single-select classification) or `QuorumStopping` (classification and compare) |
 | **Required** | No |
-| **Default** | `10` |
+| **Default** | `AdaptiveStopping()` for compare jobs, `10` otherwise |
 
-The minimum number of responses to collect for each datapoint. The actual number may slightly exceed this due to concurrent labelers.
+How many responses to collect for each datapoint.
 
-**Best Practices:**
+- An `int` collects exactly that many. The actual number may slightly exceed it due to concurrent labelers.
+- `AdaptiveStopping()` stops each supported datapoint once a decision is reached or the response cap is met.
+- `QuorumStopping(threshold, max_responses)` stops once `threshold` responses agree.
 
-- Use 15-25 for ambiguous or subjective tasks
-- Use 5-10 for clear-cut decisions
+**Related:** [Adaptive Stopping](confidence_stopping.md)
 
 ```python
-responses_per_datapoint=15
+from rapidata import AdaptiveStopping, QuorumStopping
+
+responses_per_datapoint=15                                          # fixed
+responses_per_datapoint=AdaptiveStopping(ambiguity_threshold=0.75)  # normalized disagreement threshold
+responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)
 ```
 
 ---
@@ -245,6 +250,8 @@ media_contexts=[
 | **Default** | `None` |
 | **Range** | `0.0` to `1.0` (typically `0.99` to `0.999`) |
 
+Supported for classification. On compare jobs it is deprecated: use `AdaptiveStopping` instead. Requires an `int` `responses_per_datapoint` as the cap (10 when omitted).
+
 Enables early stopping when a specified confidence level is reached. The system stops collecting responses once consensus is achieved, reducing costs while maintaining quality.
 
 **How It Works:** Uses labeler trust scores (`userScore`) to calculate statistical confidence for each category.
@@ -264,7 +271,7 @@ job_definition = client.job.create_classification_job_definition(
 
 ---
 
-### `quorum_threshold`
+### `quorum_threshold` (deprecated)
 
 | Property | Value |
 |----------|-------|
@@ -272,20 +279,19 @@ job_definition = client.job.create_classification_job_definition(
 | **Required** | No |
 | **Default** | `None` |
 
-Enables early stopping when a specified number of responses agree on the same answer. The system stops collecting responses once quorum is reached, or when quorum becomes mathematically impossible, or after `responses_per_datapoint` votes.
+Deprecated: pass `responses_per_datapoint=QuorumStopping(threshold, max_responses)` instead.
 
-Cannot be used together with `confidence_threshold`.
-
-**Related:** [Early Stopping](confidence_stopping.md#quorum-stopping)
+**Related:** [Quorum Stopping](confidence_stopping.md#quorum-stopping)
 
 ```python
+from rapidata import QuorumStopping
+
 job_definition = client.job.create_classification_job_definition(
     name="Cat or Dog with Quorum Stopping",
     instruction="What animal is in this image?",
     answer_options=["Cat", "Dog"],
     datapoints=["pet1.jpg", "pet2.jpg"],
-    responses_per_datapoint=10,  # Maximum responses
-    quorum_threshold=7,          # Stop when 7 agree
+    responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10),
 )
 ```
 
@@ -341,7 +347,7 @@ job_definition = client.job.create_compare_job_definition(
 
 #### `AllowNeitherBothSetting()`
 
-For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice.
+For Compare jobs, hints that the annotator UI should show "Neither" / "Both" after a delay. Enable answer eligibility separately with `allow_both_bad=True` and `allow_both_good=True`. New [adaptive evidence](understanding_the_results.md#adaptive-evidence) keeps these outcomes distinct from A/B and explicit can't solve.
 
 ```python
 from rapidata import AllowNeitherBothSetting
@@ -350,6 +356,8 @@ job_definition = client.job.create_compare_job_definition(
     name="Image Quality Comparison",
     instruction="Which image is higher quality?",
     datapoints=[["img_a.jpg", "img_b.jpg"]],
+    allow_both_good=True,
+    allow_both_bad=True,
     settings=[AllowNeitherBothSetting()]
 )
 ```
@@ -521,8 +529,10 @@ job_definition = client.job.create_ranking_job_definition(
 | `data_type` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :white_check_mark: | :white_check_mark: |
 | `contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
 | `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
-| `confidence_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
-| `quorum_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `AdaptiveStopping` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `QuorumStopping` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `confidence_threshold` (deprecated on compare) | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `quorum_threshold` (deprecated) | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | `answer_options` | :white_check_mark: | :x: | :x: | :x: | :x: | :x: | :x: |
 | `a_b_names` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |

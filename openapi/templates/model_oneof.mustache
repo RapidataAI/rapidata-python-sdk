@@ -108,6 +108,13 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}LazyValidatedModel{{
             return instance
 
         {{/isNullable}}
+        {{#vendorExtensions.x-rapidata-adaptive-stopping-union}}
+        from rapidata.rapidata_client.referee._adaptive_stopping_adapter import adapt_referee_model
+        adapted = adapt_referee_model(cls, json.loads(json_str), "{{{vendorExtensions.x-rapidata-adaptive-stopping-discriminator}}}")
+        if adapted is not None:
+            return adapted
+
+        {{/vendorExtensions.x-rapidata-adaptive-stopping-union}}
         error_messages = []
         match = 0
 

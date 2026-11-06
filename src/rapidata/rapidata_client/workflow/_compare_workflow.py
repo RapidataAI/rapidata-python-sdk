@@ -1,4 +1,10 @@
+from __future__ import annotations
+
 from typing import Any
+from rapidata.rapidata_client.workflow._answer_controls import (
+    validate_answer_control,
+    with_answer_controls,
+)
 from rapidata.api_client.models.i_order_workflow_input import (
     IOrderWorkflowInput,
 )
@@ -36,11 +42,26 @@ class CompareWorkflow(Workflow):
     modality = RapidModality.COMPARE
     task_type = "Compare"
 
-    def __init__(self, instruction: str, a_b_names: list[str] | None = None):
+    def __init__(
+        self,
+        instruction: str,
+        a_b_names: list[str] | None = None,
+        *,
+        allow_both_good: bool = False,
+        allow_both_bad: bool = False,
+        allow_cant_solve: bool = False,
+    ):
         super().__init__(type="CompareWorkflowConfig")
         self._validate_instruction(instruction)
         self._instruction = instruction
         self._a_b_names = a_b_names
+        self._answer_controls = {
+            "allowBothGood": allow_both_good,
+            "allowBothBad": allow_both_bad,
+            "allowCantSolve": allow_cant_solve,
+        }
+        for name, value in self._answer_controls.items():
+            validate_answer_control(name, value)
 
     def _get_instruction(self) -> str:
         return self._instruction
@@ -50,23 +71,30 @@ class CompareWorkflow(Workflow):
             **super()._to_dict(),
             "criteria": self._instruction,
             "indexIdentifiers": self._a_b_names,
+            **self._answer_controls,
         }
 
     def _to_model(self) -> IOrderWorkflowInput:
         return simple_workflow(
-            IRapidSpecCompareRapidSpec(
-                _t="Compare",
-                asset=ASSET,
-                criteria=literal(self._instruction),
-                indexIdentifiers=self._a_b_names,
+            with_answer_controls(
+                IRapidSpecCompareRapidSpec(
+                    _t="Compare",
+                    asset=ASSET,
+                    criteria=literal(self._instruction),
+                    indexIdentifiers=self._a_b_names,
+                ),
+                self._answer_controls,
             )
         )
 
     def _to_payload(self, datapoint: Datapoint) -> IRapidPayload:
         return IRapidPayload(
-            actual_instance=IRapidPayloadComparePayload(
-                _t="ComparePayload",
-                criteria=self._instruction,
+            actual_instance=with_answer_controls(
+                IRapidPayloadComparePayload(
+                    _t="ComparePayload",
+                    criteria=self._instruction,
+                ),
+                self._answer_controls,
             )
         )
 

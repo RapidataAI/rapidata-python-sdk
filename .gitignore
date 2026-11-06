@@ -171,3 +171,5 @@ customers/
 
 .idea/
 .claude/
+
+/openapi/out/

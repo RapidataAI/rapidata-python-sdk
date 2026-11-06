@@ -93,6 +93,11 @@ class IWorkflowRapidBlueprintModelAttachCategoryWorkflowRapidBlueprintModel(Lazy
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
+        from rapidata.rapidata_client.workflow._answer_controls import adapt_answer_controls
+        adapted = adapt_answer_controls(cls, obj)
+        if adapted is not None:
+            return adapted
+
         _data = {
             "_t": obj.get("_t"),
             "categories": [AttachCategoryWorkflowRapidBlueprintModelCategory.from_dict(_item) for _item in obj["categories"]] if obj.get("categories") is not None else None,

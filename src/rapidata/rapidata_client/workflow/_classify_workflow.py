@@ -1,4 +1,10 @@
+from __future__ import annotations
+
 from typing import Any
+from rapidata.rapidata_client.workflow._answer_controls import (
+    validate_answer_control,
+    with_answer_controls,
+)
 from rapidata.api_client.models.i_order_workflow_input import (
     IOrderWorkflowInput,
 )
@@ -38,10 +44,12 @@ class ClassifyWorkflow(Workflow):
     modality = RapidModality.CLASSIFY
     task_type = "Classification"
 
-    def __init__(self, instruction: str):
+    def __init__(self, instruction: str, *, allow_cant_solve: bool = False):
         super().__init__(type="SimpleWorkflowConfig")
         self._validate_instruction(instruction)
         self._instruction = instruction
+        validate_answer_control("allow_cant_solve", allow_cant_solve)
+        self._answer_controls = {"allowCantSolve": allow_cant_solve}
 
     def _get_instruction(self) -> str:
         return self._instruction
@@ -56,28 +64,35 @@ class ClassifyWorkflow(Workflow):
                 "_t": "Classify",
                 "title": {"literal": self._instruction},
                 "categories": {"segment": ANSWER_OPTIONS_SEGMENT_KEY},
+                **self._answer_controls,
             },
         }
 
     def _to_model(self) -> IOrderWorkflowInput:
         return simple_workflow(
-            IRapidSpecClassifyRapidSpec(
-                _t="Classify",
-                asset=ASSET,
-                title=literal(self._instruction),
-                categories=OptionsBinding(segment=ANSWER_OPTIONS_SEGMENT_KEY),
+            with_answer_controls(
+                IRapidSpecClassifyRapidSpec(
+                    _t="Classify",
+                    asset=ASSET,
+                    title=literal(self._instruction),
+                    categories=OptionsBinding(segment=ANSWER_OPTIONS_SEGMENT_KEY),
+                ),
+                self._answer_controls,
             )
         )
 
     def _to_payload(self, datapoint: Datapoint) -> IRapidPayload:
         return IRapidPayload(
-            actual_instance=IRapidPayloadClassifyPayload(
-                _t="ClassifyPayload",
-                categories=[
-                    ClassifyPayloadCategory(label=option, value=option)
-                    for option in datapoint.answer_options or []
-                ],
-                title=self._instruction,
+            actual_instance=with_answer_controls(
+                IRapidPayloadClassifyPayload(
+                    _t="ClassifyPayload",
+                    categories=[
+                        ClassifyPayloadCategory(label=option, value=option)
+                        for option in datapoint.answer_options or []
+                    ],
+                    title=self._instruction,
+                ),
+                self._answer_controls,
             )
         )
 

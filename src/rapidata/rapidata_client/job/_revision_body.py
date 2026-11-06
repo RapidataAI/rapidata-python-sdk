@@ -10,6 +10,10 @@ from rapidata.api_client.models.i_referee import IReferee
 
 if TYPE_CHECKING:
     from rapidata.api_client.models.feature_flag import FeatureFlag
+    from rapidata.rapidata_client.referee.stopping import (
+        AdaptiveStopping,
+        QuorumStopping,
+    )
     from rapidata.api_client.models.get_job_revision_endpoint_output import (
         GetJobRevisionEndpointOutput,
     )
@@ -26,12 +30,6 @@ _INSTRUCTION_FIELD_BY_RAPID = {
     "NamedEntity": "target",
     "Polygon": "target",
     "Scrub": "target",
-}
-
-_VOTES_FIELD_BY_REFEREE = {
-    "NaiveReferee": "totalVotes",
-    "QuorumReferee": "maxVotes",
-    "EarlyStoppingReferee": "maxVotes",
 }
 
 
@@ -94,25 +92,91 @@ def _with_answer_options(
     return IOrderWorkflowInput.from_dict(data)  # type: ignore[return-value]
 
 
-def _get_responses(referee: IReferee) -> int:
-    data = _as_dict(referee)
-    field = _VOTES_FIELD_BY_REFEREE.get(data.get("_t", ""))
-    if field is None:
+_ANSWER_CONTROLS = {
+    "allow_both_good": ("allowBothGood", {"Compare"}),
+    "allow_both_bad": ("allowBothBad", {"Compare"}),
+    "allow_cant_solve": ("allowCantSolve", {"Compare", "Classify"}),
+}
+
+
+def _get_answer_control(workflow: IOrderWorkflowInput, name: str) -> bool | None:
+    data = _as_dict(workflow)
+    field, kinds = _ANSWER_CONTROLS[name]
+    if _workflow_kind(data) not in kinds:
+        return None
+    return data["rapid"].get(field, False)
+
+
+def _with_answer_control(
+    workflow: IOrderWorkflowInput, name: str, value: bool
+) -> IOrderWorkflowInput:
+    from rapidata.rapidata_client.workflow._answer_controls import (
+        validate_answer_control,
+    )
+
+    validate_answer_control(name, value)
+    data = _as_dict(workflow)
+    field, kinds = _ANSWER_CONTROLS[name]
+    if _workflow_kind(data) not in kinds:
         raise ValueError(
-            f"A '{data.get('_t')}' referee has no responses per datapoint."
+            f"A '{_workflow_kind(data)}' job definition has no {name} control."
         )
-    return data[field]
+    data["rapid"][field] = value
+    return IOrderWorkflowInput.from_dict(data)  # type: ignore[return-value]
 
 
-def _with_responses(referee: IReferee, responses: int) -> IReferee:
+def _get_responses(referee: IReferee) -> int | AdaptiveStopping | QuorumStopping:
+    from rapidata.rapidata_client.referee.stopping import (
+        AdaptiveStopping,
+        QuorumStopping,
+    )
+
     data = _as_dict(referee)
-    field = _VOTES_FIELD_BY_REFEREE.get(data.get("_t", ""))
-    if field is None:
+    kind = data.get("_t")
+    if kind == "NaiveReferee":
+        return data["totalVotes"]
+    if kind == "EarlyStoppingReferee":
+        return data["maxVotes"]
+    if kind == "QuorumReferee":
+        return QuorumStopping(
+            threshold=data["threshold"], max_responses=data["maxVotes"]
+        )
+    if kind == "AdaptiveStoppingReferee":
+        return AdaptiveStopping._from_dict(data)
+    raise ValueError(f"A '{kind}' referee has no responses per datapoint.")
+
+
+def _with_responses(
+    referee: IReferee, responses: int | AdaptiveStopping | QuorumStopping
+) -> IReferee:
+    from rapidata.rapidata_client.referee import NaiveReferee
+
+    data = _as_dict(referee)
+    if data.get("_t") not in (
+        "NaiveReferee",
+        "EarlyStoppingReferee",
+        "QuorumReferee",
+        "AdaptiveStoppingReferee",
+    ):
         raise ValueError(
             f"A '{data.get('_t')}' referee has no responses per datapoint to change."
         )
-    data[field] = responses
-    return IReferee.from_dict(data)  # type: ignore[return-value]
+    if not isinstance(responses, int):
+        return responses._to_referee()._to_model()
+    # A legacy confidence-threshold referee has no config object; an int tunes its cap.
+    if data["_t"] == "EarlyStoppingReferee":
+        data["maxVotes"] = responses
+        return IReferee.from_dict(data)  # type: ignore[return-value]
+    return NaiveReferee(responses=responses)._to_model()
+
+
+def _check_adaptive_stopping(workflow: IOrderWorkflowInput, referee: IReferee) -> None:
+    if _as_dict(referee).get("_t") != "AdaptiveStoppingReferee":
+        return
+    if _workflow_kind(_as_dict(workflow)) not in ("Compare", "Classify"):
+        raise ValueError(
+            "AdaptiveStopping supports compare and single-select classification jobs."
+        )
 
 
 def _split_settings(
@@ -134,6 +198,10 @@ def _full_body(
     if "answer_options" in pending:
         workflow = _with_answer_options(workflow, pending["answer_options"])
 
+    for name in _ANSWER_CONTROLS:
+        if name in pending:
+            workflow = _with_answer_control(workflow, name, pending[name])
+
     referee = snapshot.referee
     if "responses_per_datapoint" in pending:
         referee = _with_responses(referee, pending["responses_per_datapoint"])
@@ -143,6 +211,24 @@ def _full_body(
     else:
         rapid_flags = list(snapshot.feature_flags)
         campaign_flags = list(snapshot.campaign_feature_flags)
+    _check_adaptive_stopping(workflow, referee)
+    if _as_dict(referee).get("_t") == "AdaptiveStoppingReferee":
+        from rapidata.rapidata_client.referee.stopping import AdaptiveStopping
+
+        config = AdaptiveStopping._from_dict(_as_dict(referee))
+        workflow_data = _as_dict(workflow)
+        if _workflow_kind(workflow_data) == "Compare":
+            from rapidata.rapidata_client.workflow._answer_controls import (
+                compare_outcome_count,
+            )
+
+            config._validate_outcome_count(
+                compare_outcome_count(workflow_data["rapid"])
+            )
+        else:
+            categories = (workflow_data["rapid"].get("categories") or {}).get("literal")
+            if categories is not None:
+                config._validate_outcome_count(len(categories))
 
     # Every field is passed explicitly: the server inherits any field left out
     # from the latest revision, and a None validationSetId must go out as null.

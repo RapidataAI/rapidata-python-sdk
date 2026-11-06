@@ -84,6 +84,11 @@ class IRapidResultCompareResult(LazyValidatedModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
+        from rapidata.rapidata_client.results._explicit_cant_solve import adapt_response_model
+        adapted = adapt_response_model(cls, obj)
+        if adapted is not None:
+            return adapted
+
         _data = {
             "_t": obj.get("_t"),
             "rapidId": obj.get("rapidId"),

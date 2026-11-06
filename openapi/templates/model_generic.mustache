@@ -270,6 +270,25 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}LazyValidatedModel{{
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
+        {{#vendorExtensions.x-rapidata-explicit-cs-result}}
+        from rapidata.rapidata_client.results._explicit_cant_solve import adapt_response_model
+        adapted = adapt_response_model(cls, obj)
+        if adapted is not None:
+            return adapted
+
+        {{/vendorExtensions.x-rapidata-explicit-cs-result}}
+        {{#vendorExtensions.x-rapidata-answer-controls}}
+        from rapidata.rapidata_client.workflow._answer_controls import adapt_answer_controls
+        adapted = adapt_answer_controls(cls, obj)
+        if adapted is not None:
+            return adapted
+
+        {{/vendorExtensions.x-rapidata-answer-controls}}
+        {{#vendorExtensions.x-rapidata-adaptive-stopping-config}}
+        from rapidata.rapidata_client.referee._adaptive_stopping_compat import normalise_adaptive_stopping_config
+        obj = normalise_adaptive_stopping_config(obj)
+
+        {{/vendorExtensions.x-rapidata-adaptive-stopping-config}}
         {{#disallowAdditionalPropertiesIfNotPresent}}
         {{^isAdditionalPropertiesTrue}}
         # raise errors for additional fields in the input
@@ -375,6 +394,9 @@ class {{classname}}({{#parent}}{{{.}}}{{/parent}}{{^parent}}LazyValidatedModel{{
             {{/isContainer}}
             {{/allVars}}
         }
+        {{#vendorExtensions.x-rapidata-preserve-field-presence}}
+        _data = {key: value for key, value in _data.items() if key in obj or value is not None}
+        {{/vendorExtensions.x-rapidata-preserve-field-presence}}
         try:
             _obj = cls.model_validate(_data)
         except ValidationError as _val_error:

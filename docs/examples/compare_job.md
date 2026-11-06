@@ -35,7 +35,6 @@ In this example, we compare images from two image generation models (Flux and Mi
         name="Example Image Prompt Alignment Job",
         instruction="Which image follows the prompt more accurately?",
         datapoints=IMAGE_PAIRS,
-        responses_per_datapoint=25,
         contexts=PROMPTS
     )
 
@@ -117,7 +116,6 @@ In this example, we compare images from two image generation models (Flux and Mi
         name="Example Image Prompt Alignment Job",
         instruction="Which image follows the prompt more accurately?",
         datapoints=IMAGE_PAIRS,
-        responses_per_datapoint=25,
         contexts=PROMPTS
     )
 
@@ -133,3 +131,20 @@ In this example, we compare images from two image generation models (Flux and Mi
 
     !!! note
         Review every qualification example and its truth carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
+
+## Additional answer outcomes
+
+Compare defaults to two substantive outcomes. Explicitly enable both/neither eligibility when needed; UI settings alone do not permit those responses:
+
+```python
+job_definition = client.job.create_compare_job_definition(
+    name="Response quality",
+    instruction="Which response is more helpful?",
+    datapoints=[["Restart the router.", "Reconnect to the network."]],
+    data_type="text",
+    allow_both_good=True,
+    allow_both_bad=True,
+)
+```
+
+`allow_cant_solve=True` permits a separate explicit can't-solve response when the annotator UI supports it. This flag does not deploy the button. See [adaptive stopping](../confidence_stopping.md) for leading sets and evidence.

@@ -22,8 +22,11 @@ from rapidata.rapidata_client.job.cost import (
 )
 from rapidata.rapidata_client.job._revision_body import (
     _full_body,
+    _get_answer_control,
+    _with_answer_control,
     _get_answer_options,
     _get_instruction,
+    _check_adaptive_stopping,
     _get_responses,
     _with_answer_options,
     _with_instruction,
@@ -38,6 +41,10 @@ if TYPE_CHECKING:
         GetJobRevisionEndpointOutput,
     )
     from rapidata.rapidata_client.settings import RapidataSetting
+    from rapidata.rapidata_client.referee.stopping import (
+        AdaptiveStopping,
+        QuorumStopping,
+    )
 
 RevisionState = Literal["Pending", "Completed", "Failed"]
 
@@ -191,6 +198,42 @@ class RapidataJobDefinition:
         self._pending["instruction"] = value
 
     @property
+    def allow_both_good(self) -> bool | None:
+        """Whether compare responses may select the BothGood outcome. None for other job types."""
+        if "allow_both_good" in self._pending:
+            return self._pending["allow_both_good"]
+        return _get_answer_control(self._snapshot.workflow, "allow_both_good")
+
+    @allow_both_good.setter
+    def allow_both_good(self, value: bool) -> None:
+        _with_answer_control(self._snapshot.workflow, "allow_both_good", value)
+        self._pending["allow_both_good"] = value
+
+    @property
+    def allow_both_bad(self) -> bool | None:
+        """Whether compare responses may select the BothBad outcome. None for other job types."""
+        if "allow_both_bad" in self._pending:
+            return self._pending["allow_both_bad"]
+        return _get_answer_control(self._snapshot.workflow, "allow_both_bad")
+
+    @allow_both_bad.setter
+    def allow_both_bad(self, value: bool) -> None:
+        _with_answer_control(self._snapshot.workflow, "allow_both_bad", value)
+        self._pending["allow_both_bad"] = value
+
+    @property
+    def allow_cant_solve(self) -> bool | None:
+        """Whether compare or classification permits explicit can't solve. None for other job types."""
+        if "allow_cant_solve" in self._pending:
+            return self._pending["allow_cant_solve"]
+        return _get_answer_control(self._snapshot.workflow, "allow_cant_solve")
+
+    @allow_cant_solve.setter
+    def allow_cant_solve(self, value: bool) -> None:
+        _with_answer_control(self._snapshot.workflow, "allow_cant_solve", value)
+        self._pending["allow_cant_solve"] = value
+
+    @property
     def answer_options(self) -> list[str] | None:
         """The answer options of a classification job definition.
 
@@ -213,17 +256,37 @@ class RapidataJobDefinition:
         self._pending["answer_options"] = list(value)
 
     @property
-    def responses_per_datapoint(self) -> int:
-        """The maximum number of responses collected per datapoint."""
-        return self._effective(
-            "responses_per_datapoint", _get_responses(self._snapshot.referee)
-        )
+    def responses_per_datapoint(self) -> int | AdaptiveStopping | QuorumStopping:
+        """How many responses are collected per datapoint.
+
+        An int for a fixed number of responses, or the ``AdaptiveStopping`` /
+        ``QuorumStopping`` the job definition stops by. Assigning one replaces the rule.
+        """
+        if "responses_per_datapoint" in self._pending:
+            return self._pending["responses_per_datapoint"]
+        return _get_responses(self._snapshot.referee)
 
     @responses_per_datapoint.setter
-    def responses_per_datapoint(self, value: int) -> None:
-        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+    def responses_per_datapoint(
+        self, value: int | AdaptiveStopping | QuorumStopping
+    ) -> None:
+        from rapidata.rapidata_client.referee.stopping import (
+            AdaptiveStopping,
+            QuorumStopping,
+        )
+
+        if isinstance(value, bool) or not isinstance(
+            value, (int, AdaptiveStopping, QuorumStopping)
+        ):
+            raise ValueError(
+                "responses_per_datapoint must be a positive integer, "
+                "AdaptiveStopping or QuorumStopping"
+            )
+        if isinstance(value, int) and value < 1:
             raise ValueError("responses_per_datapoint must be a positive integer")
-        _with_responses(self._snapshot.referee, value)
+        _check_adaptive_stopping(
+            self._snapshot.workflow, _with_responses(self._snapshot.referee, value)
+        )
         self._pending["responses_per_datapoint"] = value
 
     @property

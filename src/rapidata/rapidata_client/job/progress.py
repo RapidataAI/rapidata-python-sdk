@@ -20,10 +20,14 @@ class JobProgress:
         state: The job's current state, the same value returned by
             :py:meth:`RapidataJob.get_status`.
         completion_percentage: How much of the requested labeling is done, from 0 to 100.
+        completed: The number of datapoints that are done (for ranking jobs: comparisons).
+        total: The number of datapoints in the job (for ranking jobs: comparisons).
         recruiting: The recruiting-funnel snapshot for the job's audience, or ``None``
             for curated audiences (which do not recruit their own pool).
     """
 
     state: str
     completion_percentage: float
+    completed: int
+    total: int
     recruiting: RecruitingMetrics | None

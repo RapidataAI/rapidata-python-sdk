@@ -32,13 +32,16 @@ class CostEstimate:
     """An approximate estimate of what a job will cost to run to completion.
 
     This is an estimate, not the final bill: it is based on a sample of the
-    job's tasks and scaled to the total number of responses requested, so the
-    amount you are actually charged can differ.
+    job's tasks and scaled to the number of responses the job is expected to
+    collect, so the amount you are actually charged can differ.
+
+    With adaptive stopping, each datapoint stops once its verdict is settled, so
+    ``estimated_cost`` is the expected cost.
 
     Attributes:
-        estimated_cost: The estimated total cost of running the job to completion.
+        estimated_cost: The expected total cost of running the job to completion.
         datapoint_count: The number of datapoints the job will label.
-        required_responses: The total number of responses the job collects to complete.
+        required_responses: The total number of responses the job is expected to collect.
     """
 
     estimated_cost: float

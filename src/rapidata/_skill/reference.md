@@ -12,11 +12,11 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `instruction` | str | Question shown to labelers: one criterion, under 80 characters (see **Task design rules** in the main guide). Over 250 characters raises `ValueError` |
 | `datapoints` | list | Data to label (URLs or local paths) |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
-| `responses_per_datapoint` | int | Responses per item (default 10; never set it below 10 — see **Task design rules** in the main guide) |
+| `responses_per_datapoint` | `int \| AdaptiveStopping \| QuorumStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()`; classification default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` supports compare and single-select classification. See **Early Stopping** |
 | `contexts` | list[str] \| None | Text context per datapoint: one sentence under 150 characters with only what the instruction asks about (see **Task design rules** in the main guide). Max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually |
 | `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
-| `confidence_threshold` | float \| None | Confidence-based early stopping threshold (0-1); cannot combine with `quorum_threshold` |
-| `quorum_threshold` | int \| None | Quorum-based early stopping: stop when this many responses agree; cannot combine with `confidence_threshold` |
+| `confidence_threshold` | float \| None | Confidence-based early stopping threshold (0-1) for classification; needs an `int` `responses_per_datapoint` (10 when omitted). **Deprecated on compare jobs** (`DeprecationWarning`) — use `AdaptiveStopping` |
+| `quorum_threshold` | int \| None | **Deprecated** — use `QuorumStopping`. Needs an `int` `responses_per_datapoint` (10 when omitted) |
 | `settings` | `Sequence[RapidataSetting] \| None` | Display/behavior settings |
 | `failure_tolerance` | float \| None | Fraction of datapoints (0.0–1.0) allowed to fail upload while the definition is still created; `None` falls back to `rapidata_config.upload.failureTolerance` (default `0.0` = strict). See Error Handling |
 | `private_metadata` | `list[dict[str, str]] \| None` | Hidden metadata per datapoint |
@@ -354,6 +354,8 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 
 ### Comparison Results
 
+This example shows an older binary `stoppingState` export; new categorical exports use `adaptiveStopping` as described below.
+
 ```json
 {
   "info": { "type": "Compare", "name": "Image Comparison", "instruction": "Which image is higher quality?", "version": "4.1.0" },
@@ -373,6 +375,12 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
       "aggregatedResultsRatios": { "model_a.jpg": 0.375, "model_b.jpg": 0.625 },
       "summedUserScores": { "model_a.jpg": 1.0, "model_b.jpg": 2.5 },
       "summedUserScoresRatios": { "model_a.jpg": 0.286, "model_b.jpg": 0.714 },
+      "stoppingState": {
+        "weightA": 2.4, "weightB": 5.6, "csLower": 0.52, "csUpper": 0.97,
+        "verdict": "B", "responseCount": 8, "minConfidence": 0.9, "ambiguityRange": 0.6
+      },
+      "verdict": "B",
+      "responses": 8,
       "detailedResults": [
         {
           "votedFor": "model_b.jpg",
@@ -403,7 +411,13 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 | `aggregatedResultsRatios` | Vote percentages |
 | `summedUserScores` | Per-option sum of each choosing labeler's aggregated `userScore` |
 | `summedUserScoresRatios` | `summedUserScores` normalized to sum to 1 |
-| `confidencePerCategory` | Confidence level per category (with early stopping) |
+| `confidencePerCategory` | Confidence level per category (with `confidence_threshold`) |
+| `cantSolve` | Optional raw export CS summary `{count, userScoreSum}`, separate from the frozen snapshot tally; retained as a dictionary column. It may include late/non-adaptive CS responses |
+| `adaptiveStopping` | New adaptive compare/classification evidence: `modelVersion`, canonical `verdict`, `leadingOutcomeIds`, `responseCount`, `outcomes`, optional `cantSolve`, `ambiguity`, and resolved `parameters`. The full dictionary, including future fields, remains intact in JSON and the DataFrame column |
+| `verdict` | SDK alias of `adaptiveStopping.verdict`: `Open`, `Winner`, `TopSet`, `Ambiguous`, `Unsolvable`, `Undecided`, or a future string. Absent on non-adaptive datapoints |
+| `leadingOutcomeIds` | SDK alias of the snapshot's stable IDs. Interpret with backend outcome definitions, never as category values or asset names. A `TopSet` lists alternatives, not independently true labels |
+| `responses` | Adaptive stopping only: the snapshot's `responseCount`, distinct from later aggregate vote counts |
+| `stoppingState` | Legacy binary evidence. Still decoded into `verdict` (`A`, `B`, `ambiguous`, `undecided`, `open`) and `responses`; new `adaptiveStopping` takes precedence if both exist |
 | `userScore` | 0-1 value indicating individual labeler reliability |
 
 A labeler's `demographics` may be empty when no demographic data was collected for them.
@@ -421,56 +435,75 @@ df = results.to_pandas(split_details=True)  # one row per individual response
 results.to_json("results.json")           # writes the file (default "./results.json"); returns None
 ```
 
+In `adaptiveStopping.outcomes`, each entry has `outcomeId`, integer `count`, `userScoreSum`, and weighted `share` (`estimate`, `lower`, `upper`). `estimate` can be `null`; preserve it. `cantSolve` has the same tally/share fields without an outcome ID, and can be absent or `null`. Raw counts and weighted shares are not interchangeable. BothGood/BothBad remain distinct categories; can't solve is an explicit exclusive response, not a skip, empty selection, Both, or Neither.
+
+`ambiguity` also has nullable `estimate` and required finite numeric `lower`/`upper` bounds. Null estimate keys are retained. `parameters` contains resolved `maxVotes`, `minConfidence`, `ambiguityThreshold`, `unsolvableThreshold` (`null` in a snapshot with CS disabled), and `maxOutcomeCount`. The workflow referee config always stores its resolved threshold, default `0.5`; disabled `cantSolve` is omitted, while explicit `null` is accepted defensively. The model is currently `score-weighted-categorical-v1`; weighted confidence is heuristic, not a proven 90% coverage guarantee. A backend can't-solve option does not imply its annotator UI has shipped.
+
+Individual response models retain the boolean `cantSolve` marker (default false), separately from the raw result summary and the snapshot tally. In split DataFrames, the marker column is `responseCantSolve`; `cantSolve` holds the raw summary dictionary and `adaptiveStopping` holds the unchanged snapshot. Raw JSON field names are unchanged. A per-datapoint summary repeats on option/detail rows; count it once per datapoint. Classify CS may omit `category`; ordinary classification still requires its exact configured value. Resolve `cN` only with immutable definitions for that same rapid, never mutable/global categories or aggregate dictionary order; leave IDs unknown when definitions are unavailable.
+
 Flow items have a different result shape — see the Flows section.
 
 ## Early Stopping
 
-Two mutually exclusive strategies are available for Classification and Comparison jobs. You cannot set both on the same job.
+The stopping rule is the value of `responses_per_datapoint`:
 
-### Confidence Stopping
+| Value | Rule | Job types |
+|-------|------|-----------|
+| `AdaptiveStopping()` | Stop when the categorical model reaches a terminal decision. **Compare default** | Compare, single-select classification |
+| `QuorumStopping(threshold, max_responses)` | Stop once `threshold` responses agree | Classification, Compare |
+| `int` | Exactly that many responses. Default `10` for all other job types | All |
 
-Stop collecting responses once a statistical confidence threshold (weighted by labeler trust scores) is reached.
+### Adaptive Stopping
 
 ```python
-job_def = client.job.create_classification_job_definition(
-    name="Animal Classification",
-    instruction="What animal is in this image?",
-    answer_options=["Cat", "Dog"],
-    datapoints=["pet1.jpg", "pet2.jpg"],
-    responses_per_datapoint=50,   # Maximum
-    confidence_threshold=0.99,    # Stop at 99% confidence
+from rapidata import AdaptiveStopping
+
+job_def = client.job.create_compare_job_definition(
+    name="Image Comparison",
+    instruction="Which image is higher quality?",
+    datapoints=[["a.jpg", "b.jpg"]],
+    responses_per_datapoint=AdaptiveStopping(),   # same as omitting it
 )
 ```
 
-- System calculates confidence using labeler userScores
-- Stops when target confidence is reached
-- Saves cost by collecting fewer responses when consensus is clear
-- Best for unambiguous tasks with clear correct answers
-- Not recommended for subjective preference tasks
+`AdaptiveStopping(min_confidence=0.9, ambiguity_threshold=0.64, max_responses=100, max_outcome_count=1, unsolvable_threshold=0.5)` is a frozen config. Thresholds must be in (0, 1), counts must be positive integers, and the allowed leading-set size must be smaller than the number of substantive outcomes. The unmerged `ambiguity_range` keyword is replaced; legacy wire ranges remain readable with normalized threshold \(1-r^2\).
+
+`AdaptiveStopping()` weights each response by the labeler's user score at response time. New results use `adaptiveStopping.verdict` and stable `leadingOutcomeIds`, with the full snapshot described in **Results Format**. `Winner` names one leading outcome; `TopSet` names leading alternatives, not several independently true single-select labels. `Open` and `Undecided` remain explicit strings. Weighted confidence is heuristic; binary response-count estimates and mathematical coverage claims do not generalize to this model.
+
+Compare creation accepts `allow_both_good=False`, `allow_both_bad=False`, and `allow_cant_solve=False`; classification accepts `allow_cant_solve=False`. Set the explicit booleans to permit those responses. `AllowNeitherBothSetting` is only a UI hint; it never increases the substantive outcome count (two plus enabled BothGood/BothBad). Can't solve is excluded from that count and from leading sets. The same controls can be staged on saved definitions and persisted with `save()`.
+
+BothGood and BothBad remain separate categories in the evidence. Explicit can't solve has a separate tally and threshold, and is never inferred from Both, Neither, skipped responses, or empty selections. Compare `winners: []` is BothBad only when enabled; both asset winners are BothGood only when enabled. CS uses `cantSolve: true` exclusively with no winners/category. Normal classification selects the exact configured category value. Backend enablement does not deploy the annotator UI button. Keep counts separate from weighted shares. `CostEstimate.estimated_cost` remains the expected cost.
 
 ### Quorum Stopping
 
 Stop collecting responses once a fixed number of responses agree on the same answer.
 
 ```python
+from rapidata import QuorumStopping
+
 job_def = client.job.create_classification_job_definition(
     name="Animal Classification",
     instruction="What animal is in this image?",
     answer_options=["Cat", "Dog"],
     datapoints=["pet1.jpg", "pet2.jpg"],
-    responses_per_datapoint=10,   # Maximum
-    quorum_threshold=7,           # Stop when 7 responses agree
+    responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10),
 )
 ```
 
 A datapoint stops when:
-1. `quorum_threshold` responses agree on the same answer, **OR**
+1. `threshold` responses agree on the same answer, **OR**
 2. Quorum becomes mathematically impossible (e.g. votes are too split to reach the threshold), **OR**
-3. `responses_per_datapoint` total votes are collected
+3. `max_responses` total votes are collected
 
-- Simpler than confidence stopping — based on raw vote counts, not statistics
-- Good when you want predictable cost bounds with early termination
-- Best for unambiguous tasks with a clear correct answer
+`threshold` must be ≤ `max_responses`, both positive integers.
+
+### `confidence_threshold` and deprecated `quorum_threshold`
+
+`quorum_threshold` is deprecated everywhere and `confidence_threshold` is deprecated on compare jobs; both emit a `DeprecationWarning` there. `confidence_threshold` on classification is supported without a warning (retained for compatibility). They take an `int` `responses_per_datapoint` as the cap (10 when omitted, also on compare jobs), cannot be set together, and raise `ValueError` combined with `AdaptiveStopping` or `QuorumStopping`. Replace `quorum_threshold=7, responses_per_datapoint=10` with `responses_per_datapoint=QuorumStopping(7, 10)`, and `confidence_threshold` on compare jobs with `AdaptiveStopping()`.
+
+### Reading and editing the rule
+
+`job_def.responses_per_datapoint` returns an `int`, `AdaptiveStopping` or `QuorumStopping` (a legacy confidence-threshold definition returns its cap as an `int`). Assigning one of those replaces the rule on `save()`; assigning an `int` sets a fixed count, except on a legacy confidence-threshold definition where it changes the cap.
 
 ## Job Progress
 
@@ -479,7 +512,9 @@ A datapoint stops when:
 | Field | Type | Description |
 |-------|------|-------------|
 | `state` | str | Same value as `job.get_status()` |
-| `completion_percentage` | float | 0–100 |
+| `completion_percentage` | float | 0–100; never decreases |
+| `completed` | int | Datapoints done (comparisons for ranking jobs) |
+| `total` | int | Datapoints in the job (comparisons for ranking jobs) |
 | `recruiting` | `RecruitingMetrics \| None` | Recruiting funnel of the job's audience; `None` for curated audiences |
 
 ```python
@@ -504,7 +539,7 @@ job_def = client.job.create_compare_job_definition(
 )
 
 estimate = job_def.estimated_cost   # blocks briefly until priced
-print(f"About {estimate.estimated_cost} for {estimate.required_responses} responses")
+print(f"Expected {estimate.estimated_cost} for {estimate.required_responses} responses")
 
 # The same property is available once the job is running
 job = audience.assign_job(job_def)
@@ -515,11 +550,11 @@ print(job.estimated_cost.estimated_cost)
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `estimated_cost` | float | Estimated total cost of running the job to completion, in your account's billing currency |
+| `estimated_cost` | float | **Expected** total cost of running the job to completion, in your account's billing currency |
 | `datapoint_count` | int | Number of datapoints the job will label |
-| `required_responses` | int | Total number of responses the job collects to complete |
+| `required_responses` | int | Total number of responses the job is expected to collect |
 
-This is an **estimate, not the final bill**: it is based on a sample of the job's tasks scaled to the number of responses requested, so the amount actually charged can differ. Early stopping can also lower the final cost by collecting fewer responses than the maximum.
+This is an **estimate, not the final bill**: it is based on a sample of the job's tasks scaled to the expected number of responses, so the amount actually charged can differ.
 
 ## Billing
 
@@ -574,7 +609,7 @@ Settings with a `()` constructor are on/off: adding one turns the behavior on, l
 | Class | Constructor | Effect |
 |-------|-------------|--------|
 | `NoShuffleSetting` | `()` | Disable shuffling of answer options (Likert scales) |
-| `AllowNeitherBothSetting` | `(delay_ms: int = 5000)` — ≥ 0 | Comparison: show an "Unsure" button (answers "Neither" / "Both") after `delay_ms` milliseconds |
+| `AllowNeitherBothSetting` | `(delay_ms: int = 5000)` — ≥ 0 | Comparison UI hint: show "Neither" / "Both" after `delay_ms`. Eligibility requires explicit `allow_both_bad` / `allow_both_good`; this setting never changes the outcome count |
 | `MarkdownSetting` | `()` | Render markdown in text |
 | `MuteVideoSetting` | `()` | Start videos muted |
 | `FreeTextMinimumCharactersSetting` | `(value: int)` — must be ≥ 1 (prints a warning above 40) | Min chars for free-text tasks. Use with caution — see note below the table |
