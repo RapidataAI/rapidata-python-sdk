@@ -41,11 +41,13 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
     cost_unit: Optional[CostUnit] = Field(default=None, description="The unit cost is quoted in, or null if the price is unknown.", alias="costUnit")
     logo: Optional[StrictStr] = Field(default=None, description="The logo of the model, or null if unset.")
     status: ParticipantStatus = Field(description="The status of the participant.")
-    votes_excluded: StrictBool = Field(description="Whether the participant's already-collected votes are dropped from the scores. Only meaningful while it is disabled.", alias="votesExcluded")
+    is_deprecated: StrictBool = Field(description="Whether the participant is deprecated.", alias="isDeprecated")
+    is_public: StrictBool = Field(description="Whether everyone who can open the benchmark sees the participant.", alias="isPublic")
+    is_candidate: StrictBool = Field(description="Whether runs of other participants skip it until it is promoted.", alias="isCandidate")
     covered_prompt_count: StrictInt = Field(description="How many of the benchmark's prompts the participant has at least one sample for.", alias="coveredPromptCount")
     is_evaluating: StrictBool = Field(description="True while the participant belongs to a run that is queued, running or paused.", alias="isEvaluating")
     created_at: datetime = Field(description="When the participant was added to the benchmark.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "status", "votesExcluded", "coveredPromptCount", "isEvaluating", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "status", "isDeprecated", "isPublic", "isCandidate", "coveredPromptCount", "isEvaluating", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -140,7 +142,9 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
             "costUnit": obj.get("costUnit"),
             "logo": obj.get("logo"),
             "status": obj.get("status"),
-            "votesExcluded": obj.get("votesExcluded"),
+            "isDeprecated": obj.get("isDeprecated"),
+            "isPublic": obj.get("isPublic"),
+            "isCandidate": obj.get("isCandidate"),
             "coveredPromptCount": obj.get("coveredPromptCount"),
             "isEvaluating": obj.get("isEvaluating"),
             "createdAt": obj.get("createdAt")

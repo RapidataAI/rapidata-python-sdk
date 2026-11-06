@@ -33,3 +33,13 @@ class StandingStatus(str, Enum):
         """Create an instance of StandingStatus from a JSON string"""
         return cls(json.loads(json_str))
 
+    @classmethod
+    def _missing_(cls, value):
+        """Parse a value this release doesn't know as a pseudo-member instead of raising."""
+        if not isinstance(value, str):
+            return None
+        member = str.__new__(cls, value)
+        member._name_ = value.upper()
+        member._value_ = value
+        return cls._value2member_map_.setdefault(value, member)
+

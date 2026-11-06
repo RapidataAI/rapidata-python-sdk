@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.cost_unit import CostUnit
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
@@ -37,7 +37,9 @@ class CreateBenchmarkParticipantEndpointInput(LazyValidatedModel):
     cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The model's price in USD per costUnit. Required together with costUnit.")
     cost_unit: Optional[CostUnit] = Field(default=None, description="The unit cost is quoted in. Required when cost is supplied.", alias="costUnit")
     logo: Optional[ExistingAssetInput] = Field(default=None, description="An optional logo image for the model. Must be an existing image asset.")
-    __properties: ClassVar[List[str]] = ["name", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo"]
+    is_public: Optional[StrictBool] = Field(default=None, description="Whether everyone who can open the benchmark sees the participant. Defaults to true.", alias="isPublic")
+    is_candidate: Optional[StrictBool] = Field(default=None, description="Whether the participant is a candidate: its own run plays the whole field, but runs of other  participants never pick it until it is promoted. Defaults to false.", alias="isCandidate")
+    __properties: ClassVar[List[str]] = ["name", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "isPublic", "isCandidate"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -126,7 +128,9 @@ class CreateBenchmarkParticipantEndpointInput(LazyValidatedModel):
             "licenseType": obj.get("licenseType"),
             "cost": obj.get("cost"),
             "costUnit": obj.get("costUnit"),
-            "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None
+            "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None,
+            "isPublic": obj.get("isPublic"),
+            "isCandidate": obj.get("isCandidate")
         }
         try:
             _obj = cls.model_validate(_data)
