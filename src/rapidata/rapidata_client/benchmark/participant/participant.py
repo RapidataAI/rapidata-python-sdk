@@ -85,7 +85,9 @@ class BenchmarkParticipant:
 
         Returns:
             The Elo score, or ``None`` if it has not been computed yet (for
-            example when the participant has not been evaluated).
+            example when the participant has not been evaluated) or the
+            participant is deprecated, since the default standings leave
+            deprecated participants out.
         """
         # Scores depend on the full field; filtering to one participant changes its score.
         with tracer.start_as_current_span("BenchmarkParticipant.get_elo"):
@@ -156,29 +158,56 @@ class BenchmarkParticipant:
                         details,
                     )
 
-    def disable(self) -> None:
-        """Disables the participant in the benchmark.
+    def deprecate(self) -> None:
+        """Deprecates the participant in the benchmark.
 
-        A disabled participant is excluded from evaluation and the computed
-        standings. Use :meth:`enable` to reverse this.
+        A deprecated participant gets no new matchups; runs already in progress
+        finish. Its row and its votes are left out of the standings, matrices and
+        other score reads unless they are called with ``include_deprecated=True``.
+        Use :meth:`restore` to reverse this.
         """
-        with tracer.start_as_current_span("BenchmarkParticipant.disable"):
+        with tracer.start_as_current_span("BenchmarkParticipant.deprecate"):
             self._openapi_service.leaderboard.participant_api.participant_participant_id_disable_post(
                 participant_id=self.id
             )
             self._status = ParticipantStatus.DISABLED
 
-    def enable(self) -> None:
-        """Re-enables a previously disabled participant.
+    def restore(self) -> None:
+        """Restores a deprecated participant.
 
-        The participant returns to the ``Submitted`` state and is included in
-        evaluation and standings again.
+        The participant returns to the ``Submitted`` state, and its row and votes
+        are back in the default standings.
         """
-        with tracer.start_as_current_span("BenchmarkParticipant.enable"):
+        with tracer.start_as_current_span("BenchmarkParticipant.restore"):
             self._openapi_service.leaderboard.participant_api.participant_participant_id_enable_post(
                 participant_id=self.id
             )
             self._status = ParticipantStatus.SUBMITTED
+
+    def promote(self) -> None:
+        """Promotes a candidate into the benchmark's field.
+
+        A candidate (``add_model(..., is_candidate=True)``) plays the whole field
+        in its own run, but models submitted later don't play it. After promotion
+        they do. Promoting starts no run, so models submitted before the
+        promotion are not compared against it.
+
+        Raises:
+            RapidataError: If the participant is not a candidate (400), or you
+                can't edit the benchmark (403).
+        """
+        with tracer.start_as_current_span("BenchmarkParticipant.promote"):
+            self._openapi_service.leaderboard.participant_api.participant_participant_id_promote_post(
+                participant_id=self.id
+            )
+
+    def disable(self) -> None:
+        """Same as :meth:`deprecate`."""
+        self.deprecate()
+
+    def enable(self) -> None:
+        """Same as :meth:`restore`."""
+        self.restore()
 
     def rename(self, name: str) -> None:
         """Renames the participant.

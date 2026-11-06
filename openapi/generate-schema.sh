@@ -97,13 +97,17 @@ done
 
 npx -y @redocly/cli join ./${SCHEMA_DIR}/*.openapi.json -o ./${SCHEMA_DIR}/rapidata.openapi.json
 
+# Response enums the server may extend before old SDKs age out: unknown values
+# parse as pseudo-members instead of raising (see openapi/templates/model_enum.mustache).
+TOLERANT_ENUMS='["ParticipantStatus", "StandingStatus"]'
+
 # Filter out anything deprecated so it is not generated into the SDK:
 # fully-deprecated operations (whole endpoints), and — recursively —
 # deprecated parameters and deprecated schema properties (also pruning the
 # latter from any `required` list). This mirrors the endpoint filtering for
 # partly-deprecated surfaces like a single deprecated field on a model.
 # Note: the `walk` builtin requires jq >= 1.6.
-jq '
+jq --argjson tolerant "$TOLERANT_ENUMS" '
   del(.paths[][] | select(.deprecated == true))
   | walk(
       if type == "object" then
@@ -119,6 +123,11 @@ jq '
                   else . end )
             else . end )
       else . end
+    )
+  | reduce $tolerant[] as $name (.;
+      if .components.schemas[$name].enum == null
+      then error("tolerant enum \($name) is not an enum in the spec")
+      else .components.schemas[$name]["x-tolerant-enum"] = true end
     )' \
    ${SCHEMA_DIR}/rapidata.openapi.json \
    > ${SCHEMA_DIR}/rapidata.filtered.openapi.json

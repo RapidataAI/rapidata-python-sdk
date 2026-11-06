@@ -364,17 +364,52 @@ participant = benchmark.participants[0]
 participant.rename("New model name")
 ```
 
-### Disabling Participants
+### Deprecating Participants
 
-A disabled participant is excluded from evaluation and the computed standings. Unlike deleting, this is reversible:
+A deprecated participant gets no new matchups; runs already in progress finish. Its row and its votes are left out of the standings and matrices unless you ask for them, so deprecating a model shifts the other scores. Unlike deleting, this is reversible:
 
 ```python
 participant = benchmark.participants[0]
-participant.disable()
+participant.deprecate()
 
-# Bring it back into the evaluation later
-participant.enable()
+# Deprecated models and their votes are back in with include_deprecated=True
+standings = benchmark.get_overall_standings(include_deprecated=True)
+
+# Bring it back into the default standings later
+participant.restore()
 ```
+
+`disable()` and `enable()` still work and do the same as `deprecate()` and `restore()`.
+
+### Hidden and Candidate Models
+
+Two options on `add_model` control who sees a model and who plays it:
+
+```python
+# Only members of the benchmark's organization and staff see it.
+# Models submitted later don't play it.
+participant = benchmark.add_model(
+    name="UnreleasedModel",
+    media=["https://example.com/img1.png"],
+    identifiers=["scene_1"],
+    is_public=False,
+)
+
+# A candidate plays the whole field in its own run,
+# but models submitted later don't play it until it is promoted.
+candidate = benchmark.add_model(
+    name="CandidateModel",
+    media=["https://example.com/img2.png"],
+    identifiers=["scene_1"],
+    is_candidate=True,
+)
+candidate.run()
+
+# Later: make it part of the field that new models play against
+candidate.promote()
+```
+
+Two candidates never play each other, even when submitted together. Promoting starts no run.
 
 ### Deleting Participants
 

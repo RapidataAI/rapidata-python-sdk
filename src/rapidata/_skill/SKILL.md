@@ -728,6 +728,8 @@ participant = benchmark.add_model(
     media=["mountain_v3.png", "city_v3.png"],
     prompts=["A serene mountain landscape", "A futuristic city"],
     data_type="media",
+    is_public=True,      # False: only the benchmark's org and staff see it; later models don't play it
+    is_candidate=False,  # True: plays the whole field now; later models don't play it until promote()
 )
 
 # Upload additional media to the same participant
@@ -765,9 +767,10 @@ benchmark.run()         # Submit all unsubmitted participants (status CREATED or
 # as 'identifier' (asset_count/required), e.g. model-0: 'cat' (2/4). Submission still
 # completes and participants are marked SUBMITTED regardless of the warning.
 
-participant.disable()             # Exclude from evaluation and standings (reversible)
-participant.enable()              # Re-enable a previously disabled participant
-participant.get_elo()             # Aggregated Elo across all leaderboards (None if not yet computed)
+participant.deprecate()           # No new matchups; row and votes leave the default standings (reversible)
+participant.restore()             # Undo deprecate(). disable()/enable() are the old names, same effect
+participant.promote()             # Candidate joins the field: models submitted later play it (no run starts)
+participant.get_elo()             # Aggregated Elo across all leaderboards (None if not yet computed or deprecated)
 participant.delete()              # Delete participant and its uploaded media (cannot be undone)
 
 # Update participant metadata — adding a model and pricing it are separate calls
@@ -800,6 +803,9 @@ matrix_lb = leaderboard.get_win_loss_matrix()              # Pairwise wins/losse
 matrix_bm = benchmark.get_win_loss_matrix(                 # Pairwise wins/losses across leaderboards
     tags=None, participant_ids=None, leaderboard_ids=None, use_weighted_scoring=None,
 )
+# Deprecated models and their votes are left out of all four by default;
+# include_deprecated=True brings them back and refits every score.
+overall_all = benchmark.get_overall_standings(include_deprecated=True)
 
 # Filter any of the read methods above by voter demographics. All four benchmark reads
 # (get_overall_standings, get_win_loss_matrix, get_demographics, get_standings_breakdown)

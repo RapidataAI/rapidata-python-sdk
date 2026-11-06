@@ -13,6 +13,7 @@ from rapidata.rapidata_client.benchmark._detail_mapper import (
 from rapidata.rapidata_client.benchmark._vote_filters import (
     demographic_filters,
     in_filter,
+    include_deprecated_filter,
 )
 from rapidata.rapidata_client.benchmark.leaderboard.vote_aggregation import (
     VoteAggregation,
@@ -333,6 +334,7 @@ class RapidataLeaderboard:
         age_bucket: Optional[list[AgeGroup]] = None,
         occupation: Optional[list[str]] = None,
         run_id: Optional[str] = None,
+        include_deprecated: bool = False,
     ) -> "pd.DataFrame":
         """
         Returns the standings of the leaderboard.
@@ -352,6 +354,7 @@ class RapidataLeaderboard:
             age_bucket: Only count votes from voters in these (estimated) age buckets.
             occupation: Only count votes from voters of these (estimated) occupations.
             run_id: Only count votes from this evaluation run.
+            include_deprecated: Also list deprecated models and count their votes, which shifts every score. (default: False)
 
         Returns:
             A pandas DataFrame containing the standings of the leaderboard.
@@ -369,6 +372,9 @@ class RapidataLeaderboard:
                 age_bucket=votes.age_bucket,
                 occupation=votes.occupation,
                 run_id=votes.run_id,
+                include_deprecated_participants=include_deprecated_filter(
+                    include_deprecated
+                ),
             )
 
             import pandas as pd
@@ -400,6 +406,7 @@ class RapidataLeaderboard:
         age_bucket: Optional[list[AgeGroup]] = None,
         occupation: Optional[list[str]] = None,
         run_id: Optional[str] = None,
+        include_deprecated: bool = False,
     ) -> pd.DataFrame:
         """
         Returns the pairwise win/loss matrix for the participants in this leaderboard.
@@ -429,6 +436,7 @@ class RapidataLeaderboard:
             age_bucket: Only count votes from voters in these (estimated) age buckets.
             occupation: Only count votes from voters of these (estimated) occupations.
             run_id: Only count votes from this evaluation run.
+            include_deprecated: Also include deprecated models and their matchups. (default: False)
 
         Returns:
             A pandas DataFrame indexed by participant name on both axes, where cell
@@ -449,6 +457,9 @@ class RapidataLeaderboard:
                 age_bucket=votes.age_bucket,
                 occupation=votes.occupation,
                 run_id=votes.run_id,
+                include_deprecated_participants=include_deprecated_filter(
+                    include_deprecated
+                ),
             )
 
             import pandas as pd
