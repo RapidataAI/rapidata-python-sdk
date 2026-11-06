@@ -45,9 +45,11 @@ class GetBenchmarkStandingsByTagEndpointOutputOutputItem(LazyValidatedModel):
     total_matches: Union[StrictFloat, StrictInt] = Field(alias="totalMatches")
     response_count: StrictInt = Field(alias="responseCount")
     is_evaluating: StrictBool = Field(alias="isEvaluating")
-    is_disabled: StrictBool = Field(alias="isDisabled")
+    is_deprecated: StrictBool = Field(alias="isDeprecated")
+    is_public: StrictBool = Field(alias="isPublic")
+    is_candidate: StrictBool = Field(alias="isCandidate")
     confidence_interval: Optional[ConfidenceInterval] = Field(default=None, alias="confidenceInterval")
-    __properties: ClassVar[List[str]] = ["id", "name", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "status", "score", "wins", "totalMatches", "responseCount", "isEvaluating", "isDisabled", "confidenceInterval"]
+    __properties: ClassVar[List[str]] = ["id", "name", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "status", "score", "wins", "totalMatches", "responseCount", "isEvaluating", "isDeprecated", "isPublic", "isCandidate", "confidenceInterval"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -159,7 +161,9 @@ class GetBenchmarkStandingsByTagEndpointOutputOutputItem(LazyValidatedModel):
             "totalMatches": obj.get("totalMatches"),
             "responseCount": obj.get("responseCount"),
             "isEvaluating": obj.get("isEvaluating"),
-            "isDisabled": obj.get("isDisabled"),
+            "isDeprecated": obj.get("isDeprecated"),
+            "isPublic": obj.get("isPublic"),
+            "isCandidate": obj.get("isCandidate"),
             "confidenceInterval": ConfidenceInterval.from_dict(obj["confidenceInterval"]) if obj.get("confidenceInterval") is not None else None
         }
         try:

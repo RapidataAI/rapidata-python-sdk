@@ -34,7 +34,9 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
     name: StrictStr = Field(description="The name of the participant.")
     benchmark_id: StrictStr = Field(description="The id of the benchmark the participant belongs to.", alias="benchmarkId")
     status: ParticipantStatus = Field(description="The status of the participant.")
-    votes_excluded: StrictBool = Field(description="Whether the participant's already-collected votes are dropped from the scores. Only meaningful while it is disabled.", alias="votesExcluded")
+    is_deprecated: StrictBool = Field(description="Whether the participant is deprecated.", alias="isDeprecated")
+    is_public: StrictBool = Field(description="Whether everyone who can open the benchmark sees the participant.", alias="isPublic")
+    is_candidate: StrictBool = Field(description="Whether runs of other participants skip it until it is promoted.", alias="isCandidate")
     family: Optional[StrictStr] = Field(default=None, description="The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), or null if unset.")
     lab: Optional[StrictStr] = Field(default=None, description="The lab that makes the model (e.g. \"OpenAI\", \"Black Forest Labs\"), or null if unset.")
     proprietary_name: Optional[StrictStr] = Field(default=None, description="The vendor-facing display name of the model, or null if unset.", alias="proprietaryName")
@@ -44,7 +46,7 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
     calculated_cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Average measured cost of one sample in USD, or null if no sample has a cost. Standings show  it in place of cost while cost is null.", alias="calculatedCost")
     logo: Optional[StrictStr] = Field(default=None, description="The logo of the model, or null if unset.")
     faucet: Optional[IFaucetOutput] = Field(default=None, description="The faucet configured to auto-generate samples, or null if none is set.")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "status", "votesExcluded", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "calculatedCost", "logo", "faucet"]
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "status", "isDeprecated", "isPublic", "isCandidate", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "calculatedCost", "logo", "faucet"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -140,7 +142,9 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
             "name": obj.get("name"),
             "benchmarkId": obj.get("benchmarkId"),
             "status": obj.get("status"),
-            "votesExcluded": obj.get("votesExcluded"),
+            "isDeprecated": obj.get("isDeprecated"),
+            "isPublic": obj.get("isPublic"),
+            "isCandidate": obj.get("isCandidate"),
             "family": obj.get("family"),
             "lab": obj.get("lab"),
             "proprietaryName": obj.get("proprietaryName"),

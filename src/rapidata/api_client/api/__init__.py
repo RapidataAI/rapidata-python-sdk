@@ -58,6 +58,7 @@ from rapidata.api_client.api.simple_flow_item_api import SimpleFlowItemApi
 from rapidata.api_client.api.survey_api import SurveyApi
 from rapidata.api_client.api.translation_api import TranslationApi
 from rapidata.api_client.api.unlisted_audience_api import UnlistedAudienceApi
+from rapidata.api_client.api.upload_session_api import UploadSessionApi
 from rapidata.api_client.api.user_rapid_api import UserRapidApi
 from rapidata.api_client.api.validation_feedback_api import ValidationFeedbackApi
 from rapidata.api_client.api.validation_set_api import ValidationSetApi
