@@ -768,7 +768,7 @@ benchmark.run()         # Submit all unsubmitted participants (status CREATED or
 # completes and participants are marked SUBMITTED regardless of the warning.
 
 participant.deprecate()           # No new matchups; row and votes leave the default standings (reversible)
-participant.restore()             # Undo deprecate(). disable()/enable() are the old names, same effect
+participant.restore()             # Undo deprecate(). disable()/enable() are deprecated aliases
 participant.promote()             # Candidate joins the field: models submitted later play it (no run starts)
 participant.get_elo()             # Aggregated Elo across all leaderboards (None if not yet computed or deprecated)
 participant.delete()              # Delete participant and its uploaded media (cannot be undone)

@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
+import warnings
 from typing import Literal
 from tqdm.auto import tqdm
 
@@ -202,11 +203,21 @@ class BenchmarkParticipant:
             )
 
     def disable(self) -> None:
-        """Same as :meth:`deprecate`."""
+        """Deprecated: use :meth:`deprecate`."""
+        warnings.warn(
+            "disable() is deprecated; call deprecate() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         self.deprecate()
 
     def enable(self) -> None:
-        """Same as :meth:`restore`."""
+        """Deprecated: use :meth:`restore`."""
+        warnings.warn(
+            "enable() is deprecated; call restore() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         self.restore()
 
     def rename(self, name: str) -> None:

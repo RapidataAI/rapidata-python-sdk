@@ -928,6 +928,8 @@ participant = benchmark.add_model(
     media=["mountain_v3.png", "city_v3.png"],
     prompts=["A serene mountain landscape", "A futuristic city"],
     data_type="media",
+    is_public=True,      # False: only the benchmark's org and staff see it; later models don't play it
+    is_candidate=False,  # True: plays the whole field now; later models don't play it until promote()
 )
 
 # Upload additional media to the same participant. Returns
@@ -974,9 +976,11 @@ benchmark.update(
     min_assets_per_prompt=4,      # int >= 2 (bool rejected); ValueError otherwise
 )
 
-participant.disable()             # Exclude from evaluation and standings (reversible)
-participant.enable()              # Re-enable a previously disabled participant
-participant.get_elo()             # Aggregated Elo across all leaderboards (None if not yet computed)
+participant.deprecate()           # No new matchups; row and votes leave the default standings (reversible)
+participant.restore()             # Undo deprecate(). disable()/enable() are deprecated aliases
+participant.promote()             # Candidate joins the field: models submitted later play it (no run starts);
+                                  #   RapidataError 400 if it isn't a candidate
+participant.get_elo()             # Aggregated Elo across all leaderboards (None if not yet computed or deprecated)
 participant.delete()              # Delete participant and its uploaded media (cannot be undone)
 
 # Update participant metadata — adding a model and pricing it are separate calls (see "Participant pricing")
@@ -1016,6 +1020,9 @@ matrix_lb = leaderboard.get_win_loss_matrix()              # Pairwise wins/losse
 matrix_bm = benchmark.get_win_loss_matrix(                 # Pairwise wins/losses across leaderboards
     tags=None, participant_ids=None, leaderboard_ids=None, use_weighted_scoring=None,
 )
+# These four leave deprecated models and their votes out by default;
+# include_deprecated=True brings them back and refits every score.
+overall_all = benchmark.get_overall_standings(include_deprecated=True)
 
 # All of the read methods above (plus the two below) accept voter-demographic filters
 # and run_id — see "Voter demographic filtering".

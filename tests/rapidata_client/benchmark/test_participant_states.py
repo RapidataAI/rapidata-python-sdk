@@ -140,11 +140,10 @@ def _participant_api(participant: BenchmarkParticipant) -> MagicMock:
     return participant._openapi_service.leaderboard.participant_api
 
 
-@pytest.mark.parametrize("method", ["deprecate", "disable"])
-def test_deprecate_posts_disable_and_marks_disabled(method: str) -> None:
+def test_deprecate_posts_disable_and_marks_disabled() -> None:
     participant = _make_participant()
 
-    getattr(participant, method)()
+    participant.deprecate()
 
     api = _participant_api(participant)
     api.participant_participant_id_disable_post.assert_called_once_with(
@@ -153,17 +152,45 @@ def test_deprecate_posts_disable_and_marks_disabled(method: str) -> None:
     assert participant.status == ParticipantStatus.DISABLED
 
 
-@pytest.mark.parametrize("method", ["restore", "enable"])
-def test_restore_posts_enable_and_marks_submitted(method: str) -> None:
+def test_restore_posts_enable_and_marks_submitted() -> None:
     participant = _make_participant(ParticipantStatus.DISABLED)
 
-    getattr(participant, method)()
+    participant.restore()
 
     api = _participant_api(participant)
     api.participant_participant_id_enable_post.assert_called_once_with(
         participant_id="p-0"
     )
     assert participant.status == ParticipantStatus.SUBMITTED
+
+
+@pytest.mark.parametrize(
+    ("old", "new", "endpoint", "status"),
+    [
+        (
+            "disable",
+            "deprecate",
+            "participant_participant_id_disable_post",
+            ParticipantStatus.DISABLED,
+        ),
+        (
+            "enable",
+            "restore",
+            "participant_participant_id_enable_post",
+            ParticipantStatus.SUBMITTED,
+        ),
+    ],
+)
+def test_old_names_warn_and_still_work(old, new, endpoint, status) -> None:
+    participant = _make_participant()
+
+    with pytest.warns(DeprecationWarning, match=f"call {new}\\(\\) instead"):
+        getattr(participant, old)()
+
+    getattr(_participant_api(participant), endpoint).assert_called_once_with(
+        participant_id="p-0"
+    )
+    assert participant.status == status
 
 
 def test_failed_deprecate_keeps_local_status() -> None:

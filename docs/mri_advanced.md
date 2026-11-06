@@ -379,8 +379,6 @@ standings = benchmark.get_overall_standings(include_deprecated=True)
 participant.restore()
 ```
 
-`disable()` and `enable()` still work and do the same as `deprecate()` and `restore()`.
-
 ### Hidden and Candidate Models
 
 Two options on `add_model` control who sees a model and who plays it:

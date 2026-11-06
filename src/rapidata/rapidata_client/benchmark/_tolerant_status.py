@@ -1,5 +1,5 @@
-"""Unknown ``ParticipantStatus`` / ``StandingStatus`` strings parse as pseudo-members carrying
-the raw value, so a status the server adds later doesn't break standings and participant reads.
+"""Unknown ``ParticipantStatus`` / ``StandingStatus`` strings parse as pseudo-members carrying the raw
+value. The server will send ``"Deprecated"`` where it sends ``"Disabled"`` today, and may add more.
 """
 
 from __future__ import annotations
