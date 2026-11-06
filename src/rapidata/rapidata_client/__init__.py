@@ -1,3 +1,6 @@
+# Must stay first: pydantic 2.8–2.9 reads an enum's _missing_ when it builds a model,
+# so a model built before this import rejects unknown statuses.
+from .benchmark import _tolerant_status  # noqa: F401
 from .rapidata_client import RapidataClient
 from .audience import (
     RapidataAudience,

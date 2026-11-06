@@ -20,6 +20,16 @@ def in_filter(
     return param
 
 
+def include_deprecated_filter(
+    include_deprecated: bool,
+) -> AudienceAudienceIdJobsGetJobIdParameter:
+    """The ``include_deprecated_participants`` filter leaf (a no-op when False, the server default)."""
+    param = AudienceAudienceIdJobsGetJobIdParameter()
+    if include_deprecated:
+        param.eq = "true"
+    return param
+
+
 class DemographicFilters(NamedTuple):
     """The per-vote demographic filters shared by the benchmark and leaderboard
     standings, matrix, demographics and standings-breakdown endpoints.

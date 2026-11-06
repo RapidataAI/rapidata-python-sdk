@@ -17,6 +17,7 @@ from rapidata.api_client.models.benchmark_demographic_dimension import (
 from rapidata.rapidata_client.benchmark._vote_filters import (
     demographic_filters,
     in_filter,
+    include_deprecated_filter,
 )
 from rapidata.rapidata_client.benchmark.leaderboard.vote_aggregation import (
     VoteAggregation,
@@ -876,6 +877,8 @@ class RapidataBenchmark:
         identifiers: list[str] | None = None,
         prompts: list[str] | None = None,
         data_type: Literal["media", "text"] = "media",
+        is_public: bool = True,
+        is_candidate: bool = False,
     ) -> BenchmarkParticipant:
         """Adds a model to the benchmark without immediately submitting it for evaluation.
 
@@ -895,6 +898,8 @@ class RapidataBenchmark:
                 The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
             prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
             data_type: The type of data being provided. Use "media" for images/videos/audio (default) or "text" for text content.
+            is_public: If False, only members of the benchmark's organization and staff see the model, and models submitted later don't play it. (default: True)
+            is_candidate: If True, the model plays the whole field in its own run, but models submitted later don't play it until you call :meth:`BenchmarkParticipant.promote`. (default: False)
 
         Returns:
             The created BenchmarkParticipant instance.
@@ -936,6 +941,8 @@ class RapidataBenchmark:
                 benchmark_id=self.id,
                 create_benchmark_participant_endpoint_input=CreateBenchmarkParticipantEndpointInput(
                     name=name,
+                    isPublic=is_public,
+                    isCandidate=is_candidate,
                 ),
             )
 
@@ -1176,6 +1183,7 @@ class RapidataBenchmark:
         age_bucket: Optional[list[AgeGroup]] = None,
         occupation: Optional[list[str]] = None,
         run_id: Optional[str] = None,
+        include_deprecated: bool = False,
     ) -> pd.DataFrame:
         """
         Returns an aggregated elo table of all leaderboards in the benchmark.
@@ -1194,6 +1202,7 @@ class RapidataBenchmark:
             age_bucket: Only count votes from voters in these (estimated) age buckets.
             occupation: Only count votes from voters of these (estimated) occupations.
             run_id: Only count votes from this evaluation run.
+            include_deprecated: Also list deprecated models and count their votes, which shifts every score. (default: False)
         """
         import pandas as pd
 
@@ -1211,6 +1220,9 @@ class RapidataBenchmark:
                 age_bucket=votes.age_bucket,
                 occupation=votes.occupation,
                 run_id=votes.run_id,
+                include_deprecated_participants=include_deprecated_filter(
+                    include_deprecated
+                ),
             )
 
             standings = []
@@ -1242,6 +1254,7 @@ class RapidataBenchmark:
         age_bucket: Optional[list[AgeGroup]] = None,
         occupation: Optional[list[str]] = None,
         run_id: Optional[str] = None,
+        include_deprecated: bool = False,
     ) -> pd.DataFrame:
         """
         Returns the pairwise win/loss matrix aggregated across the benchmark's leaderboards.
@@ -1276,6 +1289,7 @@ class RapidataBenchmark:
             age_bucket: Only count votes from voters in these (estimated) age buckets.
             occupation: Only count votes from voters of these (estimated) occupations.
             run_id: Only count votes from this evaluation run.
+            include_deprecated: Also include deprecated models and their matchups. (default: False)
 
         Returns:
             A pandas DataFrame indexed by participant name on both axes, where cell
@@ -1300,6 +1314,9 @@ class RapidataBenchmark:
                 age_bucket=votes.age_bucket,
                 occupation=votes.occupation,
                 run_id=votes.run_id,
+                include_deprecated_participants=include_deprecated_filter(
+                    include_deprecated
+                ),
             )
 
             return pd.DataFrame(
