@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import NamedTuple, Optional, TYPE_CHECKING
+from typing import Optional, TypedDict, TYPE_CHECKING
 
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
     AudienceAudienceIdJobsGetJobIdParameter,
@@ -22,21 +22,16 @@ def in_filter(
 
 def include_deprecated_filter(
     include_deprecated: bool,
-) -> AudienceAudienceIdJobsGetJobIdParameter:
-    """The ``include_deprecated_participants`` filter leaf (a no-op when False, the server default)."""
-    param = AudienceAudienceIdJobsGetJobIdParameter()
-    if include_deprecated:
-        param.eq = "true"
-    return param
+) -> AudienceAudienceIdJobsGetJobIdParameter | None:
+    return (
+        AudienceAudienceIdJobsGetJobIdParameter(eq="true")
+        if include_deprecated
+        else None
+    )
 
 
-class DemographicFilters(NamedTuple):
-    """The per-vote demographic filters shared by the benchmark and leaderboard
-    standings, matrix, demographics and standings-breakdown endpoints.
-
-    Each field is keyed to match the corresponding query-endpoint parameter, so a
-    caller passes them straight through (``country=filters.country`` ...).
-    """
+class DemographicFilters(TypedDict):
+    """Keyed like the query endpoints' parameters, so callers spread them with ``**``."""
 
     country: AudienceAudienceIdJobsGetJobIdParameter
     language: AudienceAudienceIdJobsGetJobIdParameter

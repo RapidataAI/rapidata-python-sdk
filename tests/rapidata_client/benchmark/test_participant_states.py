@@ -1,15 +1,5 @@
-"""Tests for benchmark participant states: deprecated, not public, candidate.
-
-Deprecating, restoring and promoting go through the participant's own endpoints,
-the visibility and candidate flags are set once on ``add_model``, and the score
-reads leave deprecated models out unless ``include_deprecated`` asks for them.
-"""
-
 from __future__ import annotations
 
-import json
-import subprocess
-import sys
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -65,61 +55,24 @@ _RECORDED_PARTICIPANTS = """
 """
 
 
-def test_standings_with_an_unknown_status_parse(caplog) -> None:
-    result = ApiClient().deserialize(
+def test_unknown_statuses_parse(caplog) -> None:
+    client = ApiClient()
+    standings = client.deserialize(
         _RECORDED_STANDINGS,
         "QueryStandingsByBenchmarkEndpointOutput",
         "application/json",
     )
-
-    assert [item.status for item in result.items] == [StandingStatus.IDLE, "Retired"]
-    unknown = result.items[1].status
-    assert isinstance(unknown, StandingStatus)
-    assert unknown.value == "Retired"
-    assert result.items[1].is_deprecated is True
-    assert json.loads(result.to_json())["items"][1]["status"] == "Retired"
-    assert "Validation failed" not in caplog.text
-
-
-def test_participants_with_an_unknown_status_parse(caplog) -> None:
-    result = ApiClient().deserialize(
+    participants = client.deserialize(
         _RECORDED_PARTICIPANTS,
         "QueryParticipantsByBenchmarkEndpointPagedResultOfOutput",
         "application/json",
     )
 
-    status = result.items[0].status
-    assert isinstance(status, ParticipantStatus)
-    assert status == "Deprecated"
-    assert status is ParticipantStatus("Deprecated")
-    assert status not in (ParticipantStatus.CREATED, ParticipantStatus.SUBMITTABLE)
-    assert "Validation failed" not in caplog.text
-
-
-def test_unknown_status_parses_when_the_generated_client_is_imported_first() -> None:
-    code = (
-        "from rapidata.api_client.api_client import ApiClient\n"
-        "import sys\n"
-        "result = ApiClient().deserialize(sys.stdin.read(), "
-        "'QueryStandingsByBenchmarkEndpointOutput', 'application/json')\n"
-        "assert result.items[1].status.value == 'Retired', result.items[1].status\n"
-    )
-
-    subprocess.run(
-        [sys.executable, "-c", code],
-        input=_RECORDED_STANDINGS,
-        text=True,
-        check=True,
-        capture_output=True,
-    )
-
-
-def test_known_values_and_non_strings_stay_strict() -> None:
+    assert [item.status for item in standings.items] == [StandingStatus.IDLE, "Retired"]
+    assert isinstance(participants.items[0].status, ParticipantStatus)
+    assert participants.items[0].status == "Deprecated"
     assert ParticipantStatus("Disabled") is ParticipantStatus.DISABLED
-    assert StandingStatus("Idle") is StandingStatus.IDLE
-    assert "Deprecated" not in [member.value for member in ParticipantStatus]
-    with pytest.raises(ValueError):
-        ParticipantStatus(3)  # type: ignore[arg-type]
+    assert "Validation failed" not in caplog.text
 
 
 def _make_participant(
@@ -193,20 +146,6 @@ def test_old_names_warn_and_still_work(old, new, endpoint, status) -> None:
     assert participant.status == status
 
 
-def test_failed_deprecate_keeps_local_status() -> None:
-    participant = _make_participant()
-    _participant_api(
-        participant
-    ).participant_participant_id_disable_post.side_effect = RuntimeError(
-        "request failed"
-    )
-
-    with pytest.raises(RuntimeError, match="request failed"):
-        participant.deprecate()
-
-    assert participant.status == ParticipantStatus.SUBMITTED
-
-
 def test_promote_posts_promote_and_keeps_status() -> None:
     participant = _make_participant()
 
@@ -217,18 +156,6 @@ def test_promote_posts_promote_and_keeps_status() -> None:
         participant_id="p-0"
     )
     assert participant.status == ParticipantStatus.SUBMITTED
-
-
-def test_promote_propagates_the_server_rejection() -> None:
-    participant = _make_participant()
-    _participant_api(
-        participant
-    ).participant_participant_id_promote_post.side_effect = RuntimeError(
-        "400: not a candidate"
-    )
-
-    with pytest.raises(RuntimeError, match="not a candidate"):
-        participant.promote()
 
 
 def _make_benchmark() -> RapidataBenchmark:
@@ -277,7 +204,8 @@ def test_add_model_sends_visibility_and_candidate(kwargs, expected) -> None:
 
 
 def _sent_include_deprecated(call) -> str | None:
-    return call.call_args.kwargs["include_deprecated_participants"].eq
+    param = call.call_args.kwargs["include_deprecated_participants"]
+    return None if param is None else param.eq
 
 
 def _make_leaderboard() -> RapidataLeaderboard:

@@ -366,12 +366,7 @@ class RapidataLeaderboard:
             participants = self.__openapi_service.leaderboard.leaderboard_api.leaderboard_leaderboard_id_standings_query_get(
                 leaderboard_id=self.id,
                 tags=in_filter(tags),
-                country=votes.country,
-                language=votes.language,
-                gender=votes.gender,
-                age_bucket=votes.age_bucket,
-                occupation=votes.occupation,
-                run_id=votes.run_id,
+                **votes,
                 include_deprecated_participants=include_deprecated_filter(
                     include_deprecated
                 ),
@@ -451,12 +446,7 @@ class RapidataLeaderboard:
                 leaderboard_id=self.id,
                 tags=in_filter(tags),
                 use_weighted_scoring=use_weighted_scoring,
-                country=votes.country,
-                language=votes.language,
-                gender=votes.gender,
-                age_bucket=votes.age_bucket,
-                occupation=votes.occupation,
-                run_id=votes.run_id,
+                **votes,
                 include_deprecated_participants=include_deprecated_filter(
                     include_deprecated
                 ),
