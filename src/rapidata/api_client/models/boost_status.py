@@ -34,3 +34,13 @@ class BoostStatus(str, Enum):
         """Create an instance of BoostStatus from a JSON string"""
         return cls(json.loads(json_str))
 
+    @classmethod
+    def _missing_(cls, value):
+        # Values the server adds after this release parse instead of failing the response.
+        if not isinstance(value, str):
+            return None
+        member = str.__new__(cls, value)
+        member._name_ = value.upper()
+        member._value_ = value
+        return cls._value2member_map_.setdefault(value, member)
+
