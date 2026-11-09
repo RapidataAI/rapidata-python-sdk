@@ -4,17 +4,18 @@ classDiagram
     class RapidataClient {
         +RapidataJobManager job
         +RapidataAudienceManager audience
+        +RapidataAssetManager asset
         +ValidationSetManager validation
         +RapidataFlowManager flow
+        +RapidataBenchmarkManager mri
+        +RapidataSignalManager signals
         +RapidataBillingManager billing
     }
 
     class RapidataJobManager {
-        +RapidataFilters filter
-        +RapidataSettings settings
-        +RapidataSelections selections
         +create_****_job_definition()
         +get_job_definition_by_id()
+        +find_job_definitions()
         +get_job_by_id()
         +find_jobs()
     }
@@ -22,7 +23,14 @@ classDiagram
     class RapidataAudienceManager {
         +create_audience()
         +get_audience_by_id()
+        +find_audiences()
+    }
+
+    class RapidataAudience {
         +assign_job()
+        +filter()
+        +add_****_example()
+        +start_recruiting()
     }
 
     class ValidationSetManager {
@@ -32,35 +40,6 @@ classDiagram
         +find_validation_sets()
     }
 
-    class RapidataFilters {
-        +Country
-        +Language
-        +Not
-        +Or
-        +And
-    }
-
-    class RapidataSettings {
-        +AlertOnFastResponse
-        +TranslationBehaviour
-        +FreeTextMinimumCharacters
-        +NoShuffle
-        +PlayPercentageVideo
-        +AllowNeitherBoth
-        +SwapContextInstruction
-        +MuteVideo
-        +Markdown
-    }
-
-    class RapidataSelections {
-        +Labeling
-        +Validation
-        +ConditionalValidation
-        +Demographic
-        +Capped
-        +Shuffling
-    }
-
     class RapidsManager {
         +****_rapid()
     }
@@ -68,17 +47,14 @@ classDiagram
     RapidataClient --* RapidataJobManager
     RapidataClient --* RapidataAudienceManager
     RapidataClient --* ValidationSetManager
-    RapidataJobManager --* RapidataFilters
-    RapidataJobManager --* RapidataSettings
-    RapidataJobManager --* RapidataSelections
+    RapidataAudienceManager --> RapidataAudience
     ValidationSetManager --* RapidsManager
 
     link RapidataClient "../reference/rapidata/rapidata_client/rapidata_client/" ""
     link RapidataJobManager "../reference/rapidata/rapidata_client/job/rapidata_job_manager/" ""
+    link RapidataAudienceManager "../reference/rapidata/rapidata_client/audience/rapidata_audience_manager/" ""
+    link RapidataAudience "../reference/rapidata/rapidata_client/audience/rapidata_audience/" ""
     link ValidationSetManager "../reference/rapidata/rapidata_client/validation/validation_set_manager/" ""
-    link RapidataFilters "../reference/rapidata/rapidata_client/filter/rapidata_filters/" ""
-    link RapidataSettings "../reference/rapidata/rapidata_client/settings/rapidata_settings/" ""
-    link RapidataSelections "../reference/rapidata/rapidata_client/selection/rapidata_selections/" ""
     link RapidsManager "../reference/rapidata/rapidata_client/validation/rapids/rapids_manager/" ""
 
 ```
@@ -91,19 +67,17 @@ The Rapidata API builds on the [RapidataClient](reference/rapidata/rapidata_clie
 
 [RapidataJobManager](reference/rapidata/rapidata_client/job/rapidata_job_manager.md) - accessible through the RapidataClient(rapi) under rapi.job. Creates job definitions and looks up jobs.
 
-[RapidataAudienceManager](reference/rapidata/rapidata_client/audience/rapidata_audience_manager.md) - accessible through the RapidataClient(rapi) under rapi.audience. Manages annotator audiences and assigns job definitions to them.
+[RapidataAudienceManager](reference/rapidata/rapidata_client/audience/rapidata_audience_manager.md) - accessible through the RapidataClient(rapi) under rapi.audience. Creates and looks up audiences.
 
 [RapidataAssetManager](reference/rapidata/rapidata_client/asset/rapidata_asset_manager.md) - accessible through the RapidataClient(rapi) under rapi.asset. Uploads media once and returns an `UploadedAsset` to reuse in job definitions.
 
-[RapidataFilters](reference/rapidata/rapidata_client/filter/rapidata_filters.md) - accessible through the RapidataClient(rapi) under rapi.job
+[RapidataAudience](reference/rapidata/rapidata_client/audience/rapidata_audience.md) - returned by rapi.audience. Runs a job definition with `assign_job()` and narrows the audience with `filter()`.
 
-[RapidataSettings](reference/rapidata/rapidata_client/settings/rapidata_settings.md) - accessible through the RapidataClient(rapi) under rapi.job
-
-[RapidataSelections](reference/rapidata/rapidata_client/selection/rapidata_selections.md) - accessible through the RapidataClient(rapi) under rapi.job
+Filters (`CountryFilter`, `LanguageFilter`, ...), settings (`NoShuffleSetting`, `RapidataSettings`, ...) and selections (`LabelingSelection`, ...) are imported directly from `rapidata`.
 
 
 ### Validation related classes
 
-[RapidataValidationManger](reference/rapidata/rapidata_client/validation/validation_set_manager.md) - accessible through the RapidataClient(rapi) under rapi.validation
+[ValidationSetManager](reference/rapidata/rapidata_client/validation/validation_set_manager.md) - accessible through the RapidataClient(rapi) under rapi.validation
 
 [RapidsManager](reference/rapidata/rapidata_client/validation/rapids/rapids_manager.md) - accessible through the RapidataClient(rapi) under rapi.validation.rapid. Used to create specific rapids to be added to a validation set.
