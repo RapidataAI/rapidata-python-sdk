@@ -6,7 +6,7 @@ it in the project). Check authentication with
 ``python -m rapidata status`` and log the user in with ``python -m rapidata login``.
 """
 
-__version__ = "3.28.0"
+__version__ = "3.29.0"
 
 from ._agent_hint import print_agent_hint as _print_agent_hint
 
