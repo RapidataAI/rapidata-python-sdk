@@ -928,7 +928,7 @@ participant = benchmark.add_model(
     media=["mountain_v3.png", "city_v3.png"],
     prompts=["A serene mountain landscape", "A futuristic city"],
     data_type="media",
-    is_public=True,      # False: only the benchmark's org and staff see it; later models don't play it
+    is_public=True,      # False: only the benchmark's org and staff see it; paired like any other model
     is_candidate=False,  # True: plays the whole field now; later models don't play it until promote()
 )
 
