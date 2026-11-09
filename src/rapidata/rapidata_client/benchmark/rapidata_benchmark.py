@@ -1214,12 +1214,7 @@ class RapidataBenchmark:
                 benchmark_id=self.id,
                 tags=in_filter(tags),
                 leaderboard_id=in_filter(leaderboard_ids),
-                country=votes.country,
-                language=votes.language,
-                gender=votes.gender,
-                age_bucket=votes.age_bucket,
-                occupation=votes.occupation,
-                run_id=votes.run_id,
+                **votes,
                 include_deprecated_participants=include_deprecated_filter(
                     include_deprecated
                 ),
@@ -1308,12 +1303,7 @@ class RapidataBenchmark:
                 participant_id=in_filter(participant_ids),
                 leaderboard_id=in_filter(leaderboard_ids),
                 use_weighted_scoring=use_weighted_scoring,
-                country=votes.country,
-                language=votes.language,
-                gender=votes.gender,
-                age_bucket=votes.age_bucket,
-                occupation=votes.occupation,
-                run_id=votes.run_id,
+                **votes,
                 include_deprecated_participants=include_deprecated_filter(
                     include_deprecated
                 ),
@@ -1372,12 +1362,7 @@ class RapidataBenchmark:
                 benchmark_id=self.id,
                 tags=in_filter(tags),
                 leaderboard_id=in_filter(leaderboard_ids),
-                country=votes.country,
-                language=votes.language,
-                gender=votes.gender,
-                age_bucket=votes.age_bucket,
-                occupation=votes.occupation,
-                run_id=votes.run_id,
+                **votes,
             )
 
             dimensions = result.dimensions
@@ -1453,12 +1438,7 @@ class RapidataBenchmark:
                 dimension=BenchmarkDemographicDimension(dimension),
                 tags=in_filter(tags),
                 leaderboard_id=in_filter(leaderboard_ids),
-                country=votes.country,
-                language=votes.language,
-                gender=votes.gender,
-                age_bucket=votes.age_bucket,
-                occupation=votes.occupation,
-                run_id=votes.run_id,
+                **votes,
             )
 
             rows = []
