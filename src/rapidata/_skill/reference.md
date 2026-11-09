@@ -10,11 +10,11 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 |-----------|------|-------------|
 | `name` | str | Job identifier (not shown to labelers) |
 | `instruction` | str | Question shown to labelers: one criterion, under 80 characters (see **Task design rules** in the main guide). Over 250 characters raises `ValueError` |
-| `datapoints` | list | Data to label (URLs or local paths) |
+| `datapoints` | list | Data to label: URLs, local paths, or `UploadedAsset` references from `client.asset.upload(...)`, which are never uploaded again |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
 | `responses_per_datapoint` | int | Responses per item (default 10; never set it below 10 — see **Task design rules** in the main guide) |
 | `contexts` | list[str] \| None | Text context per datapoint: one sentence under 150 characters with only what the instruction asks about (see **Task design rules** in the main guide). Max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually |
-| `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
+| `media_contexts` | list[list[str \| UploadedAsset]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths/`UploadedAsset` references (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
 | `confidence_threshold` | float \| None | Confidence-based early stopping threshold (0-1); cannot combine with `quorum_threshold` |
 | `quorum_threshold` | int \| None | Quorum-based early stopping: stop when this many responses agree; cannot combine with `confidence_threshold` |
 | `settings` | `Sequence[RapidataSetting] \| None` | Display/behavior settings |
@@ -35,7 +35,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `datapoints` | list[list[str]] | Pairs: `[["a1.jpg","b1.jpg"], ...]` |
+| `datapoints` | list[list[str \| UploadedAsset]] | Pairs: `[["a1.jpg","b1.jpg"], ...]` |
 | `a_b_names` | list[str] \| None | Custom labels for results, e.g. `["Model A","Model B"]` |
 
 ### Locate-specific

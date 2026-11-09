@@ -93,6 +93,8 @@ The Rapidata API builds on the [RapidataClient](reference/rapidata/rapidata_clie
 
 [RapidataAudienceManager](reference/rapidata/rapidata_client/audience/rapidata_audience_manager.md) - accessible through the RapidataClient(rapi) under rapi.audience. Manages annotator audiences and assigns job definitions to them.
 
+[RapidataAssetManager](reference/rapidata/rapidata_client/asset/rapidata_asset_manager.md) - accessible through the RapidataClient(rapi) under rapi.asset. Uploads media once and returns an `UploadedAsset` to reuse in job definitions.
+
 [RapidataFilters](reference/rapidata/rapidata_client/filter/rapidata_filters.md) - accessible through the RapidataClient(rapi) under rapi.job
 
 [RapidataSettings](reference/rapidata/rapidata_client/settings/rapidata_settings.md) - accessible through the RapidataClient(rapi) under rapi.job

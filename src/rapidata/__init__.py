@@ -36,6 +36,8 @@ from .rapidata_client import (
     ClassifyDatapointResult,
     BillingPeriod,
     RapidataBillingManager,
+    RapidataAssetManager,
+    UploadedAsset,
     ValidationSetManager,
     RapidataValidationSet,
     Box,

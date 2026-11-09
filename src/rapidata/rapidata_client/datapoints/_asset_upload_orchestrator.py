@@ -15,6 +15,7 @@ from rapidata.rapidata_client.datapoints._batch_asset_uploader import (
 from rapidata.rapidata_client.exceptions.asset_warning import AssetWarning
 from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
 from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache
+from rapidata.rapidata_client.datapoints.assets.uploaded_asset import UploadedAsset
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.datapoints._datapoint import Datapoint
@@ -23,32 +24,31 @@ if TYPE_CHECKING:
 
 def extract_assets_from_datapoint(datapoint: Datapoint) -> set[str]:
     """
-    Extract all assets from a single datapoint.
+    Extract the assets a single datapoint still needs uploaded.
 
     Args:
         datapoint: The datapoint to extract assets from.
 
     Returns:
-        Set of asset identifiers (URLs or file paths).
+        Set of asset identifiers (URLs or file paths). An ``UploadedAsset`` is
+        already uploaded, so it is never part of the set.
     """
-    assets: set[str] = set()
+    candidates: list[str | UploadedAsset] = []
 
     # Only extract main asset(s) for media datapoints
     # Text assets are passed directly as text content, not uploaded
     if datapoint.data_type == "media":
         if isinstance(datapoint.asset, list):
-            assets.update(datapoint.asset)
+            candidates.extend(datapoint.asset)
         else:
-            assets.add(datapoint.asset)
+            candidates.append(datapoint.asset)
 
     # media_context is always a media asset regardless of data_type
     # Skip for grouped datapoints — their context is uploaded at group level
     if datapoint.media_context and datapoint.group is None:
-        # media_context is always a list of strings (the model coerces legacy
-        # single strings into a list at validation time).
-        assets.update(datapoint.media_context)
+        candidates.extend(datapoint.media_context)
 
-    return assets
+    return {asset for asset in candidates if isinstance(asset, str)}
 
 
 class AssetUploadOrchestrator:

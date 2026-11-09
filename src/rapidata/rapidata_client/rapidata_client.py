@@ -35,6 +35,7 @@ from rapidata.rapidata_client.config import (
 )
 
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+from rapidata.rapidata_client.asset.rapidata_asset_manager import RapidataAssetManager
 from rapidata.rapidata_client.job.rapidata_job_manager import RapidataJobManager
 from rapidata.rapidata_client.flow.rapidata_flow_manager import RapidataFlowManager
 from rapidata.rapidata_client.signal.rapidata_signal_manager import (
@@ -141,6 +142,8 @@ class RapidataClient:
             billing (RapidataBillingManager): The RapidataBillingManager instance for
                 reading the current billing period, its outstanding cost and the
                 remaining credits.
+            asset (RapidataAssetManager): The RapidataAssetManager instance for
+                uploading media once and reusing the reference in job definitions.
         """
         tracer.set_session_id(
             uuid.UUID(int=random.Random().getrandbits(128), version=4).hex
@@ -220,6 +223,9 @@ class RapidataClient:
 
             logger.debug("Initializing RapidataBillingManager")
             self.billing = RapidataBillingManager(openapi_service=self._openapi_service)
+
+            logger.debug("Initializing RapidataAssetManager")
+            self.asset = RapidataAssetManager(openapi_service=self._openapi_service)
 
         self._check_beta_features()  # can't be in the trace for some reason
 
