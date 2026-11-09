@@ -9,6 +9,7 @@ from rapidata.rapidata_client.datapoints.assets.constants import (
     ALLOWED_IMAGE_EXTENSIONS,
     ALLOWED_AUDIO_EXTENSIONS,
 )
+from rapidata.rapidata_client.datapoints.assets.uploaded_asset import UploadedAsset
 from rapidata.rapidata_client.config import logger
 
 # Several entries go up as one multi-asset, which the backend caps at this size.
@@ -19,14 +20,14 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.prompt_type import PromptType
 
 
-def coerce_media_context(value: object) -> list[str] | None:
-    """Normalize a ``media_context`` value to ``list[str] | None``.
+def coerce_datapoint_media_context(
+    value: object,
+) -> list[str | UploadedAsset] | None:
+    """Normalize a ``media_context`` value to ``list[str | UploadedAsset] | None``.
 
     Accepts ``str`` for backward compatibility — emits a deprecation warning
     and wraps it in a single-element list so the rest of the SDK only ever
-    has to deal with ``list[str]``. This is the single source of truth for
-    media_context coercion; both the ``Datapoint`` and ``Rapid`` field
-    validators delegate to it, as do the audience public APIs.
+    has to deal with lists.
     """
     if value is None:
         return None
@@ -45,9 +46,11 @@ def coerce_media_context(value: object) -> list[str] | None:
             raise ValueError(
                 "media_context cannot be an empty list. If not needed, set to None."
             )
-        if any(not isinstance(item, str) or item == "" for item in value):
+        if any(
+            not isinstance(item, (str, UploadedAsset)) or item == "" for item in value
+        ):
             raise ValueError(
-                "Every entry in a media_context list must be a non-empty string."
+                "Every entry in a media_context list must be a non-empty string or an UploadedAsset."
             )
         if len(value) > MAX_MEDIA_CONTEXT_ASSETS:
             raise ValueError(
@@ -59,11 +62,24 @@ def coerce_media_context(value: object) -> list[str] | None:
     )
 
 
+def coerce_media_context(value: object) -> list[str] | None:
+    """``coerce_datapoint_media_context`` for callers that take paths and URLs only."""
+    coerced = coerce_datapoint_media_context(value)
+    if coerced is None:
+        return None
+    paths = [item for item in coerced if isinstance(item, str)]
+    if len(paths) != len(coerced):
+        raise ValueError(
+            "Every entry in a media_context list must be a non-empty string."
+        )
+    return paths
+
+
 class Datapoint(BaseModel):
-    asset: str | list[str]
+    asset: str | UploadedAsset | list[str | UploadedAsset]
     data_type: Literal["text", "media"]
     context: str | None = None
-    media_context: list[str] | None = None
+    media_context: list[str | UploadedAsset] | None = None
     sentence: str | None = None
     private_metadata: dict[str, str] | None = None
     group: str | None = None
@@ -80,8 +96,8 @@ class Datapoint(BaseModel):
 
     @field_validator("media_context", mode="before")
     @classmethod
-    def media_context_normalize(cls, v: object) -> list[str] | None:
-        return coerce_media_context(v)
+    def media_context_normalize(cls, v: object) -> list[str | UploadedAsset] | None:
+        return coerce_datapoint_media_context(v)
 
     @field_validator("sentence")
     @classmethod
@@ -98,6 +114,15 @@ class Datapoint(BaseModel):
             )
         return self
 
+    @model_validator(mode="after")
+    def check_uploaded_assets_are_media(self) -> Self:
+        assets = self.asset if isinstance(self.asset, list) else [self.asset]
+        if self.data_type == "text" and any(
+            isinstance(asset, UploadedAsset) for asset in assets
+        ):
+            raise ValueError("An UploadedAsset is media; use data_type='media' for it.")
+        return self
+
     def get_asset_type(self) -> AssetType:
         from rapidata.api_client.models.asset_type import AssetType
         from urllib.parse import urlparse
@@ -106,6 +131,8 @@ class Datapoint(BaseModel):
             return AssetType.TEXT
 
         evaluation_asset = self.asset[0] if isinstance(self.asset, list) else self.asset
+        if isinstance(evaluation_asset, UploadedAsset):
+            evaluation_asset = evaluation_asset.name
 
         # Compare extensions case-insensitively and ignore URL query /
         # fragment so `photo.JPG` and `https://x/image.png?v=2` are both

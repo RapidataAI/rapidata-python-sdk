@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Pipeline API",
     "description": "The API for the Rapidata Pipeline service",
-    "version": "2026.10.29.0928-2164545"
+    "version": "2026.11.06.1913-feab628"
   },
   "servers": [
     {
@@ -108,7 +108,19 @@
             }
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/pipeline/{pipelineId}/preliminary-download": {
@@ -167,7 +179,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     }
   },
@@ -1504,7 +1528,6 @@
       "IWorkflowConfigSimpleWorkflowConfig": {
         "required": [
           "referee",
-          "blueprint",
           "_t"
         ],
         "properties": {
@@ -1518,7 +1541,13 @@
             "$ref": "#/components/schemas/IRefereeConfig"
           },
           "blueprint": {
-            "$ref": "#/components/schemas/IRapidBlueprint"
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IRapidBlueprint"
+              }
+            ],
+            "nullable": true
           },
           "batchSize": {
             "type": "integer",
@@ -1638,10 +1667,6 @@
   "security": [
     {
       "OpenIdConnect": [
-        "openid",
-        "profile",
-        "email",
-        "offline_access",
         "api"
       ]
     }

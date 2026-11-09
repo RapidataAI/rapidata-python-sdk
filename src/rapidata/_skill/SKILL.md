@@ -29,6 +29,9 @@ client = RapidataClient()  # Credentials resolved: env vars → ~/.config/rapida
 client = RapidataClient(client_id="...", client_secret="...")
 # Credentials are saved to ~/.config/rapidata/credentials.json
 
+# Pin the saved credentials to one organization; switching organization in the dashboard does not move them
+client = RapidataClient(organization_id="org_...")
+
 # Environment variables (useful for headless/container deployments):
 # RAPIDATA_CLIENT_ID, RAPIDATA_CLIENT_SECRET — authenticate without a browser
 # RAPIDATA_ENVIRONMENT — override the API endpoint (default: rapidata.ai)
@@ -39,11 +42,11 @@ client = RapidataClient(client_id="...", client_secret="...")
 Without saved credentials, `RapidataClient()` blocks on a browser login for up to 5 minutes. As a coding agent, check auth first from the CLI:
 
 ```bash
-python -m rapidata status [--environment ENV]  # exit 0: "Authenticated for {env} via {source}."; exit 1: not logged in. Never starts a login
-python -m rapidata login  [--environment ENV]  # browser login; saves credentials (no-op if already authenticated). Blocks up to 5 minutes
+python -m rapidata status [--environment ENV] [--organization ORG]  # exit 0: "Authenticated for {env} via {source}."; exit 1: not logged in. Never starts a login
+python -m rapidata login  [--environment ENV] [--organization ORG]  # browser login; saves credentials (no-op if already authenticated). Blocks up to 5 minutes
 ```
 
-- Both check `RAPIDATA_TOKEN_FILE` → `RAPIDATA_CLIENT_ID` + `RAPIDATA_CLIENT_SECRET` → credentials saved for `https://auth.{environment}`. `--environment` defaults to `RAPIDATA_ENVIRONMENT`, else `rapidata.ai`.
+- Both check `RAPIDATA_TOKEN_FILE` → `RAPIDATA_CLIENT_ID` + `RAPIDATA_CLIENT_SECRET` → credentials saved for `https://auth.{environment}` (and `--organization`, when given). `--environment` defaults to `RAPIDATA_ENVIRONMENT`, else `rapidata.ai`.
 - Run `python -m rapidata status` before the first `RapidataClient()`. If it reports not logged in, run `python -m rapidata login` in the background (or with a tool timeout above 5 minutes) and show the user the URL it prints — the login URL is always printed to stderr, even in silent mode. After the user logs in once, every later `RapidataClient()` reuses the saved credentials.
 - For headless runs, set `RAPIDATA_CLIENT_ID` and `RAPIDATA_CLIENT_SECRET` instead.
 
@@ -92,6 +95,7 @@ The file is just one transport. To move the token over any transport (key-value 
 - `client.signals` — run a labeling job on a repeating schedule
 - `client.context` — shorten over-long datapoint contexts against a specific question
 - `client.billing` — read the current billing period's cost and remaining credit, and the outstanding balance owed (organization-level)
+- `client.asset` — upload media once (`client.asset.upload(path_or_url)` → `UploadedAsset`) and reuse the reference in any job definition
 - `client.validation` — validation sets (`create_classification_set`, `create_compare_set`, …, `get_validation_set_by_id`, `find_validation_sets`); only needed for a flow's `validation_set_id` — jobs qualify labelers through audience examples instead
 
 ## Task design rules
@@ -104,6 +108,7 @@ Follow these for every job definition and audience example. Design each task so 
    - ✅ `"Is there a real dog in the red circle?"` with options `["Yes", "No", "Can't tell"]`
    - ❌ `"Which video is better overall? Consider the motion, timing, camera, style, on-screen text and sound."` (several criteria)
    - ❌ `"Is there a real dog in the red circle? It is small and often blurred. A dog on a poster or a toy dog does not count."` (one criterion, but definitions and edge cases make it 116 characters)
+   - ❌ `"Which option best describes the image? Select one answer."` (classification and comparison already accept exactly one answer, so "Select one answer" only adds words to translate and read)
 3. **Keep each context to one sentence under 150 characters, holding only what the question checks.** Don't pass the full generation prompt: nobody reads 300 characters and judges two videos in 15 seconds. Context shortening (see **Context Management**) focuses a context on the question but rarely gets it under 150 characters, so write the short version yourself.
 4. **Write the instruction, context and answer options in plain words that translate cleanly.** All three are machine-translated into each labeler's device language by default (see **Key Gotchas** #12), so most labelers read a translation, not your English. Use common words and literal phrasing; avoid idioms, slang, wordplay, abbreviations and words with several meanings, which come out wrong or meaningless in translation.
    - ✅ `"Does the video match the description?"` with options `["Yes", "No"]`
@@ -154,7 +159,7 @@ df = results.to_pandas()
 
 ### Classification
 
-Select one category from multiple options.
+Labelers pick exactly one of the answer options; the task screen allows only one, so the instruction never needs to say so.
 
 ```python
 from rapidata import NoShuffleSetting, QuorumStopping
@@ -299,6 +304,26 @@ job_def = client.job.create_free_text_job_definition(
     contexts=["Optional text context"],
 )
 ```
+
+### Upload once, reuse the reference
+
+`client.asset.upload(path_or_url)` uploads a local file or URL and returns an `UploadedAsset`. Every `create_*_job_definition` and `set_datapoints` accepts it wherever it takes a media datapoint or media context, alone or mixed with paths and URLs, and uses it as-is: it is never uploaded again.
+
+```python
+from rapidata import UploadedAsset
+
+baseline = client.asset.upload("baseline.png")  # UploadedAsset(name='<uuid>.png')
+job_def = client.job.create_compare_job_definition(
+    name="Baseline vs candidates",
+    instruction="Which image looks better?",
+    datapoints=[[baseline, "candidate_1.png"], [baseline, "https://example.com/candidate_2.png"]],
+)
+
+saved_name = baseline.name               # keep the name to reuse this upload later,
+baseline = UploadedAsset(saved_name)     # e.g. in another session
+```
+
+An `UploadedAsset` is media, so it cannot be a `data_type="text"` datapoint. Audience examples, validation sets, flows and benchmarks still take paths and URLs only.
 
 ### Custom Audiences
 
@@ -733,6 +758,8 @@ participant = benchmark.add_model(
     media=["mountain_v3.png", "city_v3.png"],
     prompts=["A serene mountain landscape", "A futuristic city"],
     data_type="media",
+    is_public=True,      # False: only the benchmark's org and staff see it; later models don't play it
+    is_candidate=False,  # True: plays the whole field now; later models don't play it until promote()
 )
 
 # Upload additional media to the same participant
@@ -770,9 +797,10 @@ benchmark.run()         # Submit all unsubmitted participants (status CREATED or
 # as 'identifier' (asset_count/required), e.g. model-0: 'cat' (2/4). Submission still
 # completes and participants are marked SUBMITTED regardless of the warning.
 
-participant.disable()             # Exclude from evaluation and standings (reversible)
-participant.enable()              # Re-enable a previously disabled participant
-participant.get_elo()             # Aggregated Elo across all leaderboards (None if not yet computed)
+participant.deprecate()           # No new matchups; row and votes leave the default standings (reversible)
+participant.restore()             # Undo deprecate(). disable()/enable() are deprecated aliases
+participant.promote()             # Candidate joins the field: models submitted later play it (no run starts)
+participant.get_elo()             # Aggregated Elo across all leaderboards (None if not yet computed or deprecated)
 participant.delete()              # Delete participant and its uploaded media (cannot be undone)
 
 # Update participant metadata — adding a model and pricing it are separate calls
@@ -805,6 +833,9 @@ matrix_lb = leaderboard.get_win_loss_matrix()              # Pairwise wins/losse
 matrix_bm = benchmark.get_win_loss_matrix(                 # Pairwise wins/losses across leaderboards
     tags=None, participant_ids=None, leaderboard_ids=None, use_weighted_scoring=None,
 )
+# Deprecated models and their votes are left out of all four by default;
+# include_deprecated=True brings them back and refits every score.
+overall_all = benchmark.get_overall_standings(include_deprecated=True)
 
 # Filter any of the read methods above by voter demographics. All four benchmark reads
 # (get_overall_standings, get_win_loss_matrix, get_demographics, get_standings_breakdown)

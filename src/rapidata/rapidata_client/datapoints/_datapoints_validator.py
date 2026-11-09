@@ -1,29 +1,38 @@
 from itertools import zip_longest
-from typing import Literal, cast, Iterable
+from typing import Literal, Sequence, cast, Iterable
 from rapidata.rapidata_client.datapoints._datapoint import (
     Datapoint,
-    coerce_media_context,
+    coerce_datapoint_media_context,
 )
+from rapidata.rapidata_client.datapoints.assets.uploaded_asset import UploadedAsset
 
 
 class DatapointsValidator:
     @staticmethod
     def validate_datapoints(
-        datapoints: list[str] | list[list[str]],
+        datapoints: (
+            Sequence[str | UploadedAsset] | Sequence[Sequence[str | UploadedAsset]]
+        ),
         contexts: list[str] | None = None,
-        media_contexts: list[list[str]] | list[str] | None = None,
+        media_contexts: (
+            Sequence[Sequence[str | UploadedAsset]] | Sequence[str] | None
+        ) = None,
         sentences: list[str] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
         groups: list[str] | None = None,
         multi_asset: bool = False,
         answer_options: list[list[str]] | None = None,
     ) -> None:
-        if multi_asset and any(isinstance(datapoint, str) for datapoint in datapoints):
-            raise ValueError("Datapoints must be a list of lists of strings")
+        if multi_asset and any(
+            isinstance(datapoint, (str, UploadedAsset)) for datapoint in datapoints
+        ):
+            raise ValueError(
+                "Datapoints must be a list of lists of strings or UploadedAsset"
+            )
         if not multi_asset and any(
             isinstance(datapoint, list) for datapoint in datapoints
         ):
-            raise ValueError("Datapoints must be a list of strings")
+            raise ValueError("Datapoints must be a list of strings or UploadedAsset")
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("Number of contexts must match number of datapoints")
         if media_contexts is not None and len(media_contexts) != len(datapoints):
@@ -59,9 +68,13 @@ class DatapointsValidator:
 
     @staticmethod
     def map_datapoints(
-        datapoints: list[str] | list[list[str]],
+        datapoints: (
+            Sequence[str | UploadedAsset] | Sequence[Sequence[str | UploadedAsset]]
+        ),
         contexts: list[str] | None = None,
-        media_contexts: list[list[str]] | list[str] | None = None,
+        media_contexts: (
+            Sequence[Sequence[str | UploadedAsset]] | Sequence[str] | None
+        ) = None,
         sentences: list[str] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
         groups: list[str] | None = None,
@@ -79,23 +92,18 @@ class DatapointsValidator:
             multi_asset=multi_asset,
             answer_options=answer_options,
         )
-        # ``media_context`` may arrive as a ``str`` (legacy form, one media
-        # context per datapoint) or as a ``list[str]``. The same
-        # ``coerce_media_context`` helper that backs the Datapoint field
-        # validator handles both — calling it here narrows the static type
-        # so pyright is happy with the Datapoint constructor.
         datapoints_list = [
             Datapoint(
                 asset=asset,
                 data_type=data_type,
                 context=context,
-                media_context=coerce_media_context(media_context),
+                media_context=coerce_datapoint_media_context(media_context),
                 sentence=sentence,
                 private_metadata=private_tag,
                 group=group,
             )
             for asset, context, media_context, sentence, private_tag, group in cast(
-                "Iterable[tuple[str | list[str], str | None, str | list[str] | None, str | None, dict[str, str] | None, str | None]]",  # because iterator only supports 5 arguments with specific type casting
+                "Iterable[tuple[str | UploadedAsset | list[str | UploadedAsset], str | None, str | list[str | UploadedAsset] | None, str | None, dict[str, str] | None, str | None]]",  # because iterator only supports 5 arguments with specific type casting
                 zip_longest(
                     datapoints,
                     contexts or [],

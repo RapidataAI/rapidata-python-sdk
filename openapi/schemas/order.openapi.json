@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.10.29.0928-2164545"
+    "version": "2026.11.06.1913-feab628"
   },
   "servers": [
     {
@@ -88,7 +88,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/definition/{definitionId}/clone": {
@@ -152,7 +164,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/definition": {
@@ -200,7 +224,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job": {
@@ -248,7 +284,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/definition/{definitionId}/revision": {
@@ -307,7 +355,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -352,7 +412,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/shares": {
@@ -404,7 +476,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -453,7 +537,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/definition/{definitionId}": {
@@ -493,7 +589,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -538,7 +646,20 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          },
+          { }
+        ]
       },
       "patch": {
         "tags": [
@@ -587,7 +708,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}": {
@@ -627,7 +760,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -672,7 +817,20 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          },
+          { }
+        ]
       },
       "patch": {
         "tags": [
@@ -721,7 +879,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/download-results": {
@@ -759,7 +929,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/ab-summary": {
@@ -816,7 +998,20 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          },
+          { }
+        ]
       }
     },
     "/job/{jobId}/cost-estimate": {
@@ -864,7 +1059,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/datapoints": {
@@ -948,7 +1155,20 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          },
+          { }
+        ]
       }
     },
     "/job/definition/{definitionId}/cost-estimate": {
@@ -996,7 +1216,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/shares/organizations": {
@@ -1047,7 +1279,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -1097,7 +1341,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/preliminary-download/{downloadId}": {
@@ -1156,7 +1412,19 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/progress": {
@@ -1204,7 +1472,89 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          },
+          { }
+        ]
+      }
+    },
+    "/job/{jobId}/results/groups/{groupId}/head-to-head": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets a ranking group's context and the votes each of its datapoints received against every opponent.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "description": "The id of the grouped-ranking job the group belongs to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "The id of the group whose head-to-head to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          },
+          { }
+        ]
       }
     },
     "/job/{jobId}/results/groups/{groupId}": {
@@ -1279,7 +1629,20 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          },
+          { }
+        ]
       }
     },
     "/job/{jobId}/responses": {
@@ -1353,7 +1716,20 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          },
+          { }
+        ]
       }
     },
     "/job/{jobId}/results/{rapidId}/navigation": {
@@ -1471,7 +1847,20 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          },
+          { }
+        ]
       }
     },
     "/job/{jobId}/results": {
@@ -1572,7 +1961,20 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          },
+          { }
+        ]
       }
     },
     "/job/definition/{definitionId}/revision/{revisionNumber}": {
@@ -1629,7 +2031,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/jobs/unlisted/{audienceId}/active": {
@@ -1717,7 +2131,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/jobs/aggregated-overview": {
@@ -1954,7 +2380,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/definitions": {
@@ -2335,7 +2773,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/definition/{definitionId}/revisions": {
@@ -2577,7 +3027,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/jobs": {
@@ -3069,7 +3531,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/definitions/public": {
@@ -3449,7 +3923,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/rapids/restart": {
@@ -3501,7 +3987,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/resume": {
@@ -3541,7 +4039,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/retry": {
@@ -3581,7 +4091,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/shares/organizations/{organizationId}": {
@@ -3631,7 +4153,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/shares/{customerId}": {
@@ -3682,7 +4216,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/definition/{definitionId}/share": {
@@ -3731,7 +4277,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/share": {
@@ -3781,7 +4339,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/preliminary-download": {
@@ -3839,7 +4409,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/job/{jobId}/visibility": {
@@ -3889,7 +4471,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}/approve": {
@@ -3930,7 +4524,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}/clone": {
@@ -3990,7 +4596,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/complex": {
@@ -4038,7 +4656,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order": {
@@ -4087,7 +4717,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/unsupported": {
@@ -4128,7 +4770,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}": {
@@ -4169,7 +4823,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -4265,7 +4931,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}/download-results": {
@@ -4304,7 +4982,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}/results": {
@@ -4343,7 +5033,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/orders/public": {
@@ -4430,7 +5132,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}/pause": {
@@ -4471,7 +5185,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}/preview": {
@@ -4528,7 +5254,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/orders/aggregated-overview": {
@@ -4766,7 +5504,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/orders": {
@@ -5100,7 +5850,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}/resume": {
@@ -5141,7 +5903,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}/retry": {
@@ -5182,7 +5956,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}/share": {
@@ -5232,7 +6018,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}/submit": {
@@ -5290,7 +6088,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/order/{orderId}/unlock": {
@@ -5339,7 +6149,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     }
   },
@@ -5370,7 +6192,8 @@
           "FreeText",
           "Scrub",
           "Ranking",
-          "MultiRanking"
+          "MultiRanking",
+          "Open"
         ]
       },
       "AssetBinding": {
@@ -5939,6 +6762,11 @@
             ],
             "description": "The aggregator type.",
             "nullable": true
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The audience that runs of this definition start their jobs on. POST /job ignores\n it. Must refer to an existing audience.",
+            "nullable": true
           }
         },
         "description": "The input for the create job definition endpoint."
@@ -6142,6 +6970,11 @@
           "validationSetId": {
             "type": "string",
             "description": "A validation set id to pin on this revision. When set, every job run from this\n revision uses the specified validation set as the source of validation rapids\n instead of audience-derived examples. If not provided, inherits from the previous\n revision. Provide a wrapped null value to clear a previously pinned set.",
+            "nullable": true
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The audience that runs of this revision start their jobs on. POST /job ignores it.\n Must refer to an existing audience. If not provided, inherits from the previous\n revision; a wrapped null clears it.",
             "nullable": true
           },
           "baseRevisionNumber": {
@@ -6527,7 +7360,8 @@
           "Scrub",
           "Ranking",
           "GroupedRanking",
-          "Evaluation"
+          "Evaluation",
+          "Open"
         ]
       },
       "DeviceType": {
@@ -7044,6 +7878,107 @@
           }
         }
       },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "string",
+            "description": "The text context shared by every comparison in the group.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "description": "The asset context shared by every comparison in the group."
+          },
+          "headToHead": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid"
+              }
+            ],
+            "description": "The vote grid; null when the group has more than 100 datapoints."
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid": {
+        "required": [
+          "datapoints",
+          "rows"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Datapoint"
+            }
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row"
+            }
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Datapoint": {
+        "required": [
+          "datapointId",
+          "asset"
+        ],
+        "type": "object",
+        "properties": {
+          "datapointId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row": {
+        "required": [
+          "datapointId",
+          "cells"
+        ],
+        "type": "object",
+        "properties": {
+          "datapointId": {
+            "type": "string"
+          },
+          "cells": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row_Cell"
+            }
+          }
+        }
+      },
+      "GetJobRankingGroupHeadToHeadEndpoint_Output_Grid_Row_Cell": {
+        "required": [
+          "opponentId",
+          "votesFor",
+          "votesAgainst"
+        ],
+        "type": "object",
+        "properties": {
+          "opponentId": {
+            "type": "string"
+          },
+          "votesFor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "votesAgainst": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "GetJobResponsesEndpoint_Output": {
         "required": [
           "responses"
@@ -7287,6 +8222,22 @@
           "validationSetId": {
             "type": "string",
             "description": "The validation set pinned on this revision, or null when none is pinned.",
+            "nullable": true
+          },
+          "audienceId": {
+            "type": "string",
+            "description": "The audience that runs of this revision start their jobs on, or null when none\n is set. POST /job ignores it.",
+            "nullable": true
+          },
+          "sourceDefinitionId": {
+            "type": "string",
+            "description": "The definition this revision was copied from, or null when it is not a copy.",
+            "nullable": true
+          },
+          "sourceRevisionNumber": {
+            "type": "integer",
+            "description": "The source definition's revision number at the time of the copy, or null when it\n is not a copy.",
+            "format": "int32",
             "nullable": true
           },
           "baseRevisionNumber": {
@@ -8264,6 +9215,175 @@
           }
         }
       },
+      "IOpenInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenOptionsInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenTextInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "OpenAssetInput": "#/components/schemas/IOpenInputOpenAssetInput",
+            "OpenOptionsInput": "#/components/schemas/IOpenInputOpenOptionsInput",
+            "OpenTextInput": "#/components/schemas/IOpenInputOpenTextInput"
+          }
+        }
+      },
+      "IOpenInputBinding": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOpenInputBindingAssetBinding"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputBindingOptionsBinding"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputBindingTextBinding"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "Asset": "#/components/schemas/IOpenInputBindingAssetBinding",
+            "Options": "#/components/schemas/IOpenInputBindingOptionsBinding",
+            "Text": "#/components/schemas/IOpenInputBindingTextBinding"
+          }
+        }
+      },
+      "IOpenInputBindingAssetBinding": {
+        "required": [
+          "segment",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Asset"
+            ],
+            "type": "string"
+          },
+          "segment": {
+            "type": "string"
+          }
+        }
+      },
+      "IOpenInputBindingOptionsBinding": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Options"
+            ],
+            "type": "string"
+          },
+          "literal": { },
+          "segment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IOpenInputBindingTextBinding": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Text"
+            ],
+            "type": "string"
+          },
+          "literal": {
+            "type": "string",
+            "nullable": true
+          },
+          "segment": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SegmentTextLanguage"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "IOpenInputOpenAssetInput": {
+        "required": [
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenAssetInput"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          }
+        }
+      },
+      "IOpenInputOpenOptionsInput": {
+        "required": [
+          "options",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenOptionsInput"
+            ],
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenOptionsInput_Option"
+            }
+          }
+        }
+      },
+      "IOpenInputOpenTextInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenTextInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
       "IOrderWorkflowInput": {
         "required": [
           "_t"
@@ -9114,6 +10234,9 @@
             "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
           },
           {
+            "$ref": "#/components/schemas/IRapidPayloadOpenPayload"
+          },
+          {
             "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
           },
           {
@@ -9133,6 +10256,7 @@
             "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
             "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
             "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
+            "OpenPayload": "#/components/schemas/IRapidPayloadOpenPayload",
             "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
             "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
             "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload"
@@ -9279,6 +10403,30 @@
           }
         }
       },
+      "IRapidPayloadOpenPayload": {
+        "required": [
+          "bundleFileName",
+          "inputs",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenPayload"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IOpenInput"
+            }
+          }
+        }
+      },
       "IRapidPayloadPolygonPayload": {
         "required": [
           "target",
@@ -9365,6 +10513,9 @@
             "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
           },
           {
+            "$ref": "#/components/schemas/IRapidResultOpenResult"
+          },
+          {
             "$ref": "#/components/schemas/IRapidResultPolygonResult"
           },
           {
@@ -9387,6 +10538,7 @@
             "LineResult": "#/components/schemas/IRapidResultLineResult",
             "LocateResult": "#/components/schemas/IRapidResultLocateResult",
             "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
+            "OpenResult": "#/components/schemas/IRapidResultOpenResult",
             "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
             "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
             "SkipResult": "#/components/schemas/IRapidResultSkipResult",
@@ -9555,6 +10707,25 @@
           }
         }
       },
+      "IRapidResultOpenResult": {
+        "required": [
+          "rapidId",
+          "answer",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "answer": { }
+        }
+      },
       "IRapidResultPolygonResult": {
         "required": [
           "rapidId",
@@ -9673,6 +10844,9 @@
             "$ref": "#/components/schemas/IRapidSpecNamedEntityRapidSpec"
           },
           {
+            "$ref": "#/components/schemas/IRapidSpecOpenRapidSpec"
+          },
+          {
             "$ref": "#/components/schemas/IRapidSpecPolygonRapidSpec"
           },
           {
@@ -9692,6 +10866,7 @@
             "Line": "#/components/schemas/IRapidSpecLineRapidSpec",
             "Locate": "#/components/schemas/IRapidSpecLocateRapidSpec",
             "NamedEntity": "#/components/schemas/IRapidSpecNamedEntityRapidSpec",
+            "Open": "#/components/schemas/IRapidSpecOpenRapidSpec",
             "Polygon": "#/components/schemas/IRapidSpecPolygonRapidSpec",
             "Scrub": "#/components/schemas/IRapidSpecScrubRapidSpec",
             "Transcription": "#/components/schemas/IRapidSpecTranscriptionRapidSpec"
@@ -9979,6 +11154,30 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidSpecOpenRapidSpec": {
+        "required": [
+          "bundleFileName",
+          "inputs",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Open"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IOpenInputBinding"
             }
           }
         }
@@ -11351,6 +12550,30 @@
           }
         }
       },
+      "OpenOptionsInput_Option": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
       "OptionsBinding": {
         "type": "object",
         "properties": {
@@ -12312,6 +13535,9 @@
           },
           "clearOnPause": {
             "type": "boolean"
+          },
+          "releaseOnSkip": {
+            "type": "boolean"
           }
         }
       },
@@ -12532,10 +13758,6 @@
   "security": [
     {
       "OpenIdConnect": [
-        "openid",
-        "profile",
-        "email",
-        "offline_access",
         "api"
       ]
     }

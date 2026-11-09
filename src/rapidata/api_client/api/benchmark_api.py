@@ -30,6 +30,8 @@ from rapidata.api_client.models.create_benchmark_participant_endpoint_output imp
 from rapidata.api_client.models.create_prompt_embedding_map_endpoint_output import CreatePromptEmbeddingMapEndpointOutput
 from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_input import CreatePromptForBenchmarkEndpointInput
 from rapidata.api_client.models.create_prompt_for_benchmark_endpoint_output import CreatePromptForBenchmarkEndpointOutput
+from rapidata.api_client.models.create_prompts_for_benchmark_endpoint_input import CreatePromptsForBenchmarkEndpointInput
+from rapidata.api_client.models.create_prompts_for_benchmark_endpoint_output import CreatePromptsForBenchmarkEndpointOutput
 from rapidata.api_client.models.create_sample_generation_endpoint_input import CreateSampleGenerationEndpointInput
 from rapidata.api_client.models.create_sample_generation_endpoint_output import CreateSampleGenerationEndpointOutput
 from rapidata.api_client.models.fork_benchmark_endpoint_output import ForkBenchmarkEndpointOutput
@@ -42,6 +44,7 @@ from rapidata.api_client.models.get_benchmark_standings_breakdown_endpoint_outpu
 from rapidata.api_client.models.get_benchmark_standings_by_tag_endpoint_output import GetBenchmarkStandingsByTagEndpointOutput
 from rapidata.api_client.models.get_prompt_embedding_map_endpoint_output import GetPromptEmbeddingMapEndpointOutput
 from rapidata.api_client.models.get_prompt_embedding_map_status_endpoint_output import GetPromptEmbeddingMapStatusEndpointOutput
+from rapidata.api_client.models.get_prompt_processing_progress_endpoint_output import GetPromptProcessingProgressEndpointOutput
 from rapidata.api_client.models.get_prompts_by_benchmark_endpoint_paged_result_of_output import GetPromptsByBenchmarkEndpointPagedResultOfOutput
 from rapidata.api_client.models.matchup_zone import MatchupZone
 from rapidata.api_client.models.preview_sample_generation_endpoint_input import PreviewSampleGenerationEndpointInput
@@ -61,6 +64,8 @@ from rapidata.api_client.models.query_tags_by_benchmark_endpoint_output import Q
 from rapidata.api_client.models.rating_grouping import RatingGrouping
 from rapidata.api_client.models.start_benchmark_hugging_face_sync_endpoint_input import StartBenchmarkHuggingFaceSyncEndpointInput
 from rapidata.api_client.models.start_benchmark_hugging_face_sync_endpoint_output import StartBenchmarkHuggingFaceSyncEndpointOutput
+from rapidata.api_client.models.top_up_participants_endpoint_input import TopUpParticipantsEndpointInput
+from rapidata.api_client.models.top_up_participants_endpoint_output import TopUpParticipantsEndpointOutput
 from rapidata.api_client.models.update_benchmark_endpoint_input import UpdateBenchmarkEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -363,6 +368,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -379,7 +385,7 @@ class BenchmarkApi:
     ) -> GetBenchmarkDemographicsEndpointOutput:
         """Returns the share of a benchmark's votes falling in each demographic bucket.
 
-        The same vote-level filters as the standings query apply. Every dimension closes with an  unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks  without granular votes return a zero-vote, empty-dimension response.
+        The same vote-level filters as the standings query apply. Every dimension closes with an  unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks  without granular votes return a zero-vote, empty-dimension response.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -405,6 +411,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -442,6 +450,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -481,6 +490,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -497,7 +507,7 @@ class BenchmarkApi:
     ) -> ApiResponse[GetBenchmarkDemographicsEndpointOutput]:
         """Returns the share of a benchmark's votes falling in each demographic bucket.
 
-        The same vote-level filters as the standings query apply. Every dimension closes with an  unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks  without granular votes return a zero-vote, empty-dimension response.
+        The same vote-level filters as the standings query apply. Every dimension closes with an  unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks  without granular votes return a zero-vote, empty-dimension response.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -523,6 +533,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -560,6 +572,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -599,6 +612,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -615,7 +629,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Returns the share of a benchmark's votes falling in each demographic bucket.
 
-        The same vote-level filters as the standings query apply. Every dimension closes with an  unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks  without granular votes return a zero-vote, empty-dimension response.
+        The same vote-level filters as the standings query apply. Every dimension closes with an  unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks  without granular votes return a zero-vote, empty-dimension response.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -641,6 +655,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -678,6 +694,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -712,6 +729,7 @@ class BenchmarkApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -902,6 +920,21 @@ class BenchmarkApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -962,6 +995,7 @@ class BenchmarkApi:
     ) -> ForkBenchmarkEndpointOutput:
         """Creates a copy of a public benchmark and all of its related entities.
 
+        Models the caller cannot see are left out of the copy, with their votes and the runs named after them.
 
         :param benchmark_id: The id of the benchmark to fork. (required)
         :type benchmark_id: str
@@ -1031,6 +1065,7 @@ class BenchmarkApi:
     ) -> ApiResponse[ForkBenchmarkEndpointOutput]:
         """Creates a copy of a public benchmark and all of its related entities.
 
+        Models the caller cannot see are left out of the copy, with their votes and the runs named after them.
 
         :param benchmark_id: The id of the benchmark to fork. (required)
         :type benchmark_id: str
@@ -1100,6 +1135,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Creates a copy of a public benchmark and all of its related entities.
 
+        Models the caller cannot see are left out of the copy, with their votes and the runs named after them.
 
         :param benchmark_id: The id of the benchmark to fork. (required)
         :type benchmark_id: str
@@ -2992,6 +3028,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3008,7 +3045,7 @@ class BenchmarkApi:
     ) -> GetBenchmarkMatchupBreakdownEndpointPagedResultOfOutput:
         """Returns a page of the requested confidence zone of an A-vs-B matchup — the prompts A clearly  wins, the coin flips, or the prompts B clearly wins.
 
-        Each vote is weighted by the annotator's reliability; a prompt is placed by the Wilson score  interval on A's win share and, within the requested zone, ordered most-confident first (coin  flips by effective sample size). The same vote-level filters as the matrix query apply.  Benchmarks without granular votes return an empty page.
+        Each vote is weighted by the annotator's reliability; a prompt is placed by the Wilson score  interval on A's win share and, within the requested zone, ordered most-confident first (coin  flips by effective sample size). The same vote-level filters as the matrix query apply.  Benchmarks without granular votes return an empty page.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -3044,6 +3081,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3086,6 +3125,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3130,6 +3170,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3146,7 +3187,7 @@ class BenchmarkApi:
     ) -> ApiResponse[GetBenchmarkMatchupBreakdownEndpointPagedResultOfOutput]:
         """Returns a page of the requested confidence zone of an A-vs-B matchup — the prompts A clearly  wins, the coin flips, or the prompts B clearly wins.
 
-        Each vote is weighted by the annotator's reliability; a prompt is placed by the Wilson score  interval on A's win share and, within the requested zone, ordered most-confident first (coin  flips by effective sample size). The same vote-level filters as the matrix query apply.  Benchmarks without granular votes return an empty page.
+        Each vote is weighted by the annotator's reliability; a prompt is placed by the Wilson score  interval on A's win share and, within the requested zone, ordered most-confident first (coin  flips by effective sample size). The same vote-level filters as the matrix query apply.  Benchmarks without granular votes return an empty page.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -3182,6 +3223,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3224,6 +3267,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3268,6 +3312,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3284,7 +3329,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Returns a page of the requested confidence zone of an A-vs-B matchup — the prompts A clearly  wins, the coin flips, or the prompts B clearly wins.
 
-        Each vote is weighted by the annotator's reliability; a prompt is placed by the Wilson score  interval on A's win share and, within the requested zone, ordered most-confident first (coin  flips by effective sample size). The same vote-level filters as the matrix query apply.  Benchmarks without granular votes return an empty page.
+        Each vote is weighted by the annotator's reliability; a prompt is placed by the Wilson score  interval on A's win share and, within the requested zone, ordered most-confident first (coin  flips by effective sample size). The same vote-level filters as the matrix query apply.  Benchmarks without granular votes return an empty page.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -3320,6 +3365,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3362,6 +3409,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3401,6 +3449,7 @@ class BenchmarkApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -3611,6 +3660,21 @@ class BenchmarkApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -3677,6 +3741,8 @@ class BenchmarkApi:
         responses: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by responses.")] = None,
         extremeness: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by extremeness.")] = None,
         winner_sigma: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by winner_sigma.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3693,7 +3759,7 @@ class BenchmarkApi:
     ) -> QueryMatchupsByBenchmarkEndpointOutput:
         """Queries a benchmark's image matchups — a page of compared image pairs with how the responses  split between them.
 
-        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.
+        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  ParticipantStatus, also top-level and only, keeps matchups whose two participants both match it, so  participant_status[neq]=Disabled hides deprecated models without changing any other matchup's sigma.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -3739,6 +3805,10 @@ class BenchmarkApi:
         :type extremeness: AudienceAudienceIdJobsGetJobIdParameter
         :param winner_sigma: Filter by winner_sigma.
         :type winner_sigma: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3786,6 +3856,8 @@ class BenchmarkApi:
             responses=responses,
             extremeness=extremeness,
             winner_sigma=winner_sigma,
+            participant_status=participant_status,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3835,6 +3907,8 @@ class BenchmarkApi:
         responses: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by responses.")] = None,
         extremeness: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by extremeness.")] = None,
         winner_sigma: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by winner_sigma.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -3851,7 +3925,7 @@ class BenchmarkApi:
     ) -> ApiResponse[QueryMatchupsByBenchmarkEndpointOutput]:
         """Queries a benchmark's image matchups — a page of compared image pairs with how the responses  split between them.
 
-        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.
+        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  ParticipantStatus, also top-level and only, keeps matchups whose two participants both match it, so  participant_status[neq]=Disabled hides deprecated models without changing any other matchup's sigma.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -3897,6 +3971,10 @@ class BenchmarkApi:
         :type extremeness: AudienceAudienceIdJobsGetJobIdParameter
         :param winner_sigma: Filter by winner_sigma.
         :type winner_sigma: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3944,6 +4022,8 @@ class BenchmarkApi:
             responses=responses,
             extremeness=extremeness,
             winner_sigma=winner_sigma,
+            participant_status=participant_status,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3993,6 +4073,8 @@ class BenchmarkApi:
         responses: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by responses.")] = None,
         extremeness: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by extremeness.")] = None,
         winner_sigma: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by winner_sigma.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -4009,7 +4091,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Queries a benchmark's image matchups — a page of compared image pairs with how the responses  split between them.
 
-        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.
+        An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards  comes back once per board. Filters use the prompt-ratings query's field set, applied to the  votes a matchup is tallied from, plus four outcome fields accepted only as top-level  and leaves: WinnerParticipantId/LooserParticipantId pick the side that  won the whole matchup (a tie matches neither), and Responses/Extremeness  select on the evidence the matchup carries — together a fair-coin sign test, so  extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would  reproduce under 5% of the time. WinnerSigma is sigma signed from the winning  side; sort by -winner_sigma to separate records the pooled data confirms from upsets.  Matchups of leaderboards excluded from the benchmark overall are never returned.  ParticipantStatus, also top-level and only, keeps matchups whose two participants both match it, so  participant_status[neq]=Disabled hides deprecated models without changing any other matchup's sigma.  Each item's leaderboard carries the instruction annotators were asked plus an optional  displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it  when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to  the winning side.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -4055,6 +4137,10 @@ class BenchmarkApi:
         :type extremeness: AudienceAudienceIdJobsGetJobIdParameter
         :param winner_sigma: Filter by winner_sigma.
         :type winner_sigma: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4102,6 +4188,8 @@ class BenchmarkApi:
             responses=responses,
             extremeness=extremeness,
             winner_sigma=winner_sigma,
+            participant_status=participant_status,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4146,6 +4234,8 @@ class BenchmarkApi:
         responses,
         extremeness,
         winner_sigma,
+        participant_status,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -4432,6 +4522,36 @@ class BenchmarkApi:
                             _query_params.append(('winner_sigma[' + _k + ']', _item))
                     else:
                         _query_params.append(('winner_sigma[' + _k + ']', _v))
+        if participant_status is not None:
+            _param_val = participant_status
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_status[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('participant_status[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -4489,6 +4609,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -4505,7 +4626,7 @@ class BenchmarkApi:
     ) -> QueryMatrixByBenchmarkEndpointOutput:
         """Queries the win matrix of a benchmark.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Alongside the matchup outcomes in data, each response also carries votes: the  un-binarized human vote counts on the same axes, display-only and not reflected in scoring.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Alongside the matchup outcomes in data, each response also carries votes: the  un-binarized human vote counts on the same axes, display-only and not reflected in scoring.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -4533,6 +4654,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4571,6 +4694,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4611,6 +4735,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -4627,7 +4752,7 @@ class BenchmarkApi:
     ) -> ApiResponse[QueryMatrixByBenchmarkEndpointOutput]:
         """Queries the win matrix of a benchmark.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Alongside the matchup outcomes in data, each response also carries votes: the  un-binarized human vote counts on the same axes, display-only and not reflected in scoring.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Alongside the matchup outcomes in data, each response also carries votes: the  un-binarized human vote counts on the same axes, display-only and not reflected in scoring.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -4655,6 +4780,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4693,6 +4820,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4733,6 +4861,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -4749,7 +4878,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Queries the win matrix of a benchmark.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Alongside the matchup outcomes in data, each response also carries votes: the  un-binarized human vote counts on the same axes, display-only and not reflected in scoring.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Alongside the matchup outcomes in data, each response also carries votes: the  un-binarized human vote counts on the same axes, display-only and not reflected in scoring.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -4777,6 +4906,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4815,6 +4946,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4850,6 +4982,7 @@ class BenchmarkApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -5044,6 +5177,21 @@ class BenchmarkApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -5095,6 +5243,7 @@ class BenchmarkApi:
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        is_candidate: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_candidate.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -5126,6 +5275,8 @@ class BenchmarkApi:
         :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param status: Filter by status.
         :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_candidate: Filter by is_candidate.
+        :type is_candidate: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -5158,6 +5309,7 @@ class BenchmarkApi:
             id=id,
             name=name,
             status=status,
+            is_candidate=is_candidate,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5192,6 +5344,7 @@ class BenchmarkApi:
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        is_candidate: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_candidate.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -5223,6 +5376,8 @@ class BenchmarkApi:
         :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param status: Filter by status.
         :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_candidate: Filter by is_candidate.
+        :type is_candidate: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -5255,6 +5410,7 @@ class BenchmarkApi:
             id=id,
             name=name,
             status=status,
+            is_candidate=is_candidate,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5289,6 +5445,7 @@ class BenchmarkApi:
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         name: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by name.")] = None,
         status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by status.")] = None,
+        is_candidate: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by is_candidate.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -5320,6 +5477,8 @@ class BenchmarkApi:
         :type name: AudienceAudienceIdJobsGetJobIdParameter
         :param status: Filter by status.
         :type status: AudienceAudienceIdJobsGetJobIdParameter
+        :param is_candidate: Filter by is_candidate.
+        :type is_candidate: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -5352,6 +5511,7 @@ class BenchmarkApi:
             id=id,
             name=name,
             status=status,
+            is_candidate=is_candidate,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5381,6 +5541,7 @@ class BenchmarkApi:
         id,
         name,
         status,
+        is_candidate,
         logic,
         _request_auth,
         _content_type,
@@ -5464,6 +5625,21 @@ class BenchmarkApi:
                             _query_params.append(('status[' + _k + ']', _item))
                     else:
                         _query_params.append(('status[' + _k + ']', _v))
+        if is_candidate is not None:
+            _param_val = is_candidate
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('is_candidate[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('is_candidate[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -7499,6 +7675,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -7515,7 +7692,7 @@ class BenchmarkApi:
     ) -> QueryPromptRatingsByBenchmarkEndpointOutput:
         """Queries a benchmark's prompt ratings — a page of prompts, each with its ranked entries and the  pairwise win matrix over them.
 
-        Filters apply to the underlying votes with the standings query's field set. A rating is an  entry's standing against the other entries on its prompt, so a participant filter narrows the  entries but does not refit, and a prompt with no matching votes yields no entries.  groupBy decides what competes: per participant, a participant's images become one entry  rated from their pooled wins, and comparisons between its own images are excluded from the  rating, both matrices, and responseCount. Grouping never changes which prompts the page  holds.
+        Filters apply to the underlying votes with the standings query's field set. A rating is an  entry's standing against the other entries on its prompt, so a participant filter narrows the  entries but does not refit, and a prompt with no matching votes yields no entries.  groupBy decides what competes: per participant, a participant's images become one entry  rated from their pooled wins, and comparisons between its own images are excluded from the  rating, both matrices, and responseCount. Grouping never changes which prompts the page  holds.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -7551,6 +7728,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -7593,6 +7772,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -7637,6 +7817,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -7653,7 +7834,7 @@ class BenchmarkApi:
     ) -> ApiResponse[QueryPromptRatingsByBenchmarkEndpointOutput]:
         """Queries a benchmark's prompt ratings — a page of prompts, each with its ranked entries and the  pairwise win matrix over them.
 
-        Filters apply to the underlying votes with the standings query's field set. A rating is an  entry's standing against the other entries on its prompt, so a participant filter narrows the  entries but does not refit, and a prompt with no matching votes yields no entries.  groupBy decides what competes: per participant, a participant's images become one entry  rated from their pooled wins, and comparisons between its own images are excluded from the  rating, both matrices, and responseCount. Grouping never changes which prompts the page  holds.
+        Filters apply to the underlying votes with the standings query's field set. A rating is an  entry's standing against the other entries on its prompt, so a participant filter narrows the  entries but does not refit, and a prompt with no matching votes yields no entries.  groupBy decides what competes: per participant, a participant's images become one entry  rated from their pooled wins, and comparisons between its own images are excluded from the  rating, both matrices, and responseCount. Grouping never changes which prompts the page  holds.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -7689,6 +7870,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -7731,6 +7914,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -7775,6 +7959,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -7791,7 +7976,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Queries a benchmark's prompt ratings — a page of prompts, each with its ranked entries and the  pairwise win matrix over them.
 
-        Filters apply to the underlying votes with the standings query's field set. A rating is an  entry's standing against the other entries on its prompt, so a participant filter narrows the  entries but does not refit, and a prompt with no matching votes yields no entries.  groupBy decides what competes: per participant, a participant's images become one entry  rated from their pooled wins, and comparisons between its own images are excluded from the  rating, both matrices, and responseCount. Grouping never changes which prompts the page  holds.
+        Filters apply to the underlying votes with the standings query's field set. A rating is an  entry's standing against the other entries on its prompt, so a participant filter narrows the  entries but does not refit, and a prompt with no matching votes yields no entries.  groupBy decides what competes: per participant, a participant's images become one entry  rated from their pooled wins, and comparisons between its own images are excluded from the  rating, both matrices, and responseCount. Grouping never changes which prompts the page  holds.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -7827,6 +8012,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -7869,6 +8056,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -7908,6 +8096,7 @@ class BenchmarkApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -8119,6 +8308,21 @@ class BenchmarkApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -8459,6 +8663,301 @@ class BenchmarkApi:
 
 
     @validate_call
+    def benchmark_benchmark_id_prompts_bulk_post(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to add the prompts to.")],
+        create_prompts_for_benchmark_endpoint_input: Annotated[CreatePromptsForBenchmarkEndpointInput, Field(description="The prompts to add.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CreatePromptsForBenchmarkEndpointOutput:
+        """Creates up to 5000 prompts at once; their text is translated afterwards, and sample generation answers 409 until then.
+
+
+        :param benchmark_id: The id of the benchmark to add the prompts to. (required)
+        :type benchmark_id: str
+        :param create_prompts_for_benchmark_endpoint_input: The prompts to add. (required)
+        :type create_prompts_for_benchmark_endpoint_input: CreatePromptsForBenchmarkEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_bulk_post_serialize(
+            benchmark_id=benchmark_id,
+            create_prompts_for_benchmark_endpoint_input=create_prompts_for_benchmark_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreatePromptsForBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_prompts_bulk_post_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to add the prompts to.")],
+        create_prompts_for_benchmark_endpoint_input: Annotated[CreatePromptsForBenchmarkEndpointInput, Field(description="The prompts to add.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CreatePromptsForBenchmarkEndpointOutput]:
+        """Creates up to 5000 prompts at once; their text is translated afterwards, and sample generation answers 409 until then.
+
+
+        :param benchmark_id: The id of the benchmark to add the prompts to. (required)
+        :type benchmark_id: str
+        :param create_prompts_for_benchmark_endpoint_input: The prompts to add. (required)
+        :type create_prompts_for_benchmark_endpoint_input: CreatePromptsForBenchmarkEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_bulk_post_serialize(
+            benchmark_id=benchmark_id,
+            create_prompts_for_benchmark_endpoint_input=create_prompts_for_benchmark_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreatePromptsForBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_prompts_bulk_post_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to add the prompts to.")],
+        create_prompts_for_benchmark_endpoint_input: Annotated[CreatePromptsForBenchmarkEndpointInput, Field(description="The prompts to add.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Creates up to 5000 prompts at once; their text is translated afterwards, and sample generation answers 409 until then.
+
+
+        :param benchmark_id: The id of the benchmark to add the prompts to. (required)
+        :type benchmark_id: str
+        :param create_prompts_for_benchmark_endpoint_input: The prompts to add. (required)
+        :type create_prompts_for_benchmark_endpoint_input: CreatePromptsForBenchmarkEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_bulk_post_serialize(
+            benchmark_id=benchmark_id,
+            create_prompts_for_benchmark_endpoint_input=create_prompts_for_benchmark_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreatePromptsForBenchmarkEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_prompts_bulk_post_serialize(
+        self,
+        benchmark_id,
+        create_prompts_for_benchmark_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if create_prompts_for_benchmark_endpoint_input is not None:
+            _body_params = create_prompts_for_benchmark_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/benchmark/{benchmarkId}/prompts/bulk',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def benchmark_benchmark_id_prompts_get(
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark to query.")],
@@ -8473,6 +8972,7 @@ class BenchmarkApi:
         tag_values: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_values.")] = None,
         tag_categories: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_categories.")] = None,
         origin_source: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by origin_source.")] = None,
+        processing_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by processing_status.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -8514,6 +9014,8 @@ class BenchmarkApi:
         :type tag_categories: AudienceAudienceIdJobsGetJobIdParameter
         :param origin_source: Filter by origin_source.
         :type origin_source: AudienceAudienceIdJobsGetJobIdParameter
+        :param processing_status: Filter by processing_status.
+        :type processing_status: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -8551,6 +9053,7 @@ class BenchmarkApi:
             tag_values=tag_values,
             tag_categories=tag_categories,
             origin_source=origin_source,
+            processing_status=processing_status,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -8590,6 +9093,7 @@ class BenchmarkApi:
         tag_values: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_values.")] = None,
         tag_categories: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_categories.")] = None,
         origin_source: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by origin_source.")] = None,
+        processing_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by processing_status.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -8631,6 +9135,8 @@ class BenchmarkApi:
         :type tag_categories: AudienceAudienceIdJobsGetJobIdParameter
         :param origin_source: Filter by origin_source.
         :type origin_source: AudienceAudienceIdJobsGetJobIdParameter
+        :param processing_status: Filter by processing_status.
+        :type processing_status: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -8668,6 +9174,7 @@ class BenchmarkApi:
             tag_values=tag_values,
             tag_categories=tag_categories,
             origin_source=origin_source,
+            processing_status=processing_status,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -8707,6 +9214,7 @@ class BenchmarkApi:
         tag_values: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_values.")] = None,
         tag_categories: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by tag_categories.")] = None,
         origin_source: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by origin_source.")] = None,
+        processing_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by processing_status.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -8748,6 +9256,8 @@ class BenchmarkApi:
         :type tag_categories: AudienceAudienceIdJobsGetJobIdParameter
         :param origin_source: Filter by origin_source.
         :type origin_source: AudienceAudienceIdJobsGetJobIdParameter
+        :param processing_status: Filter by processing_status.
+        :type processing_status: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -8785,6 +9295,7 @@ class BenchmarkApi:
             tag_values=tag_values,
             tag_categories=tag_categories,
             origin_source=origin_source,
+            processing_status=processing_status,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -8819,6 +9330,7 @@ class BenchmarkApi:
         tag_values,
         tag_categories,
         origin_source,
+        processing_status,
         logic,
         _request_auth,
         _content_type,
@@ -8977,6 +9489,21 @@ class BenchmarkApi:
                             _query_params.append(('origin_source[' + _k + ']', _item))
                     else:
                         _query_params.append(('origin_source[' + _k + ']', _v))
+        if processing_status is not None:
+            _param_val = processing_status
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('processing_status[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('processing_status[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -9003,6 +9530,276 @@ class BenchmarkApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/benchmark/{benchmarkId}/prompts',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def benchmark_benchmark_id_prompts_processing_get(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose prompts to count.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetPromptProcessingProgressEndpointOutput:
+        """Reports how many of the benchmark's prompts are still being processed or failed to.
+
+        Find failed prompts with processing_status=Failed on GET .../prompts and retry each one.
+
+        :param benchmark_id: The benchmark whose prompts to count. (required)
+        :type benchmark_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_processing_get_serialize(
+            benchmark_id=benchmark_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetPromptProcessingProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_prompts_processing_get_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose prompts to count.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetPromptProcessingProgressEndpointOutput]:
+        """Reports how many of the benchmark's prompts are still being processed or failed to.
+
+        Find failed prompts with processing_status=Failed on GET .../prompts and retry each one.
+
+        :param benchmark_id: The benchmark whose prompts to count. (required)
+        :type benchmark_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_processing_get_serialize(
+            benchmark_id=benchmark_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetPromptProcessingProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_prompts_processing_get_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose prompts to count.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Reports how many of the benchmark's prompts are still being processed or failed to.
+
+        Find failed prompts with processing_status=Failed on GET .../prompts and retry each one.
+
+        :param benchmark_id: The benchmark whose prompts to count. (required)
+        :type benchmark_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_prompts_processing_get_serialize(
+            benchmark_id=benchmark_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetPromptProcessingProgressEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_prompts_processing_get_serialize(
+        self,
+        benchmark_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/benchmark/{benchmarkId}/prompts/processing',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -9301,6 +10098,301 @@ class BenchmarkApi:
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/benchmark/{benchmarkId}/runs/custom',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def benchmark_benchmark_id_runs_top_up_post(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants are topped up.")],
+        top_up_participants_endpoint_input: Annotated[TopUpParticipantsEndpointInput, Field(description="The participants and the responses each receives.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> TopUpParticipantsEndpointOutput:
+        """Queues one same-seeded run per leaderboard pairing the participants with all others.
+
+
+        :param benchmark_id: The benchmark whose participants are topped up. (required)
+        :type benchmark_id: str
+        :param top_up_participants_endpoint_input: The participants and the responses each receives. (required)
+        :type top_up_participants_endpoint_input: TopUpParticipantsEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_runs_top_up_post_serialize(
+            benchmark_id=benchmark_id,
+            top_up_participants_endpoint_input=top_up_participants_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '202': "TopUpParticipantsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def benchmark_benchmark_id_runs_top_up_post_with_http_info(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants are topped up.")],
+        top_up_participants_endpoint_input: Annotated[TopUpParticipantsEndpointInput, Field(description="The participants and the responses each receives.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[TopUpParticipantsEndpointOutput]:
+        """Queues one same-seeded run per leaderboard pairing the participants with all others.
+
+
+        :param benchmark_id: The benchmark whose participants are topped up. (required)
+        :type benchmark_id: str
+        :param top_up_participants_endpoint_input: The participants and the responses each receives. (required)
+        :type top_up_participants_endpoint_input: TopUpParticipantsEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_runs_top_up_post_serialize(
+            benchmark_id=benchmark_id,
+            top_up_participants_endpoint_input=top_up_participants_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '202': "TopUpParticipantsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def benchmark_benchmark_id_runs_top_up_post_without_preload_content(
+        self,
+        benchmark_id: Annotated[StrictStr, Field(description="The benchmark whose participants are topped up.")],
+        top_up_participants_endpoint_input: Annotated[TopUpParticipantsEndpointInput, Field(description="The participants and the responses each receives.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Queues one same-seeded run per leaderboard pairing the participants with all others.
+
+
+        :param benchmark_id: The benchmark whose participants are topped up. (required)
+        :type benchmark_id: str
+        :param top_up_participants_endpoint_input: The participants and the responses each receives. (required)
+        :type top_up_participants_endpoint_input: TopUpParticipantsEndpointInput
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._benchmark_benchmark_id_runs_top_up_post_serialize(
+            benchmark_id=benchmark_id,
+            top_up_participants_endpoint_input=top_up_participants_endpoint_input,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '202': "TopUpParticipantsEndpointOutput",
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _benchmark_benchmark_id_runs_top_up_post_serialize(
+        self,
+        benchmark_id,
+        top_up_participants_endpoint_input,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if benchmark_id is not None:
+            _path_params['benchmarkId'] = benchmark_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if top_up_participants_endpoint_input is not None:
+            _body_params = top_up_participants_endpoint_input
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OpenIdConnect'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/benchmark/{benchmarkId}/runs/top-up',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -9928,6 +11020,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -9944,7 +11037,7 @@ class BenchmarkApi:
     ) -> GetBenchmarkStandingsBreakdownEndpointOutput:
         """Returns the standings over the whole filtered set alongside the standings recomputed for  each value of the chosen dimension.
 
-        The same vote-level filters as the standings query apply. Segments are sorted by votes  descending, the unknown segment last. Benchmarks without granular votes return  empty segments.
+        The same vote-level filters as the standings query apply. Segments are sorted by votes  descending, the unknown segment last. Benchmarks without granular votes return  empty segments.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -9972,6 +11065,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -10010,6 +11105,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -10050,6 +11146,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -10066,7 +11163,7 @@ class BenchmarkApi:
     ) -> ApiResponse[GetBenchmarkStandingsBreakdownEndpointOutput]:
         """Returns the standings over the whole filtered set alongside the standings recomputed for  each value of the chosen dimension.
 
-        The same vote-level filters as the standings query apply. Segments are sorted by votes  descending, the unknown segment last. Benchmarks without granular votes return  empty segments.
+        The same vote-level filters as the standings query apply. Segments are sorted by votes  descending, the unknown segment last. Benchmarks without granular votes return  empty segments.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -10094,6 +11191,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -10132,6 +11231,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -10172,6 +11272,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -10188,7 +11289,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Returns the standings over the whole filtered set alongside the standings recomputed for  each value of the chosen dimension.
 
-        The same vote-level filters as the standings query apply. Segments are sorted by votes  descending, the unknown segment last. Benchmarks without granular votes return  empty segments.
+        The same vote-level filters as the standings query apply. Segments are sorted by votes  descending, the unknown segment last. Benchmarks without granular votes return  empty segments.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -10216,6 +11317,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -10254,6 +11357,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -10289,6 +11393,7 @@ class BenchmarkApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -10483,6 +11588,21 @@ class BenchmarkApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -10538,6 +11658,7 @@ class BenchmarkApi:
         leaderboard_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by leaderboard_id.")] = None,
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -10554,7 +11675,7 @@ class BenchmarkApi:
     ) -> GetBenchmarkStandingsByTagEndpointOutput:
         """Returns the standings over the whole filtered set alongside the standings recomputed for each  tag on the benchmark.
 
-        The same vote-level filters as the standings query apply, except a tag filter — tags are what  the response is sliced by. Every tag is returned, across every taxonomy axis, so the whole  grid comes from one request; which axes to render is the caller's choice. Segment items carry  the id and the numbers only: the participants' names and model metadata are identical in every  segment and are reported once in global, to be joined on by id.
+        The same vote-level filters as the standings query apply, except a tag filter — tags are what  the response is sliced by. Every tag is returned, across every taxonomy axis, so the whole  grid comes from one request; which axes to render is the caller's choice. Segment items carry  the id and the numbers only: the participants' names and model metadata are identical in every  segment and are reported once in global, to be joined on by id.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -10578,6 +11699,8 @@ class BenchmarkApi:
         :type run_id: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -10614,6 +11737,7 @@ class BenchmarkApi:
             leaderboard_id=leaderboard_id,
             run_id=run_id,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -10652,6 +11776,7 @@ class BenchmarkApi:
         leaderboard_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by leaderboard_id.")] = None,
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -10668,7 +11793,7 @@ class BenchmarkApi:
     ) -> ApiResponse[GetBenchmarkStandingsByTagEndpointOutput]:
         """Returns the standings over the whole filtered set alongside the standings recomputed for each  tag on the benchmark.
 
-        The same vote-level filters as the standings query apply, except a tag filter — tags are what  the response is sliced by. Every tag is returned, across every taxonomy axis, so the whole  grid comes from one request; which axes to render is the caller's choice. Segment items carry  the id and the numbers only: the participants' names and model metadata are identical in every  segment and are reported once in global, to be joined on by id.
+        The same vote-level filters as the standings query apply, except a tag filter — tags are what  the response is sliced by. Every tag is returned, across every taxonomy axis, so the whole  grid comes from one request; which axes to render is the caller's choice. Segment items carry  the id and the numbers only: the participants' names and model metadata are identical in every  segment and are reported once in global, to be joined on by id.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -10692,6 +11817,8 @@ class BenchmarkApi:
         :type run_id: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -10728,6 +11855,7 @@ class BenchmarkApi:
             leaderboard_id=leaderboard_id,
             run_id=run_id,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -10766,6 +11894,7 @@ class BenchmarkApi:
         leaderboard_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by leaderboard_id.")] = None,
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -10782,7 +11911,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Returns the standings over the whole filtered set alongside the standings recomputed for each  tag on the benchmark.
 
-        The same vote-level filters as the standings query apply, except a tag filter — tags are what  the response is sliced by. Every tag is returned, across every taxonomy axis, so the whole  grid comes from one request; which axes to render is the caller's choice. Segment items carry  the id and the numbers only: the participants' names and model metadata are identical in every  segment and are reported once in global, to be joined on by id.
+        The same vote-level filters as the standings query apply, except a tag filter — tags are what  the response is sliced by. Every tag is returned, across every taxonomy axis, so the whole  grid comes from one request; which axes to render is the caller's choice. Segment items carry  the id and the numbers only: the participants' names and model metadata are identical in every  segment and are reported once in global, to be joined on by id.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -10806,6 +11935,8 @@ class BenchmarkApi:
         :type run_id: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -10842,6 +11973,7 @@ class BenchmarkApi:
             leaderboard_id=leaderboard_id,
             run_id=run_id,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -10875,6 +12007,7 @@ class BenchmarkApi:
         leaderboard_id,
         run_id,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -11039,6 +12172,21 @@ class BenchmarkApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -11096,6 +12244,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -11112,7 +12261,7 @@ class BenchmarkApi:
     ) -> QueryStandingsByBenchmarkEndpointOutput:
         """Queries the standings of a benchmark.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -11140,6 +12289,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -11178,6 +12329,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -11218,6 +12370,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -11234,7 +12387,7 @@ class BenchmarkApi:
     ) -> ApiResponse[QueryStandingsByBenchmarkEndpointOutput]:
         """Queries the standings of a benchmark.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -11262,6 +12415,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -11300,6 +12455,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -11340,6 +12496,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -11356,7 +12513,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Queries the standings of a benchmark.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark. (required)
         :type benchmark_id: str
@@ -11384,6 +12541,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -11422,6 +12581,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -11457,6 +12617,7 @@ class BenchmarkApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -11651,6 +12812,21 @@ class BenchmarkApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -11978,6 +13154,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -11994,7 +13171,7 @@ class BenchmarkApi:
     ) -> QueryCombinedMatrixByBenchmarksEndpointOutput:
         """Queries the combined win matrix of multiple benchmarks.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
         :type benchmark_ids: List[str]
@@ -12022,6 +13199,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -12060,6 +13239,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -12100,6 +13280,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -12116,7 +13297,7 @@ class BenchmarkApi:
     ) -> ApiResponse[QueryCombinedMatrixByBenchmarksEndpointOutput]:
         """Queries the combined win matrix of multiple benchmarks.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
         :type benchmark_ids: List[str]
@@ -12144,6 +13325,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -12182,6 +13365,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -12222,6 +13406,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -12238,7 +13423,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Queries the combined win matrix of multiple benchmarks.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
         :type benchmark_ids: List[str]
@@ -12266,6 +13451,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -12304,6 +13491,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -12339,6 +13527,7 @@ class BenchmarkApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -12536,6 +13725,21 @@ class BenchmarkApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -12593,6 +13797,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -12609,7 +13814,7 @@ class BenchmarkApi:
     ) -> QueryCombinedStandingsByBenchmarksEndpointOutput:
         """Queries the combined standings of multiple benchmarks.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
         :type benchmark_ids: List[str]
@@ -12637,6 +13842,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -12675,6 +13882,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -12715,6 +13923,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -12731,7 +13940,7 @@ class BenchmarkApi:
     ) -> ApiResponse[QueryCombinedStandingsByBenchmarksEndpointOutput]:
         """Queries the combined standings of multiple benchmarks.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
         :type benchmark_ids: List[str]
@@ -12759,6 +13968,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -12797,6 +14008,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -12837,6 +14049,7 @@ class BenchmarkApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -12853,7 +14066,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Queries the combined standings of multiple benchmarks.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_ids: The identifiers of the benchmarks to combine. (required)
         :type benchmark_ids: List[str]
@@ -12881,6 +14094,8 @@ class BenchmarkApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -12919,6 +14134,7 @@ class BenchmarkApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -12954,6 +14170,7 @@ class BenchmarkApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -13151,6 +14368,21 @@ class BenchmarkApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))

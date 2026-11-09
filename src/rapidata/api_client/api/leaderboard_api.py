@@ -18,7 +18,6 @@ from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import List, Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import AudienceAudienceIdJobsGetJobIdParameter
-from rapidata.api_client.models.boost_leaderboard_endpoint_input import BoostLeaderboardEndpointInput
 from rapidata.api_client.models.create_custom_run_endpoint_input import CreateCustomRunEndpointInput
 from rapidata.api_client.models.create_custom_run_endpoint_output import CreateCustomRunEndpointOutput
 from rapidata.api_client.models.create_leaderboard_endpoint_input import CreateLeaderboardEndpointInput
@@ -30,7 +29,6 @@ from rapidata.api_client.models.query_leaderboard_runs_endpoint_paged_result_of_
 from rapidata.api_client.models.query_leaderboards_endpoint_paged_result_of_output import QueryLeaderboardsEndpointPagedResultOfOutput
 from rapidata.api_client.models.query_matrix_by_leaderboard_endpoint_output import QueryMatrixByLeaderboardEndpointOutput
 from rapidata.api_client.models.query_standings_by_leaderboard_endpoint_output import QueryStandingsByLeaderboardEndpointOutput
-from rapidata.api_client.models.rebalance_leaderboard_endpoint_input import RebalanceLeaderboardEndpointInput
 from rapidata.api_client.models.update_leaderboard_endpoint_input import UpdateLeaderboardEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -66,6 +64,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -82,7 +81,7 @@ class LeaderboardApi:
     ) -> QueryCombinedMatrixByLeaderboardsEndpointOutput:
         """Queries the combined win matrix of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -108,6 +107,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -145,6 +146,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -184,6 +186,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -200,7 +203,7 @@ class LeaderboardApi:
     ) -> ApiResponse[QueryCombinedMatrixByLeaderboardsEndpointOutput]:
         """Queries the combined win matrix of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -226,6 +229,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -263,6 +268,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -302,6 +308,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -318,7 +325,7 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Queries the combined win matrix of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -344,6 +351,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -381,6 +390,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -415,6 +425,7 @@ class LeaderboardApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -597,6 +608,21 @@ class LeaderboardApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -653,6 +679,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -669,7 +696,7 @@ class LeaderboardApi:
     ) -> QueryCombinedStandingsByLeaderboardsEndpointOutput:
         """Queries the combined standings of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -695,6 +722,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -732,6 +761,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -771,6 +801,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -787,7 +818,7 @@ class LeaderboardApi:
     ) -> ApiResponse[QueryCombinedStandingsByLeaderboardsEndpointOutput]:
         """Queries the combined standings of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -813,6 +844,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -850,6 +883,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -889,6 +923,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -905,7 +940,7 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Queries the combined standings of multiple leaderboards.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_ids: The identifiers of the leaderboards to combine. (required)
         :type leaderboard_ids: List[str]
@@ -931,6 +966,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -968,6 +1005,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1002,6 +1040,7 @@ class LeaderboardApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -1184,6 +1223,21 @@ class LeaderboardApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -1210,301 +1264,6 @@ class LeaderboardApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/leaderboard/combined-standings/query',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def leaderboard_leaderboard_id_boost_post(
-        self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to boost.")],
-        boost_leaderboard_endpoint_input: Annotated[BoostLeaderboardEndpointInput, Field(description="The payload describing the boost to apply.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
-        """Boosts a subset of participants within a leaderboard.
-
-
-        :param leaderboard_id: The id of the leaderboard to boost. (required)
-        :type leaderboard_id: str
-        :param boost_leaderboard_endpoint_input: The payload describing the boost to apply. (required)
-        :type boost_leaderboard_endpoint_input: BoostLeaderboardEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._leaderboard_leaderboard_id_boost_post_serialize(
-            leaderboard_id=leaderboard_id,
-            boost_leaderboard_endpoint_input=boost_leaderboard_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def leaderboard_leaderboard_id_boost_post_with_http_info(
-        self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to boost.")],
-        boost_leaderboard_endpoint_input: Annotated[BoostLeaderboardEndpointInput, Field(description="The payload describing the boost to apply.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Boosts a subset of participants within a leaderboard.
-
-
-        :param leaderboard_id: The id of the leaderboard to boost. (required)
-        :type leaderboard_id: str
-        :param boost_leaderboard_endpoint_input: The payload describing the boost to apply. (required)
-        :type boost_leaderboard_endpoint_input: BoostLeaderboardEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._leaderboard_leaderboard_id_boost_post_serialize(
-            leaderboard_id=leaderboard_id,
-            boost_leaderboard_endpoint_input=boost_leaderboard_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def leaderboard_leaderboard_id_boost_post_without_preload_content(
-        self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to boost.")],
-        boost_leaderboard_endpoint_input: Annotated[BoostLeaderboardEndpointInput, Field(description="The payload describing the boost to apply.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Boosts a subset of participants within a leaderboard.
-
-
-        :param leaderboard_id: The id of the leaderboard to boost. (required)
-        :type leaderboard_id: str
-        :param boost_leaderboard_endpoint_input: The payload describing the boost to apply. (required)
-        :type boost_leaderboard_endpoint_input: BoostLeaderboardEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._leaderboard_leaderboard_id_boost_post_serialize(
-            leaderboard_id=leaderboard_id,
-            boost_leaderboard_endpoint_input=boost_leaderboard_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _leaderboard_leaderboard_id_boost_post_serialize(
-        self,
-        leaderboard_id,
-        boost_leaderboard_endpoint_input,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if leaderboard_id is not None:
-            _path_params['leaderboardId'] = leaderboard_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if boost_leaderboard_endpoint_input is not None:
-            _body_params = boost_leaderboard_endpoint_input
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OpenIdConnect'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/leaderboard/{leaderboardId}/boost',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2072,6 +1831,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -2088,7 +1848,7 @@ class LeaderboardApi:
     ) -> QueryMatrixByLeaderboardEndpointOutput:
         """Queries the win matrix of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
@@ -2114,6 +1874,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2151,6 +1913,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2190,6 +1953,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -2206,7 +1970,7 @@ class LeaderboardApi:
     ) -> ApiResponse[QueryMatrixByLeaderboardEndpointOutput]:
         """Queries the win matrix of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
@@ -2232,6 +1996,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2269,6 +2035,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2308,6 +2075,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -2324,7 +2092,7 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Queries the win matrix of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
@@ -2350,6 +2118,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2387,6 +2157,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2421,6 +2192,7 @@ class LeaderboardApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -2600,6 +2372,21 @@ class LeaderboardApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))
@@ -2924,304 +2711,6 @@ class LeaderboardApi:
         return self.api_client.param_serialize(
             method='PATCH',
             resource_path='/leaderboard/{leaderboardId}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def leaderboard_leaderboard_id_rebalance_post(
-        self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to rebalance.")],
-        rebalance_leaderboard_endpoint_input: Annotated[RebalanceLeaderboardEndpointInput, Field(description="The payload describing the rebalance to apply.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
-        """Rebalances a leaderboard by adding responses for the given participants.
-
-        Unlike the plain boost, which only generates matchups among the boosted participants,  this matches each given participant evenly against every other participant of the  benchmark — the same distribution a participant receives when it is first submitted.  Use it to bring under-sampled participants up to the rest of the leaderboard.
-
-        :param leaderboard_id: The id of the leaderboard to rebalance. (required)
-        :type leaderboard_id: str
-        :param rebalance_leaderboard_endpoint_input: The payload describing the rebalance to apply. (required)
-        :type rebalance_leaderboard_endpoint_input: RebalanceLeaderboardEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._leaderboard_leaderboard_id_rebalance_post_serialize(
-            leaderboard_id=leaderboard_id,
-            rebalance_leaderboard_endpoint_input=rebalance_leaderboard_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def leaderboard_leaderboard_id_rebalance_post_with_http_info(
-        self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to rebalance.")],
-        rebalance_leaderboard_endpoint_input: Annotated[RebalanceLeaderboardEndpointInput, Field(description="The payload describing the rebalance to apply.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Rebalances a leaderboard by adding responses for the given participants.
-
-        Unlike the plain boost, which only generates matchups among the boosted participants,  this matches each given participant evenly against every other participant of the  benchmark — the same distribution a participant receives when it is first submitted.  Use it to bring under-sampled participants up to the rest of the leaderboard.
-
-        :param leaderboard_id: The id of the leaderboard to rebalance. (required)
-        :type leaderboard_id: str
-        :param rebalance_leaderboard_endpoint_input: The payload describing the rebalance to apply. (required)
-        :type rebalance_leaderboard_endpoint_input: RebalanceLeaderboardEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._leaderboard_leaderboard_id_rebalance_post_serialize(
-            leaderboard_id=leaderboard_id,
-            rebalance_leaderboard_endpoint_input=rebalance_leaderboard_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def leaderboard_leaderboard_id_rebalance_post_without_preload_content(
-        self,
-        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard to rebalance.")],
-        rebalance_leaderboard_endpoint_input: Annotated[RebalanceLeaderboardEndpointInput, Field(description="The payload describing the rebalance to apply.")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Rebalances a leaderboard by adding responses for the given participants.
-
-        Unlike the plain boost, which only generates matchups among the boosted participants,  this matches each given participant evenly against every other participant of the  benchmark — the same distribution a participant receives when it is first submitted.  Use it to bring under-sampled participants up to the rest of the leaderboard.
-
-        :param leaderboard_id: The id of the leaderboard to rebalance. (required)
-        :type leaderboard_id: str
-        :param rebalance_leaderboard_endpoint_input: The payload describing the rebalance to apply. (required)
-        :type rebalance_leaderboard_endpoint_input: RebalanceLeaderboardEndpointInput
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._leaderboard_leaderboard_id_rebalance_post_serialize(
-            leaderboard_id=leaderboard_id,
-            rebalance_leaderboard_endpoint_input=rebalance_leaderboard_endpoint_input,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-            '400': "ValidationProblemDetails",
-            '401': None,
-            '403': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _leaderboard_leaderboard_id_rebalance_post_serialize(
-        self,
-        leaderboard_id,
-        rebalance_leaderboard_endpoint_input,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if leaderboard_id is not None:
-            _path_params['leaderboardId'] = leaderboard_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if rebalance_leaderboard_endpoint_input is not None:
-            _body_params = rebalance_leaderboard_endpoint_input
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'OpenIdConnect'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/leaderboard/{leaderboardId}/rebalance',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -4026,6 +3515,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -4042,7 +3532,7 @@ class LeaderboardApi:
     ) -> QueryStandingsByLeaderboardEndpointOutput:
         """Queries the standings of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
@@ -4068,6 +3558,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4105,6 +3597,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4144,6 +3637,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -4160,7 +3654,7 @@ class LeaderboardApi:
     ) -> ApiResponse[QueryStandingsByLeaderboardEndpointOutput]:
         """Queries the standings of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
@@ -4186,6 +3680,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4223,6 +3719,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4262,6 +3759,7 @@ class LeaderboardApi:
         run_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by run_id.")] = None,
         prompt_identifier: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by prompt_identifier.")] = None,
         voted_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by voted_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -4278,7 +3776,7 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Queries the standings of a leaderboard.
 
-        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.
+        Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate  only the filters their aggregated data can answer (tags, participants, leaderboards, runs,  prompt identifiers); demographic and vote-time filters require granular vote storage.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param leaderboard_id: The id of the leaderboard. (required)
         :type leaderboard_id: str
@@ -4304,6 +3802,8 @@ class LeaderboardApi:
         :type prompt_identifier: AudienceAudienceIdJobsGetJobIdParameter
         :param voted_at: Filter by voted_at.
         :type voted_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4341,6 +3841,7 @@ class LeaderboardApi:
             run_id=run_id,
             prompt_identifier=prompt_identifier,
             voted_at=voted_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4375,6 +3876,7 @@ class LeaderboardApi:
         run_id,
         prompt_identifier,
         voted_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -4554,6 +4056,21 @@ class LeaderboardApi:
                             _query_params.append(('voted_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('voted_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))

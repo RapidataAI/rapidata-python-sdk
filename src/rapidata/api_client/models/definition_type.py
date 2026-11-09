@@ -38,6 +38,7 @@ class DefinitionType(str, Enum):
     RANKING = 'Ranking'
     GROUPEDRANKING = 'GroupedRanking'
     EVALUATION = 'Evaluation'
+    OPEN = 'Open'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

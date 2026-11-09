@@ -58,7 +58,7 @@ instruction="Which image follows the prompt more accurately?"
 
 | Property | Value |
 |----------|-------|
-| **Type** | `list[str]` or `list[list[str]]` |
+| **Type** | `list[str \| UploadedAsset]` or `list[list[str \| UploadedAsset]]` |
 | **Required** | Yes |
 
 The data to be labeled. The format depends on the job type:
@@ -77,6 +77,7 @@ The data to be labeled. The format depends on the job type:
 
 - Public URLs (https://...)
 - Local file paths (will be uploaded automatically)
+- `UploadedAsset` references from `client.asset.upload(...)` (used as-is, never uploaded again)
 
 ```python
 # Classification - list of single items
@@ -87,7 +88,13 @@ datapoints=[
     ["https://example.com/a1.jpg", "https://example.com/b1.jpg"],
     ["https://example.com/a2.jpg", "https://example.com/b2.jpg"],
 ]
+
+# Upload once, then reuse the reference in any number of job definitions
+baseline = client.asset.upload("baseline.jpg")
+datapoints=[[baseline, "https://example.com/b1.jpg"], [baseline, "https://example.com/b2.jpg"]]
 ```
+
+An `UploadedAsset` is media, so it cannot be used with `data_type="text"`.
 
 ---
 
@@ -214,13 +221,13 @@ shortened = client.context.shorten_contexts([
 
 | Property | Value |
 |----------|-------|
-| **Type** | `Optional[list[list[str]]]` |
+| **Type** | `Optional[list[list[str \| UploadedAsset]]]` |
 | **Required** | No |
 | **Default** | `None` |
 
 Image URLs shown as reference context alongside each datapoint. Useful when you need to show one or more reference images alongside the item being evaluated.
 
-**Constraints:** If provided, must have the same length as `datapoints`. Each entry is itself a list of image URLs / paths. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
+**Constraints:** If provided, must have the same length as `datapoints`. Each entry is itself a list of image URLs / paths / `UploadedAsset` references. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
 
 Media contexts open in a collapsible drawer. If there is enough space next to the task, [`PinContextMediaSetting()`](#pincontextmediasetting) keeps the context visible instead. For a compare of two image edits, [`ReferenceOverlaySetting()`](#referenceoverlaysetting) lays the original over both options.
 

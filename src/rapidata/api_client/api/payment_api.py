@@ -879,7 +879,7 @@ class PaymentApi:
     ) -> None:
         """Processes an incoming Stripe webhook event.
 
-        Reads the raw request body and the Stripe-Signature header, then dispatches a  ProcessPaymentEventCommand.
+        Returns 400 when the Stripe-Signature header does not verify.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -942,7 +942,7 @@ class PaymentApi:
     ) -> ApiResponse[None]:
         """Processes an incoming Stripe webhook event.
 
-        Reads the raw request body and the Stripe-Signature header, then dispatches a  ProcessPaymentEventCommand.
+        Returns 400 when the Stripe-Signature header does not verify.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1005,7 +1005,7 @@ class PaymentApi:
     ) -> RESTResponseType:
         """Processes an incoming Stripe webhook event.
 
-        Reads the raw request body and the Stripe-Signature header, then dispatches a  ProcessPaymentEventCommand.
+        Returns 400 when the Stripe-Signature header does not verify.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

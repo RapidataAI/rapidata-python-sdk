@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Rapid API",
     "description": "The API for the Rapidata Rapid service",
-    "version": "2026.10.29.0928-2164545"
+    "version": "2026.11.06.1913-feab628"
   },
   "servers": [
     {
@@ -55,7 +55,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/{rapidId}": {
@@ -95,7 +107,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/global-responses": {
@@ -178,7 +202,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapids/flagged": {
@@ -509,7 +545,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/{correlationId}/validation-potential": {
@@ -759,7 +807,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/{rapidId}/unflag": {
@@ -800,7 +860,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/validation/{rapidId}": {
@@ -851,7 +923,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "validation:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/global-text": {
@@ -898,7 +982,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -932,7 +1028,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:viewer"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/global-text/{globalTextId}": {
@@ -972,7 +1080,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -1021,7 +1141,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/{rapidId}/navigation": {
@@ -1118,7 +1250,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/compare-ab-summary/{correlationId}/recalculate": {
@@ -1159,7 +1303,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/{rapidId}/reject": {
@@ -1200,7 +1356,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/republish-response-counts": {
@@ -1230,7 +1398,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/response": {
@@ -1324,7 +1504,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:viewer"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/viewed": {
@@ -1706,7 +1898,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:viewer"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/rapid/{rapidId}/report": {
@@ -2093,7 +2297,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "validation:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     }
   },
@@ -3576,6 +3792,85 @@
           }
         }
       },
+      "IOpenInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenOptionsInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenInputOpenTextInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "OpenAssetInput": "#/components/schemas/IOpenInputOpenAssetInput",
+            "OpenOptionsInput": "#/components/schemas/IOpenInputOpenOptionsInput",
+            "OpenTextInput": "#/components/schemas/IOpenInputOpenTextInput"
+          }
+        }
+      },
+      "IOpenInputOpenAssetInput": {
+        "required": [
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenAssetInput"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          }
+        }
+      },
+      "IOpenInputOpenOptionsInput": {
+        "required": [
+          "options",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenOptionsInput"
+            ],
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenOptionsInput_Option"
+            }
+          }
+        }
+      },
+      "IOpenInputOpenTextInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenTextInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
       "IRapid": {
         "required": [
           "_t"
@@ -3604,6 +3899,9 @@
             "$ref": "#/components/schemas/IRapidNamedEntityRapid"
           },
           {
+            "$ref": "#/components/schemas/IRapidOpenRapid"
+          },
+          {
             "$ref": "#/components/schemas/IRapidPolygonRapid"
           },
           {
@@ -3623,6 +3921,7 @@
             "LineRapidModel": "#/components/schemas/IRapidLineRapid",
             "LocateRapidModel": "#/components/schemas/IRapidLocateRapid",
             "NamedEntityRapidModel": "#/components/schemas/IRapidNamedEntityRapid",
+            "OpenRapidModel": "#/components/schemas/IRapidOpenRapid",
             "PolygonRapidModel": "#/components/schemas/IRapidPolygonRapid",
             "ScrubRapidModel": "#/components/schemas/IRapidScrubRapid",
             "TranscriptionRapidModel": "#/components/schemas/IRapidTranscriptionRapid"
@@ -4014,6 +4313,66 @@
           }
         }
       },
+      "IRapidOpenRapid": {
+        "required": [
+          "bundleFileName",
+          "inputs",
+          "asset",
+          "featureFlags",
+          "id",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenRapidModel"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/OpenRapid_IInput"
+            }
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAsset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "reportViewed": {
+            "type": "boolean"
+          }
+        }
+      },
       "IRapidPayload": {
         "required": [
           "_t"
@@ -4042,6 +4401,9 @@
             "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
           },
           {
+            "$ref": "#/components/schemas/IRapidPayloadOpenPayload"
+          },
+          {
             "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
           },
           {
@@ -4061,6 +4423,7 @@
             "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
             "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
             "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
+            "OpenPayload": "#/components/schemas/IRapidPayloadOpenPayload",
             "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
             "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
             "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload"
@@ -4207,6 +4570,30 @@
           }
         }
       },
+      "IRapidPayloadOpenPayload": {
+        "required": [
+          "bundleFileName",
+          "inputs",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenPayload"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IOpenInput"
+            }
+          }
+        }
+      },
       "IRapidPayloadPolygonPayload": {
         "required": [
           "target",
@@ -4346,6 +4733,9 @@
             "$ref": "#/components/schemas/IRapidResultNamedEntityResult"
           },
           {
+            "$ref": "#/components/schemas/IRapidResultOpenResult"
+          },
+          {
             "$ref": "#/components/schemas/IRapidResultPolygonResult"
           },
           {
@@ -4368,6 +4758,7 @@
             "LineResult": "#/components/schemas/IRapidResultLineResult",
             "LocateResult": "#/components/schemas/IRapidResultLocateResult",
             "NamedEntityResult": "#/components/schemas/IRapidResultNamedEntityResult",
+            "OpenResult": "#/components/schemas/IRapidResultOpenResult",
             "PolygonResult": "#/components/schemas/IRapidResultPolygonResult",
             "ScrubResult": "#/components/schemas/IRapidResultScrubResult",
             "SkipResult": "#/components/schemas/IRapidResultSkipResult",
@@ -4534,6 +4925,25 @@
               "$ref": "#/components/schemas/NamedEntityResult_NamedClassification"
             }
           }
+        }
+      },
+      "IRapidResultOpenResult": {
+        "required": [
+          "rapidId",
+          "answer",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenResult"
+            ],
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "answer": { }
         }
       },
       "IRapidResultPolygonResult": {
@@ -5605,6 +6015,138 @@
           }
         }
       },
+      "OpenOptionsInput_Option": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "OpenRapid_IInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/OpenRapid_IInputOpenRapid_TextInput"
+          },
+          {
+            "$ref": "#/components/schemas/OpenRapid_IInputOpenRapid_AssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/OpenRapid_IInputOpenRapid_OptionsInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "OpenTextInput": "#/components/schemas/OpenRapid_IInputOpenRapid_TextInput",
+            "OpenAssetInput": "#/components/schemas/OpenRapid_IInputOpenRapid_AssetInput",
+            "OpenOptionsInput": "#/components/schemas/OpenRapid_IInputOpenRapid_OptionsInput"
+          }
+        }
+      },
+      "OpenRapid_IInputOpenRapid_AssetInput": {
+        "required": [
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenAssetInput"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAsset"
+          }
+        }
+      },
+      "OpenRapid_IInputOpenRapid_OptionsInput": {
+        "required": [
+          "options",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenOptionsInput"
+            ],
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenRapid_Option"
+            }
+          }
+        }
+      },
+      "OpenRapid_IInputOpenRapid_TextInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenTextInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "$ref": "#/components/schemas/TranslatedString"
+          }
+        }
+      },
+      "OpenRapid_Option": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranslatedString"
+              }
+            ],
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
       "PolygonResult_Coordinate": {
         "required": [
           "x",
@@ -6352,10 +6894,6 @@
   "security": [
     {
       "OpenIdConnect": [
-        "openid",
-        "profile",
-        "email",
-        "offline_access",
         "api"
       ]
     }

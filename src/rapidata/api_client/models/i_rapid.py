@@ -22,6 +22,7 @@ from rapidata.api_client.models.i_rapid_free_text_rapid import IRapidFreeTextRap
 from rapidata.api_client.models.i_rapid_line_rapid import IRapidLineRapid
 from rapidata.api_client.models.i_rapid_locate_rapid import IRapidLocateRapid
 from rapidata.api_client.models.i_rapid_named_entity_rapid import IRapidNamedEntityRapid
+from rapidata.api_client.models.i_rapid_open_rapid import IRapidOpenRapid
 from rapidata.api_client.models.i_rapid_polygon_rapid import IRapidPolygonRapid
 from rapidata.api_client.models.i_rapid_scrub_rapid import IRapidScrubRapid
 from rapidata.api_client.models.i_rapid_transcription_rapid import IRapidTranscriptionRapid
@@ -30,7 +31,7 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IRAPID_ONE_OF_SCHEMAS = ["IRapidAttachCategoryRapid", "IRapidBoundingBoxRapid", "IRapidCompareRapid", "IRapidFreeTextRapid", "IRapidLineRapid", "IRapidLocateRapid", "IRapidNamedEntityRapid", "IRapidPolygonRapid", "IRapidScrubRapid", "IRapidTranscriptionRapid"]
+IRAPID_ONE_OF_SCHEMAS = ["IRapidAttachCategoryRapid", "IRapidBoundingBoxRapid", "IRapidCompareRapid", "IRapidFreeTextRapid", "IRapidLineRapid", "IRapidLocateRapid", "IRapidNamedEntityRapid", "IRapidOpenRapid", "IRapidPolygonRapid", "IRapidScrubRapid", "IRapidTranscriptionRapid"]
 
 class IRapid(LazyValidatedModel):
     """
@@ -50,14 +51,16 @@ class IRapid(LazyValidatedModel):
     oneof_schema_6_validator: Optional[IRapidLocateRapid] = None
     # data type: IRapidNamedEntityRapid
     oneof_schema_7_validator: Optional[IRapidNamedEntityRapid] = None
+    # data type: IRapidOpenRapid
+    oneof_schema_8_validator: Optional[IRapidOpenRapid] = None
     # data type: IRapidPolygonRapid
-    oneof_schema_8_validator: Optional[IRapidPolygonRapid] = None
+    oneof_schema_9_validator: Optional[IRapidPolygonRapid] = None
     # data type: IRapidScrubRapid
-    oneof_schema_9_validator: Optional[IRapidScrubRapid] = None
+    oneof_schema_10_validator: Optional[IRapidScrubRapid] = None
     # data type: IRapidTranscriptionRapid
-    oneof_schema_10_validator: Optional[IRapidTranscriptionRapid] = None
-    actual_instance: Optional[Union[IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid]] = None
-    one_of_schemas: Set[str] = { "IRapidAttachCategoryRapid", "IRapidBoundingBoxRapid", "IRapidCompareRapid", "IRapidFreeTextRapid", "IRapidLineRapid", "IRapidLocateRapid", "IRapidNamedEntityRapid", "IRapidPolygonRapid", "IRapidScrubRapid", "IRapidTranscriptionRapid" }
+    oneof_schema_11_validator: Optional[IRapidTranscriptionRapid] = None
+    actual_instance: Optional[Union[IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidOpenRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid]] = None
+    one_of_schemas: Set[str] = { "IRapidAttachCategoryRapid", "IRapidBoundingBoxRapid", "IRapidCompareRapid", "IRapidFreeTextRapid", "IRapidLineRapid", "IRapidLocateRapid", "IRapidNamedEntityRapid", "IRapidOpenRapid", "IRapidPolygonRapid", "IRapidScrubRapid", "IRapidTranscriptionRapid" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -115,6 +118,11 @@ class IRapid(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidNamedEntityRapid`")
         else:
             match += 1
+        # validate data type: IRapidOpenRapid
+        if not isinstance(v, IRapidOpenRapid):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidOpenRapid`")
+        else:
+            match += 1
         # validate data type: IRapidPolygonRapid
         if not isinstance(v, IRapidPolygonRapid):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRapidPolygonRapid`")
@@ -132,10 +140,10 @@ class IRapid(LazyValidatedModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IRapid with oneOf schemas: IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IRapid with oneOf schemas: IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidOpenRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IRapid with oneOf schemas: IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IRapid with oneOf schemas: IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidOpenRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -192,6 +200,12 @@ class IRapid(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IRapidOpenRapid
+        try:
+            instance.actual_instance = IRapidOpenRapid.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IRapidPolygonRapid
         try:
             instance.actual_instance = IRapidPolygonRapid.from_json(json_str)
@@ -213,10 +227,10 @@ class IRapid(LazyValidatedModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IRapid with oneOf schemas: IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IRapid with oneOf schemas: IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidOpenRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IRapid with oneOf schemas: IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IRapid with oneOf schemas: IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidOpenRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -230,7 +244,7 @@ class IRapid(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRapidAttachCategoryRapid, IRapidBoundingBoxRapid, IRapidCompareRapid, IRapidFreeTextRapid, IRapidLineRapid, IRapidLocateRapid, IRapidNamedEntityRapid, IRapidOpenRapid, IRapidPolygonRapid, IRapidScrubRapid, IRapidTranscriptionRapid]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

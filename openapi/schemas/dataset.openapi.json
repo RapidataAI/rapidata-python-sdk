@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Dataset API",
     "description": "The API for the Rapidata Dataset service",
-    "version": "2026.10.29.0928-2164545"
+    "version": "2026.11.06.1913-feab628"
   },
   "servers": [
     {
@@ -56,7 +56,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/dataset/{datasetId}/datapoint": {
@@ -115,7 +127,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/datapoint/{datapointId}": {
@@ -155,7 +179,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -200,7 +236,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/dataset/{datasetId}/datapoints/failed": {
@@ -248,7 +296,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/dataset/{datasetId}/datapoints": {
@@ -441,7 +501,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/dataset": {
@@ -489,7 +561,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/dataset/{datasetId}": {
@@ -536,7 +620,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/dataset/{datasetId}/progress": {
@@ -583,7 +679,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/dataset/{datasetId}/name": {
@@ -634,7 +742,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/dataset/{datasetId}/group": {
@@ -686,7 +806,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "dataset:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     }
   },
@@ -1977,10 +2109,6 @@
   "security": [
     {
       "OpenIdConnect": [
-        "openid",
-        "profile",
-        "email",
-        "offline_access",
         "api"
       ]
     }

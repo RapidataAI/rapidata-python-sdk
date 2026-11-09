@@ -378,7 +378,7 @@ class AssetApi:
     ) -> UploadFileEndpointOutput:
         """Uploads a file to our system and returns the new file name used internally.
 
-        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.
+        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.  An HTML bundle (at most 1 MB) is stored as plain text and returns 403 unless the organization may upload bundles.
 
         :param file: (required)
         :type file: bytes
@@ -460,7 +460,7 @@ class AssetApi:
     ) -> ApiResponse[UploadFileEndpointOutput]:
         """Uploads a file to our system and returns the new file name used internally.
 
-        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.
+        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.  An HTML bundle (at most 1 MB) is stored as plain text and returns 403 unless the organization may upload bundles.
 
         :param file: (required)
         :type file: bytes
@@ -542,7 +542,7 @@ class AssetApi:
     ) -> RESTResponseType:
         """Uploads a file to our system and returns the new file name used internally.
 
-        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.
+        Returns 400 when an audio or video file cannot be read, e.g. a truncated MP4.  An HTML bundle (at most 1 MB) is stored as plain text and returns 403 unless the organization may upload bundles.
 
         :param file: (required)
         :type file: bytes

@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 import os
 import threading
-from typing import Any, Literal
+from typing import Any, Literal, Sequence
 
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.service.openapi_service import OpenAPIService
@@ -11,8 +11,26 @@ from rapidata.rapidata_client.config import logger, rapidata_config, tracer
 from rapidata.rapidata_client.config.upload_config import CompressionConfig
 from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache
+from rapidata.rapidata_client.datapoints._string_only_disk import StringOnlyDisk
+from rapidata.rapidata_client.datapoints.assets.uploaded_asset import UploadedAsset
 from rapidata.rapidata_client.exceptions.asset_warning import AssetWarning
 from diskcache import FanoutCache
+
+
+def _asset_key(asset: str | UploadedAsset) -> str:
+    return asset.name if isinstance(asset, UploadedAsset) else asset
+
+
+def _text_only(
+    asset: str | UploadedAsset | Sequence[str | UploadedAsset],
+) -> str | list[str]:
+    if isinstance(asset, str):
+        return asset
+    entries = [asset] if isinstance(asset, UploadedAsset) else list(asset)
+    texts = [entry for entry in entries if isinstance(entry, str)]
+    if len(texts) != len(entries):
+        raise TypeError("An UploadedAsset is media; text assets must be strings.")
+    return texts
 
 
 class AssetUploader:
@@ -54,6 +72,7 @@ class AssetUploader:
                     rapidata_config.upload.cacheLocation,
                     shards=rapidata_config.upload.cacheShards,
                     timeout=rapidata_config.upload.cacheTimeout,
+                    disk=StringOnlyDisk,
                 )
                 logger.debug("Initialized file cache with disk storage")
             else:
@@ -215,63 +234,76 @@ class AssetUploader:
     # by hand or copy them from docs with varying capitalisation.
     _URL_SCHEME_RE = re.compile(r"^https?://", re.IGNORECASE)
 
-    def upload_asset(self, asset: str) -> str:
+    def upload_asset(self, asset: str | UploadedAsset) -> str:
+        if isinstance(asset, UploadedAsset):
+            logger.debug("Reusing uploaded asset: %s", asset.name)
+            return asset.name
+
         logger.debug("Uploading asset: %s", asset)
         if not isinstance(asset, str):
-            raise TypeError(f"Asset must be a string, got {type(asset).__name__}")
+            raise TypeError(
+                f"Asset must be a string or an UploadedAsset, got {type(asset).__name__}"
+            )
 
         if self._URL_SCHEME_RE.match(asset):
             return self._upload_url_asset(asset)
 
         return self._upload_file_asset(asset)
 
-    def upload_and_map_asset(self, asset: str | list[str]) -> IAssetInput:
+    def upload_and_map_asset(
+        self, asset: str | UploadedAsset | Sequence[str | UploadedAsset]
+    ) -> IAssetInput:
         """Upload asset(s) and wrap the result in an ``IAssetInput``.
 
         Used both for main datapoint/example assets and for ``media_context``.
-        A single string is returned as a plain ``ExistingAssetInput``; a list
+        A single asset is returned as a plain ``ExistingAssetInput``; a list
         is bundled into a ``MultiAssetInput``.
         """
-        if isinstance(asset, list):
-            uploaded_names = [self.upload_asset(a) for a in asset]
-            return AssetMapper.create_existing_asset_input(uploaded_names)
+        if isinstance(asset, (str, UploadedAsset)):
+            return AssetMapper.create_existing_asset_input(self.upload_asset(asset))
 
-        return AssetMapper.create_existing_asset_input(self.upload_asset(asset))
+        uploaded_names = [self.upload_asset(a) for a in asset]
+        return AssetMapper.create_existing_asset_input(uploaded_names)
 
     def build_asset_input(
-        self, asset: str | list[str], data_type: Literal["media", "text"]
+        self,
+        asset: str | UploadedAsset | Sequence[str | UploadedAsset],
+        data_type: Literal["media", "text"],
     ) -> IAssetInput:
         """Build the ``IAssetInput`` for an asset: upload media, wrap text as-is."""
         asset_input, _ = self.build_asset_input_with_names(asset, data_type)
         return asset_input
 
     def build_asset_input_with_names(
-        self, asset: str | list[str], data_type: Literal["media", "text"]
+        self,
+        asset: str | UploadedAsset | Sequence[str | UploadedAsset],
+        data_type: Literal["media", "text"],
     ) -> tuple[IAssetInput, dict[str, str]]:
         """Build the ``IAssetInput`` plus an original-asset → uploaded-name map.
 
         The map lets compare-truth translation rewrite truth references
         (winner ids, correct combinations) from caller-supplied paths/URLs to
-        the uploaded names the API expects. It is empty for text assets,
-        which are sent verbatim and never uploaded.
+        the uploaded names the API expects; an ``UploadedAsset`` is keyed by
+        its name. It is empty for text assets, which are sent verbatim and
+        never uploaded.
         """
         if data_type == "text":
-            return AssetMapper.create_text_input(asset), {}
+            return AssetMapper.create_text_input(_text_only(asset)), {}
 
-        if isinstance(asset, list):
-            asset_to_uploaded = {a: self.upload_asset(a) for a in asset}
-            # Re-index through the original list so duplicate entries survive.
+        if isinstance(asset, (str, UploadedAsset)):
+            uploaded_name = self.upload_asset(asset)
             return (
-                AssetMapper.create_existing_asset_input(
-                    [asset_to_uploaded[a] for a in asset]
-                ),
-                asset_to_uploaded,
+                AssetMapper.create_existing_asset_input(uploaded_name),
+                {_asset_key(asset): uploaded_name},
             )
 
-        uploaded_name = self.upload_asset(asset)
+        asset_to_uploaded = {_asset_key(a): self.upload_asset(a) for a in asset}
+        # Re-index through the original list so duplicate entries survive.
         return (
-            AssetMapper.create_existing_asset_input(uploaded_name),
-            {asset: uploaded_name},
+            AssetMapper.create_existing_asset_input(
+                [asset_to_uploaded[_asset_key(a)] for a in asset]
+            ),
+            asset_to_uploaded,
         )
 
     def clear_cache(self) -> None:

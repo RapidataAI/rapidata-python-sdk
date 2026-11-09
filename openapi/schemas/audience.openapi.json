@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.10.29.0928-2164545"
+    "version": "2026.11.06.1913-feab628"
   },
   "servers": [
     {
@@ -55,7 +55,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{baseAudienceId}/filter": {
@@ -113,7 +125,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}": {
@@ -153,7 +177,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -199,7 +235,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -255,7 +303,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/inactivity-sync/{syncId}": {
@@ -302,7 +362,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/shares/organizations": {
@@ -353,7 +425,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -403,7 +487,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/shares": {
@@ -454,7 +550,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -504,7 +612,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/state-recalculation/{recalculationId}": {
@@ -551,7 +671,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/user-metrics": {
@@ -598,7 +730,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/inactivity-sync": {
@@ -645,7 +789,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -691,7 +847,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/state-recalculation": {
@@ -738,7 +906,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -784,7 +964,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/initialize-users": {
@@ -843,7 +1035,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/pause-distillation": {
@@ -883,7 +1087,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/jobs": {
@@ -1225,7 +1441,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audiences": {
@@ -1618,7 +1846,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/rebuild-distilling-campaign": {
@@ -1659,7 +1899,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/reconcile-user-counts": {
@@ -1688,7 +1940,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/recreate-external-audiences": {
@@ -1739,7 +2003,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/republish-user-states": {
@@ -1769,7 +2045,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/resume-distillation": {
@@ -1809,7 +2097,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/shares/organizations/{organizationId}": {
@@ -1859,7 +2159,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/shares/{customerId}": {
@@ -1910,7 +2222,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/recruit": {
@@ -1950,7 +2274,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/boost-config": {
@@ -2008,7 +2344,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/example": {
@@ -2066,7 +2414,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/example/{exampleId}": {
@@ -2113,7 +2473,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/examples": {
@@ -2353,7 +2725,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/{audienceId}/example/{exampleId}": {
@@ -2413,7 +2797,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/unlisted": {
@@ -2461,7 +2857,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audience/unlisted/{audienceId}": {
@@ -2508,7 +2916,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/audiences/unlisted": {
@@ -2692,7 +3112,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "audience:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     }
   },
@@ -6105,10 +6537,6 @@
   "security": [
     {
       "OpenIdConnect": [
-        "openid",
-        "profile",
-        "email",
-        "offline_access",
         "api"
       ]
     }

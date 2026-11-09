@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.10.29.0928-2164545"
+    "version": "2026.11.06.1913-feab628"
   },
   "servers": [
     {
@@ -44,7 +44,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/cache/user-scores": {
@@ -80,7 +92,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/{campaignId}/activate": {
@@ -121,7 +145,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/boost": {
@@ -162,7 +198,19 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "deprecated": true,
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/program": {
@@ -210,7 +258,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/boost/insights": {
@@ -246,7 +306,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/boost/status": {
@@ -282,7 +354,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/{campaignId}": {
@@ -330,7 +414,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -379,7 +475,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/boost/{externalCampaignId}/fast-bid-multiplier": {
@@ -428,7 +536,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -486,7 +606,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/monitor": {
@@ -549,7 +681,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/boost/preheat": {
@@ -578,7 +722,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaigns": {
@@ -962,7 +1118,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/republish-user-campaign-sessions": {
@@ -992,7 +1160,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/{campaignId}/resume": {
@@ -1032,7 +1212,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/boost/global-level": {
@@ -1072,7 +1264,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/{campaignId}/program": {
@@ -1124,7 +1328,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/experiments": {
@@ -1172,7 +1388,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -1209,7 +1437,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/experiments/{experimentId}": {
@@ -1256,7 +1496,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/external-audiences": {
@@ -1491,7 +1743,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/external-audiences/sync": {
@@ -1520,7 +1784,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/owner-tier-overrides": {
@@ -1568,7 +1844,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -1605,7 +1893,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/owner-tier-overrides/{ownerTierOverrideId}": {
@@ -1645,7 +1945,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1695,7 +2007,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/campaign/owner-tier/organizations/{organizationId}": {
@@ -1743,7 +2067,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "campaign:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     }
   },
@@ -2286,6 +2622,11 @@
           "routingId": {
             "type": "string",
             "description": "The routing that owns the work; its completion moves the campaign to analysis.",
+            "nullable": true
+          },
+          "experimentId": {
+            "type": "string",
+            "description": "The A/B experiment that splits the campaign's sessions into control and treatment.",
             "nullable": true
           }
         }
@@ -4905,6 +5246,9 @@
           },
           "clearOnPause": {
             "type": "boolean"
+          },
+          "releaseOnSkip": {
+            "type": "boolean"
           }
         }
       },
@@ -5137,10 +5481,6 @@
   "security": [
     {
       "OpenIdConnect": [
-        "openid",
-        "profile",
-        "email",
-        "offline_access",
         "api"
       ]
     }

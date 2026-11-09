@@ -38,6 +38,7 @@ class AggregatorType(str, Enum):
     SCRUB = 'Scrub'
     RANKING = 'Ranking'
     MULTIRANKING = 'MultiRanking'
+    OPEN = 'Open'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

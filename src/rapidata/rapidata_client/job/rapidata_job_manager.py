@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger, tracer, rapidata_config
-from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.rapidata_client.datapoints._datapoint import (
+    Datapoint,
+    coerce_datapoint_media_context,
+)
+from rapidata.rapidata_client.datapoints.assets.uploaded_asset import UploadedAsset
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.job.rapidata_job_definition import RapidataJobDefinition
@@ -214,11 +218,16 @@ class RapidataJobManager:
         name: str,
         instruction: str,
         answer_options: list[str] | list[list[str]],
-        datapoints: list[str],
+        datapoints: list[str] | list[UploadedAsset] | list[str | UploadedAsset],
         data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: int | AdaptiveStopping | QuorumStopping = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[list[str]] | None = None,
+        media_contexts: (
+            list[list[str]]
+            | list[list[UploadedAsset]]
+            | list[list[str | UploadedAsset]]
+            | None
+        ) = None,
         confidence_threshold: float | None = None,
         quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
@@ -242,7 +251,7 @@ class RapidataJobManager:
                 Pass one list to show the same options for every datapoint, or one list per datapoint
                 (same length as datapoints, matched by index) to show different options per datapoint.
                 Each datapoint needs between 2 and 8 unique options.
-            datapoints (list[str]): The list of datapoints for the classification - each datapoint will be labeled.
+            datapoints (list[str | UploadedAsset]): The list of datapoints for the classification - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
             responses_per_datapoint (int | AdaptiveStopping | QuorumStopping, optional): How many responses to collect per datapoint. Defaults to 10.\n
@@ -250,7 +259,7 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the classification. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the classification (each inner list is the images shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str | UploadedAsset]], optional): The list of image URLs / paths / UploadedAsset references shown for the classification (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             confidence_threshold (float, optional): The probability threshold for the classification. Defaults to None.\n
@@ -265,9 +274,11 @@ class RapidataJobManager:
         """
         with tracer.start_as_current_span("JobManager.create_classification_job"):
             if not isinstance(datapoints, list) or not all(
-                isinstance(datapoint, str) for datapoint in datapoints
+                isinstance(datapoint, (str, UploadedAsset)) for datapoint in datapoints
             ):
-                raise ValueError("Datapoints must be a list of strings")
+                raise ValueError(
+                    "Datapoints must be a list of strings or UploadedAsset"
+                )
 
             from rapidata.rapidata_client.workflow import ClassifyWorkflow
 
@@ -308,13 +319,22 @@ class RapidataJobManager:
         self,
         name: str,
         instruction: str,
-        datapoints: list[list[str]],
+        datapoints: (
+            list[list[str]]
+            | list[list[UploadedAsset]]
+            | list[list[str | UploadedAsset]]
+        ),
         data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: (
             int | AdaptiveStopping | QuorumStopping
         ) = _DEFAULT_COMPARE_STOPPING,
         contexts: list[str] | None = None,
-        media_contexts: list[list[str]] | None = None,
+        media_contexts: (
+            list[list[str]]
+            | list[list[UploadedAsset]]
+            | list[list[str | UploadedAsset]]
+            | None
+        ) = None,
         a_b_names: list[str] | None = None,
         confidence_threshold: float | None = None,
         quorum_threshold: int | None = None,
@@ -337,7 +357,7 @@ class RapidataJobManager:
                 Requires annotator UI support; this control does not deploy the button.
             name (str): The name of the job. (Will not be shown to the labeler)
             instruction (str): The instruction for the comparison. Will be shown along side each datapoint.
-            datapoints (list[list[str]]): Outher list is the datapoints, inner list is the options for the comparison - each datapoint will be labeled.
+            datapoints (list[list[str | UploadedAsset]]): Outher list is the datapoints, inner list is the options for the comparison - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
             responses_per_datapoint (int | AdaptiveStopping | QuorumStopping, optional): How many responses to collect per datapoint.
@@ -346,7 +366,7 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str | UploadedAsset]], optional): The list of image URLs / paths / UploadedAsset references shown for the comparison (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
@@ -414,13 +434,22 @@ class RapidataJobManager:
         self,
         name: str,
         instruction: str,
-        datapoints: list[list[str]],
+        datapoints: (
+            list[list[str]]
+            | list[list[UploadedAsset]]
+            | list[list[str | UploadedAsset]]
+        ),
         comparison_budget_per_ranking: int,
         responses_per_comparison: int = 1,
         data_type: Literal["media", "text"] = "media",
         random_comparisons_ratio: float = 0.5,
         contexts: list[str] | None = None,
-        media_contexts: list[list[str]] | None = None,
+        media_contexts: (
+            list[list[str]]
+            | list[list[UploadedAsset]]
+            | list[list[str | UploadedAsset]]
+            | None
+        ) = None,
         settings: Sequence[RapidataSetting] | None = None,
         failure_tolerance: float | None = None,
     ) -> RapidataJobDefinition:
@@ -433,7 +462,7 @@ class RapidataJobManager:
         Args:
             name (str): The name of the job.
             instruction (str): The instruction for the ranking. Will be shown with each matchup.
-            datapoints (list[list[str]]): The outer list is determines the independent rankings, the inner list is the datapoints for each ranking.
+            datapoints (list[list[str | UploadedAsset]]): The outer list is determines the independent rankings, the inner list is the datapoints for each ranking.
             comparison_budget_per_ranking (int): The number of comparisons that will be collected per ranking (outer list of datapoints).\n
                 Rankings with more than 10 datapoints are matched adaptively (Elo-style) within this budget.
                 Rankings with 10 or fewer datapoints compare every unique pair, spreading the budget evenly across the pairs —
@@ -446,7 +475,7 @@ class RapidataJobManager:
             contexts (list[str], optional): The list of contexts for the ranking. Defaults to None.\n
                 If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the ranking (each inner list is the images shown for that ranking). Defaults to None.\n
+            media_contexts (list[list[str | UploadedAsset]], optional): The list of image URLs / paths / UploadedAsset references shown for the ranking (each inner list is the images shown for that ranking). Defaults to None.\n
                 If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
                 Will be matched up with the datapoints using the list index.
                 Use a single-element inner list for one image per ranking, or multiple entries to display several images.
@@ -486,7 +515,11 @@ class RapidataJobManager:
                             asset=d,
                             data_type=data_type,
                             context=contexts[i] if contexts else None,
-                            media_context=media_contexts[i] if media_contexts else None,
+                            media_context=(
+                                coerce_datapoint_media_context(media_contexts[i])
+                                if media_contexts
+                                else None
+                            ),
                             group=str(i),
                         )
                     )
@@ -512,11 +545,16 @@ class RapidataJobManager:
         self,
         name: str,
         instruction: str,
-        datapoints: list[str],
+        datapoints: list[str] | list[UploadedAsset] | list[str | UploadedAsset],
         data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[list[str]] | None = None,
+        media_contexts: (
+            list[list[str]]
+            | list[list[UploadedAsset]]
+            | list[list[str | UploadedAsset]]
+            | None
+        ) = None,
         settings: Sequence[RapidataSetting] | None = None,
         failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
@@ -529,14 +567,14 @@ class RapidataJobManager:
         Args:
             name (str): The name of the job.
             instruction (str): The instruction to answer with free text. Will be shown along side each datapoint.
-            datapoints (list[str]): The list of datapoints for the free text - each datapoint will be labeled.
+            datapoints (list[str | UploadedAsset]): The list of datapoints for the free text - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the free text. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the free text (each inner list is the images shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str | UploadedAsset]], optional): The list of image URLs / paths / UploadedAsset references shown for the free text (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
@@ -569,7 +607,7 @@ class RapidataJobManager:
         self,
         name: str,
         instruction: str,
-        datapoints: list[str],
+        datapoints: list[str] | list[UploadedAsset] | list[str | UploadedAsset],
         sentences: list[str],
         responses_per_datapoint: int = 10,
         settings: Sequence[RapidataSetting] | None = None,
@@ -585,7 +623,7 @@ class RapidataJobManager:
         Args:
             name (str): The name of the job.
             instruction (str): The instruction for how the words should be selected. Will be shown along side each datapoint.
-            datapoints (list[str]): The list of datapoints for the select words - each datapoint will be labeled.
+            datapoints (list[str | UploadedAsset]): The list of datapoints for the select words - each datapoint will be labeled.
             sentences (list[str]): The list of sentences for the select words - Will be split up by spaces and shown along side each datapoint.\n
                 Must be the same length as datapoints.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
@@ -618,10 +656,15 @@ class RapidataJobManager:
         self,
         name: str,
         instruction: str,
-        datapoints: list[str],
+        datapoints: list[str] | list[UploadedAsset] | list[str | UploadedAsset],
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[list[str]] | None = None,
+        media_contexts: (
+            list[list[str]]
+            | list[list[UploadedAsset]]
+            | list[list[str | UploadedAsset]]
+            | None
+        ) = None,
         settings: Sequence[RapidataSetting] | None = None,
         failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
@@ -634,12 +677,12 @@ class RapidataJobManager:
         Args:
             name (str): The name of the job. (Will not be shown to the labeler)
             instruction (str): The instruction what should be located. Will be shown along side each datapoint.
-            datapoints (list[str]): The list of datapoints for the locate - each datapoint will be labeled.
+            datapoints (list[str | UploadedAsset]): The list of datapoints for the locate - each datapoint will be labeled.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the locate. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the locate (each inner list is the images shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str | UploadedAsset]], optional): The list of image URLs / paths / UploadedAsset references shown for the locate (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
@@ -670,10 +713,15 @@ class RapidataJobManager:
         self,
         name: str,
         instruction: str,
-        datapoints: list[str],
+        datapoints: list[str] | list[UploadedAsset] | list[str | UploadedAsset],
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[list[str]] | None = None,
+        media_contexts: (
+            list[list[str]]
+            | list[list[UploadedAsset]]
+            | list[list[str | UploadedAsset]]
+            | None
+        ) = None,
         settings: Sequence[RapidataSetting] | None = None,
         failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
@@ -686,12 +734,12 @@ class RapidataJobManager:
         Args:
             name (str): The name of the job. (Will not be shown to the labeler)
             instruction (str): The instruction for how the lines should be drawn. Will be shown along side each datapoint.
-            datapoints (list[str]): The list of datapoints for the draw lines - each datapoint will be labeled.
+            datapoints (list[str | UploadedAsset]): The list of datapoints for the draw lines - each datapoint will be labeled.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the draw lines (each inner list is the images shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str | UploadedAsset]], optional): The list of image URLs / paths / UploadedAsset references shown for the draw lines (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
@@ -722,10 +770,15 @@ class RapidataJobManager:
         self,
         name: str,
         instruction: str,
-        datapoints: list[str],
+        datapoints: list[str] | list[UploadedAsset] | list[str | UploadedAsset],
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
-        media_contexts: list[list[str]] | None = None,
+        media_contexts: (
+            list[list[str]]
+            | list[list[UploadedAsset]]
+            | list[list[str | UploadedAsset]]
+            | None
+        ) = None,
         settings: Sequence[RapidataSetting] | None = None,
         failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
@@ -741,12 +794,12 @@ class RapidataJobManager:
         Args:
             name (str): The name of the job. (Will not be shown to the labeler)
             instruction (str): The instruction for the timestamp task. Will be shown along side each datapoint.
-            datapoints (list[str]): The list of datapoints for the timestamp - each datapoint will be labeled.
+            datapoints (list[str | UploadedAsset]): The list of datapoints for the timestamp - each datapoint will be labeled.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            media_contexts (list[list[str]], optional): The list of image URLs / paths shown for the timestamp (each inner list is the images shown for that datapoint). Defaults to None.\n
+            media_contexts (list[list[str | UploadedAsset]], optional): The list of image URLs / paths / UploadedAsset references shown for the timestamp (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.

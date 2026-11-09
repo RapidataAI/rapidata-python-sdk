@@ -19,6 +19,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.origin import Origin
+from rapidata.api_client.models.prompt_processing_status import PromptProcessingStatus
 from rapidata.api_client.models.prompt_segment import PromptSegment
 from rapidata.api_client.models.tag import Tag
 from pydantic import ValidationError
@@ -38,7 +39,8 @@ class GetPromptsByBenchmarkEndpointOutput(LazyValidatedModel):
     created_at: datetime = Field(description="The timestamp when the prompt was created.", alias="createdAt")
     tags: List[Tag]
     origin: Optional[Origin] = Field(default=None, description="Where the prompt came from, if known.")
-    __properties: ClassVar[List[str]] = ["id", "englishPrompt", "originalPrompt", "segments", "identifier", "createdAt", "tags", "origin"]
+    processing_status: PromptProcessingStatus = Field(description="Whether the prompt's English text is filled in; only Ready prompts reach generation and runs.", alias="processingStatus")
+    __properties: ClassVar[List[str]] = ["id", "englishPrompt", "originalPrompt", "segments", "identifier", "createdAt", "tags", "origin", "processingStatus"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -121,7 +123,8 @@ class GetPromptsByBenchmarkEndpointOutput(LazyValidatedModel):
             "identifier": obj.get("identifier"),
             "createdAt": obj.get("createdAt"),
             "tags": [Tag.from_dict(_item) for _item in obj["tags"]] if obj.get("tags") is not None else None,
-            "origin": Origin.from_dict(obj["origin"]) if obj.get("origin") is not None else None
+            "origin": Origin.from_dict(obj["origin"]) if obj.get("origin") is not None else None,
+            "processingStatus": obj.get("processingStatus")
         }
         try:
             _obj = cls.model_validate(_data)

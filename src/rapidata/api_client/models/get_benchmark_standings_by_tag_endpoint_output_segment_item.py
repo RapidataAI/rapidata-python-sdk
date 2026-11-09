@@ -32,9 +32,11 @@ class GetBenchmarkStandingsByTagEndpointOutputSegmentItem(LazyValidatedModel):
     wins: Union[StrictFloat, StrictInt]
     total_matches: Union[StrictFloat, StrictInt] = Field(alias="totalMatches")
     response_count: StrictInt = Field(alias="responseCount")
-    is_disabled: StrictBool = Field(alias="isDisabled")
+    is_deprecated: StrictBool = Field(alias="isDeprecated")
+    is_public: StrictBool = Field(alias="isPublic")
+    is_candidate: StrictBool = Field(alias="isCandidate")
     confidence_interval: Optional[ConfidenceInterval] = Field(default=None, alias="confidenceInterval")
-    __properties: ClassVar[List[str]] = ["id", "score", "wins", "totalMatches", "responseCount", "isDisabled", "confidenceInterval"]
+    __properties: ClassVar[List[str]] = ["id", "score", "wins", "totalMatches", "responseCount", "isDeprecated", "isPublic", "isCandidate", "confidenceInterval"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -101,7 +103,9 @@ class GetBenchmarkStandingsByTagEndpointOutputSegmentItem(LazyValidatedModel):
             "wins": obj.get("wins"),
             "totalMatches": obj.get("totalMatches"),
             "responseCount": obj.get("responseCount"),
-            "isDisabled": obj.get("isDisabled"),
+            "isDeprecated": obj.get("isDeprecated"),
+            "isPublic": obj.get("isPublic"),
+            "isCandidate": obj.get("isCandidate"),
             "confidenceInterval": ConfidenceInterval.from_dict(obj["confidenceInterval"]) if obj.get("confidenceInterval") is not None else None
         }
         try:

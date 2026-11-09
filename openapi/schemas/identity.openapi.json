@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.10.29.0928-2164545"
+    "version": "2026.11.06.1913-feab628"
   },
   "servers": [
     {
@@ -83,7 +83,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:viewer"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -122,7 +134,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -161,7 +185,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/capabilities/{capability}/grantees": {
@@ -225,56 +261,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
-      }
-    },
-    "/customers/{customerId}/capabilities": {
-      "get": {
-        "tags": [
-          "Capabilities"
-        ],
-        "summary": "Lists the capabilities a customer holds.",
-        "description": "capabilities are granted to an organization, so these are the grants of the\n organization the customer is currently acting under — the same set enforced for them. A\n customer without an organization holds none.",
-        "parameters": [
+        },
+        "security": [
           {
-            "name": "customerId",
-            "in": "path",
-            "description": "The customer to inspect.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "OpenIdConnect": [
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCustomerCapabilitiesEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
+        ]
       }
     },
     "/organizations/{organizationId}/capabilities": {
@@ -322,7 +321,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/{organizationId}/capabilities/{capability}": {
@@ -372,7 +383,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -420,7 +443,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/authorization/relations/clickhouse": {
@@ -460,7 +495,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:viewer"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -499,7 +546,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -538,7 +597,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/authorization/relations/clickhouse/agent": {
@@ -579,7 +650,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/client": {
@@ -588,6 +671,7 @@
           "Client"
         ],
         "summary": "Creates a new client for the current customer.",
+        "description": "The client never holds more than the calling token; asking for more is refused with 403 insufficient_scope.",
         "requestBody": {
           "description": "The client creation payload.",
           "content": {
@@ -626,7 +710,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "client:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/client/{clientId}": {
@@ -666,7 +762,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "client:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -946,7 +1054,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "client:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/client/register": {
@@ -1013,7 +1133,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/customers/{customerId}": {
@@ -1055,7 +1187,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/customers": {
@@ -1095,7 +1239,9 @@
                   "email",
                   "-email",
                   "organization_name",
-                  "-organization_name"
+                  "-organization_name",
+                  "created_at",
+                  "-created_at"
                 ],
                 "type": "string"
               }
@@ -1338,7 +1484,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/customers/{customerId}/unban": {
@@ -1380,7 +1538,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/authorization/relations/external-app": {
@@ -1452,7 +1622,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:viewer"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -1491,7 +1673,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1530,7 +1724,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/identity/bridge-token": {
@@ -1828,7 +2034,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/accept-invitation": {
@@ -1876,7 +2094,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/{organizationId}/members/{customerId}/role": {
@@ -1938,7 +2168,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations": {
@@ -1986,7 +2228,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -2166,7 +2420,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/{organizationId}": {
@@ -2207,7 +2473,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -2252,7 +2530,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -2302,7 +2592,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/{organizationId}/invitations": {
@@ -2361,7 +2663,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -2406,7 +2720,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/invitations": {
@@ -2442,7 +2768,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/{organizationId}/members": {
@@ -2489,7 +2827,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/all": {
@@ -2724,7 +3074,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/invitations/{invitationId}/reject": {
@@ -2765,7 +3127,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/{organizationId}/members/{customerId}": {
@@ -2816,7 +3190,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/{organizationId}/invitations/{invitationId}": {
@@ -2866,7 +3252,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/organizations/{organizationId}/support-slack-channel": {
@@ -2918,48 +3316,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
-      }
-    },
-    "/organizations/active": {
-      "put": {
-        "tags": [
-          "Organization"
-        ],
-        "summary": "Switches the calling customer's active organization to the given one.",
-        "description": "The active organization determines the token's org claim; the change takes effect the next time\n the client refreshes its token. Responds with 403 when the caller is not a member of the target\n organization.",
-        "requestBody": {
-          "description": "The organization to activate.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SwitchActiveOrganizationEndpoint_Input"
-              }
-            }
-          },
-          "required": true
         },
-        "responses": {
-          "204": {
-            "description": "No Content"
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
           },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
           }
-        }
+        ]
       }
     },
     "/authorization/relations/platform": {
@@ -3022,7 +3391,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:viewer"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -3061,7 +3442,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -3100,7 +3493,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/identity/survey": {
@@ -3140,7 +3545,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "profile:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     }
   },
@@ -3226,9 +3643,10 @@
       "AuthorizationRelations_Platform": {
         "enum": [
           "Admin",
+          "Editor",
           "Viewer"
         ],
-        "description": "Relations on the singleton `platform` object. The model is hierarchical: `admin`\nfolds into `viewer`."
+        "description": "Relations on the singleton `platform` object. The model is hierarchical: `admin`\nfolds into `editor`, and `editor` into `viewer`."
       },
       "AuthorizationScope": {
         "enum": [
@@ -3246,7 +3664,8 @@
           "UploadLongMedia",
           "Faucets",
           "BringYourOwnAudience",
-          "LowResponseCount"
+          "LowResponseCount",
+          "OpenRapids"
         ],
         "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
       },
@@ -3414,8 +3833,20 @@
           },
           "organizationId": {
             "type": "string",
-            "description": "The organization to authorize the client for. Defaults to the caller's active organization.",
+            "description": "The organization to authorize the client for. Defaults to the organization of the calling token.",
             "nullable": true
+          },
+          "scopes": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The scopes to give the client, each held by the calling token. Defaults to everything the calling token holds."
           }
         }
       },
@@ -3559,7 +3990,8 @@
         "enum": [
           "ArgoCd",
           "Grafana",
-          "Headscale"
+          "Headscale",
+          "Poseidon"
         ],
         "description": "                The third-party applications that federate on our OIDC `groups` claim and can therefore\n                be administered through a grant here. Each maps to an `external_app` object in the\n                authorization graph.\n                A closed enum rather than a free-form id on purpose: an arbitrary string would let a typo\nwrite a grant against an object nothing consumes, which looks like access was granted but\nsilently is not. Adding an app is a value here plus a tuple — no model change.This is the app itself; the relation vocabulary defined on these objects is\nAuthorizationRelations.ExternalApp. The Id suffix here keeps the two\ndistinguishable: a file with using static AuthorizationRelations imports that\nnested enum, and identical short names would make every bare mention ambiguous."
       },
@@ -3716,25 +4148,6 @@
           },
           "agentCeiling": {
             "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseAgentCeiling"
-          }
-        }
-      },
-      "GetCustomerCapabilitiesEndpoint_Output": {
-        "required": [
-          "capabilities"
-        ],
-        "type": "object",
-        "properties": {
-          "capabilities": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Capability"
-                }
-              }
-            ],
-            "description": "Capabilities granted to the organization the customer is acting under."
           }
         }
       },
@@ -4842,18 +5255,6 @@
           }
         }
       },
-      "SwitchActiveOrganizationEndpoint_Input": {
-        "required": [
-          "organizationId"
-        ],
-        "type": "object",
-        "properties": {
-          "organizationId": {
-            "type": "string",
-            "description": "The id of the organization to activate."
-          }
-        }
-      },
       "UnsubscribeFromNewsletterEndpoint_Input": {
         "required": [
           "email",
@@ -4936,10 +5337,6 @@
   "security": [
     {
       "OpenIdConnect": [
-        "openid",
-        "profile",
-        "email",
-        "offline_access",
         "api"
       ]
     }

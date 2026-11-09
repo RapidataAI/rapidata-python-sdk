@@ -39,8 +39,8 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
     cost_unit: Optional[CostUnit] = Field(default=None, description="The unit cost is quoted in. Pass null to clear.", alias="costUnit")
     logo: Optional[ExistingAssetInput] = Field(default=None, description="An image asset for the model's logo. Pass null to clear.")
     faucet: Optional[IFaucetInput] = Field(default=None, description="The faucet to set or replace on the participant.")
-    votes_excluded: Optional[StrictBool] = Field(default=None, description="Whether the participant's already-collected votes are dropped from the scores. Only allowed while it is disabled; enabling it resets this to false.", alias="votesExcluded")
-    __properties: ClassVar[List[str]] = ["name", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "faucet", "votesExcluded"]
+    is_public: Optional[StrictBool] = Field(default=None, description="Whether everyone who can open the benchmark sees the participant. Making it public starts  no matchups; models submitted from then on play it.", alias="isPublic")
+    __properties: ClassVar[List[str]] = ["name", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "faucet", "isPublic"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -139,7 +139,7 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
             "costUnit": obj.get("costUnit"),
             "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None,
             "faucet": IFaucetInput.from_dict(obj["faucet"]) if obj.get("faucet") is not None else None,
-            "votesExcluded": obj.get("votesExcluded")
+            "isPublic": obj.get("isPublic")
         }
         try:
             _obj = cls.model_validate(_data)

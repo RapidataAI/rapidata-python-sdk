@@ -10,11 +10,11 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 |-----------|------|-------------|
 | `name` | str | Job identifier (not shown to labelers) |
 | `instruction` | str | Question shown to labelers: one criterion, under 80 characters (see **Task design rules** in the main guide). Over 250 characters raises `ValueError` |
-| `datapoints` | list | Data to label (URLs or local paths) |
+| `datapoints` | list | Data to label: URLs, local paths, or `UploadedAsset` references from `client.asset.upload(...)`, which are never uploaded again |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
 | `responses_per_datapoint` | `int \| AdaptiveStopping \| QuorumStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()`; classification default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` supports compare and single-select classification. See **Early Stopping** |
 | `contexts` | list[str] \| None | Text context per datapoint: one sentence under 150 characters with only what the instruction asks about (see **Task design rules** in the main guide). Max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually |
-| `media_contexts` | list[list[str]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
+| `media_contexts` | list[list[str \| UploadedAsset]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths/`UploadedAsset` references (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
 | `confidence_threshold` | float \| None | Confidence-based early stopping threshold (0-1) for classification; needs an `int` `responses_per_datapoint` (10 when omitted). **Deprecated on compare jobs** (`DeprecationWarning`) — use `AdaptiveStopping` |
 | `quorum_threshold` | int \| None | **Deprecated** — use `QuorumStopping`. Needs an `int` `responses_per_datapoint` (10 when omitted) |
 | `settings` | `Sequence[RapidataSetting] \| None` | Display/behavior settings |
@@ -35,7 +35,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `datapoints` | list[list[str]] | Pairs: `[["a1.jpg","b1.jpg"], ...]` |
+| `datapoints` | list[list[str \| UploadedAsset]] | Pairs: `[["a1.jpg","b1.jpg"], ...]` |
 | `a_b_names` | list[str] \| None | Custom labels for results, e.g. `["Model A","Model B"]` |
 
 ### Locate-specific
@@ -963,6 +963,8 @@ participant = benchmark.add_model(
     media=["mountain_v3.png", "city_v3.png"],
     prompts=["A serene mountain landscape", "A futuristic city"],
     data_type="media",
+    is_public=True,      # False: only the benchmark's org and staff see it; later models don't play it
+    is_candidate=False,  # True: plays the whole field now; later models don't play it until promote()
 )
 
 # Upload additional media to the same participant. Returns
@@ -1009,9 +1011,11 @@ benchmark.update(
     min_assets_per_prompt=4,      # int >= 2 (bool rejected); ValueError otherwise
 )
 
-participant.disable()             # Exclude from evaluation and standings (reversible)
-participant.enable()              # Re-enable a previously disabled participant
-participant.get_elo()             # Aggregated Elo across all leaderboards (None if not yet computed)
+participant.deprecate()           # No new matchups; row and votes leave the default standings (reversible)
+participant.restore()             # Undo deprecate(). disable()/enable() are deprecated aliases
+participant.promote()             # Candidate joins the field: models submitted later play it (no run starts);
+                                  #   RapidataError 400 if it isn't a candidate
+participant.get_elo()             # Aggregated Elo across all leaderboards (None if not yet computed or deprecated)
 participant.delete()              # Delete participant and its uploaded media (cannot be undone)
 
 # Update participant metadata — adding a model and pricing it are separate calls (see "Participant pricing")
@@ -1051,6 +1055,9 @@ matrix_lb = leaderboard.get_win_loss_matrix()              # Pairwise wins/losse
 matrix_bm = benchmark.get_win_loss_matrix(                 # Pairwise wins/losses across leaderboards
     tags=None, participant_ids=None, leaderboard_ids=None, use_weighted_scoring=None,
 )
+# These four leave deprecated models and their votes out by default;
+# include_deprecated=True brings them back and refits every score.
+overall_all = benchmark.get_overall_standings(include_deprecated=True)
 
 # All of the read methods above (plus the two below) accept voter-demographic filters
 # and run_id — see "Voter demographic filtering".
@@ -1463,13 +1470,13 @@ Governs compression of images **and** videos. Applies to single-asset uploads (`
 
 All config fields support environment-variable overrides with the `RAPIDATA_` prefix (e.g., `RAPIDATA_maxWorkers=10`, `RAPIDATA_failureTolerance=0.0`, `RAPIDATA_DISABLE_OTLP=1`).
 
-**Client authentication** is also resolved from environment variables: `RAPIDATA_CLIENT_ID` and `RAPIDATA_CLIENT_SECRET` are used before falling back to `~/.config/rapidata/credentials.json` and browser login. Without saved credentials, `RapidataClient()` blocks on a browser login for up to 5 minutes; the login URL is always printed to stderr (even in silent mode). `RAPIDATA_ENVIRONMENT` overrides the API endpoint (default: `rapidata.ai`). `RAPIDATA_TOKEN_FILE` points the client at a shared access-token file (equivalent to `token_file=`). Empty values are treated as unset and fall through to the next resolution layer.
+**Client authentication** is also resolved from environment variables: `RAPIDATA_CLIENT_ID` and `RAPIDATA_CLIENT_SECRET` are used before falling back to `~/.config/rapidata/credentials.json` and browser login. Without saved credentials, `RapidataClient()` blocks on a browser login for up to 5 minutes; the login URL is always printed to stderr (even in silent mode). `RAPIDATA_ENVIRONMENT` overrides the API endpoint (default: `rapidata.ai`). `RAPIDATA_TOKEN_FILE` points the client at a shared access-token file (equivalent to `token_file=`). `RapidataClient(organization_id="org_...")` pins the saved credentials to one organization: the browser login opens on it, credentials are saved per environment and organization, and a dashboard organization switch does not move them. Without it, any saved credential for the environment is reused. Empty values are treated as unset and fall through to the next resolution layer.
 
-**Checking and establishing auth from the CLI** (`--environment` defaults to `RAPIDATA_ENVIRONMENT`, else `rapidata.ai`). Both commands check `RAPIDATA_TOKEN_FILE`, then `RAPIDATA_CLIENT_ID` + `RAPIDATA_CLIENT_SECRET`, then the credentials saved for `https://auth.{environment}`:
+**Checking and establishing auth from the CLI** (`--environment` defaults to `RAPIDATA_ENVIRONMENT`, else `rapidata.ai`). Both commands check `RAPIDATA_TOKEN_FILE`, then `RAPIDATA_CLIENT_ID` + `RAPIDATA_CLIENT_SECRET`, then the credentials saved for `https://auth.{environment}` (and `--organization ORG`, when given):
 
 ```bash
-python -m rapidata status [--environment ENV]  # exit 0 "Authenticated for {env} via {source}."; exit 1 if not logged in. Never starts a login
-python -m rapidata login  [--environment ENV]  # browser login; saves credentials (exit 0), or "Login did not complete..." on stderr (exit 1).
+python -m rapidata status [--environment ENV] [--organization ORG]  # exit 0 "Authenticated for {env} via {source}."; exit 1 if not logged in. Never starts a login
+python -m rapidata login  [--environment ENV] [--organization ORG]  # browser login; saves credentials (exit 0), or "Login did not complete..." on stderr (exit 1).
                                                #   Exits 0 immediately if already authenticated; otherwise blocks up to 5 minutes
 ```
 

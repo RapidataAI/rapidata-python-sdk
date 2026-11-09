@@ -40,6 +40,9 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.get_job_revision_endpoint_output import (
         GetJobRevisionEndpointOutput,
     )
+    from rapidata.rapidata_client.datapoints.assets.uploaded_asset import (
+        UploadedAsset,
+    )
     from rapidata.rapidata_client.settings import RapidataSetting
     from rapidata.rapidata_client.referee.stopping import (
         AdaptiveStopping,
@@ -336,10 +339,22 @@ class RapidataJobDefinition:
 
     def set_datapoints(
         self,
-        datapoints: list[str] | list[list[str]],
+        datapoints: (
+            list[str]
+            | list[UploadedAsset]
+            | list[str | UploadedAsset]
+            | list[list[str]]
+            | list[list[UploadedAsset]]
+            | list[list[str | UploadedAsset]]
+        ),
         data_type: Literal["text", "media"] = "media",
         contexts: list[str] | None = None,
-        media_contexts: list[list[str]] | None = None,
+        media_contexts: (
+            list[list[str]]
+            | list[list[UploadedAsset]]
+            | list[list[str | UploadedAsset]]
+            | None
+        ) = None,
         sentences: list[str] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
         answer_options: list[str] | list[list[str]] | None = None,
@@ -347,10 +362,10 @@ class RapidataJobDefinition:
         """Upload a new dataset now and stage it for the next ``save()``.
 
         Args:
-            datapoints (list[str] | list[list[str]]): paths to the datapoints or strings for text datapoints.
+            datapoints (list[str | UploadedAsset] | list[list[str | UploadedAsset]]): paths, URLs or UploadedAsset references to the datapoints, or strings for text datapoints.
             data_type (Literal["text", "media"]): The type of the datapoints.
             contexts (list[str], optional): One text context per datapoint. Defaults to None.
-            media_contexts (list[list[str]], optional): Image URLs / paths shown alongside each datapoint, one inner list per datapoint. Defaults to None.
+            media_contexts (list[list[str | UploadedAsset]], optional): Image URLs / paths / UploadedAsset references shown alongside each datapoint, one inner list per datapoint. Defaults to None.
             sentences (list[str], optional): The sentences associated with each datapoint (used by select-words workflows). Defaults to None.
             private_metadata (list[dict[str, str]], optional): Key-value pairs attached to each datapoint that will not be shown to labelers. Defaults to None.
             answer_options (list[str] | list[list[str]], optional): Classification only, required when the

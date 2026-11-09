@@ -51,7 +51,9 @@ class SampleApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -68,7 +70,7 @@ class SampleApi:
     ) -> GetSamplesByIdentifierEndpointPagedResultOfOutput:
         """Returns the paged samples of a benchmark filtered by an identifier.
 
-        Identifiers are free-form text and must be percent-encoded into the path. Slashes have to  be sent as %2F; they are decoded back to / before the identifier is matched.
+        Identifiers are free-form text and must be percent-encoded into the path. Slashes have to  be sent as %2F; they are decoded back to / before the identifier is matched.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark to query. (required)
         :type benchmark_id: str
@@ -84,8 +86,12 @@ class SampleApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param participant_id: Filter by participant_id.
         :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -118,7 +124,9 @@ class SampleApi:
             sort=sort,
             id=id,
             participant_id=participant_id,
+            participant_status=participant_status,
             created_at=created_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -153,7 +161,9 @@ class SampleApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -170,7 +180,7 @@ class SampleApi:
     ) -> ApiResponse[GetSamplesByIdentifierEndpointPagedResultOfOutput]:
         """Returns the paged samples of a benchmark filtered by an identifier.
 
-        Identifiers are free-form text and must be percent-encoded into the path. Slashes have to  be sent as %2F; they are decoded back to / before the identifier is matched.
+        Identifiers are free-form text and must be percent-encoded into the path. Slashes have to  be sent as %2F; they are decoded back to / before the identifier is matched.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark to query. (required)
         :type benchmark_id: str
@@ -186,8 +196,12 @@ class SampleApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param participant_id: Filter by participant_id.
         :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -220,7 +234,9 @@ class SampleApi:
             sort=sort,
             id=id,
             participant_id=participant_id,
+            participant_status=participant_status,
             created_at=created_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -255,7 +271,9 @@ class SampleApi:
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
         id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by id.")] = None,
         participant_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_id.")] = None,
+        participant_status: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by participant_status.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
+        include_deprecated_participants: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by include_deprecated_participants.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
         _request_timeout: Union[
             None,
@@ -272,7 +290,7 @@ class SampleApi:
     ) -> RESTResponseType:
         """Returns the paged samples of a benchmark filtered by an identifier.
 
-        Identifiers are free-form text and must be percent-encoded into the path. Slashes have to  be sent as %2F; they are decoded back to / before the identifier is matched.
+        Identifiers are free-form text and must be percent-encoded into the path. Slashes have to  be sent as %2F; they are decoded back to / before the identifier is matched.  Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.
 
         :param benchmark_id: The id of the benchmark to query. (required)
         :type benchmark_id: str
@@ -288,8 +306,12 @@ class SampleApi:
         :type id: AudienceAudienceIdJobsGetJobIdParameter
         :param participant_id: Filter by participant_id.
         :type participant_id: AudienceAudienceIdJobsGetJobIdParameter
+        :param participant_status: Filter by participant_status.
+        :type participant_status: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
         :type created_at: AudienceAudienceIdJobsGetJobIdParameter
+        :param include_deprecated_participants: Filter by include_deprecated_participants.
+        :type include_deprecated_participants: AudienceAudienceIdJobsGetJobIdParameter
         :param logic: How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.
         :type logic: str
         :param _request_timeout: timeout setting for this request. If one
@@ -322,7 +344,9 @@ class SampleApi:
             sort=sort,
             id=id,
             participant_id=participant_id,
+            participant_status=participant_status,
             created_at=created_at,
+            include_deprecated_participants=include_deprecated_participants,
             logic=logic,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -352,7 +376,9 @@ class SampleApi:
         sort,
         id,
         participant_id,
+        participant_status,
         created_at,
+        include_deprecated_participants,
         logic,
         _request_auth,
         _content_type,
@@ -423,6 +449,21 @@ class SampleApi:
                             _query_params.append(('participant_id[' + _k + ']', _item))
                     else:
                         _query_params.append(('participant_id[' + _k + ']', _v))
+        if participant_status is not None:
+            _param_val = participant_status
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('participant_status[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('participant_status[' + _k + ']', _v))
         if created_at is not None:
             _param_val = created_at
             if hasattr(_param_val, 'to_dict'):
@@ -438,6 +479,21 @@ class SampleApi:
                             _query_params.append(('created_at[' + _k + ']', _item))
                     else:
                         _query_params.append(('created_at[' + _k + ']', _v))
+        if include_deprecated_participants is not None:
+            _param_val = include_deprecated_participants
+            if hasattr(_param_val, 'to_dict'):
+                _param_val = _param_val.to_dict()
+            if isinstance(_param_val, dict):
+                for _k, _v in _param_val.items():
+                    if _v is None:
+                        continue
+                    if isinstance(_v, list):
+                        # Explode list operator values (e.g. `in`) into repeated
+                        # params: field[in]=a&field[in]=b.
+                        for _item in _v:
+                            _query_params.append(('include_deprecated_participants[' + _k + ']', _item))
+                    else:
+                        _query_params.append(('include_deprecated_participants[' + _k + ']', _v))
         if logic is not None:
             
             _query_params.append(('logic', logic))

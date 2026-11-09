@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.10.29.0928-2164545"
+    "version": "2026.11.06.1913-feab628"
   },
   "servers": [
     {
@@ -67,7 +67,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/runs/custom": {
@@ -126,7 +138,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark": {
@@ -173,7 +197,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/participants": {
@@ -231,7 +267,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -434,6 +482,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "is_candidate",
+            "in": "query",
+            "description": "Filter by is_candidate.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -532,7 +629,89 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/prompts/bulk": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Creates up to 5000 prompts at once; their text is translated afterwards, and sample generation answers 409 until then.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark to add the prompts to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The prompts to add.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}": {
@@ -572,7 +751,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -666,57 +857,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
-      }
-    },
-    "/benchmark/{benchmarkId}/participant/{participantId}": {
-      "delete": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "Deletes a participant on a benchmark.",
-        "parameters": [
-          {
-            "name": "benchmarkId",
-            "in": "path",
-            "description": "The id of the benchmark the participant belongs to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant to delete.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
         },
-        "deprecated": true
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/fork": {
@@ -725,6 +878,7 @@
           "Benchmark"
         ],
         "summary": "Creates a copy of a public benchmark and all of its related entities.",
+        "description": "Models the caller cannot see are left out of the copy, with their votes and the runs named after them.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -763,7 +917,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/demographics": {
@@ -772,7 +938,7 @@
           "Benchmark"
         ],
         "summary": "Returns the share of a benchmark's votes falling in each demographic bucket.",
-        "description": "The same vote-level filters as the standings query apply. Every dimension closes with an\n unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks\n without granular votes return a zero-vote, empty-dimension response.",
+        "description": "The same vote-level filters as the standings query apply. Every dimension closes with an\n unknown bucket for votes with no recorded value, and its shares sum to 1. Benchmarks\n without granular votes return a zero-vote, empty-dimension response.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -1323,6 +1489,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -1371,7 +1586,7 @@
           "Benchmark"
         ],
         "summary": "Returns a page of the requested confidence zone of an A-vs-B matchup — the prompts A clearly\n wins, the coin flips, or the prompts B clearly wins.",
-        "description": "Each vote is weighted by the annotator's reliability; a prompt is placed by the Wilson score\n interval on A's win share and, within the requested zone, ordered most-confident first (coin\n flips by effective sample size). The same vote-level filters as the matrix query apply.\n Benchmarks without granular votes return an empty page.",
+        "description": "Each vote is weighted by the annotator's reliability; a prompt is placed by the Wilson score\n interval on A's win share and, within the requested zone, ordered most-confident first (coin\n flips by effective sample size). The same vote-level filters as the matrix query apply.\n Benchmarks without granular votes return an empty page.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -1966,6 +2181,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -2008,361 +2272,13 @@
         }
       }
     },
-    "/benchmark/{benchmarkId}/matrix": {
-      "get": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "Returns the pairwise vote matrix for a benchmark.",
-        "description": "The matrix is returned in pandas split format.",
-        "parameters": [
-          {
-            "name": "benchmarkId",
-            "in": "path",
-            "description": "The identifier of the benchmark.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tags",
-            "in": "query",
-            "description": "Optional tags to filter the matrix entries.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "participantIds",
-            "in": "query",
-            "description": "Optional participant identifiers to include in the matrix.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "leaderboardIds",
-            "in": "query",
-            "description": "Optional leaderboard identifiers to scope the matrix.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "useWeightedScoring",
-            "in": "query",
-            "description": "Whether to apply weighted scoring to the matrix values.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "country",
-            "in": "query",
-            "description": "Filter by country.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "language",
-            "in": "query",
-            "description": "Filter by language.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "gender",
-            "in": "query",
-            "description": "Filter by gender.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "age_bucket",
-            "in": "query",
-            "description": "Filter by age_bucket.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "occupation",
-            "in": "query",
-            "description": "Filter by occupation.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "logic",
-            "in": "query",
-            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
-            "schema": {
-              "enum": [
-                "and",
-                "or"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VoteMatrixResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/benchmark/{benchmarkId}/standings/breakdown": {
       "get": {
         "tags": [
           "Benchmark"
         ],
         "summary": "Returns the standings over the whole filtered set alongside the standings recomputed for\n each value of the chosen dimension.",
-        "description": "The same vote-level filters as the standings query apply. Segments are sorted by votes\n descending, the unknown segment last. Benchmarks without granular votes return\n empty segments.",
+        "description": "The same vote-level filters as the standings query apply. Segments are sorted by votes\n descending, the unknown segment last. Benchmarks without granular votes return\n empty segments.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -2922,6 +2838,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -2970,7 +2935,7 @@
           "Benchmark"
         ],
         "summary": "Returns the standings over the whole filtered set alongside the standings recomputed for each\n tag on the benchmark.",
-        "description": "The same vote-level filters as the standings query apply, except a tag filter — tags are what\n the response is sliced by. Every tag is returned, across every taxonomy axis, so the whole\n grid comes from one request; which axes to render is the caller's choice. Segment items carry\n the id and the numbers only: the participants' names and model metadata are identical in every\n segment and are reported once in global, to be joined on by id.",
+        "description": "The same vote-level filters as the standings query apply, except a tag filter — tags are what\n the response is sliced by. Every tag is returned, across every taxonomy axis, so the whole\n grid comes from one request; which axes to render is the caller's choice. Segment items carry\n the id and the numbers only: the participants' names and model metadata are identical in every\n segment and are reported once in global, to be joined on by id.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -3432,6 +3397,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -3474,32 +3488,21 @@
         }
       }
     },
-    "/benchmark/combined-matrix": {
+    "/benchmark/{benchmarkId}/prompts/processing": {
       "get": {
         "tags": [
           "Benchmark"
         ],
-        "summary": "Returns the combined pairwise vote matrix for multiple benchmarks.",
+        "summary": "Reports how many of the benchmark's prompts are still being processed or failed to.",
+        "description": "Find failed prompts with processing_status=Failed on GET .../prompts and retry each one.",
         "parameters": [
           {
-            "name": "benchmarkIds",
-            "in": "query",
-            "description": "The identifiers of the benchmarks to combine.",
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark whose prompts to count.",
             "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "useWeightedScoring",
-            "in": "query",
-            "description": "Whether to apply weighted scoring to the matrix values.",
-            "schema": {
-              "type": "boolean",
-              "default": false
+              "type": "string"
             }
           }
         ],
@@ -3509,7 +3512,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetCombinedBenchmarkMatrixEndpoint_Output"
+                  "$ref": "#/components/schemas/GetPromptProcessingProgressEndpoint_Output"
                 }
               }
             }
@@ -3531,67 +3534,18 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
-      }
-    },
-    "/benchmark/combined-standings": {
-      "get": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "Returns the combined standings for multiple benchmarks.",
-        "parameters": [
+        "security": [
           {
-            "name": "benchmarkIds",
-            "in": "query",
-            "description": "The identifiers of the benchmarks to combine.",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
           },
           {
-            "name": "useWeightedScoring",
-            "in": "query",
-            "description": "Whether to apply weighted scoring.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
+            "OpenIdConnect": [
+              "api"
+            ]
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCombinedBenchmarkStandingsEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
+        ]
       }
     },
     "/benchmark/{benchmarkId}/prompts": {
@@ -4041,6 +3995,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "processing_status",
+            "in": "query",
+            "description": "Filter by processing_status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -4129,7 +4132,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -4187,7 +4202,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/huggingface-sync/attempts": {
@@ -4632,7 +4659,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/prompt-embedding-map": {
@@ -4681,7 +4720,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -4721,7 +4772,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -4823,354 +4886,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
-      }
-    },
-    "/benchmark/{benchmarkId}/standings": {
-      "get": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "Queries all standings for a benchmark.",
-        "parameters": [
-          {
-            "name": "benchmarkId",
-            "in": "path",
-            "description": "The id of the benchmark whose standings should be queried.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tags",
-            "in": "query",
-            "description": "The tags to filter the standings by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "participantIds",
-            "in": "query",
-            "description": "The participant ids to filter by; leave empty for no filter.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "leaderboardIds",
-            "in": "query",
-            "description": "The leaderboard ids to filter by; leave empty for no filter.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "useWeightedScoring",
-            "in": "query",
-            "description": "Whether to apply weighted scoring based on user scores.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "country",
-            "in": "query",
-            "description": "Filter by country.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "language",
-            "in": "query",
-            "description": "Filter by language.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "gender",
-            "in": "query",
-            "description": "Filter by gender.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "age_bucket",
-            "in": "query",
-            "description": "Filter by age_bucket.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "occupation",
-            "in": "query",
-            "description": "Filter by occupation.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "logic",
-            "in": "query",
-            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
-            "schema": {
-              "enum": [
-                "and",
-                "or"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryBenchmarkStandingsEndpoint_PagedResultOfOutput"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
         },
-        "deprecated": true
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmarks": {
@@ -5556,7 +5284,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/combined-matrix/query": {
@@ -5565,7 +5305,7 @@
           "Benchmark"
         ],
         "summary": "Queries the combined win matrix of multiple benchmarks.",
-        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.",
+        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "benchmarkIds",
@@ -6082,6 +5822,55 @@
             "name": "voted_at",
             "in": "query",
             "description": "Filter by voted_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -6167,7 +5956,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/combined-standings/query": {
@@ -6176,7 +5977,7 @@
           "Benchmark"
         ],
         "summary": "Queries the combined standings of multiple benchmarks.",
-        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.",
+        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "benchmarkIds",
@@ -6739,6 +6540,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -6778,7 +6628,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/leaderboards": {
@@ -7358,7 +7220,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/matchups/query": {
@@ -7367,7 +7241,7 @@
           "Benchmark"
         ],
         "summary": "Queries a benchmark's image matchups — a page of compared image pairs with how the responses\n split between them.",
-        "description": "An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards\n comes back once per board. Filters use the prompt-ratings query's field set, applied to the\n votes a matchup is tallied from, plus four outcome fields accepted only as top-level\n and leaves: WinnerParticipantId/LooserParticipantId pick the side that\n won the whole matchup (a tie matches neither), and Responses/Extremeness\n select on the evidence the matchup carries — together a fair-coin sign test, so\n extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would\n reproduce under 5% of the time. WinnerSigma is sigma signed from the winning\n side; sort by -winner_sigma to separate records the pooled data confirms from upsets.\n Matchups of leaderboards excluded from the benchmark overall are never returned.\n Each item's leaderboard carries the instruction annotators were asked plus an optional\n displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it\n when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to\n the winning side.",
+        "description": "An item is one image pair as one leaderboard saw it — a pair compared on several leaderboards\n comes back once per board. Filters use the prompt-ratings query's field set, applied to the\n votes a matchup is tallied from, plus four outcome fields accepted only as top-level\n and leaves: WinnerParticipantId/LooserParticipantId pick the side that\n won the whole matchup (a tie matches neither), and Responses/Extremeness\n select on the evidence the matchup carries — together a fair-coin sign test, so\n extremeness[gte]=1.96 with responses[gte]=5 keeps splits a coin flip would\n reproduce under 5% of the time. WinnerSigma is sigma signed from the winning\n side; sort by -winner_sigma to separate records the pooled data confirms from upsets.\n Matchups of leaderboards excluded from the benchmark overall are never returned.\n ParticipantStatus, also top-level and only, keeps matchups whose two participants both match it, so\n participant_status[neq]=Disabled hides deprecated models without changing any other matchup's sigma.\n Each item's leaderboard carries the instruction annotators were asked plus an optional\n displayInstruction — presentation-only, rendered instead of instruction when set and falling back to it\n when null. An inversed board asks for the worse image, so its override is the phrasing that reads correctly next to\n the winning side.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -8222,6 +8096,104 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "participant_status",
+            "in": "query",
+            "description": "Filter by participant_status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -8270,7 +8242,7 @@
           "Benchmark"
         ],
         "summary": "Queries the win matrix of a benchmark.",
-        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.\n Alongside the matchup outcomes in data, each response also carries votes: the\n un-binarized human vote counts on the same axes, display-only and not reflected in scoring.",
+        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.\n Alongside the matchup outcomes in data, each response also carries votes: the\n un-binarized human vote counts on the same axes, display-only and not reflected in scoring.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -8830,6 +8802,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -8878,7 +8899,7 @@
           "Benchmark"
         ],
         "summary": "Queries a benchmark's prompt ratings — a page of prompts, each with its ranked entries and the\n pairwise win matrix over them.",
-        "description": "Filters apply to the underlying votes with the standings query's field set. A rating is an\n entry's standing against the other entries on its prompt, so a participant filter narrows the\n entries but does not refit, and a prompt with no matching votes yields no entries.\n groupBy decides what competes: per participant, a participant's images become one entry\n rated from their pooled wins, and comparisons between its own images are excluded from the\n rating, both matrices, and responseCount. Grouping never changes which prompts the page\n holds.",
+        "description": "Filters apply to the underlying votes with the standings query's field set. A rating is an\n entry's standing against the other entries on its prompt, so a participant filter narrows the\n entries but does not refit, and a prompt with no matching votes yields no entries.\n groupBy decides what competes: per participant, a participant's images become one entry\n rated from their pooled wins, and comparisons between its own images are excluded from the\n rating, both matrices, and responseCount. Grouping never changes which prompts the page\n holds.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -9484,6 +9505,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -9918,7 +9988,7 @@
           "Benchmark"
         ],
         "summary": "Queries the standings of a benchmark.",
-        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.",
+        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -10478,6 +10548,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -10625,7 +10744,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/sample-generation/preview": {
@@ -10685,77 +10816,32 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
-    "/benchmark/{benchmarkId}/participants/{participantId}/submit": {
+    "/benchmark/{benchmarkId}/runs/top-up": {
       "post": {
         "tags": [
           "Benchmark"
         ],
-        "summary": "Submits a participant to a benchmark.",
+        "summary": "Queues one same-seeded run per leaderboard pairing the participants with all others.",
         "parameters": [
           {
             "name": "benchmarkId",
             "in": "path",
-            "description": "The id of the benchmark the participant belongs to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant to submit.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubmitParticipantByBenchmarkEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/benchmark/{benchmarkId}/name": {
-      "put": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "Updates the name of a benchmark.",
-        "parameters": [
-          {
-            "name": "benchmarkId",
-            "in": "path",
-            "description": "The id of the benchmark to update.",
+            "description": "The benchmark whose participants are topped up.",
             "required": true,
             "schema": {
               "type": "string"
@@ -10763,19 +10849,26 @@
           }
         ],
         "requestBody": {
-          "description": "The payload describing the new name.",
+          "description": "The participants and the responses each receives.",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateBenchmarkNameEndpoint_Input"
+                "$ref": "#/components/schemas/TopUpParticipantsEndpoint_Input"
               }
             }
           },
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "No Content"
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopUpParticipantsEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -10794,7 +10887,18 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/faucet/replicate/models/{modelOwner}/{modelName}": {
@@ -10852,7 +10956,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/faucet/replicate/models": {
@@ -10909,58 +11025,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
-      }
-    },
-    "/leaderboard/{leaderboardId}/boost": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Boosts a subset of participants within a leaderboard.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard to boost.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The payload describing the boost to apply.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BoostLeaderboardEndpoint_Input"
-              }
-            }
-          },
-          "required": true
         },
-        "responses": {
-          "204": {
-            "description": "No Content"
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
           },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
           }
-        }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/runs/custom": {
@@ -11019,7 +11096,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard": {
@@ -11067,171 +11156,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
-      }
-    },
-    "/leaderboard/{leaderboardId}/participants": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Creates a participant in a leaderboard.",
-        "parameters": [
+        },
+        "security": [
           {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard the participant will be added to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The payload describing the participant to create.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLeaderboardParticipantEndpoint_Input"
-              }
-            }
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
           },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateLeaderboardParticipantEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
-      },
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Queries all participants connected to a leaderboard.",
-        "parameters": [
           {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard whose participants should be queried.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "OpenIdConnect": [
+              "api"
+            ]
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryParticipantsObsoleteEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/leaderboard/{leaderboardId}/prompts": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Adds a new prompt to a leaderboard.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard to add the prompt to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The prompt text.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreatePromptForLeaderboardEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
+        ]
       }
     },
     "/leaderboard/{leaderboardId}": {
@@ -11271,7 +11208,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -11367,453 +11316,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
-      }
-    },
-    "/leaderboard/combined-matrix": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Returns the combined pairwise vote matrix for multiple leaderboards.",
-        "parameters": [
-          {
-            "name": "leaderboardIds",
-            "in": "query",
-            "description": "The identifiers of the leaderboards to combine.",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "useWeightedScoring",
-            "in": "query",
-            "description": "Whether to apply weighted scoring to the matrix values.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCombinedLeaderboardMatrixEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
         },
-        "deprecated": true
-      }
-    },
-    "/leaderboard/combined-standings": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Returns the combined standings for multiple leaderboards.",
-        "parameters": [
+        "security": [
           {
-            "name": "leaderboardIds",
-            "in": "query",
-            "description": "The identifiers of the leaderboards to combine.",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
           },
           {
-            "name": "useWeightedScoring",
-            "in": "query",
-            "description": "Whether to apply weighted scoring.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
+            "OpenIdConnect": [
+              "api"
+            ]
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCombinedLeaderboardStandingsEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/leaderboard/{leaderboardId}/matrix": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Returns the pairwise vote matrix for a leaderboard.",
-        "description": "The matrix is returned in pandas split format.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The identifier of the leaderboard.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tags",
-            "in": "query",
-            "description": "Optional tags to filter the matrix entries.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "useWeightedScoring",
-            "in": "query",
-            "description": "Whether to apply weighted scoring to the matrix values.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "country",
-            "in": "query",
-            "description": "Filter by country.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "language",
-            "in": "query",
-            "description": "Filter by language.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "gender",
-            "in": "query",
-            "description": "Filter by gender.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "age_bucket",
-            "in": "query",
-            "description": "Filter by age_bucket.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "occupation",
-            "in": "query",
-            "description": "Filter by occupation.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "logic",
-            "in": "query",
-            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
-            "schema": {
-              "enum": [
-                "and",
-                "or"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VoteMatrixResult"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
+        ]
       }
     },
     "/leaderboard/combined-matrix/query": {
@@ -11822,7 +11337,7 @@
           "Leaderboard"
         ],
         "summary": "Queries the combined win matrix of multiple leaderboards.",
-        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.",
+        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "leaderboardIds",
@@ -12290,6 +11805,55 @@
             "name": "voted_at",
             "in": "query",
             "description": "Filter by voted_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -12375,7 +11939,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/combined-standings/query": {
@@ -12384,7 +11960,7 @@
           "Leaderboard"
         ],
         "summary": "Queries the combined standings of multiple leaderboards.",
-        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.",
+        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "leaderboardIds",
@@ -12898,6 +12474,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -12937,7 +12562,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/runs": {
@@ -13279,7 +12916,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboards": {
@@ -13564,7 +13213,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/leaderboard/{leaderboardId}/matrix/query": {
@@ -13573,7 +13234,7 @@
           "Leaderboard"
         ],
         "summary": "Queries the win matrix of a leaderboard.",
-        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.",
+        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -14038,6 +13699,55 @@
             "name": "voted_at",
             "in": "query",
             "description": "Filter by voted_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -14132,7 +13842,7 @@
           "Leaderboard"
         ],
         "summary": "Queries the standings of a leaderboard.",
-        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.",
+        "description": "Filters apply to the underlying votes. Benchmarks without granular vote storage evaluate\n only the filters their aggregated data can answer (tags, participants, leaderboards, runs,\n prompt identifiers); demographic and vote-time filters require granular vote storage.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -14643,6 +14353,55 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "logic",
             "in": "query",
             "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
@@ -14683,544 +14442,6 @@
             "description": "Forbidden"
           }
         }
-      }
-    },
-    "/leaderboard/{leaderboardId}/standings": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Queries all standings for a leaderboard by its id.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard whose standings should be queried.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "tags",
-            "in": "query",
-            "description": "The tags the standings should be filtered by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "useWeightedScoring",
-            "in": "query",
-            "description": "Whether to use weighted scoring based on user scores.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "country",
-            "in": "query",
-            "description": "Filter by country.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "language",
-            "in": "query",
-            "description": "Filter by language.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "gender",
-            "in": "query",
-            "description": "Filter by gender.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "age_bucket",
-            "in": "query",
-            "description": "Filter by age_bucket.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "occupation",
-            "in": "query",
-            "description": "Filter by occupation.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
-            "name": "logic",
-            "in": "query",
-            "description": "How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.",
-            "schema": {
-              "enum": [
-                "and",
-                "or"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryStandingsEndpoint_PagedResultOfOutput"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/leaderboard/{leaderboardId}/rebalance": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Rebalances a leaderboard by adding responses for the given participants.",
-        "description": "Unlike the plain boost, which only generates matchups among the boosted participants,\n this matches each given participant evenly against every other participant of the\n benchmark — the same distribution a participant receives when it is first submitted.\n Use it to bring under-sampled participants up to the rest of the leaderboard.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard to rebalance.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The payload describing the rebalance to apply.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RebalanceLeaderboardEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/leaderboard/{leaderboardId}/participants/{participantId}/submit": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Submits a participant to a leaderboard.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard the participant belongs to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant to submit.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubmitLeaderboardParticipantEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/leaderboard/{leaderboardId}/name": {
-      "put": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Updates the name of a leaderboard.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard to update.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The payload describing the new name.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateLeaderboardNameEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/leaderboard/{leaderboardId}/response-config": {
-      "put": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "Updates the response configuration of a leaderboard.",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "The id of the leaderboard to update.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The payload describing the new response configuration.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateLeaderboardResponseConfigEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
       }
     },
     "/participant/{participantId}/sample": {
@@ -15278,66 +14499,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
-      }
-    },
-    "/participant/{participantId}/sample-new": {
-      "post": {
-        "tags": [
-          "Participant"
-        ],
-        "summary": "Adds a sample to a participant.",
-        "parameters": [
+        },
+        "security": [
           {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant to add the sample to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
           }
-        ],
-        "requestBody": {
-          "description": "The payload describing the sample to create.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateSampleNewEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateSampleNewEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
+        ]
       }
     },
     "/participant/{participantId}": {
@@ -15377,7 +14551,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -15472,7 +14658,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant-sample/{sampleId}": {
@@ -15512,7 +14710,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant/{participantId}/disable": {
@@ -15520,25 +14730,15 @@
         "tags": [
           "Participant"
         ],
-        "summary": "Disables a participant in a benchmark.",
-        "description": "The participant is no longer matched up and collects no further results, but stays listed in\n the standings. By default its already-collected votes keep counting toward every model's\n score; pass keepVotes=false to drop them from the scores and the matchups instead.\n The choice can be changed later through the participant update endpoint. Fails with 400 if\n the participant is not currently submitted.",
+        "summary": "Deprecates a participant: reads leave it and its votes out unless they filter on include_deprecated_participants[eq]=true. Fails with 400 unless it is submitted.",
         "parameters": [
           {
             "name": "participantId",
             "in": "path",
-            "description": "The id of the participant to disable.",
+            "description": "The id of the participant to deprecate.",
             "required": true,
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "keepVotes",
-            "in": "query",
-            "description": "Whether the votes the participant already collected keep counting toward the scores while\n it is disabled. Defaults to true.",
-            "schema": {
-              "type": "boolean",
-              "default": true
             }
           }
         ],
@@ -15562,7 +14762,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant/{participantId}/enable": {
@@ -15570,13 +14782,13 @@
         "tags": [
           "Participant"
         ],
-        "summary": "Enables a previously disabled participant in a benchmark.",
-        "description": "Fails with 400 if the participant is not currently disabled. Votes that were excluded from\n the scores while it was disabled count again.",
+        "summary": "Restores a deprecated participant in a benchmark.",
+        "description": "Fails with 400 if the participant is not currently deprecated.",
         "parameters": [
           {
             "name": "participantId",
             "in": "path",
-            "description": "The id of the participant to enable.",
+            "description": "The id of the participant to restore.",
             "required": true,
             "schema": {
               "type": "string"
@@ -15603,7 +14815,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant-sample/{sampleId}/exclude-votes": {
@@ -15644,7 +14868,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant/{participantId}/faucet": {
@@ -15685,37 +14921,39 @@
           "403": {
             "description": "Forbidden"
           }
-        }
-      },
-      "put": {
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/participant/{participantId}/promote": {
+      "post": {
         "tags": [
-          "Participant",
-          "Faucet"
+          "Participant"
         ],
-        "summary": "Sets the faucet used to auto-generate samples for a participant.",
-        "description": "Returns 403 unless the caller's organization has been granted the Faucets\n capability.",
+        "summary": "Promotes a candidate, so participants submitted from then on are paired against it.",
+        "description": "Fails with 400 unless the participant is a candidate. Starts no matchups.",
         "parameters": [
           {
             "name": "participantId",
             "in": "path",
-            "description": "The id of the participant whose faucet to set.",
+            "description": "The id of the candidate to promote.",
             "required": true,
             "schema": {
               "type": "string"
             }
           }
         ],
-        "requestBody": {
-          "description": "The faucet configuration payload.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IFaucetInput"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "204": {
             "description": "No Content"
@@ -15737,7 +14975,18 @@
             "description": "Forbidden"
           }
         },
-        "deprecated": true
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/participant-sample/{sampleId}/restore-votes": {
@@ -15778,54 +15027,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
-      }
-    },
-    "/participants/{participantId}/submit": {
-      "post": {
-        "tags": [
-          "Participant"
-        ],
-        "summary": "Submits a participant to a benchmark.",
-        "parameters": [
+        },
+        "security": [
           {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant to submit.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubmitParticipantEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
+        ]
       }
     },
     "/participants/submit": {
@@ -15834,7 +15048,7 @@
           "Participant"
         ],
         "summary": "Submits several participants of one benchmark together, so they are evaluated as one batch.",
-        "description": "A batch is compared symmetrically — every participant against every other and against the\n benchmark's already-submitted field — where the same participants submitted one by one would\n be compared in submission order. All participants must belong to the same benchmark, be\n ready for evaluation, and appear at most once; at most 100 per request.",
+        "description": "A batch is compared symmetrically — every participant against every other and against the\n benchmark's public submitted non-candidates, but never two non-public or candidate ones together.\n All participants must belong to the same benchmark, be ready for evaluation, and appear at\n most once; at most 100 per request.",
         "requestBody": {
           "description": "The participants to submit.",
           "content": {
@@ -15873,59 +15087,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
-      }
-    },
-    "/participant/{participantId}/name": {
-      "put": {
-        "tags": [
-          "Participant"
-        ],
-        "summary": "Updates the name of a participant.",
-        "parameters": [
+        },
+        "security": [
           {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant whose name should be updated.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
           }
-        ],
-        "requestBody": {
-          "description": "The payload containing the new participant name.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateParticipantNameEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "deprecated": true
+        ]
       }
     },
     "/benchmark-prompt/{promptId}": {
@@ -15966,7 +15140,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark-prompt/{promptId}/segments": {
@@ -16018,7 +15204,72 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark-prompt/{promptId}/processing/retry": {
+      "post": {
+        "tags": [
+          "Prompt"
+        ],
+        "summary": "Queues processing again for a prompt that failed or is stuck pending.",
+        "description": "Responds with 400 when the prompt is already processed.",
+        "parameters": [
+          {
+            "name": "promptId",
+            "in": "path",
+            "description": "The id of the prompt to process.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark-prompt/{promptId}/tags": {
@@ -16070,7 +15321,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark-sample/{sampleId}": {
@@ -16184,7 +15447,7 @@
           "Sample"
         ],
         "summary": "Returns the paged samples of a benchmark filtered by an identifier.",
-        "description": "Identifiers are free-form text and must be percent-encoded into the path. Slashes have to\n be sent as %2F; they are decoded back to / before the identifier is matched.",
+        "description": "Identifiers are free-form text and must be percent-encoded into the path. Slashes have to\n be sent as %2F; they are decoded back to / before the identifier is matched.\n Deprecated participants and their votes count only with include_deprecated_participants[eq]=true.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -16339,9 +15602,107 @@
             "x-parameter-group": "filters"
           },
           {
+            "name": "participant_status",
+            "in": "query",
+            "description": "Filter by participant_status.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
             "name": "created_at",
             "in": "query",
             "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "not_contains": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "include_deprecated_participants",
+            "in": "query",
+            "description": "Filter by include_deprecated_participants.",
             "style": "deepObject",
             "explode": true,
             "schema": {
@@ -16737,7 +16098,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/sample-generation/{sampleGenerationId}/items": {
@@ -17077,7 +16450,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/{benchmarkId}/sample-generations": {
@@ -17220,7 +16605,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     },
     "/benchmark/sample-generation/{sampleGenerationId}/retry": {
@@ -17284,7 +16681,19 @@
           "403": {
             "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
       }
     }
   },
@@ -17355,37 +16764,6 @@
           "Forking",
           "Failed"
         ]
-      },
-      "BoostLeaderboardEndpoint_Input": {
-        "required": [
-          "participants",
-          "totalResponses"
-        ],
-        "type": "object",
-        "properties": {
-          "participants": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "description": "The participants of the given leaderboard that should be boosted."
-          },
-          "totalResponses": {
-            "type": "integer",
-            "description": "The total responses to add, shared across all participants.",
-            "format": "int32"
-          },
-          "seed": {
-            "type": "integer",
-            "description": "Optional seed for deterministic matchup selection. Reuse it across a benchmark's leaderboards to align them on the same\n image pairs; omit for random selection.",
-            "format": "int64",
-            "nullable": true
-          }
-        }
       },
       "ConfidenceInterval": {
         "required": [
@@ -17618,6 +16996,14 @@
               }
             ],
             "description": "An optional logo image for the model. Must be an existing image asset."
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether everyone who can open the benchmark sees the participant. Defaults to true."
+          },
+          "isCandidate": {
+            "type": "boolean",
+            "description": "Whether the participant is a candidate: its own run plays the whole field, but runs of other\n participants never pick it until it is promoted. Defaults to false."
           }
         }
       },
@@ -17881,35 +17267,6 @@
           }
         }
       },
-      "CreateLeaderboardParticipantEndpoint_Input": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name of the participant."
-          }
-        }
-      },
-      "CreateLeaderboardParticipantEndpoint_Output": {
-        "required": [
-          "participantId",
-          "datasetId"
-        ],
-        "type": "object",
-        "properties": {
-          "participantId": {
-            "type": "string",
-            "description": "The id of the created participant."
-          },
-          "datasetId": {
-            "type": "string",
-            "description": "The id of the participant's dataset."
-          }
-        }
-      },
       "CreatePromptEmbeddingMapEndpoint_Output": {
         "required": [
           "id"
@@ -17993,15 +17350,90 @@
           }
         }
       },
-      "CreatePromptForLeaderboardEndpoint_Output": {
+      "CreatePromptsForBenchmarkEndpoint_Input": {
         "required": [
-          "id"
+          "prompts"
+        ],
+        "type": "object",
+        "properties": {
+          "prompts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Prompt"
+                }
+              }
+            ],
+            "description": "The prompts to create, at most 5000."
+          }
+        }
+      },
+      "CreatePromptsForBenchmarkEndpoint_Output": {
+        "required": [
+          "prompts"
+        ],
+        "type": "object",
+        "properties": {
+          "prompts": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreatePromptsForBenchmarkEndpoint_Output_CreatedPrompt"
+                }
+              }
+            ],
+            "description": "The created prompts, in request order."
+          }
+        }
+      },
+      "CreatePromptsForBenchmarkEndpoint_Output_CreatedPrompt": {
+        "required": [
+          "id",
+          "identifier"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "description": "The id of the created prompt."
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "CreatePromptsForBenchmarkEndpoint_Prompt": {
+        "required": [
+          "identifier",
+          "segments"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromptSegmentInput"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "nullable": true
+          },
+          "origin": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Origin"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -18146,39 +17578,6 @@
               }
             ],
             "description": "Participants nothing was queued for because they already hold the requested count.\n Distinct from SkippedParticipantIds, which is about participants that\n cannot generate at all. Always empty in additive mode."
-          }
-        }
-      },
-      "CreateSampleNewEndpoint_Input": {
-        "required": [
-          "identifier",
-          "asset"
-        ],
-        "type": "object",
-        "properties": {
-          "identifier": {
-            "type": "string",
-            "description": "The identifier used to correlate samples of different participants."
-          },
-          "asset": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IAssetInput"
-              }
-            ],
-            "description": "The asset input for the sample."
-          }
-        }
-      },
-      "CreateSampleNewEndpoint_Output": {
-        "required": [
-          "id"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The id of the created sample."
           }
         }
       },
@@ -18812,7 +18211,10 @@
           "score",
           "wins",
           "totalMatches",
-          "isDisabled"
+          "isDeprecated",
+          "isDisabled",
+          "isPublic",
+          "isCandidate"
         ],
         "type": "object",
         "properties": {
@@ -18877,7 +18279,17 @@
             "type": "number",
             "format": "double"
           },
+          "isDeprecated": {
+            "type": "boolean"
+          },
           "isDisabled": {
+            "type": "boolean",
+            "deprecated": true
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "isCandidate": {
             "type": "boolean"
           },
           "confidenceInterval": {
@@ -18962,7 +18374,10 @@
           "totalMatches",
           "responseCount",
           "isEvaluating",
-          "isDisabled"
+          "isDeprecated",
+          "isDisabled",
+          "isPublic",
+          "isCandidate"
         ],
         "type": "object",
         "properties": {
@@ -19034,7 +18449,17 @@
           "isEvaluating": {
             "type": "boolean"
           },
+          "isDeprecated": {
+            "type": "boolean"
+          },
           "isDisabled": {
+            "type": "boolean",
+            "deprecated": true
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "isCandidate": {
             "type": "boolean"
           },
           "confidenceInterval": {
@@ -19087,7 +18512,10 @@
           "wins",
           "totalMatches",
           "responseCount",
-          "isDisabled"
+          "isDeprecated",
+          "isDisabled",
+          "isPublic",
+          "isCandidate"
         ],
         "type": "object",
         "properties": {
@@ -19111,278 +18539,17 @@
             "type": "integer",
             "format": "int64"
           },
-          "isDisabled": {
+          "isDeprecated": {
             "type": "boolean"
           },
-          "confidenceInterval": {
-            "type": "object",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ConfidenceInterval"
-              }
-            ],
-            "nullable": true
-          }
-        }
-      },
-      "GetCombinedBenchmarkMatrixEndpoint_Output": {
-        "required": [
-          "index",
-          "columns",
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "index": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "description": "Row participant names."
-          },
-          "columns": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "description": "Column participant names."
-          },
-          "data": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "array",
-                  "items": {
-                    "type": "number",
-                    "format": "double"
-                  }
-                }
-              }
-            ],
-            "description": "NxN matrix where Data[i][j] = wins of Index[i] over Columns[j]."
-          }
-        },
-        "description": "Combined benchmark matrix output in pandas split format."
-      },
-      "GetCombinedBenchmarkStandingsEndpoint_Output": {
-        "required": [
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/GetCombinedBenchmarkStandingsEndpoint_OutputItem"
-                }
-              }
-            ],
-            "description": "The standings items."
-          }
-        },
-        "description": "Combined benchmark standings output."
-      },
-      "GetCombinedBenchmarkStandingsEndpoint_OutputItem": {
-        "required": [
-          "id",
-          "name",
-          "status",
-          "score",
-          "wins",
-          "totalMatches",
-          "isDisabled"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "family": {
-            "type": "string",
-            "nullable": true
-          },
-          "lab": {
-            "type": "string",
-            "nullable": true
-          },
-          "proprietaryName": {
-            "type": "string",
-            "nullable": true
-          },
-          "licenseType": {
-            "type": "string",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ModelLicenseType"
-              }
-            ],
-            "nullable": true
-          },
-          "cost": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "costUnit": {
-            "type": "string",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CostUnit"
-              }
-            ],
-            "nullable": true
-          },
-          "logo": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "$ref": "#/components/schemas/StandingStatus"
-          },
-          "score": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "wins": {
-            "type": "number",
-            "format": "double"
-          },
-          "totalMatches": {
-            "type": "number",
-            "format": "double"
-          },
           "isDisabled": {
+            "type": "boolean",
+            "deprecated": true
+          },
+          "isPublic": {
             "type": "boolean"
           },
-          "confidenceInterval": {
-            "type": "object",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ConfidenceInterval"
-              }
-            ],
-            "nullable": true
-          }
-        }
-      },
-      "GetCombinedLeaderboardMatrixEndpoint_Output": {
-        "required": [
-          "index",
-          "columns",
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "index": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "description": "Row participant names."
-          },
-          "columns": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "description": "Column participant names."
-          },
-          "data": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "array",
-                  "items": {
-                    "type": "number",
-                    "format": "double"
-                  }
-                }
-              }
-            ],
-            "description": "NxN matrix where Data[i][j] = wins of Index[i] over Columns[j]."
-          }
-        },
-        "description": "Combined leaderboard matrix output in pandas split format."
-      },
-      "GetCombinedLeaderboardStandingsEndpoint_Output": {
-        "required": [
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/GetCombinedLeaderboardStandingsEndpoint_OutputItem"
-                }
-              }
-            ],
-            "description": "The standings items."
-          }
-        },
-        "description": "Combined leaderboard standings output."
-      },
-      "GetCombinedLeaderboardStandingsEndpoint_OutputItem": {
-        "required": [
-          "id",
-          "name",
-          "status",
-          "score",
-          "wins",
-          "totalMatches",
-          "isDisabled"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "status": {
-            "$ref": "#/components/schemas/StandingStatus"
-          },
-          "score": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "wins": {
-            "type": "number",
-            "format": "double"
-          },
-          "totalMatches": {
-            "type": "number",
-            "format": "double"
-          },
-          "isDisabled": {
+          "isCandidate": {
             "type": "boolean"
           },
           "confidenceInterval": {
@@ -19561,7 +18728,10 @@
           "name",
           "benchmarkId",
           "status",
-          "votesExcluded"
+          "isDeprecated",
+          "votesExcluded",
+          "isPublic",
+          "isCandidate"
         ],
         "type": "object",
         "properties": {
@@ -19585,9 +18755,22 @@
             ],
             "description": "The status of the participant."
           },
+          "isDeprecated": {
+            "type": "boolean",
+            "description": "Whether the participant is deprecated."
+          },
           "votesExcluded": {
             "type": "boolean",
-            "description": "Whether the participant's already-collected votes are dropped from the scores. Only meaningful while it is disabled."
+            "description": "Same as isDeprecated.",
+            "deprecated": true
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether everyone who can open the benchmark sees the participant."
+          },
+          "isCandidate": {
+            "type": "boolean",
+            "description": "Whether runs of other participants skip it until it is promoted."
           },
           "family": {
             "type": "string",
@@ -19769,13 +18952,33 @@
           }
         }
       },
+      "GetPromptProcessingProgressEndpoint_Output": {
+        "required": [
+          "pendingCount",
+          "failedCount"
+        ],
+        "type": "object",
+        "properties": {
+          "pendingCount": {
+            "type": "integer",
+            "description": "Prompts still being processed, e.g. translated to English.",
+            "format": "int32"
+          },
+          "failedCount": {
+            "type": "integer",
+            "description": "Prompts whose processing failed and needs a retry.",
+            "format": "int32"
+          }
+        }
+      },
       "GetPromptsByBenchmarkEndpoint_Output": {
         "required": [
           "id",
           "segments",
           "identifier",
           "createdAt",
-          "tags"
+          "tags",
+          "processingStatus"
         ],
         "type": "object",
         "properties": {
@@ -19846,6 +19049,14 @@
               }
             ],
             "description": "Where the prompt came from, if known."
+          },
+          "processingStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PromptProcessingStatus"
+              }
+            ],
+            "description": "Whether the prompt's English text is filled in; only Ready prompts reach generation and runs."
           }
         }
       },
@@ -21876,6 +21087,13 @@
           "Failed"
         ]
       },
+      "PromptProcessingStatus": {
+        "enum": [
+          "Ready",
+          "Pending",
+          "Failed"
+        ]
+      },
       "PromptSegment": {
         "required": [
           "key",
@@ -22065,148 +21283,6 @@
           }
         }
       },
-      "QueryBenchmarkStandingsEndpoint_Output": {
-        "required": [
-          "id",
-          "name",
-          "benchmarkId",
-          "status",
-          "score",
-          "wins",
-          "totalMatches",
-          "isDisabled"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier of the participant."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the participant."
-          },
-          "family": {
-            "type": "string",
-            "description": "The family the underlying model belongs to (e.g. \"Flux\", \"GPT\"), or null if unset.",
-            "nullable": true
-          },
-          "lab": {
-            "type": "string",
-            "description": "The lab that makes the model (e.g. \"OpenAI\", \"Black Forest Labs\"), or null if unset.",
-            "nullable": true
-          },
-          "proprietaryName": {
-            "type": "string",
-            "description": "The vendor-facing display name of the model, or null if unset.",
-            "nullable": true
-          },
-          "licenseType": {
-            "type": "string",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ModelLicenseType"
-              }
-            ],
-            "description": "The license classification of the underlying model, or null if not classified yet.",
-            "nullable": true
-          },
-          "cost": {
-            "type": "number",
-            "description": "The price of one costUnit of the model in USD, or null if the price is unknown.",
-            "format": "double",
-            "nullable": true
-          },
-          "costUnit": {
-            "type": "string",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CostUnit"
-              }
-            ],
-            "description": "The unit cost is quoted in, or null if the price is unknown.",
-            "nullable": true
-          },
-          "logo": {
-            "type": "string",
-            "description": "The logo of the model, or null if unset.",
-            "nullable": true
-          },
-          "benchmarkId": {
-            "type": "string",
-            "description": "The id of the benchmark this standing belongs to."
-          },
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StandingStatus"
-              }
-            ],
-            "description": "The status of the standing."
-          },
-          "score": {
-            "type": "number",
-            "description": "The calculated score, or null if not yet computed.",
-            "format": "double",
-            "nullable": true
-          },
-          "wins": {
-            "type": "number",
-            "description": "The number of wins.",
-            "format": "double"
-          },
-          "totalMatches": {
-            "type": "number",
-            "description": "The total number of matches.",
-            "format": "double"
-          },
-          "isDisabled": {
-            "type": "boolean",
-            "description": "Whether the participant is disabled."
-          },
-          "confidenceInterval": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ConfidenceInterval"
-              }
-            ],
-            "description": "The confidence interval bounds, if requested."
-          }
-        }
-      },
-      "QueryBenchmarkStandingsEndpoint_PagedResultOfOutput": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QueryBenchmarkStandingsEndpoint_Output"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "QueryCombinedMatrixByBenchmarksEndpoint_Output": {
         "required": [
           "index",
@@ -22336,7 +21412,10 @@
           "wins",
           "totalMatches",
           "responseCount",
-          "isDisabled"
+          "isDeprecated",
+          "isDisabled",
+          "isPublic",
+          "isCandidate"
         ],
         "type": "object",
         "properties": {
@@ -22405,7 +21484,17 @@
             "type": "integer",
             "format": "int64"
           },
+          "isDeprecated": {
+            "type": "boolean"
+          },
           "isDisabled": {
+            "type": "boolean",
+            "deprecated": true
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "isCandidate": {
             "type": "boolean"
           },
           "confidenceInterval": {
@@ -22454,7 +21543,10 @@
           "wins",
           "totalMatches",
           "responseCount",
-          "isDisabled"
+          "isDeprecated",
+          "isDisabled",
+          "isPublic",
+          "isCandidate"
         ],
         "type": "object",
         "properties": {
@@ -22523,7 +21615,17 @@
             "type": "integer",
             "format": "int64"
           },
+          "isDeprecated": {
+            "type": "boolean"
+          },
           "isDisabled": {
+            "type": "boolean",
+            "deprecated": true
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "isCandidate": {
             "type": "boolean"
           },
           "confidenceInterval": {
@@ -23397,8 +22499,12 @@
           "name",
           "benchmarkId",
           "status",
+          "isDeprecated",
           "votesExcluded",
+          "isPublic",
+          "isCandidate",
           "coveredPromptCount",
+          "isEvaluating",
           "createdAt"
         ],
         "type": "object",
@@ -23469,14 +22575,31 @@
             ],
             "description": "The status of the participant."
           },
+          "isDeprecated": {
+            "type": "boolean",
+            "description": "Whether the participant is deprecated."
+          },
           "votesExcluded": {
             "type": "boolean",
-            "description": "Whether the participant's already-collected votes are dropped from the scores. Only meaningful while it is disabled."
+            "description": "Same as isDeprecated.",
+            "deprecated": true
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether everyone who can open the benchmark sees the participant."
+          },
+          "isCandidate": {
+            "type": "boolean",
+            "description": "Whether runs of other participants skip it until it is promoted."
           },
           "coveredPromptCount": {
             "type": "integer",
             "description": "How many of the benchmark's prompts the participant has at least one sample for.",
             "format": "int32"
+          },
+          "isEvaluating": {
+            "type": "boolean",
+            "description": "True while the participant belongs to a run that is queued, running or paused."
           },
           "createdAt": {
             "type": "string",
@@ -23515,77 +22638,6 @@
           "totalPages": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "QueryParticipantsObsoleteEndpoint_Output": {
-        "required": [
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/QueryParticipantsObsoleteEndpoint_OutputItem"
-                }
-              }
-            ],
-            "description": "The standings items for the leaderboard."
-          }
-        }
-      },
-      "QueryParticipantsObsoleteEndpoint_OutputItem": {
-        "required": [
-          "id",
-          "name",
-          "leaderboardId",
-          "status",
-          "score",
-          "wins",
-          "totalMatches",
-          "isDisabled"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "leaderboardId": {
-            "type": "string"
-          },
-          "status": {
-            "$ref": "#/components/schemas/StandingStatus"
-          },
-          "score": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "wins": {
-            "type": "number",
-            "format": "double"
-          },
-          "totalMatches": {
-            "type": "number",
-            "format": "double"
-          },
-          "isDisabled": {
-            "type": "boolean"
-          },
-          "confidenceInterval": {
-            "type": "object",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ConfidenceInterval"
-              }
-            ],
-            "nullable": true
           }
         }
       },
@@ -24083,7 +23135,10 @@
           "totalMatches",
           "responseCount",
           "isEvaluating",
+          "isDeprecated",
           "isDisabled",
+          "isPublic",
+          "isCandidate",
           "isPartiallyEvaluated"
         ],
         "type": "object",
@@ -24156,7 +23211,17 @@
           "isEvaluating": {
             "type": "boolean"
           },
+          "isDeprecated": {
+            "type": "boolean"
+          },
           "isDisabled": {
+            "type": "boolean",
+            "deprecated": true
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "isCandidate": {
             "type": "boolean"
           },
           "confidenceInterval": {
@@ -24208,7 +23273,10 @@
           "wins",
           "totalMatches",
           "responseCount",
-          "isDisabled"
+          "isDeprecated",
+          "isDisabled",
+          "isPublic",
+          "isCandidate"
         ],
         "type": "object",
         "properties": {
@@ -24277,7 +23345,17 @@
             "type": "integer",
             "format": "int64"
           },
+          "isDeprecated": {
+            "type": "boolean"
+          },
           "isDisabled": {
+            "type": "boolean",
+            "deprecated": true
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "isCandidate": {
             "type": "boolean"
           },
           "confidenceInterval": {
@@ -24288,102 +23366,6 @@
               }
             ],
             "nullable": true
-          }
-        }
-      },
-      "QueryStandingsEndpoint_Output": {
-        "required": [
-          "id",
-          "name",
-          "leaderboardId",
-          "status",
-          "score",
-          "wins",
-          "totalMatches",
-          "isDisabled"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The unique identifier of the participant."
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the participant."
-          },
-          "leaderboardId": {
-            "type": "string",
-            "description": "The id of the leaderboard this standing belongs to."
-          },
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StandingStatus"
-              }
-            ],
-            "description": "The status of the standing."
-          },
-          "score": {
-            "type": "number",
-            "description": "The calculated score, or null if not yet computed.",
-            "format": "double",
-            "nullable": true
-          },
-          "wins": {
-            "type": "number",
-            "description": "The number of wins.",
-            "format": "double"
-          },
-          "totalMatches": {
-            "type": "number",
-            "description": "The total number of matches.",
-            "format": "double"
-          },
-          "isDisabled": {
-            "type": "boolean",
-            "description": "Whether the participant is disabled."
-          },
-          "confidenceInterval": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ConfidenceInterval"
-              }
-            ],
-            "description": "The confidence interval bounds, if requested."
-          }
-        }
-      },
-      "QueryStandingsEndpoint_PagedResultOfOutput": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QueryStandingsEndpoint_Output"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },
@@ -24435,37 +23417,6 @@
           "Participant"
         ],
         "description": "What each rated entry of a prompt represents."
-      },
-      "RebalanceLeaderboardEndpoint_Input": {
-        "required": [
-          "participants",
-          "totalResponses"
-        ],
-        "type": "object",
-        "properties": {
-          "participants": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "description": "The participants of the given leaderboard that should receive responses."
-          },
-          "totalResponses": {
-            "type": "integer",
-            "description": "The total responses to add, shared evenly across all given participants.",
-            "format": "int32"
-          },
-          "seed": {
-            "type": "integer",
-            "description": "Optional seed for deterministic matchup selection. Reuse it across a benchmark's leaderboards to align them on the same\n image pairs; omit for random selection.",
-            "format": "int64",
-            "nullable": true
-          }
-        }
       },
       "ReplacePromptSegmentsEndpoint_Input": {
         "required": [
@@ -24767,106 +23718,6 @@
           }
         }
       },
-      "SubmitLeaderboardParticipantEndpoint_Output": {
-        "required": [
-          "validDatapoints",
-          "invalidDatapoints"
-        ],
-        "type": "object",
-        "properties": {
-          "validDatapoints": {
-            "type": "integer",
-            "description": "The number of valid datapoints collected by the participant.",
-            "format": "int32"
-          },
-          "invalidDatapoints": {
-            "type": "integer",
-            "description": "The number of invalid datapoints collected by the participant.",
-            "format": "int32"
-          }
-        }
-      },
-      "SubmitParticipantByBenchmarkEndpoint_Output": {
-        "required": [
-          "validDatapoints",
-          "invalidDatapoints"
-        ],
-        "type": "object",
-        "properties": {
-          "validDatapoints": {
-            "type": "integer",
-            "description": "The number of valid datapoints collected by the participant.",
-            "format": "int32"
-          },
-          "invalidDatapoints": {
-            "type": "integer",
-            "description": "The number of invalid datapoints collected by the participant.",
-            "format": "int32"
-          }
-        }
-      },
-      "SubmitParticipantEndpoint_MinAssetsPerPromptWarning": {
-        "required": [
-          "minAssetsPerPrompt",
-          "underfilledPrompts"
-        ],
-        "type": "object",
-        "properties": {
-          "minAssetsPerPrompt": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "underfilledPrompts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SubmitParticipantEndpoint_UnderfilledPrompt"
-            }
-          }
-        }
-      },
-      "SubmitParticipantEndpoint_Output": {
-        "required": [
-          "validDatapoints",
-          "invalidDatapoints"
-        ],
-        "type": "object",
-        "properties": {
-          "validDatapoints": {
-            "type": "integer",
-            "description": "The number of valid datapoints collected by the participant.",
-            "format": "int32"
-          },
-          "invalidDatapoints": {
-            "type": "integer",
-            "description": "The number of invalid datapoints collected by the participant.",
-            "format": "int32"
-          },
-          "minAssetsPerPromptWarning": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SubmitParticipantEndpoint_MinAssetsPerPromptWarning"
-              }
-            ],
-            "description": "Set when the benchmark enforces a minimum number of samples per prompt and some prompts\n fall short. null when the gate is off or every prompt satisfies it. Advisory — the\n submission still succeeded."
-          }
-        }
-      },
-      "SubmitParticipantEndpoint_UnderfilledPrompt": {
-        "required": [
-          "identifier",
-          "assetCount"
-        ],
-        "type": "object",
-        "properties": {
-          "identifier": {
-            "type": "string"
-          },
-          "assetCount": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "SubmitParticipantsEndpoint_BatchMinAssetsPerPromptWarning": {
         "required": [
           "minAssetsPerPrompt",
@@ -25016,6 +23867,89 @@
           }
         }
       },
+      "TopUpParticipantsEndpoint_Input": {
+        "required": [
+          "participantIds",
+          "responsesPerParticipant"
+        ],
+        "type": "object",
+        "properties": {
+          "participantIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The evaluated participants to collect more responses for, 1 to 100 of them."
+          },
+          "responsesPerParticipant": {
+            "type": "integer",
+            "description": "The responses each participant receives on every targeted leaderboard.",
+            "format": "int32"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Optional seed for deterministic matchup selection; one is generated when omitted.",
+            "format": "int64",
+            "nullable": true
+          },
+          "leaderboardIds": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Optional leaderboards of the benchmark to run on. Omit to target every visible leaderboard\n included in the benchmark overall."
+          }
+        }
+      },
+      "TopUpParticipantsEndpoint_Output": {
+        "required": [
+          "runs",
+          "seed"
+        ],
+        "type": "object",
+        "properties": {
+          "runs": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TopUpParticipantsEndpoint_Output_Run"
+                }
+              }
+            ],
+            "description": "The created runs, one per targeted leaderboard."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "The seed every created run shares.",
+            "format": "int64"
+          }
+        }
+      },
+      "TopUpParticipantsEndpoint_Output_Run": {
+        "required": [
+          "leaderboardId",
+          "runId"
+        ],
+        "type": "object",
+        "properties": {
+          "leaderboardId": {
+            "type": "string"
+          },
+          "runId": {
+            "type": "string"
+          }
+        }
+      },
       "TranslatedString": {
         "required": [
           "englishText",
@@ -25084,18 +24018,6 @@
             "type": "number",
             "description": "Multiplicative factor applied to displayed scores (relative to the Bradley-Terry\n center) on the overall scoreboard of this benchmark. Must be strictly positive.",
             "format": "double"
-          }
-        }
-      },
-      "UpdateBenchmarkNameEndpoint_Input": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The new name of the benchmark."
           }
         }
       },
@@ -25201,37 +24123,6 @@
           }
         }
       },
-      "UpdateLeaderboardNameEndpoint_Input": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The new name of the leaderboard."
-          }
-        }
-      },
-      "UpdateLeaderboardResponseConfigEndpoint_Input": {
-        "required": [
-          "responseBudget",
-          "minResponses"
-        ],
-        "type": "object",
-        "properties": {
-          "responseBudget": {
-            "type": "integer",
-            "description": "The response budget collected when onboarding a new participant.",
-            "format": "int32"
-          },
-          "minResponses": {
-            "type": "integer",
-            "description": "The minimum responses collected per matchup.",
-            "format": "int32"
-          }
-        }
-      },
       "UpdateParticipantEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -25298,21 +24189,9 @@
             ],
             "description": "The faucet to set or replace on the participant."
           },
-          "votesExcluded": {
+          "isPublic": {
             "type": "boolean",
-            "description": "Whether the participant's already-collected votes are dropped from the scores. Only allowed while it is disabled; enabling it resets this to false."
-          }
-        }
-      },
-      "UpdateParticipantNameEndpoint_Input": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The new name of the participant."
+            "description": "Whether everyone who can open the benchmark sees the participant. Making it public starts\n no matchups; models submitted from then on play it."
           }
         }
       },
@@ -25380,49 +24259,6 @@
           "AllVotes",
           "MajorityVote"
         ]
-      },
-      "VoteMatrixResult": {
-        "required": [
-          "index",
-          "columns",
-          "data",
-          "votes"
-        ],
-        "type": "object",
-        "properties": {
-          "index": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "columns": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "number",
-                "format": "double"
-              }
-            }
-          },
-          "votes": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "number",
-                "format": "double"
-              }
-            }
-          }
-        }
       }
     },
     "securitySchemes": {
@@ -25436,10 +24272,6 @@
   "security": [
     {
       "OpenIdConnect": [
-        "openid",
-        "profile",
-        "email",
-        "offline_access",
         "api"
       ]
     }

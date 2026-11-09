@@ -27,8 +27,9 @@ class CreateClientEndpointInput(LazyValidatedModel):
     CreateClientEndpointInput
     """ # noqa: E501
     display_name: Optional[StrictStr] = Field(default=None, description="An optional display name for the client.", alias="displayName")
-    organization_id: Optional[StrictStr] = Field(default=None, description="The organization to authorize the client for. Defaults to the caller's active organization.", alias="organizationId")
-    __properties: ClassVar[List[str]] = ["displayName", "organizationId"]
+    organization_id: Optional[StrictStr] = Field(default=None, description="The organization to authorize the client for. Defaults to the organization of the calling token.", alias="organizationId")
+    scopes: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["displayName", "organizationId", "scopes"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -75,6 +76,11 @@ class CreateClientEndpointInput(LazyValidatedModel):
         if self.organization_id is None and "organization_id" in self.model_fields_set:
             _dict['organizationId'] = None
 
+        # set to None if scopes (nullable) is None
+        # and model_fields_set contains the field
+        if self.scopes is None and "scopes" in self.model_fields_set:
+            _dict['scopes'] = None
+
         return _dict
 
     @classmethod
@@ -88,7 +94,8 @@ class CreateClientEndpointInput(LazyValidatedModel):
 
         _data = {
             "displayName": obj.get("displayName"),
-            "organizationId": obj.get("organizationId")
+            "organizationId": obj.get("organizationId"),
+            "scopes": obj.get("scopes")
         }
         try:
             _obj = cls.model_validate(_data)
