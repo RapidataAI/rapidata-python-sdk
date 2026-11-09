@@ -437,6 +437,18 @@ with no arguments. On a workstation, calling `RapidataClient()` with no
 credentials instead opens a browser login once and caches the token in
 `~/.config/rapidata/credentials.json`.
 
+Credentials belong to one organization. To pin the saved credentials to a
+specific one, pass its id; the login page opens on that organization, and
+switching organization in the dashboard does not change which one the client
+acts in:
+
+```python
+client = RapidataClient(organization_id="org_...")
+```
+
+Each organization keeps its own saved credentials, so clients for two
+organizations can run side by side on one machine.
+
 Running many workers in parallel (e.g. a distributed training job)? Don't
 give each worker its own credentials — authenticate once and share the token
 via a file, as described in [Distributed Training](distributed_training.md).
@@ -757,8 +769,8 @@ audience.add_classification_example(
 ```
 
 1. Applies the setting as a feature flag on this single example. Use the same
-   `RapidataSetting` subclasses you would pass to `settings=` on a job or
-   order (e.g. `NoShuffleSetting`, `MarkdownSetting`,
+   `RapidataSetting` subclasses you would pass to `settings=` on a job
+   definition (e.g. `NoShuffleSetting`, `MarkdownSetting`,
    `AllowNeitherBothSetting`, `ComparePanoramaSetting`). All
    `add_*_example` methods accept `settings`.
 
@@ -1047,7 +1059,7 @@ instruction="Which image follows the prompt more accurately?"
 
 | Property | Value |
 |----------|-------|
-| **Type** | `list[str]` or `list[list[str]]` |
+| **Type** | `list[str \| UploadedAsset]` or `list[list[str \| UploadedAsset]]` |
 | **Required** | Yes |
 
 The data to be labeled. The format depends on the job type:
@@ -1066,6 +1078,7 @@ The data to be labeled. The format depends on the job type:
 
 - Public URLs (https://...)
 - Local file paths (will be uploaded automatically)
+- `UploadedAsset` references from `client.asset.upload(...)` (used as-is, never uploaded again)
 
 ```python
 # Classification - list of single items
@@ -1076,7 +1089,13 @@ datapoints=[
     ["https://example.com/a1.jpg", "https://example.com/b1.jpg"],
     ["https://example.com/a2.jpg", "https://example.com/b2.jpg"],
 ]
+
+# Upload once, then reuse the reference in any number of job definitions
+baseline = client.asset.upload("baseline.jpg")
+datapoints=[[baseline, "https://example.com/b1.jpg"], [baseline, "https://example.com/b2.jpg"]]
 ```
+
+An `UploadedAsset` is media, so it cannot be used with `data_type="text"`.
 
 ---
 
@@ -1198,13 +1217,13 @@ shortened = client.context.shorten_contexts([
 
 | Property | Value |
 |----------|-------|
-| **Type** | `Optional[list[list[str]]]` |
+| **Type** | `Optional[list[list[str \| UploadedAsset]]]` |
 | **Required** | No |
 | **Default** | `None` |
 
 Image URLs shown as reference context alongside each datapoint. Useful when you need to show one or more reference images alongside the item being evaluated.
 
-**Constraints:** If provided, must have the same length as `datapoints`. Each entry is itself a list of image URLs / paths. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
+**Constraints:** If provided, must have the same length as `datapoints`. Each entry is itself a list of image URLs / paths / `UploadedAsset` references. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
 
 Media contexts open in a collapsible drawer. If there is enough space next to the task, [`PinContextMediaSetting()`](#pincontextmediasetting) keeps the context visible instead. For a compare of two image edits, [`ReferenceOverlaySetting()`](#referenceoverlaysetting) lays the original over both options.
 
@@ -4318,17 +4337,50 @@ participant = benchmark.participants[0]
 participant.rename("New model name")
 ```
 
-### Disabling Participants
+### Deprecating Participants
 
-A disabled participant is excluded from evaluation and the computed standings. Unlike deleting, this is reversible:
+A deprecated participant gets no new matchups; runs already in progress finish. Its row and its votes are left out of the standings and matrices unless you ask for them, so deprecating a model shifts the other scores. Unlike deleting, this is reversible:
 
 ```python
 participant = benchmark.participants[0]
-participant.disable()
+participant.deprecate()
 
-# Bring it back into the evaluation later
-participant.enable()
+# Deprecated models and their votes are back in with include_deprecated=True
+standings = benchmark.get_overall_standings(include_deprecated=True)
+
+# Bring it back into the default standings later
+participant.restore()
 ```
+
+### Hidden and Candidate Models
+
+Two options on `add_model` control who sees a model and who plays it:
+
+```python
+# Only members of the benchmark's organization and staff see it.
+# Models submitted later don't play it.
+participant = benchmark.add_model(
+    name="UnreleasedModel",
+    media=["https://example.com/img1.png"],
+    identifiers=["scene_1"],
+    is_public=False,
+)
+
+# A candidate plays the whole field in its own run,
+# but models submitted later don't play it until it is promoted.
+candidate = benchmark.add_model(
+    name="CandidateModel",
+    media=["https://example.com/img2.png"],
+    identifiers=["scene_1"],
+    is_candidate=True,
+)
+candidate.run()
+
+# Later: make it part of the field that new models play against
+candidate.promote()
+```
+
+Two candidates never play each other, even when submitted together. Promoting starts no run.
 
 ### Deleting Participants
 

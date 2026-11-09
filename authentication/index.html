@@ -1709,22 +1709,30 @@
 with no arguments. On a workstation, calling <code>RapidataClient()</code> with no
 credentials instead opens a browser login once and caches the token in
 <code>~/.config/rapidata/credentials.json</code>.</p>
+<p>Credentials belong to one organization. To pin the saved credentials to a
+specific one, pass its id; the login page opens on that organization, and
+switching organization in the dashboard does not change which one the client
+acts in:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">(</span><span class="n">organization_id</span><span class="o">=</span><span class="s2">"org_..."</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Each organization keeps its own saved credentials, so clients for two
+organizations can run side by side on one machine.</p>
 <p>Running many workers in parallel (e.g. a distributed training job)? Don't
 give each worker its own credentials — authenticate once and share the token
 via a file, as described in <a href="../distributed_training/">Distributed Training</a>.</p>
 <h2 id="direct-token-request">Direct token request<a class="headerlink" href="#direct-token-request" title="Permanent link">#</a></h2>
 <p>To call the API without the SDK, request a token from the token endpoint and
 send it as a bearer token:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://auth.rapidata.ai/connect/token<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">grant_type</span><span class="o">=</span>client_credentials<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">client_id</span><span class="o">=</span>YOUR_CLIENT_ID<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">client_secret</span><span class="o">=</span>YOUR_CLIENT_SECRET<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">scope</span><span class="o">=</span><span class="s2">"openid email api"</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># → {"access_token": "...", "token_type": "Bearer", "expires_in": 3600}</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl<span class="w"> </span>https://api.rapidata.ai/jobs<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer ACCESS_TOKEN"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://auth.rapidata.ai/connect/token<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">grant_type</span><span class="o">=</span>client_credentials<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">client_id</span><span class="o">=</span>YOUR_CLIENT_ID<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">client_secret</span><span class="o">=</span>YOUR_CLIENT_SECRET<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">scope</span><span class="o">=</span><span class="s2">"openid email api"</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># → {"access_token": "...", "token_type": "Bearer", "expires_in": 3600}</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>curl<span class="w"> </span>https://api.rapidata.ai/jobs<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer ACCESS_TOKEN"</span>
 </span></code></pre></div>
 <h2 id="scopes">Scopes<a class="headerlink" href="#scopes" title="Permanent link">#</a></h2>
 <p>Tokens are scoped. The SDK requests <code>openid email api</code> by default, which is

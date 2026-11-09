@@ -39,6 +39,18 @@ with no arguments. On a workstation, calling `RapidataClient()` with no
 credentials instead opens a browser login once and caches the token in
 `~/.config/rapidata/credentials.json`.
 
+Credentials belong to one organization. To pin the saved credentials to a
+specific one, pass its id; the login page opens on that organization, and
+switching organization in the dashboard does not change which one the client
+acts in:
+
+```python
+client = RapidataClient(organization_id="org_...")
+```
+
+Each organization keeps its own saved credentials, so clients for two
+organizations can run side by side on one machine.
+
 Running many workers in parallel (e.g. a distributed training job)? Don't
 give each worker its own credentials — authenticate once and share the token
 via a file, as described in [Distributed Training](distributed_training.md).

@@ -2446,7 +2446,7 @@
 <tbody>
 <tr>
 <td><strong>Type</strong></td>
-<td><code>list[str]</code> or <code>list[list[str]]</code></td>
+<td><code>list[str \| UploadedAsset]</code> or <code>list[list[str \| UploadedAsset]]</code></td>
 </tr>
 <tr>
 <td><strong>Required</strong></td>
@@ -2505,6 +2505,7 @@
 <ul>
 <li>Public URLs (https://...)</li>
 <li>Local file paths (will be uploaded automatically)</li>
+<li><code>UploadedAsset</code> references from <code>client.asset.upload(...)</code> (used as-is, never uploaded again)</li>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Classification - list of single items</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img1.jpg"</span><span class="p">,</span> <span class="s2">"https://example.com/img2.jpg"</span><span class="p">]</span>
@@ -2514,7 +2515,12 @@
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="p">[</span><span class="s2">"https://example.com/a1.jpg"</span><span class="p">,</span> <span class="s2">"https://example.com/b1.jpg"</span><span class="p">],</span>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="p">[</span><span class="s2">"https://example.com/a2.jpg"</span><span class="p">,</span> <span class="s2">"https://example.com/b2.jpg"</span><span class="p">],</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">]</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Upload once, then reuse the reference in any number of job definitions</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">baseline</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">asset</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="s2">"baseline.jpg"</span><span class="p">)</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">datapoints</span><span class="o">=</span><span class="p">[[</span><span class="n">baseline</span><span class="p">,</span> <span class="s2">"https://example.com/b1.jpg"</span><span class="p">],</span> <span class="p">[</span><span class="n">baseline</span><span class="p">,</span> <span class="s2">"https://example.com/b2.jpg"</span><span class="p">]]</span>
 </span></code></pre></div>
+<p>An <code>UploadedAsset</code> is media, so it cannot be used with <code>data_type="text"</code>.</p>
 <hr>
 <h3 id="responses_per_datapoint"><code>responses_per_datapoint</code><a class="headerlink" href="#responses_per_datapoint" title="Permanent link">#</a></h3>
 <table>
@@ -2672,7 +2678,7 @@
 <tbody>
 <tr>
 <td><strong>Type</strong></td>
-<td><code>Optional[list[list[str]]]</code></td>
+<td><code>Optional[list[list[str \| UploadedAsset]]]</code></td>
 </tr>
 <tr>
 <td><strong>Required</strong></td>
@@ -2685,7 +2691,7 @@
 </tbody>
 </table>
 <p>Image URLs shown as reference context alongside each datapoint. Useful when you need to show one or more reference images alongside the item being evaluated.</p>
-<p><strong>Constraints:</strong> If provided, must have the same length as <code>datapoints</code>. Each entry is itself a list of image URLs / paths. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.</p>
+<p><strong>Constraints:</strong> If provided, must have the same length as <code>datapoints</code>. Each entry is itself a list of image URLs / paths / <code>UploadedAsset</code> references. Use a single-element inner list for one image per datapoint, or multiple entries to display several images.</p>
 <p>Media contexts open in a collapsible drawer. If there is enough space next to the task, <a href="#pincontextmediasetting"><code>PinContextMediaSetting()</code></a> keeps the context visible instead. For a compare of two image edits, <a href="#referenceoverlaysetting"><code>ReferenceOverlaySetting()</code></a> lays the original over both options.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># One reference image per datapoint (each inner list has one entry)</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"edited1.jpg"</span><span class="p">,</span> <span class="s2">"edited2.jpg"</span><span class="p">],</span>
