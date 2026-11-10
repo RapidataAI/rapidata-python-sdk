@@ -5,7 +5,6 @@ from rapidata.api_client.api.asset_api import AssetApi
 from rapidata.api_client.api.audience_api import AudienceApi
 from rapidata.api_client.api.batch_upload_api import BatchUploadApi
 from rapidata.api_client.api.benchmark_api import BenchmarkApi
-from rapidata.api_client.api.bidder_api import BidderApi
 from rapidata.api_client.api.billing_api import BillingApi
 from rapidata.api_client.api.billing_account_api import BillingAccountApi
 from rapidata.api_client.api.cache_api import CacheApi
@@ -40,6 +39,7 @@ from rapidata.api_client.api.organization_api import OrganizationApi
 from rapidata.api_client.api.owner_tier_override_api import OwnerTierOverrideApi
 from rapidata.api_client.api.participant_api import ParticipantApi
 from rapidata.api_client.api.payment_api import PaymentApi
+from rapidata.api_client.api.permissions_api import PermissionsApi
 from rapidata.api_client.api.platform_api import PlatformApi
 from rapidata.api_client.api.prompt_api import PromptApi
 from rapidata.api_client.api.prompt_embedding_map_api import PromptEmbeddingMapApi
@@ -48,6 +48,7 @@ from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi
 from rapidata.api_client.api.rapid_api import RapidApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
 from rapidata.api_client.api.reconciliation_api import ReconciliationApi
+from rapidata.api_client.api.relations_api import RelationsApi
 from rapidata.api_client.api.replicate_api import ReplicateApi
 from rapidata.api_client.api.sample_api import SampleApi
 from rapidata.api_client.api.sample_generation_api import SampleGenerationApi
