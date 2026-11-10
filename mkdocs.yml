@@ -59,6 +59,7 @@ plugins:
         Guides:
           - index.md
           - quickstart.md
+          - templates.md
           - authentication.md
           - audiences.md
           - signals.md
@@ -125,6 +126,7 @@ nav:
     - Guides:
       - Overview: index.md
       - Quick Start: quickstart.md
+      - Templates: templates.md
       - Authentication: authentication.md
       - Custom Audiences: audiences.md
       - Signals: signals.md

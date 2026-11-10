@@ -11,6 +11,7 @@ from .job import (
     RapidataJob,
     RapidataJobDefinition,
     RapidataJobManager,
+    RapidataTemplateManager,
     CostEstimate,
     JobProgress,
     RevisionInfo,

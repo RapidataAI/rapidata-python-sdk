@@ -23,6 +23,7 @@ from .rapidata_client import (
     RapidataJob,
     RapidataJobDefinition,
     RapidataJobManager,
+    RapidataTemplateManager,
     CostEstimate,
     JobProgress,
     RevisionInfo,

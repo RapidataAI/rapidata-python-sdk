@@ -18,6 +18,9 @@ from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
 )
 from rapidata.rapidata_client.context.context_manager import ContextManager
+from rapidata.rapidata_client.job.rapidata_template_manager import (
+    RapidataTemplateManager,
+)
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
@@ -27,11 +30,15 @@ class RapidataJobManager:
     """
     A rapidata manager for job definitions.
     Used to create and retrieve job definitions.
+
+    Attributes:
+        template (RapidataTemplateManager): Runs a Rapidata template on your own pairs in one call.
     """
 
     def __init__(self, openapi_service: OpenAPIService):
         self._openapi_service = openapi_service
         self.__context_manager = ContextManager(openapi_service)
+        self.template = RapidataTemplateManager(openapi_service=openapi_service)
 
         self.__priority: int | None = None
         logger.debug("JobManager initialized")

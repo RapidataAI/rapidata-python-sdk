@@ -137,6 +137,35 @@ job_def.update_dataset(    # replace the datapoints
 )
 ```
 
+### Templates (`client.job.template`)
+
+```python
+client.job.template.run_alignment(name, datapoints, contexts, a_b_names=None) -> RapidataJob
+client.job.template.run_preference(name, datapoints, a_b_names=None) -> RapidataJob
+client.job.template.run_coherence(name, datapoints, a_b_names=None) -> RapidataJob
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | str | 1–256 characters; the name of the job and of the job definition the call creates |
+| `datapoints` | list[list[str]] | Pairs of file paths or URLs, `[[a, b], ...]`; 2 different files per pair, all images (`.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`) or all videos (`.mp4`) |
+| `contexts` | list[str] | `run_alignment` only: one prompt per pair. Warns above 200 characters; above 400 they are shortened on upload against the template's question |
+| `a_b_names` | list[str] \| None | 2 different names for the first and second file of every pair, shown in the results instead of A and B |
+
+Every pair gets 11 votes from the template's audience; there is no `responses_per_datapoint`, `settings` or audience to pass. One call sends:
+
+1. `GET /job/definition/{definitionId}/revision` — the template's question and votes. The template id is pinned per environment and media type.
+2. `POST /dataset` (`run_alignment`: with `contextShortening: {question}`), then the usual uploads: files, and one `POST /dataset/{datasetId}/datapoint` per pair.
+3. `POST /job/definition/{definitionId}/run` with `{name, datasetId, aName, bName}` → a new job definition in your organization and its job.
+
+Errors:
+
+- `ValueError` before anything is sent: a mixed call ("Images and videos can't be mixed in one call (the question depends on the media type): 12 datapoints are images, 3 are videos (datapoints[3], [7], [9]). Send them as two calls, …"), a pair that isn't 2 different files, a file that is neither an image nor a video, a missing or empty prompt, a bad `name` or `a_b_names`.
+- `FailedUploadException` (subclass `TemplateUploadException`): some pairs failed to upload into the named dataset; no job was started. `retry()` raises `RuntimeError`: call the method again, it uploads into a new dataset.
+- `RapidataError` with "No answer from Rapidata, so a job may have started. Look for it with client.job.find_jobs(name) before calling again." on a 502/503/504 or a lost connection from the start request, which is sent once (only 429 and connection failures before the request left the client are retried). Other errors from it (400, 403) carry the backend's reason.
+
+`RAPIDATA_TEMPLATE_IDS` (a JSON object such as `{"alignment/image": "jdf_..."}`) replaces the pinned template ids, for environments without them.
+
 ## Audiences
 
 **Goal.** An audience selects a specific group of annotators for a **specific task**. You tailor the pool to that task two ways — by training it on **qualification examples** (tasks with a known-correct answer; only labelers who answer them correctly are recruited) and/or by attaching **recruitment filters** (country, language, demographics). The point is to get the *right* annotators onto *that* task.

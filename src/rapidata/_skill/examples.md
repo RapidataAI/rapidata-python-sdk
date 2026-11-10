@@ -41,6 +41,38 @@ job_def = client.job.create_classification_job_definition(
 job = audience.assign_job(job_def)
 ```
 
+## Template Run: Two Models, One Call
+
+```python
+from rapidata import RapidataClient
+from rapidata.rapidata_client.exceptions import RapidataError
+
+client = RapidataClient()
+
+try:
+    job = client.job.template.run_alignment(
+        name="flux vs midjourney, cats",
+        datapoints=[
+            ["flux_cat.jpg", "mj_cat.jpg"],
+            ["flux_sunset.jpg", "mj_sunset.jpg"],
+        ],
+        contexts=["A cat on a chair", "A sunset over mountains"],
+        a_b_names=["Flux", "Midjourney"],
+    )
+except RapidataError as e:
+    if "a job may have started" not in str(e):
+        raise
+    # The start request got no answer: look before calling run_alignment again.
+    jobs = client.job.find_jobs(name="flux vs midjourney, cats", amount=1)
+    if not jobs:
+        raise  # no job started, so calling run_alignment again is safe
+    job = jobs[0]
+
+results = job.get_results()
+```
+
+`run_preference` and `run_coherence` take the same arguments without `contexts`. Send image pairs and video pairs as separate calls.
+
 ## Comparison with Early Stopping
 
 ```python
