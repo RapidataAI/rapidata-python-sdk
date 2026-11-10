@@ -3068,7 +3068,7 @@ class ParticipantApi:
     ) -> SubmitParticipantsEndpointOutput:
         """Submits several participants of one benchmark together, so they are evaluated as one batch.
 
-        A batch is compared symmetrically — every participant against every other and against the  benchmark's public submitted non-candidates, but never two non-public or candidate ones together.  All participants must belong to the same benchmark, be ready for evaluation, and appear at  most once; at most 100 per request.
+        A batch is compared symmetrically — every participant against every other and against the  benchmark's submitted non-candidates, but never two candidates together.  All participants must belong to the same benchmark, be ready for evaluation, and appear at  most once; at most 100 per request.
 
         :param submit_participants_endpoint_input: The participants to submit. (required)
         :type submit_participants_endpoint_input: SubmitParticipantsEndpointInput
@@ -3138,7 +3138,7 @@ class ParticipantApi:
     ) -> ApiResponse[SubmitParticipantsEndpointOutput]:
         """Submits several participants of one benchmark together, so they are evaluated as one batch.
 
-        A batch is compared symmetrically — every participant against every other and against the  benchmark's public submitted non-candidates, but never two non-public or candidate ones together.  All participants must belong to the same benchmark, be ready for evaluation, and appear at  most once; at most 100 per request.
+        A batch is compared symmetrically — every participant against every other and against the  benchmark's submitted non-candidates, but never two candidates together.  All participants must belong to the same benchmark, be ready for evaluation, and appear at  most once; at most 100 per request.
 
         :param submit_participants_endpoint_input: The participants to submit. (required)
         :type submit_participants_endpoint_input: SubmitParticipantsEndpointInput
@@ -3208,7 +3208,7 @@ class ParticipantApi:
     ) -> RESTResponseType:
         """Submits several participants of one benchmark together, so they are evaluated as one batch.
 
-        A batch is compared symmetrically — every participant against every other and against the  benchmark's public submitted non-candidates, but never two non-public or candidate ones together.  All participants must belong to the same benchmark, be ready for evaluation, and appear at  most once; at most 100 per request.
+        A batch is compared symmetrically — every participant against every other and against the  benchmark's submitted non-candidates, but never two candidates together.  All participants must belong to the same benchmark, be ready for evaluation, and appear at  most once; at most 100 per request.
 
         :param submit_participants_endpoint_input: The participants to submit. (required)
         :type submit_participants_endpoint_input: SubmitParticipantsEndpointInput

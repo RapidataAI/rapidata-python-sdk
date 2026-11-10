@@ -17,6 +17,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.create_dataset_endpoint_context_shortening import CreateDatasetEndpointContextShortening
 from rapidata.api_client.models.dataset_segment_definition import DatasetSegmentDefinition
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -29,7 +30,8 @@ class CreateDatasetEndpointInput(LazyValidatedModel):
     """ # noqa: E501
     name: StrictStr = Field(description="The name to give to the new dataset.")
     var_schema: Optional[List[DatasetSegmentDefinition]] = Field(default=None, alias="schema")
-    __properties: ClassVar[List[str]] = ["name", "schema"]
+    context_shortening: Optional[CreateDatasetEndpointContextShortening] = Field(default=None, description="Shortens each uploaded context that is longer than its schema allows; without it, such an upload fails.", alias="contextShortening")
+    __properties: ClassVar[List[str]] = ["name", "schema", "contextShortening"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -73,6 +75,9 @@ class CreateDatasetEndpointInput(LazyValidatedModel):
                 if _item_var_schema:
                     _items.append(_item_var_schema.to_dict())
             _dict['schema'] = _items
+        # override the default output from pydantic by calling `to_dict()` of context_shortening
+        if self.context_shortening:
+            _dict['contextShortening'] = self.context_shortening.to_dict()
         # set to None if var_schema (nullable) is None
         # and model_fields_set contains the field
         if self.var_schema is None and "var_schema" in self.model_fields_set:
@@ -91,7 +96,8 @@ class CreateDatasetEndpointInput(LazyValidatedModel):
 
         _data = {
             "name": obj.get("name"),
-            "schema": [DatasetSegmentDefinition.from_dict(_item) for _item in obj["schema"]] if obj.get("schema") is not None else None
+            "schema": [DatasetSegmentDefinition.from_dict(_item) for _item in obj["schema"]] if obj.get("schema") is not None else None,
+            "contextShortening": CreateDatasetEndpointContextShortening.from_dict(obj["contextShortening"]) if obj.get("contextShortening") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

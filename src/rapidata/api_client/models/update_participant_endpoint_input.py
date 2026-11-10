@@ -39,7 +39,7 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
     cost_unit: Optional[CostUnit] = Field(default=None, description="The unit cost is quoted in. Pass null to clear.", alias="costUnit")
     logo: Optional[ExistingAssetInput] = Field(default=None, description="An image asset for the model's logo. Pass null to clear.")
     faucet: Optional[IFaucetInput] = Field(default=None, description="The faucet to set or replace on the participant.")
-    is_public: Optional[StrictBool] = Field(default=None, description="Whether everyone who can open the benchmark sees the participant. Making it public starts  no matchups; models submitted from then on play it.", alias="isPublic")
+    is_public: Optional[StrictBool] = Field(default=None, description="Whether everyone who can open the benchmark sees the participant. It affects only visibility:  the participant is paired the same way either way, and changing it starts no matchups.", alias="isPublic")
     __properties: ClassVar[List[str]] = ["name", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "faucet", "isPublic"]
 
     # model_config is inherited from LazyValidatedModel

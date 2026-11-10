@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.11.06.1913-feab628"
+    "version": "2026.11.09.1638-57c9d0b"
   },
   "servers": [
     {
@@ -15048,7 +15048,7 @@
           "Participant"
         ],
         "summary": "Submits several participants of one benchmark together, so they are evaluated as one batch.",
-        "description": "A batch is compared symmetrically — every participant against every other and against the\n benchmark's public submitted non-candidates, but never two non-public or candidate ones together.\n All participants must belong to the same benchmark, be ready for evaluation, and appear at\n most once; at most 100 per request.",
+        "description": "A batch is compared symmetrically — every participant against every other and against the\n benchmark's submitted non-candidates, but never two candidates together.\n All participants must belong to the same benchmark, be ready for evaluation, and appear at\n most once; at most 100 per request.",
         "requestBody": {
           "description": "The participants to submit.",
           "content": {
@@ -24191,7 +24191,7 @@
           },
           "isPublic": {
             "type": "boolean",
-            "description": "Whether everyone who can open the benchmark sees the participant. Making it public starts\n no matchups; models submitted from then on play it."
+            "description": "Whether everyone who can open the benchmark sees the participant. It affects only visibility:\n the participant is paired the same way either way, and changing it starts no matchups."
           }
         }
       },
