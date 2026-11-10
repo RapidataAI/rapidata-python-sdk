@@ -7,12 +7,12 @@ TEMPLATE_IDS_VARIABLE = "RAPIDATA_TEMPLATE_IDS"
 
 TEMPLATE_IDS: dict[str, dict[str, str]] = {
     "rapidata.ai": {
-        "alignment/image": "jdf_PLACEHOLDER_prod_alignment_image",
-        "alignment/video": "jdf_PLACEHOLDER_prod_alignment_video",
-        "preference/image": "jdf_PLACEHOLDER_prod_preference_image",
-        "preference/video": "jdf_PLACEHOLDER_prod_preference_video",
-        "coherence/image": "jdf_PLACEHOLDER_prod_coherence_image",
-        "coherence/video": "jdf_PLACEHOLDER_prod_coherence_video",
+        "alignment/image": "jdf_1aWZJUJxJsddn3",
+        "alignment/video": "jdf_1aWZS1Sn2D7c3e",
+        "preference/image": "jdf_1aWZYaq69c8Vwb",
+        "preference/video": "jdf_1aWZdzkGIkkWR0",
+        "coherence/image": "jdf_1aWZjLcMsSA5DM",
+        "coherence/video": "jdf_1aWZpAlATURr9c",
     },
     "rabbitdata.ch": {
         "alignment/image": "jdf_1aWV8WjLLGuF9s",

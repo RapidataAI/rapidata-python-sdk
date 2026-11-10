@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from datetime import datetime
 from unittest.mock import MagicMock
 
@@ -343,6 +344,9 @@ def test_every_environment_pins_all_six_templates(environment):
     assert sorted(TEMPLATE_IDS[environment]) == sorted(
         f"{kind}/{media}" for kind in METHODS for media in ("image", "video")
     )
+    ids = list(TEMPLATE_IDS[environment].values())
+    assert all(re.fullmatch(r"jdf_[0-9A-Za-z]{14}", i) for i in ids), ids
+    assert len(set(ids)) == 6
 
 
 def test_long_prompts_warn_before_the_upload(dataset, caplog):
