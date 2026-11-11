@@ -1,12 +1,12 @@
 # Templates
 
-We run model comparisons for our own benchmarks and for our customers, and a few setups keep giving teams answers they can act on. Templates are the three most useful ones, ready to run. You bring pairs of images or videos, one from each model. We bring the question, the right annotators and 11 votes per pair.
+We run model comparisons for our own benchmarks and for our customers, and we've found a few setups that work for the most common annotation use cases. To use a template, you only need the image or video pairs, and for alignment also the prompts. Everything else uses our field-tested setup.
 
 | Template | Annotators answer | Use it to |
 | --- | --- | --- |
 | [Alignment](#alignment-does-it-follow-the-prompt) | Which image matches the description better? | check how well a model follows prompts |
 | [Preference](#preference-which-one-do-people-like) | Which image do you prefer? | find the model people like more |
-| [Coherence](#coherence-which-one-looks-ai-generated) | Which image is more likely AI-generated? | catch glitches like extra fingers or warped text |
+| [Coherence](#coherence-which-one-looks-ai-generated) | Which image is more likely AI-generated? | see which model makes fewer AI mistakes |
 
 ## Alignment: does it follow the prompt?
 
@@ -42,7 +42,7 @@ results = job.get_results()
 
 ## Coherence: which one looks AI-generated?
 
-Annotators trained to spot AI mistakes, like extra fingers, warped text or melting objects, pick the image that looks more AI-generated.
+Annotators trained to spot AI mistakes pick the image that looks more AI-generated.
 
 ```py
 job = client.job.template.run_coherence(
