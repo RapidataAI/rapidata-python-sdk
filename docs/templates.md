@@ -42,6 +42,8 @@ job = client.job.template.run_alignment(
 results = job.get_results()
 ```
 
+We recommend keeping prompts shorter than 200 characters for optimal results.
+
 ## Preference: which one do people like?
 
 A broad crowd picks the image they like more. No prompt needed.
@@ -120,6 +122,4 @@ The results also hold all 11 votes for every pair.
 
 ## Good to know
 
-- **Videos work the same way.** Send `.mp4` files (GIFs count as videos), and the question says "video". Send images and videos in separate calls.
-- **Keep prompts short.** Under 200 characters reads best on a phone. We shorten prompts over 400 characters to what the question needs.
-- **We maintain the templates.** Every call uses the latest version.
+Images and videos both work as assets for templates. Send one kind per call.
