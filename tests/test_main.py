@@ -49,7 +49,7 @@ def test_skill_survives_a_closed_pipe(tmp_path: Path):
         f'"{sys.executable}" -m rapidata skill | head -1',
         shell=True,
         cwd=tmp_path,
-        env={**os.environ, "HOME": str(tmp_path), "RAPIDATA_AGENT_HINT": "0"},
+        env={**os.environ, "HOME": str(tmp_path)},
         capture_output=True,
         text=True,
     )

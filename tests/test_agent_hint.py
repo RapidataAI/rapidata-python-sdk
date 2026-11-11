@@ -18,7 +18,6 @@ from rapidata._agent_hint import (
     installed_version,
     mark_skill_read,
     print_agent_hint,
-    running_under_coding_agent,
     stamp_skill,
 )
 
@@ -53,7 +52,7 @@ def _after(monkeypatch: pytest.MonkeyPatch, seconds: float) -> None:
 
 
 def test_not_detected_in_a_plain_shell():
-    assert running_under_coding_agent() is False
+    assert detected_coding_agent() is None
     assert agent_hint() is None
 
 
@@ -63,20 +62,12 @@ def test_detected_by_agent_env_var(monkeypatch: pytest.MonkeyPatch, var: str):
     assert agent_hint() == AGENT_HINT
 
 
-@pytest.mark.parametrize("value", ["0", "false", "NO"])
-def test_override_silences(monkeypatch: pytest.MonkeyPatch, value: str):
-    _agent(monkeypatch)
+@pytest.mark.parametrize("value", ["0", "1"])
+def test_former_override_has_no_effect(monkeypatch: pytest.MonkeyPatch, value: str):
     monkeypatch.setenv("RAPIDATA_AGENT_HINT", value)
     assert agent_hint() is None
-
-
-def test_override_cannot_force_the_hint_on(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setenv("RAPIDATA_AGENT_HINT", "1")
-    assert agent_hint() is None
-
-
-def test_hint_does_not_advertise_the_off_switch():
-    assert "RAPIDATA_AGENT_HINT" not in AGENT_HINT
+    _agent(monkeypatch)
+    assert agent_hint() == AGENT_HINT
 
 
 @pytest.mark.parametrize(
@@ -95,13 +86,6 @@ def test_detected_coding_agent_names_the_runtime(
     for var, value in env.items():
         monkeypatch.setenv(var, value)
     assert detected_coding_agent() == expected
-
-
-def test_detection_ignores_hint_override(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setenv("CLAUDECODE", "1")
-    monkeypatch.setenv("RAPIDATA_AGENT_HINT", "0")
-    assert detected_coding_agent() == "claude-code"
-    assert running_under_coding_agent() is False
 
 
 def test_silent_once_this_session_read_the_guide(monkeypatch: pytest.MonkeyPatch):
