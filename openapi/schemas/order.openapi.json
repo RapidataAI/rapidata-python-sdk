@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.11.09.1638-57c9d0b"
+    "version": "2026.11.10.2217-0adf303"
   },
   "servers": [
     {
@@ -4199,6 +4199,76 @@
         "responses": {
           "204": {
             "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/job/definition/{definitionId}/run": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Creates a job definition in your organization from the definition's latest completed revision and starts a job on its audience with your dataset; every call creates a new job definition and job.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "description": "The id of the job definition to run.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The name of the new job and the dataset it runs on.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunJobDefinitionEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunJobDefinitionEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -13459,6 +13529,80 @@
           "ClassificationTimedOut"
         ],
         "description": "Customer-facing reason a job was routed to manual review. Deliberately a projection of the\n internal review-reason taxonomy: the size-triggered LargeJob reason is intentionally\n absent so customers cannot learn that job size triggers review (that would incentivize splitting\n work into smaller jobs). A size-triggered review therefore surfaces as no reason at all."
+      },
+      "RunJobDefinitionEndpoint_CostWarning": {
+        "required": [
+          "estimatedCost",
+          "availableBalance",
+          "shortfall"
+        ],
+        "type": "object",
+        "properties": {
+          "estimatedCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "availableBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "shortfall": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "RunJobDefinitionEndpoint_Input": {
+        "required": [
+          "name",
+          "datasetId"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the job and of the job definition the call creates."
+          },
+          "datasetId": {
+            "type": "string",
+            "description": "A dataset you can read, fully uploaded: each datapoint's files under asset and, when the definition shows a prompt, its prompt under context."
+          },
+          "aName": {
+            "type": "string",
+            "description": "The name shown instead of A for the first file of every datapoint. Send it with bName.",
+            "nullable": true
+          },
+          "bName": {
+            "type": "string",
+            "description": "The name shown instead of B for the second file of every datapoint. Send it with aName.",
+            "nullable": true
+          }
+        }
+      },
+      "RunJobDefinitionEndpoint_Output": {
+        "required": [
+          "jobId",
+          "definitionId"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "description": "The id of the started job."
+          },
+          "definitionId": {
+            "type": "string",
+            "description": "The id of the created job definition. Run it again to keep these settings."
+          },
+          "costWarning": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RunJobDefinitionEndpoint_CostWarning"
+              }
+            ],
+            "description": "Present only when the job's estimated cost exceeds the owner's remaining balance."
+          }
+        }
       },
       "SegmentTextLanguage": {
         "enum": [

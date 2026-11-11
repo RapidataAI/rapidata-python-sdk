@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.09.1638-57c9d0b"
+    "version": "2026.11.10.2217-0adf303"
   },
   "servers": [
     {
@@ -100,10 +100,6 @@
       "x-displayName": "Rapidata.Identity.API"
     },
     {
-      "name": "Bidder",
-      "x-displayName": "Bidder"
-    },
-    {
       "name": "Capabilities",
       "x-displayName": "Capabilities"
     },
@@ -136,8 +132,16 @@
       "x-displayName": "Organization"
     },
     {
+      "name": "Permissions",
+      "x-displayName": "Permissions"
+    },
+    {
       "name": "Platform",
       "x-displayName": "Platform"
+    },
+    {
+      "name": "Relations",
+      "x-displayName": "Relations"
     },
     {
       "name": "Survey",
@@ -8637,183 +8641,6 @@
         ]
       }
     },
-    "/authorization/relations/bidder": {
-      "get": {
-        "tags": [
-          "Bidder"
-        ],
-        "summary": "Lists the customers holding bidder relations, one cursor page at a time.",
-        "description": "Returns every relation unless relation narrows it. Follow nextCursor to page.",
-        "parameters": [
-          {
-            "name": "relation",
-            "in": "query",
-            "description": "Optional relation to filter by.",
-            "schema": {
-              "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "description": "The opaque cursor from the previous page; omit for the first page.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "description": "The number of items per page.",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetBidderRelationMembersEndpoint_CursorPagedResultOfOutput"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:viewer"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "Bidder"
-        ],
-        "summary": "Grants a bidder relation to a customer.",
-        "description": "Idempotent: re-granting an existing relation is a no-op.",
-        "requestBody": {
-          "description": "The customer and the bidder relation to grant.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GrantBidderRelationEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Bidder"
-        ],
-        "summary": "Revokes a bidder relation from a customer.",
-        "description": "Idempotent: revoking a relation that was never granted is a no-op.",
-        "requestBody": {
-          "description": "The customer and the bidder relation to revoke.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RevokeBidderRelationEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      }
-    },
     "/capabilities/{capability}/grantees": {
       "get": {
         "tags": [
@@ -12001,6 +11828,66 @@
         ]
       }
     },
+    "/authorization/permissions/test": {
+      "post": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "Returns, per resource and in request order, the requested permissions the caller holds.",
+        "description": "Only can_* permissions may be tested: at most 50 resources and 20 permissions each. 503 when permissions cannot be evaluated right now.",
+        "requestBody": {
+          "description": "The resources and the permissions to test on each.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestPermissionsEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestPermissionsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "profile:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/authorization/relations/platform": {
       "get": {
         "tags": [
@@ -12138,6 +12025,201 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RevokePlatformRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/authorization/relations": {
+      "get": {
+        "tags": [
+          "Relations"
+        ],
+        "summary": "Lists the customers holding relations on a resource, one cursor page at a time.",
+        "description": "Returns every relation unless relation narrows it. Follow nextCursor to page.",
+        "parameters": [
+          {
+            "name": "resourceType",
+            "in": "query",
+            "description": "The resource type, e.g. bidder.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resourceId",
+            "in": "query",
+            "description": "The resource id within its type, e.g. amsterdam.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "relation",
+            "in": "query",
+            "description": "Optional relation to filter by.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "The opaque cursor from the previous page; omit for the first page.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRelationMembersEndpoint_CursorPagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:viewer"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Relations"
+        ],
+        "summary": "Grants a customer a relation on a resource registered on the platform.",
+        "description": "Idempotent: re-granting an existing relation is a no-op. Fails validation when the resource's owning service has not registered it.",
+        "requestBody": {
+          "description": "The resource, the relation and the customer to grant.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrantRelationEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Relations"
+        ],
+        "summary": "Revokes a customer's relation on a resource.",
+        "description": "Idempotent: revoking a relation that was never granted is a no-op.",
+        "requestBody": {
+          "description": "The resource, the relation and the customer to revoke.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeRelationEndpoint_Input"
               }
             }
           },
@@ -33310,6 +33392,76 @@
         ]
       }
     },
+    "/job/definition/{definitionId}/run": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Creates a job definition in your organization from the definition's latest completed revision and starts a job on its audience with your dataset; every call creates a new job definition and job.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "description": "The id of the job definition to run.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The name of the new job and the dataset it runs on.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunJobDefinitionEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunJobDefinitionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "job:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/job/definition/{definitionId}/share": {
       "patch": {
         "tags": [
@@ -54340,14 +54492,6 @@
           }
         }
       },
-      "AuthorizationRelations_Bidder": {
-        "enum": [
-          "Admin",
-          "Editor",
-          "Viewer"
-        ],
-        "description": "Relations on the singleton `bidder` object that carries global RTB access. Grants are\ndirect here and, unlike Organization, are never folded in from platform staff."
-      },
       "AuthorizationRelations_ClickHouseAgentCeiling": {
         "enum": [
           "None",
@@ -54726,72 +54870,6 @@
         ],
         "description": "                The third-party applications that federate on our OIDC `groups` claim and can therefore\n                be administered through a grant here. Each maps to an `external_app` object in the\n                authorization graph.\n                A closed enum rather than a free-form id on purpose: an arbitrary string would let a typo\nwrite a grant against an object nothing consumes, which looks like access was granted but\nsilently is not. Adding an app is a value here plus a tuple — no model change.This is the app itself; the relation vocabulary defined on these objects is\nAuthorizationRelations.ExternalApp. The Id suffix here keeps the two\ndistinguishable: a file with using static AuthorizationRelations imports that\nnested enum, and identical short names would make every bare mention ambiguous."
       },
-      "GetBidderRelationMembersEndpoint_CursorPagedResultOfOutput": {
-        "required": [
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetBidderRelationMembersEndpoint_Output"
-            }
-          },
-          "nextCursor": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "description": "A page of results identified by an opaque cursor rather than an offset. Used where the\nunderlying store pages by continuation token and a total count is unavailable or expensive.\nstring? CursorPagedResult&lt;T&gt;.NextCursor is null on the last page."
-      },
-      "GetBidderRelationMembersEndpoint_Output": {
-        "required": [
-          "customer",
-          "email",
-          "organizationName",
-          "organizationId",
-          "scope",
-          "relation",
-          "grantedAt"
-        ],
-        "type": "object",
-        "properties": {
-          "customer": {
-            "type": "string",
-            "description": "The customer holding the relation.",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string",
-            "description": "The email address of the customer."
-          },
-          "organizationName": {
-            "type": "string",
-            "description": "The name of the customer's active organization."
-          },
-          "organizationId": {
-            "type": "string",
-            "description": "The identifier of the customer's active organization."
-          },
-          "scope": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AuthorizationScope"
-              }
-            ],
-            "description": "The object the relation is on."
-          },
-          "relation": {
-            "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
-          },
-          "grantedAt": {
-            "type": "string",
-            "description": "When the grant was written.",
-            "format": "date-time"
-          }
-        }
-      },
       "GetCapabilityGranteesEndpoint_CursorPagedResultOfOutput": {
         "required": [
           "items"
@@ -55071,6 +55149,74 @@
           }
         }
       },
+      "GetRelationMembersEndpoint_CursorPagedResultOfOutput": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetRelationMembersEndpoint_Output"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "description": "A page of results identified by an opaque cursor rather than an offset. Used where the\nunderlying store pages by continuation token and a total count is unavailable or expensive.\nstring? CursorPagedResult&lt;T&gt;.NextCursor is null on the last page."
+      },
+      "GetRelationMembersEndpoint_Output": {
+        "required": [
+          "customer",
+          "email",
+          "organizationName",
+          "organizationId",
+          "resourceType",
+          "resourceId",
+          "relation",
+          "grantedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "description": "The customer holding the relation.",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email address of the customer."
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "The name of the customer's active organization."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "The identifier of the customer's active organization."
+          },
+          "resourceType": {
+            "type": "string",
+            "description": "The type of the resource the relation is on."
+          },
+          "resourceId": {
+            "type": "string",
+            "description": "The id of the resource the relation is on."
+          },
+          "relation": {
+            "type": "string",
+            "description": "The granted relation."
+          },
+          "grantedAt": {
+            "type": "string",
+            "description": "When the grant was written.",
+            "format": "date-time"
+          }
+        }
+      },
       "GoogleOneTapLoginEndpoint_Input": {
         "required": [
           "idToken"
@@ -55107,23 +55253,6 @@
             "type": "string",
             "description": "The email of the signed-in user, if available.",
             "nullable": true
-          }
-        }
-      },
-      "GrantBidderRelationEndpoint_Input": {
-        "required": [
-          "customer",
-          "relation"
-        ],
-        "type": "object",
-        "properties": {
-          "customer": {
-            "type": "string",
-            "description": "The customer to grant the relation to.",
-            "format": "uuid"
-          },
-          "relation": {
-            "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
           }
         }
       },
@@ -55184,6 +55313,34 @@
           },
           "relation": {
             "$ref": "#/components/schemas/AuthorizationRelations_Platform"
+          }
+        }
+      },
+      "GrantRelationEndpoint_Input": {
+        "required": [
+          "resourceType",
+          "resourceId",
+          "relation",
+          "customer"
+        ],
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string",
+            "description": "The resource type, e.g. bidder."
+          },
+          "resourceId": {
+            "type": "string",
+            "description": "The resource id within its type, e.g. amsterdam."
+          },
+          "relation": {
+            "type": "string",
+            "description": "The relation, e.g. admin, editor or viewer."
+          },
+          "customer": {
+            "type": "string",
+            "description": "The customer.",
+            "format": "uuid"
           }
         }
       },
@@ -55847,23 +56004,6 @@
           }
         }
       },
-      "RevokeBidderRelationEndpoint_Input": {
-        "required": [
-          "customer",
-          "relation"
-        ],
-        "type": "object",
-        "properties": {
-          "customer": {
-            "type": "string",
-            "description": "The customer to revoke the relation from.",
-            "format": "uuid"
-          },
-          "relation": {
-            "$ref": "#/components/schemas/AuthorizationRelations_Bidder"
-          }
-        }
-      },
       "RevokeClickHouseRelationEndpoint_Input": {
         "required": [
           "customer",
@@ -55921,6 +56061,34 @@
           },
           "relation": {
             "$ref": "#/components/schemas/AuthorizationRelations_Platform"
+          }
+        }
+      },
+      "RevokeRelationEndpoint_Input": {
+        "required": [
+          "resourceType",
+          "resourceId",
+          "relation",
+          "customer"
+        ],
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string",
+            "description": "The resource type, e.g. bidder."
+          },
+          "resourceId": {
+            "type": "string",
+            "description": "The resource id within its type, e.g. amsterdam."
+          },
+          "relation": {
+            "type": "string",
+            "description": "The relation, e.g. admin, editor or viewer."
+          },
+          "customer": {
+            "type": "string",
+            "description": "The customer.",
+            "format": "uuid"
           }
         }
       },
@@ -55983,6 +56151,88 @@
           "token": {
             "type": "string",
             "description": "The recaptcha token used to verify the caller is not a bot."
+          }
+        }
+      },
+      "TestPermissionsEndpoint_Input": {
+        "required": [
+          "checks"
+        ],
+        "type": "object",
+        "properties": {
+          "checks": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TestPermissionsEndpoint_Input_PermissionCheck"
+                }
+              }
+            ],
+            "description": "The resources to test, each with the permissions to test on it."
+          }
+        }
+      },
+      "TestPermissionsEndpoint_Input_PermissionCheck": {
+        "required": [
+          "resourceType",
+          "resourceId",
+          "permissions"
+        ],
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string"
+          },
+          "resourceId": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "TestPermissionsEndpoint_Output": {
+        "required": [
+          "results"
+        ],
+        "type": "object",
+        "properties": {
+          "results": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TestPermissionsEndpoint_Output_HeldPermissions"
+                }
+              }
+            ],
+            "description": "One entry per requested resource, in request order."
+          }
+        }
+      },
+      "TestPermissionsEndpoint_Output_HeldPermissions": {
+        "required": [
+          "resourceType",
+          "resourceId",
+          "permissions"
+        ],
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string"
+          },
+          "resourceId": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -69049,6 +69299,80 @@
         ],
         "description": "Customer-facing reason a job was routed to manual review. Deliberately a projection of the\n internal review-reason taxonomy: the size-triggered LargeJob reason is intentionally\n absent so customers cannot learn that job size triggers review (that would incentivize splitting\n work into smaller jobs). A size-triggered review therefore surfaces as no reason at all."
       },
+      "RunJobDefinitionEndpoint_CostWarning": {
+        "required": [
+          "estimatedCost",
+          "availableBalance",
+          "shortfall"
+        ],
+        "type": "object",
+        "properties": {
+          "estimatedCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "availableBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "shortfall": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "RunJobDefinitionEndpoint_Input": {
+        "required": [
+          "name",
+          "datasetId"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the job and of the job definition the call creates."
+          },
+          "datasetId": {
+            "type": "string",
+            "description": "A dataset you can read, fully uploaded: each datapoint's files under asset and, when the definition shows a prompt, its prompt under context."
+          },
+          "aName": {
+            "type": "string",
+            "description": "The name shown instead of A for the first file of every datapoint. Send it with bName.",
+            "nullable": true
+          },
+          "bName": {
+            "type": "string",
+            "description": "The name shown instead of B for the second file of every datapoint. Send it with aName.",
+            "nullable": true
+          }
+        }
+      },
+      "RunJobDefinitionEndpoint_Output": {
+        "required": [
+          "jobId",
+          "definitionId"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "description": "The id of the started job."
+          },
+          "definitionId": {
+            "type": "string",
+            "description": "The id of the created job definition. Run it again to keep these settings."
+          },
+          "costWarning": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RunJobDefinitionEndpoint_CostWarning"
+              }
+            ],
+            "description": "Present only when the job's estimated cost exceeds the owner's remaining balance."
+          }
+        }
+      },
       "SegmentTextLanguage": {
         "enum": [
           "Original",
@@ -77275,7 +77599,6 @@
       "name": "Rapidata Identity API",
       "tags": [
         "Rapidata.Identity.API",
-        "Bidder",
         "Capabilities",
         "ClickHouse",
         "Client",
@@ -77284,7 +77607,9 @@
         "Identity",
         "Newsletter",
         "Organization",
+        "Permissions",
         "Platform",
+        "Relations",
         "Survey"
       ]
     },
