@@ -105,9 +105,9 @@ The file is just one transport. To move the token over any transport (key-value 
 
 | The user wants to know | Call | Annotators answer |
 |---|---|---|
-| Which model follows the prompt better? | `run_alignment(name, datapoints, *, contexts, a_b_names=None)` | "Which image matches the description better?" (trained Alignment audience) |
-| Which model do people like more? | `run_preference(name, datapoints, *, a_b_names=None)` | "Which image do you prefer?" (broad global crowd) |
-| Which model makes fewer AI mistakes? | `run_coherence(name, datapoints, *, a_b_names=None)` | "Which image is more likely AI-generated?" (trained Coherence audience). The winner is the side that looks **more** AI-generated, so the better model wins fewer pairs |
+| Which model follows the prompt better? | `run_alignment`, with one prompt per pair | "Which image matches the description better?" (trained Alignment audience) |
+| Which model do people like more? | `run_preference` | "Which image do you prefer?" (broad global crowd) |
+| Which model makes fewer AI mistakes? | `run_coherence` | "Which image is more likely AI-generated?" (trained Coherence audience). The winner is the side that looks **more** AI-generated, so the better model wins fewer pairs |
 
 For a full picture of two models, run all three. Build a job definition instead (see **Job Definitions + Audiences**) only when the user needs something a template doesn't do: another question, more than two options, audio or text, their own audience, or a different number of votes. To rank three or more models, use **Model Ranking Insights (MRI / Benchmarks)**.
 
@@ -116,16 +116,12 @@ job = client.job.template.run_alignment(
     name="my-model vs flux-2",
     datapoints=[["mine/cat.png", "flux/cat.png"], ["mine/dog.png", "flux/dog.png"]],
     contexts=["A cat wearing a red scarf", "A dog surfing at sunset"],
+    a_b_names=["my-model", "flux-2"],
 )
-results = job.get_results()
+job.get_results()["summary"]  # {'my-model_wins_total': …, 'flux-2_wins_total': …}
 ```
 
-- **One media type per call.** Videos (`.mp4`, and `.gif`, which Rapidata stores as video) get the same questions with "video". A call that mixes images and videos raises `ValueError` before anything is uploaded; send two calls.
-- **Prompts:** one per pair. The SDK warns above 200 characters ("annotators read them on a phone"); over 400 they are shortened on upload against the template's question (billed like `client.context`). `rapidata_config.upload.contextShortening` does not apply.
-- `a_b_names=["my-model", "flux-2"]` names the first and second file of every pair: `job.get_results()["summary"]` then reads `{'my-model_wins_total': …, 'flux-2_wins_total': …}`.
-- Any failed pair raises `FailedUploadException` (naming the dataset) and **no job starts**; `failureTolerance` does not apply. Fix the files and call the method again.
-- The start request is **never retried** once it may have reached Rapidata. If no answer or a 500 comes back, it raises `RapidataError` ("… so a job may have started…"): look for the job with `client.job.find_jobs(name)` before calling again, or you pay for two jobs. Only a job named exactly `name` and created after the call began is this call's (the error prints that time); `find_jobs` matches any name that contains the text.
-- Each call uses the template's latest completed version and creates a new job definition in your organization. A job can wait for a manual content review (always for videos; for images when the dataset is large or something is flagged); `job.get_results()` then raises with the reason.
+Images and videos (`.mp4`, `.gif`) both work; send them as separate calls. Signatures, errors and what to do when a call says a job may have started: `python -m rapidata skill reference`, **Templates**.
 
 ## Task design rules
 

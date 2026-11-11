@@ -46,35 +46,21 @@ job = audience.assign_job(job_def)
 The quickest way to compare two models: Rapidata's field-tested setup, with only the pairs and prompts from the user.
 
 ```python
-from datetime import datetime, timezone
-
 from rapidata import RapidataClient
-from rapidata.rapidata_client.exceptions import RapidataError
 
 client = RapidataClient()
-name = "flux vs midjourney, cats"
-started = datetime.now(timezone.utc)
 
-try:
-    job = client.job.template.run_alignment(
-        name=name,
-        datapoints=[
-            ["flux_cat.jpg", "mj_cat.jpg"],
-            ["flux_sunset.jpg", "mj_sunset.jpg"],
-        ],
-        contexts=["A cat on a chair", "A sunset over mountains"],
-        a_b_names=["Flux", "Midjourney"],
-    )
-except RapidataError as e:
-    if "a job may have started" not in str(e):
-        raise
-    # find_jobs matches any name containing the text, old jobs included: keep only this call's.
-    jobs = [j for j in client.job.find_jobs(name) if j.name == name and j.created_at >= started]
-    if not jobs:
-        raise  # no job started, so calling run_alignment again is safe
-    job = jobs[0]
-
+job = client.job.template.run_alignment(
+    name="flux vs midjourney, cats",
+    datapoints=[
+        ["flux_cat.jpg", "mj_cat.jpg"],
+        ["flux_sunset.jpg", "mj_sunset.jpg"],
+    ],
+    contexts=["A cat on a chair", "A sunset over mountains"],
+    a_b_names=["Flux", "Midjourney"],
+)
 results = job.get_results()
+print(results["summary"])  # {'Flux_wins_total': …, 'Midjourney_wins_total': …}
 ```
 
 `run_preference` and `run_coherence` take the same arguments without `contexts`. Pass `contexts` and `a_b_names` by keyword. Send image pairs and video pairs as separate calls.
