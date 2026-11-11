@@ -13,7 +13,6 @@ docstrings, so the pointer is printed at import time:
   copy from another version asks for a reinstall instead. Nothing here touches
   the network.
 
-``RAPIDATA_AGENT_HINT=0`` switches it off for processes an agent merely started.
 State lives in :data:`STATE_FILE`, falling back to the temp dir when a sandbox
 makes the home directory read-only. Kept free of client imports:
 ``rapidata/__init__.py`` calls it before loading the client.
@@ -70,28 +69,17 @@ _STAMP_RE = re.compile(r'^  rapidata-sdk-version: "([^"]+)"$', re.MULTILINE)
 AGENT_HINT = (
     "rapidata: coding agent detected. Read the SDK guide for this version before exploring "
     "the installed source (skip if this session already read it):\n"
-    "  python -m rapidata skill            # print the guide\n"
-    "  python -m rapidata skill --install  # keep it in this project\n"
+    "  python -m rapidata skill  # print the guide\n"
     "Before the first RapidataClient(), run `python -m rapidata status`. If it reports not logged in,\n"
     "run `python -m rapidata login` and show the user the URL it prints (it waits up to 5 minutes)."
 )
 
 
 def detected_coding_agent() -> str | None:
-    """Return the name of the coding-agent runtime driving this process, or None.
-
-    Ignores ``RAPIDATA_AGENT_HINT``: silencing the hint does not change what drives the process.
-    """
+    """Return the name of the coding-agent runtime driving this process, or None."""
     return next(
         (name for var, name in _AGENT_ENV_VARS.items() if os.environ.get(var)), None
     )
-
-
-def running_under_coding_agent() -> bool:
-    """Return True when a known coding-agent runtime drives this process and the hint is not switched off."""
-    if os.environ.get("RAPIDATA_AGENT_HINT", "").lower() in ("0", "false", "no"):
-        return False
-    return detected_coding_agent() is not None
 
 
 def _sdk_version() -> str:
@@ -240,7 +228,7 @@ def _running_the_cli() -> bool:
 def agent_hint() -> str | None:
     """Return the pointer an agent should see on import, or None when it has what it needs."""
     try:
-        if not running_under_coding_agent() or _running_the_cli():
+        if detected_coding_agent() is None or _running_the_cli():
             return None
         copies = installed_copies()
         current = _sdk_version()
