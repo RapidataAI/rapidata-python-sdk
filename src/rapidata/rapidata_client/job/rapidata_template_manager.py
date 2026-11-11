@@ -1,8 +1,14 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Literal
 
-from rapidata.rapidata_client.config import logger, managed_print, tracer
+from rapidata.rapidata_client.config import (
+    logger,
+    managed_print,
+    rapidata_config,
+    tracer,
+)
 from rapidata.rapidata_client.context.context_manager import MAX_CONTEXT_LENGTH
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
@@ -33,10 +39,10 @@ MAX_INDEXES_SHOWN = 5
 # Above the load balancer's 120 s, so a slow /run ends in its 504 rather than a client timeout.
 RUN_REQUEST_TIMEOUT = (15.0, 130.0)
 NO_ANSWER_STATUS_CODES = {502, 503, 504}
-NO_ANSWER_MESSAGE = (
-    "No answer from Rapidata, so a job may have started. "
-    "Look for it with client.job.find_jobs(name) before calling again."
-)
+NO_ANSWER = "No answer from Rapidata"
+# The jobs API saves the job before it publishes the start, so a 500 can follow a saved job.
+FAILED_START_STATUS_CODE = 500
+FAILED_START = "Rapidata failed while starting the job"
 
 
 class TemplateUploadException(FailedUploadException):
@@ -63,7 +69,7 @@ class TemplateUploadException(FailedUploadException):
         return (
             f"{len(self.detailed_failures)} of {self._total} pairs failed to upload into "
             f"dataset {self.dataset.id}, so no job was started. Fix them and call "
-            f"client.job.template.{self._method}() again.\n\n{super().__str__()}"
+            f"client.job.template.{self._method}() again.\n\n{self._failures_message()}"
         )
 
 
@@ -77,6 +83,7 @@ class RapidataTemplateManager:
         self,
         name: str,
         datapoints: list[list[str]],
+        *,
         contexts: list[str],
         a_b_names: list[str] | None = None,
     ) -> RapidataJob:
@@ -98,6 +105,7 @@ class RapidataTemplateManager:
         self,
         name: str,
         datapoints: list[list[str]],
+        *,
         a_b_names: list[str] | None = None,
     ) -> RapidataJob:
         """Asks which image (or video) annotators prefer. Arguments as run_alignment."""
@@ -108,6 +116,7 @@ class RapidataTemplateManager:
         self,
         name: str,
         datapoints: list[list[str]],
+        *,
         a_b_names: list[str] | None = None,
     ) -> RapidataJob:
         """Asks which image (or video) is more likely AI-generated. The winner is the
@@ -129,6 +138,7 @@ class RapidataTemplateManager:
         from rapidata.rapidata_client.job._revision_body import _get_instruction
         from rapidata.rapidata_client.job._template_ids import template_id
 
+        started = datetime.now(timezone.utc)
         _check_name(name)
         _check_a_b_names(a_b_names)
         media = _media_of_call(datapoints)
@@ -137,13 +147,13 @@ class RapidataTemplateManager:
         )
         if prompts is not None:
             _warn_about_long_prompts(prompts)
+        _warn_if_content_check_is_forced()
 
         definition_id = template_id(
             self._openapi_service.environment, f"{kind}/{media}"
         )
-        revision = self._openapi_service.order.job_api.job_definition_definition_id_revision_get(
-            definition_id=definition_id
-        )
+        revision = self._read_template(definition_id)
+        votes = _votes(revision)
         question = None
         if prompts is not None:
             question = _get_instruction(revision.workflow)
@@ -153,15 +163,46 @@ class RapidataTemplateManager:
                 )
 
         dataset = self._upload(f"run_{kind}", name, datapoints, prompts, question)
-        response = self._start(definition_id, name, dataset.id, a_b_names)
+        response = self._start(definition_id, name, dataset.id, a_b_names, started)
+        RapidataAudienceBase._warn_if_cost_exceeds_balance(name, response.cost_warning)
 
         job = self._load_job(response.job_id)
         managed_print(
-            f"Job started: {_pairs(len(datapoints))}{_votes(revision)}\n"
-            f"{job.job_details_page}"
+            f"Job started: {_pairs(len(datapoints))}{votes}\n{job.job_details_page}"
         )
-        RapidataAudienceBase._warn_if_cost_exceeds_balance(job, response.cost_warning)
         return job
+
+    def _read_template(self, definition_id: str) -> GetJobRevisionEndpointOutput:
+        from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
+            AudienceAudienceIdJobsGetJobIdParameter,
+        )
+        from rapidata.api_client.models.job_definition_revision_state import (
+            JobDefinitionRevisionState,
+        )
+
+        job_api = self._openapi_service.order.job_api
+        latest = job_api.job_definition_definition_id_revision_get(
+            definition_id=definition_id
+        )
+        if latest.state == JobDefinitionRevisionState.COMPLETED:
+            return latest
+
+        # /run copies the latest completed revision, not a newer pending or failed one.
+        completed = job_api.job_definition_definition_id_revisions_get(
+            definition_id=definition_id,
+            page_size=1,
+            sort=["-revision_number"],
+            state=AudienceAudienceIdJobsGetJobIdParameter(
+                eq=JobDefinitionRevisionState.COMPLETED.value
+            ),
+        ).items
+        if not completed:
+            raise RuntimeError(
+                f"Template {definition_id} has no completed revision to run."
+            )
+        return job_api.job_definition_definition_id_revision_revision_number_get(
+            definition_id=definition_id, revision_number=completed[0].revision_number
+        )
 
     def _upload(
         self,
@@ -214,7 +255,10 @@ class RapidataTemplateManager:
         name: str,
         dataset_id: str,
         a_b_names: list[str] | None,
+        started: datetime,
     ) -> RunJobDefinitionEndpointOutput:
+        from httpx2 import ConnectError, ConnectTimeout, PoolTimeout
+
         from rapidata.api_client.exceptions import ApiException
         from rapidata.api_client.models.run_job_definition_endpoint_input import (
             RunJobDefinitionEndpointInput,
@@ -242,16 +286,26 @@ class RapidataTemplateManager:
                     _request_timeout=RUN_REQUEST_TIMEOUT,
                 )
         except RapidataError as e:
-            if e.status_code not in NO_ANSWER_STATUS_CODES:
+            if e.status_code == FAILED_START_STATUS_CODE:
+                lead = FAILED_START
+            elif e.status_code in NO_ANSWER_STATUS_CODES:
+                lead = NO_ANSWER
+            else:
                 raise
             raise RapidataError(
                 status_code=e.status_code,
-                message=NO_ANSWER_MESSAGE,
+                message=_may_have_started(lead, name, started),
                 original_exception=e,
                 trace_id=e.trace_id,
             ) from e
         except ApiException as e:
-            raise RapidataError(message=NO_ANSWER_MESSAGE, original_exception=e) from e
+            # These fail before the request leaves the client, so calling again is safe.
+            if isinstance(e.__context__, (ConnectError, ConnectTimeout, PoolTimeout)):
+                raise
+            raise RapidataError(
+                message=_may_have_started(NO_ANSWER, name, started),
+                original_exception=e,
+            ) from e
 
     def _load_job(self, job_id: str) -> RapidataJob:
         from rapidata.rapidata_client.job.rapidata_job import RapidataJob
@@ -260,11 +314,13 @@ class RapidataTemplateManager:
             output = self._openapi_service.order.job_api.job_job_id_get(job_id=job_id)
         except Exception as e:
             raise RapidataError(
+                status_code=getattr(e, "status_code", None),
                 message=(
                     f"Job {job_id} started, but reading it failed. "
                     f"Get it with client.job.get_job_by_id('{job_id}')."
                 ),
                 original_exception=e,
+                trace_id=getattr(e, "trace_id", None),
             ) from e
         return RapidataJob(
             job_id=output.job_id,
@@ -283,8 +339,16 @@ class RapidataTemplateManager:
         return self.__str__()
 
 
+def _may_have_started(lead: str, name: str, started: datetime) -> str:
+    return (
+        f"{lead}, so a job may have started. Look for it with "
+        "client.job.find_jobs(name) before calling again. This call's job would be "
+        f"named exactly {name!r} and created after {started:%Y-%m-%d %H:%M:%S} UTC."
+    )
+
+
 def _check_name(name: str) -> None:
-    if not isinstance(name, str) or not 1 <= len(name) <= 256:
+    if not isinstance(name, str) or not name.strip() or len(name) > 256:
         raise ValueError("Name must be 1 to 256 characters.")
 
 
@@ -294,7 +358,7 @@ def _check_a_b_names(a_b_names: list[str] | None) -> None:
     if (
         not isinstance(a_b_names, (list, tuple))
         or len(a_b_names) != 2
-        or not all(isinstance(side, str) and side for side in a_b_names)
+        or not all(isinstance(side, str) and side.strip() for side in a_b_names)
         or a_b_names[0] == a_b_names[1]
     ):
         raise ValueError(
@@ -388,7 +452,7 @@ def _check_contexts(contexts: list[str] | None, pair_count: int) -> list[str]:
             "send one prompt per pair."
         )
     for index, context in enumerate(contexts):
-        if not isinstance(context, str) or not context:
+        if not isinstance(context, str) or not context.strip():
             raise ValueError(f"contexts[{index}] is empty: every pair needs a prompt.")
     return contexts
 
@@ -419,6 +483,15 @@ def _warn_about_long_prompts(contexts: list[str]) -> None:
         )
 
 
+def _warn_if_content_check_is_forced() -> None:
+    if rapidata_config.upload.checkForExplicitContent is True:
+        logger.warning(
+            "rapidata_config.upload.checkForExplicitContent = True has no effect on "
+            "template runs: POST /job/definition/{definitionId}/run checks content "
+            "unless your organization may skip the check."
+        )
+
+
 def _pairs(count: int) -> str:
     return f"{count} pair" if count == 1 else f"{count} pairs"
 
@@ -428,5 +501,5 @@ def _votes(revision: GetJobRevisionEndpointOutput) -> str:
 
     try:
         return f", {_get_responses(revision.referee)} votes each"
-    except ValueError:
+    except (AttributeError, KeyError, TypeError, ValueError):
         return ""

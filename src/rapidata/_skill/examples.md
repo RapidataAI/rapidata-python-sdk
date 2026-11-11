@@ -44,14 +44,18 @@ job = audience.assign_job(job_def)
 ## Template Run: Two Models, One Call
 
 ```python
+from datetime import datetime, timezone
+
 from rapidata import RapidataClient
 from rapidata.rapidata_client.exceptions import RapidataError
 
 client = RapidataClient()
+name = "flux vs midjourney, cats"
+started = datetime.now(timezone.utc)
 
 try:
     job = client.job.template.run_alignment(
-        name="flux vs midjourney, cats",
+        name=name,
         datapoints=[
             ["flux_cat.jpg", "mj_cat.jpg"],
             ["flux_sunset.jpg", "mj_sunset.jpg"],
@@ -62,8 +66,8 @@ try:
 except RapidataError as e:
     if "a job may have started" not in str(e):
         raise
-    # The start request got no answer: look before calling run_alignment again.
-    jobs = client.job.find_jobs(name="flux vs midjourney, cats", amount=1)
+    # find_jobs matches any name containing the text, old jobs included: keep only this call's.
+    jobs = [j for j in client.job.find_jobs(name) if j.name == name and j.created_at >= started]
     if not jobs:
         raise  # no job started, so calling run_alignment again is safe
     job = jobs[0]
@@ -71,7 +75,7 @@ except RapidataError as e:
 results = job.get_results()
 ```
 
-`run_preference` and `run_coherence` take the same arguments without `contexts`. Send image pairs and video pairs as separate calls.
+`run_preference` and `run_coherence` take the same arguments without `contexts`. Pass `contexts` and `a_b_names` by keyword. Send image pairs and video pairs as separate calls.
 
 ## Comparison with Early Stopping
 

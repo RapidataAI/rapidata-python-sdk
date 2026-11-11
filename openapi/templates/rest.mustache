@@ -33,8 +33,8 @@ _logger = logging.getLogger("rapidata.api_client")
 _TRANSIENT_RETRY_MAX_ATTEMPTS = 3
 _TRANSIENT_RETRY_BASE_DELAY = 0.5
 _TRANSIENT_RETRY_MAX_DELAY = 30.0
-# 429 = rate limit, 502/503/504 = transient upstream / gateway errors.
-# All four are safe to retry with exponential backoff.
+# 429 = rate limit, 502/503/504 = transient upstream / gateway errors, all retried
+# with exponential backoff. Inside without_unsafe_retries() only 429 is.
 _RETRYABLE_STATUS_CODES = {429, 502, 503, 504}
 _RETRY_AFTER_MAX_SECONDS = 60.0
 

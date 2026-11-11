@@ -126,7 +126,7 @@ class FailedUploadException(Exception):
                 return True
         return False
 
-    def __str__(self) -> str:
+    def _failures_message(self) -> str:
         total = len(self._failed_uploads)
         if total == 0:
             return "0 datapoints failed to upload"
@@ -167,6 +167,12 @@ class FailedUploadException(Exception):
                 "environment variables. See "
                 "https://docs.rapidata.ai/config/#upload-configuration-options"
             )
+        return failed_upload_message
+
+    def __str__(self) -> str:
+        failed_upload_message = self._failures_message()
+        if not self._failed_uploads:
+            return failed_upload_message
         if self.machine is not None:
             failed_upload_message += (
                 "\n\nNo job definition was created because the upload stayed outside the "

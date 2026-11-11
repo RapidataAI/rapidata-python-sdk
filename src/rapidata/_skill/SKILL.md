@@ -130,16 +130,16 @@ results = job.get_results()
 
 | Method | You send | Question annotators see |
 |---|---|---|
-| `run_alignment(name, datapoints, contexts, a_b_names=None)` | pairs + prompts | "Which image matches the description better?" |
-| `run_preference(name, datapoints, a_b_names=None)` | pairs | "Which image do you prefer?" |
-| `run_coherence(name, datapoints, a_b_names=None)` | pairs | "Which image is more likely AI-generated?" — the winner is the side that looks **more** AI-generated, so the better model wins fewer pairs |
+| `run_alignment(name, datapoints, *, contexts, a_b_names=None)` | pairs + prompts | "Which image matches the description better?" |
+| `run_preference(name, datapoints, *, a_b_names=None)` | pairs | "Which image do you prefer?" |
+| `run_coherence(name, datapoints, *, a_b_names=None)` | pairs | "Which image is more likely AI-generated?" — the winner is the side that looks **more** AI-generated, so the better model wins fewer pairs |
 
-- **One media type per call.** Videos (`.mp4`) get the same questions with "video". A call that mixes images and videos raises `ValueError` before anything is uploaded; send two calls.
+- **One media type per call.** Videos (`.mp4`, and `.gif`, which Rapidata stores as video) get the same questions with "video". A call that mixes images and videos raises `ValueError` before anything is uploaded; send two calls.
 - **Prompts:** one per pair. The SDK warns above 200 characters ("annotators read them on a phone"); over 400 they are shortened on upload against the template's question (billed like `client.context`). `rapidata_config.upload.contextShortening` does not apply.
 - `a_b_names=["my-model", "flux-2"]` names the first and second file of every pair in the results.
 - Any failed pair raises `FailedUploadException` (naming the dataset) and **no job starts**; `failureTolerance` does not apply. Fix the files and call the method again.
-- The start request is **never retried** once it may have reached Rapidata. If no answer comes back, it raises `RapidataError` ("No answer from Rapidata, so a job may have started…"): look for the job with `client.job.find_jobs(name)` before calling again, or you pay for two jobs.
-- Each call uses the template's latest version and creates a new job definition in your organization. A video job can wait for a manual content review; `job.get_results()` then raises with the reason.
+- The start request is **never retried** once it may have reached Rapidata. If no answer or a 500 comes back, it raises `RapidataError` ("… so a job may have started…"): look for the job with `client.job.find_jobs(name)` before calling again, or you pay for two jobs. Only a job named exactly `name` and created after the call began is this call's (the error prints that time); `find_jobs` matches any name that contains the text.
+- Each call uses the template's latest completed version and creates a new job definition in your organization. A job can wait for a manual content review (always for videos; for images when the dataset is large or something is flagged); `job.get_results()` then raises with the reason.
 
 ## Job Definitions + Audiences
 
@@ -581,7 +581,7 @@ settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (ta
 12. **Don't restrict evaluations to English speakers for comprehension** — the instruction, the `context` string and answer options are translated into each labeler's device language automatically, so the global pool understands an English task. Turn this off with `OriginalLanguageOnlySetting()`. Two exceptions:
    - **Text assets are NOT translated by default** — datapoints uploaded with `data_type="text"` (and text `context_assets`) are shown exactly as supplied unless you add `TranslateTextAssetsSetting()`, which translates them into each labeler's language. That setting **always treats the source text as English** — for non-English text, leave it off and target speakers of the text's language with `LanguageFilter`. Results keep referencing the original text. `OriginalLanguageOnlySetting` wins over it.
    - **Text inside images and videos is never translated.** To measure it (e.g. rendered text in a generated image), run it as its own job or leaderboard that asks only about that dimension, on an audience filtered with `LanguageFilter` for the text's language — not `CountryFilter`, since a country's labelers don't all read its language. Keep the other dimensions on the unfiltered audience.
-13. **Don't retry a template run blindly** — `client.job.template.run_*()` never resends its start request once it may have reached Rapidata. A `RapidataError` saying "No answer from Rapidata, so a job may have started" means exactly that: call `client.job.find_jobs(name)` first, and only call the method again if no job with that name exists.
+13. **Don't retry a template run blindly** — `client.job.template.run_*()` never resends its start request once it may have reached Rapidata. A `RapidataError` saying "… so a job may have started" (no answer, or a 500) means exactly that: call `client.job.find_jobs(name)` first, and only call the method again if no job named exactly `name` was created after the call began. `find_jobs` also returns older jobs and longer names that contain the text, so never take its first result blindly.
 14. **`assign_job` runs the object's revision, not the latest** — it sends `job_def.revision` and raises `RuntimeError` while the object has unsaved changes; `save()` first. Two objects loaded at the same revision never see each other's changes: each `save()` creates its own revision from what it loaded, and the last save becomes the latest. Use `save(require_latest=True)` to refuse instead: it raises `RevisionConflictError` (`e.latest_revision`) when someone saved since you loaded, creating nothing; then `discard_changes()`, `reload()`, reapply and save
 
 ## Flows (Continuous Response Collection)
