@@ -1,6 +1,16 @@
 # Templates
 
-Run a Rapidata-maintained setup on your own pairs in one call. Rapidata picks the question and the audience; every pair gets 11 votes.
+We run model comparisons for our own benchmarks and for our customers, and a few setups keep giving teams answers they can act on. Templates are the three most useful ones, ready to run. You bring pairs of images or videos, one from each model. We bring the question, the right annotators and 11 votes per pair.
+
+| Template | Annotators answer | Use it to |
+| --- | --- | --- |
+| [Alignment](#alignment-does-it-follow-the-prompt) | Which image matches the description better? | check how well a model follows prompts |
+| [Preference](#preference-which-one-do-people-like) | Which image do you prefer? | find the model people like more |
+| [Coherence](#coherence-which-one-looks-ai-generated) | Which image is more likely AI-generated? | catch glitches like extra fingers or warped text |
+
+## Alignment: does it follow the prompt?
+
+Annotators trained for this read the prompt, look at both images and pick the one that matches it better. Send the prompt each pair was made from.
 
 ```py
 from rapidata import RapidataClient
@@ -17,29 +27,54 @@ job = client.job.template.run_alignment(
 results = job.get_results()
 ```
 
-| Method | You send | Question annotators see |
-| --- | --- | --- |
-| `run_alignment` | pairs + prompts | "Which image matches the description better?" |
-| `run_preference` | pairs | "Which image do you prefer?" |
-| `run_coherence` | pairs | "Which image is more likely AI-generated?" |
+## Preference: which one do people like?
 
-Videos (`.mp4` and `.gif`) get the same questions with "video". **One media type per call:** send images and videos as two calls.
+A broad crowd picks the image they like more. No prompt needed.
 
-!!! note "Coherence: the winner looks more AI-generated"
-    Annotators pick the file that looks more AI-generated, so the better model wins fewer pairs.
+```py
+job = client.job.template.run_preference(
+    name="my-model vs flux-2",
+    datapoints=[["mine/cat.png", "flux/cat.png"],
+                ["mine/dog.png", "flux/dog.png"]],
+)
+results = job.get_results()
+```
 
-**Name the sides (optional).** `a_b_names=["my-model", "flux-2"]` names the first and second file of every pair; the results show these names instead of A and B.
+## Coherence: which one looks AI-generated?
 
-!!! tip "Keep prompts under 200 characters for better results"
-    The SDK warns above 200. Annotators see at most 400: longer prompts are shortened to the part relevant to the question (LLM, cached, billed like `client.context`), and the SDK logs how many.
+Annotators trained to spot AI mistakes, like extra fingers, warped text or melting objects, pick the image that looks more AI-generated.
 
-Each call uses the template's latest version and creates a job definition in your organization.
+```py
+job = client.job.template.run_coherence(
+    name="my-model vs flux-2",
+    datapoints=[["mine/cat.png", "flux/cat.png"],
+                ["mine/dog.png", "flux/dog.png"]],
+)
+results = job.get_results()
+```
 
-## What one call sends
+!!! note "In Coherence, fewer wins is better"
+    The winning side is the one that looks more AI-generated, so the better model wins fewer pairs.
 
-1. `GET /job/definition/{definitionId}/revision` reads the template's question and votes. If that revision isn't completed yet, the call reads the latest completed one, which `/run` uses.
-2. `POST /dataset` creates a dataset in your organization. For `run_alignment` it carries `contextShortening` with the template's question.
-3. The files upload, then one `POST /dataset/{datasetId}/datapoint` per pair. If a pair fails, the call raises a `FailedUploadException` naming the dataset, and no job starts.
-4. One `POST /job/definition/{definitionId}/run` starts the job. It is never retried after it may have reached Rapidata: if no answer or a 500 comes back, the call raises a `RapidataError`. A job may have started, so look for it with `client.job.find_jobs(name)` before calling again. Only a job with exactly this name, created after the call began, can be it; the error prints that time.
+## See who won
 
-Template runs don't read `rapidata_config.upload.contextShortening` (only prompts over 400 characters are shortened), `failureTolerance` (any failed pair stops the run) or `checkForExplicitContent` (`POST /job/definition/{definitionId}/run` decides the content check from your organization, and the SDK warns when it is `True`). A job can wait for a manual content review before it starts: always for videos, and for images when the dataset is large or something is flagged. `job.get_results()` then raises with the reason instead of blocking.
+Name the two sides, and the results count each side's wins:
+
+```py
+job = client.job.template.run_preference(
+    name="my-model vs flux-2",
+    datapoints=[["mine/cat.png", "flux/cat.png"],
+                ["mine/dog.png", "flux/dog.png"]],
+    a_b_names=["my-model", "flux-2"],
+)
+job.get_results()["summary"]
+# {'my-model_wins_total': 2, 'flux-2_wins_total': 0}
+```
+
+The results also hold all 11 votes for every pair.
+
+## Good to know
+
+- **Videos work the same way.** Send `.mp4` files (GIFs count as videos), and the question says "video". Send images and videos in separate calls.
+- **Keep prompts short.** Under 200 characters reads best on a phone. We shorten prompts over 400 characters to what the question needs.
+- **We maintain the templates.** Every call uses the latest version.
