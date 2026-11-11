@@ -2746,7 +2746,7 @@ class LeaderboardApi:
     ) -> CreateCustomRunEndpointOutput:
         """Creates a run that evaluates an explicit list of matchup configurations, each with its own  response count.
 
-        Answers 202 once the configurations are validated and the run is queued; it then starts  behind whatever else is queued on the leaderboard, and its matchups are resolved at that  point. Poll GET /leaderboard/{leaderboardId}/runs for its status. Every id is  verified before the 202, but a configuration that resolves to no matchups is only found at  start and is skipped; the run fails when all of them do. At most 2000 configurations,  1000000 responses and 10000 referenced ids per request.
+        Answers 202 once the configurations are validated and the run is queued; it then starts  behind whatever else is queued on the leaderboard, and its matchups are resolved at that  point. Poll GET /leaderboard/{leaderboardId}/runs for its status. Every id is  verified before the 202, but a configuration that resolves to no matchups is only found at  start and is skipped; the run fails when all of them do. At most 2000 configurations,  1000000 responses and 10000 referenced ids per request.  Two candidates are never paired: a configuration whose participantIds or  sampleIds can only pair candidates is a 400.
 
         :param leaderboard_id: The id of the leaderboard to run the matchups on. (required)
         :type leaderboard_id: str
@@ -2820,7 +2820,7 @@ class LeaderboardApi:
     ) -> ApiResponse[CreateCustomRunEndpointOutput]:
         """Creates a run that evaluates an explicit list of matchup configurations, each with its own  response count.
 
-        Answers 202 once the configurations are validated and the run is queued; it then starts  behind whatever else is queued on the leaderboard, and its matchups are resolved at that  point. Poll GET /leaderboard/{leaderboardId}/runs for its status. Every id is  verified before the 202, but a configuration that resolves to no matchups is only found at  start and is skipped; the run fails when all of them do. At most 2000 configurations,  1000000 responses and 10000 referenced ids per request.
+        Answers 202 once the configurations are validated and the run is queued; it then starts  behind whatever else is queued on the leaderboard, and its matchups are resolved at that  point. Poll GET /leaderboard/{leaderboardId}/runs for its status. Every id is  verified before the 202, but a configuration that resolves to no matchups is only found at  start and is skipped; the run fails when all of them do. At most 2000 configurations,  1000000 responses and 10000 referenced ids per request.  Two candidates are never paired: a configuration whose participantIds or  sampleIds can only pair candidates is a 400.
 
         :param leaderboard_id: The id of the leaderboard to run the matchups on. (required)
         :type leaderboard_id: str
@@ -2894,7 +2894,7 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Creates a run that evaluates an explicit list of matchup configurations, each with its own  response count.
 
-        Answers 202 once the configurations are validated and the run is queued; it then starts  behind whatever else is queued on the leaderboard, and its matchups are resolved at that  point. Poll GET /leaderboard/{leaderboardId}/runs for its status. Every id is  verified before the 202, but a configuration that resolves to no matchups is only found at  start and is skipped; the run fails when all of them do. At most 2000 configurations,  1000000 responses and 10000 referenced ids per request.
+        Answers 202 once the configurations are validated and the run is queued; it then starts  behind whatever else is queued on the leaderboard, and its matchups are resolved at that  point. Poll GET /leaderboard/{leaderboardId}/runs for its status. Every id is  verified before the 202, but a configuration that resolves to no matchups is only found at  start and is skipped; the run fails when all of them do. At most 2000 configurations,  1000000 responses and 10000 referenced ids per request.  Two candidates are never paired: a configuration whose participantIds or  sampleIds can only pair candidates is a 400.
 
         :param leaderboard_id: The id of the leaderboard to run the matchups on. (required)
         :type leaderboard_id: str
