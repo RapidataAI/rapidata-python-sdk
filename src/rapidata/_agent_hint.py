@@ -69,8 +69,7 @@ _STAMP_RE = re.compile(r'^  rapidata-sdk-version: "([^"]+)"$', re.MULTILINE)
 AGENT_HINT = (
     "rapidata: coding agent detected. Read the SDK guide for this version before exploring "
     "the installed source (skip if this session already read it):\n"
-    "  python -m rapidata skill            # print the guide\n"
-    "  python -m rapidata skill --install  # keep it in this project\n"
+    "  python -m rapidata skill  # print the guide\n"
     "Before the first RapidataClient(), run `python -m rapidata status`. If it reports not logged in,\n"
     "run `python -m rapidata login` and show the user the URL it prints (it waits up to 5 minutes)."
 )

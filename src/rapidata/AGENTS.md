@@ -7,8 +7,7 @@ sets, result fields and the mistakes agents make most often.
 Read it first:
 
 ```bash
-python -m rapidata skill            # print the guide
-python -m rapidata skill --install  # install it into the current project
+python -m rapidata skill  # print the guide
 ```
 
 The guide's source is `_skill/SKILL.md` in this package, edited only in the
