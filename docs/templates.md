@@ -12,6 +12,21 @@ We run model comparisons for our own benchmarks and for our customers, and we've
 
 Annotators trained for this read the prompt, look at both images and pick the one that matches it better. Send the prompt each pair was made from.
 
+<div class="preview-gallery">
+<div data-preview-embed data-preview-lazy data-preview-campaign="cmp_1abYfMLy0hYeVt">
+<div class="phone-preview">
+<div class="phone-preview__notch"></div>
+<div class="phone-preview__btn phone-preview__btn--left-top"></div>
+<div class="phone-preview__btn phone-preview__btn--left-bot"></div>
+<div class="phone-preview__btn phone-preview__btn--right"></div>
+<iframe class="phone-preview__iframe" allow="clipboard-write" title="Live alignment preview"></iframe>
+</div>
+<div class="preview-controls">
+<button type="button" data-preview-refresh aria-label="Refresh preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg><span>Refresh</span></button>
+</div>
+</div>
+</div>
+
 ```py
 from rapidata import RapidataClient
 
@@ -31,6 +46,21 @@ results = job.get_results()
 
 A broad crowd picks the image they like more. No prompt needed.
 
+<div class="preview-gallery">
+<div data-preview-embed data-preview-lazy data-preview-campaign="cmp_1abYgGt4xQgkRv">
+<div class="phone-preview">
+<div class="phone-preview__notch"></div>
+<div class="phone-preview__btn phone-preview__btn--left-top"></div>
+<div class="phone-preview__btn phone-preview__btn--left-bot"></div>
+<div class="phone-preview__btn phone-preview__btn--right"></div>
+<iframe class="phone-preview__iframe" allow="clipboard-write" title="Live preference preview"></iframe>
+</div>
+<div class="preview-controls">
+<button type="button" data-preview-refresh aria-label="Refresh preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg><span>Refresh</span></button>
+</div>
+</div>
+</div>
+
 ```py
 job = client.job.template.run_preference(
     name="my-model vs flux-2",
@@ -43,6 +73,21 @@ results = job.get_results()
 ## Coherence: which one looks AI-generated?
 
 Annotators trained to spot AI mistakes pick the image that looks more AI-generated.
+
+<div class="preview-gallery">
+<div data-preview-embed data-preview-lazy data-preview-campaign="cmp_1abYgZcG8wKP7l">
+<div class="phone-preview">
+<div class="phone-preview__notch"></div>
+<div class="phone-preview__btn phone-preview__btn--left-top"></div>
+<div class="phone-preview__btn phone-preview__btn--left-bot"></div>
+<div class="phone-preview__btn phone-preview__btn--right"></div>
+<iframe class="phone-preview__iframe" allow="clipboard-write" title="Live coherence preview"></iframe>
+</div>
+<div class="preview-controls">
+<button type="button" data-preview-refresh aria-label="Refresh preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg><span>Refresh</span></button>
+</div>
+</div>
+</div>
 
 ```py
 job = client.job.template.run_coherence(
