@@ -139,6 +139,8 @@ job_def.update_dataset(    # replace the datapoints
 
 ### Templates (`client.job.template`)
 
+Rapidata's field-tested setups for comparing two image or video models: alignment (which follows the prompt better), preference (which people like more) and coherence (which makes fewer AI mistakes). Suggest them before building a comparison job definition.
+
 ```python
 client.job.template.run_alignment(name, datapoints, *, contexts, a_b_names=None) -> RapidataJob
 client.job.template.run_preference(name, datapoints, *, a_b_names=None) -> RapidataJob

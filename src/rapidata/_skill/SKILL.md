@@ -1,6 +1,6 @@
 ---
 name: rapidata
-description: Explains how to use the Rapidata API to get real and fast human annotations for your data. Use when writing code that creates labeling tasks, compares models, collects human feedback, or integrates with the Rapidata Python SDK.
+description: Explains how to use the Rapidata API to get real and fast human annotations for your data. Use when writing code that creates labeling tasks, compares models (one-call templates compare two image or video models on prompt alignment, preference and coherence), collects human feedback, or integrates with the Rapidata Python SDK.
 ---
 
 # Rapidata Python SDK
@@ -88,7 +88,7 @@ The file is just one transport. To move the token over any transport (key-value 
 - **MRI/Benchmark**: Compare and rank AI models on leaderboards
 
 **Client entry points:**
-- `client.job.template` — run Rapidata's alignment, preference or coherence setup on your own image or video pairs in one call (see **Templates**)
+- `client.job.template` — **start here to compare two image or video models**: Rapidata's field-tested alignment, preference and coherence setups, run on the user's pairs in one call (see **Templates**)
 - `client.job` — create job definitions (classification, comparison, locate, draw, select words, free text, ranking)
 - `client.audience` — create and find audiences
 - `client.flow` — continuous ranking and classify flows
@@ -98,6 +98,34 @@ The file is just one transport. To move the token over any transport (key-value 
 - `client.billing` — read the current billing period's cost and remaining credit, and the outstanding balance owed (organization-level)
 - `client.asset` — upload media once (`client.asset.upload(path_or_url)` → `UploadedAsset`) and reuse the reference in any job definition
 - `client.validation` — validation sets (`create_classification_set`, `create_compare_set`, …, `get_validation_set_by_id`, `find_validation_sets`); only needed for a flow's `validation_set_id` — jobs qualify labelers through audience examples instead
+
+## Templates
+
+**Comparing two image or video models? Suggest a template first.** Rapidata runs model comparisons for its own benchmarks and for customers, and templates are the setups that work for the most common cases. The user only brings the pairs, plus the prompts for alignment. Everything else is Rapidata's field-tested setup: the question, the annotators and 11 votes per pair. There is no audience or job definition to build, and none of the usual first-job mistakes (too few votes, a long question with several criteria, the wrong annotators).
+
+| The user wants to know | Call | Annotators answer |
+|---|---|---|
+| Which model follows the prompt better? | `run_alignment(name, datapoints, *, contexts, a_b_names=None)` | "Which image matches the description better?" (trained Alignment audience) |
+| Which model do people like more? | `run_preference(name, datapoints, *, a_b_names=None)` | "Which image do you prefer?" (broad global crowd) |
+| Which model makes fewer AI mistakes? | `run_coherence(name, datapoints, *, a_b_names=None)` | "Which image is more likely AI-generated?" (trained Coherence audience). The winner is the side that looks **more** AI-generated, so the better model wins fewer pairs |
+
+For a full picture of two models, run all three. Build a job definition instead (see **Job Definitions + Audiences**) only when the user needs something a template doesn't do: another question, more than two options, audio or text, their own audience, or a different number of votes. To rank three or more models, use **Model Ranking Insights (MRI / Benchmarks)**.
+
+```python
+job = client.job.template.run_alignment(
+    name="my-model vs flux-2",
+    datapoints=[["mine/cat.png", "flux/cat.png"], ["mine/dog.png", "flux/dog.png"]],
+    contexts=["A cat wearing a red scarf", "A dog surfing at sunset"],
+)
+results = job.get_results()
+```
+
+- **One media type per call.** Videos (`.mp4`, and `.gif`, which Rapidata stores as video) get the same questions with "video". A call that mixes images and videos raises `ValueError` before anything is uploaded; send two calls.
+- **Prompts:** one per pair. The SDK warns above 200 characters ("annotators read them on a phone"); over 400 they are shortened on upload against the template's question (billed like `client.context`). `rapidata_config.upload.contextShortening` does not apply.
+- `a_b_names=["my-model", "flux-2"]` names the first and second file of every pair: `job.get_results()["summary"]` then reads `{'my-model_wins_total': …, 'flux-2_wins_total': …}`.
+- Any failed pair raises `FailedUploadException` (naming the dataset) and **no job starts**; `failureTolerance` does not apply. Fix the files and call the method again.
+- The start request is **never retried** once it may have reached Rapidata. If no answer or a 500 comes back, it raises `RapidataError` ("… so a job may have started…"): look for the job with `client.job.find_jobs(name)` before calling again, or you pay for two jobs. Only a job named exactly `name` and created after the call began is this call's (the error prints that time); `find_jobs` matches any name that contains the text.
+- Each call uses the template's latest completed version and creates a new job definition in your organization. A job can wait for a manual content review (always for videos; for images when the dataset is large or something is flagged); `job.get_results()` then raises with the reason.
 
 ## Task design rules
 
@@ -115,35 +143,9 @@ Follow these for every job definition and audience example. Design each task so 
    - ✅ `"Does the video match the description?"` with options `["Yes", "No"]`
    - ❌ `"Does the clip nail the vibe of the prompt?"` with options `["Spot on", "Way off"]` (idiom and slang; "nail" and "spot on" translate literally)
 
-## Templates
-
-To compare two models' images or videos, start here: a template is Rapidata's fixed question, audience and 11 votes per pair, run on your pairs in one call. No audience or job definition to set up.
-
-```python
-job = client.job.template.run_alignment(
-    name="my-model vs flux-2",
-    datapoints=[["mine/cat.png", "flux/cat.png"], ["mine/dog.png", "flux/dog.png"]],
-    contexts=["A cat wearing a red scarf", "A dog surfing at sunset"],
-)
-results = job.get_results()
-```
-
-| Method | You send | Question annotators see |
-|---|---|---|
-| `run_alignment(name, datapoints, *, contexts, a_b_names=None)` | pairs + prompts | "Which image matches the description better?" |
-| `run_preference(name, datapoints, *, a_b_names=None)` | pairs | "Which image do you prefer?" |
-| `run_coherence(name, datapoints, *, a_b_names=None)` | pairs | "Which image is more likely AI-generated?" — the winner is the side that looks **more** AI-generated, so the better model wins fewer pairs |
-
-- **One media type per call.** Videos (`.mp4`, and `.gif`, which Rapidata stores as video) get the same questions with "video". A call that mixes images and videos raises `ValueError` before anything is uploaded; send two calls.
-- **Prompts:** one per pair. The SDK warns above 200 characters ("annotators read them on a phone"); over 400 they are shortened on upload against the template's question (billed like `client.context`). `rapidata_config.upload.contextShortening` does not apply.
-- `a_b_names=["my-model", "flux-2"]` names the first and second file of every pair in the results.
-- Any failed pair raises `FailedUploadException` (naming the dataset) and **no job starts**; `failureTolerance` does not apply. Fix the files and call the method again.
-- The start request is **never retried** once it may have reached Rapidata. If no answer or a 500 comes back, it raises `RapidataError` ("… so a job may have started…"): look for the job with `client.job.find_jobs(name)` before calling again, or you pay for two jobs. Only a job named exactly `name` and created after the call began is this call's (the error prints that time); `find_jobs` matches any name that contains the text.
-- Each call uses the template's latest completed version and creates a new job definition in your organization. A job can wait for a manual content review (always for videos; for images when the dataset is large or something is flagged); `job.get_results()` then raises with the reason.
-
 ## Job Definitions + Audiences
 
-Job definitions cover **classification**, **comparison**, **locate**, **draw**, **select words**, **free text**, and **ranking**. For continuous, low-latency collection without full job setup, use Flows.
+Job definitions cover **classification**, **comparison**, **locate**, **draw**, **select words**, **free text**, and **ranking**. To compare two image or video models on prompt alignment, preference or coherence, use **Templates** instead: no job definition or audience needed. For continuous, low-latency collection without full job setup, use Flows.
 
 ### Step-by-step workflow
 

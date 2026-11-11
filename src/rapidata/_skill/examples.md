@@ -43,6 +43,8 @@ job = audience.assign_job(job_def)
 
 ## Template Run: Two Models, One Call
 
+The quickest way to compare two models: Rapidata's field-tested setup, with only the pairs and prompts from the user.
+
 ```python
 from datetime import datetime, timezone
 
