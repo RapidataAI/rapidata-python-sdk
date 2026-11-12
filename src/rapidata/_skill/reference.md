@@ -12,11 +12,11 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `instruction` | str | Question shown to labelers: one criterion, under 80 characters (see **Task design rules** in the main guide). Over 250 characters raises `ValueError` |
 | `datapoints` | list | Data to label: URLs, local paths, or `UploadedAsset` references from `client.asset.upload(...)`, which are never uploaded again |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
-| `responses_per_datapoint` | `int \| AdaptiveStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()` (~21 responses per pair on average, ~31 for the hardest pairs); other default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` is compare-only. See **Early Stopping** |
+| `responses_per_datapoint` | `int \| AdaptiveStopping \| QuorumStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()` (~21 responses per pair on average, ~31 for the hardest pairs); other default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` is compare-only; `QuorumStopping(threshold, max_responses)` works on classification and compare. See **Early Stopping** |
 | `contexts` | list[str] \| None | Text context per datapoint: one sentence under 150 characters with only what the instruction asks about (see **Task design rules** in the main guide). Max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually |
 | `media_contexts` | list[list[str \| UploadedAsset]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths/`UploadedAsset` references (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
 | `confidence_threshold` | float \| None | **Deprecated** (`DeprecationWarning`). Confidence-based early stopping threshold (0-1); needs an `int` `responses_per_datapoint` as the cap (when omitted: 15 on compare jobs, 10 otherwise). Use adaptive stopping on compare jobs |
-| `quorum_threshold` | int \| None | Quorum-based early stopping: stop when this many responses agree; needs an `int` `responses_per_datapoint` as the cap (when omitted: 15 on compare jobs, 10 otherwise); cannot combine with `confidence_threshold` |
+| `quorum_threshold` | int \| None | **Deprecated** (`DeprecationWarning`) — use `responses_per_datapoint=QuorumStopping(threshold, max_responses)`. Needs an `int` `responses_per_datapoint` as the cap (when omitted: 15 on compare jobs, 10 otherwise); cannot combine with `confidence_threshold` |
 | `settings` | `Sequence[RapidataSetting] \| None` | Display/behavior settings |
 | `failure_tolerance` | float \| None | Fraction of datapoints (0.0–1.0) allowed to fail upload while the definition is still created; `None` falls back to `rapidata_config.upload.failureTolerance` (default `0.0` = strict). See Error Handling |
 | `private_metadata` | `list[dict[str, str]] \| None` | Hidden metadata per datapoint |
@@ -464,6 +464,7 @@ The stopping rule is the value of `responses_per_datapoint`:
 | Value | Rule | Job types |
 |-------|------|-----------|
 | `AdaptiveStopping()` | Stop each pair at its first settled verdict. **Compare default** | Compare |
+| `QuorumStopping(threshold, max_responses)` | Stop once `threshold` responses agree | Classification, Compare |
 | `int` | Exactly that many responses. Default `10` for all other job types | All |
 
 ### Adaptive Stopping
@@ -514,30 +515,33 @@ Each adaptive compare result gets `adaptiveStoppingState`:
 Stop collecting responses once a fixed number of responses agree on the same answer.
 
 ```python
+from rapidata import QuorumStopping
+
 job_def = client.job.create_classification_job_definition(
     name="Animal Classification",
     instruction="What animal is in this image?",
     answer_options=["Cat", "Dog"],
     datapoints=["pet1.jpg", "pet2.jpg"],
-    responses_per_datapoint=10,   # Maximum
-    quorum_threshold=7,           # Stop when 7 responses agree
+    responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10),
 )
 ```
 
 A datapoint stops when:
-1. `quorum_threshold` responses agree on the same answer, **OR**
+1. `threshold` responses agree on the same answer, **OR**
 2. Quorum becomes mathematically impossible (e.g. responses are too split to reach the threshold), **OR**
-3. `responses_per_datapoint` total responses are collected
+3. `max_responses` total responses are collected
 
-### Deprecated `confidence_threshold`
+`QuorumStopping` is a frozen dataclass; both fields are positive ints and `threshold` ≤ `max_responses`, else `ValueError`. Other job types than classification and compare raise `ValueError`.
 
-`confidence_threshold` emits a `DeprecationWarning` on every job type. Use adaptive stopping (the default) on compare jobs; on classification use `quorum_threshold` or a fixed count. It still works with an `int` `responses_per_datapoint` as the cap.
+### Deprecated `quorum_threshold` and `confidence_threshold`
 
-Both thresholds cannot be set together and raise `ValueError` combined with an explicit `AdaptiveStopping`. On a compare job with the default left in place, they use a cap of 15.
+Both emit a `DeprecationWarning` on every job type. Replace `quorum_threshold=7, responses_per_datapoint=10` with `responses_per_datapoint=QuorumStopping(7, 10)`, and `confidence_threshold` with adaptive stopping (the default) on compare jobs or `QuorumStopping` / a fixed count on classification. They still work with an `int` `responses_per_datapoint` as the cap.
+
+They cannot be set together and raise `ValueError` combined with `AdaptiveStopping` or `QuorumStopping`. On a compare job with the default left in place, they use a cap of 15.
 
 ### Reading and editing the rule
 
-`job_def.responses_per_datapoint` returns an `int`, or an `AdaptiveStopping` with the resolved values for adaptive definitions. Assigning an `AdaptiveStopping` switches a compare definition to adaptive stopping on `save()`; assigning an `int` to an adaptive definition switches it to that fixed count, and on any other definition changes its count or cap.
+`job_def.responses_per_datapoint` returns an `int`, `AdaptiveStopping` or `QuorumStopping` (a legacy `confidence_threshold` definition returns its cap as an `int`). Assigning `AdaptiveStopping` or `QuorumStopping` replaces the rule on `save()`; assigning an `int` sets a fixed count, except on a legacy `confidence_threshold` definition, where it changes the cap.
 
 ## Job Progress
 

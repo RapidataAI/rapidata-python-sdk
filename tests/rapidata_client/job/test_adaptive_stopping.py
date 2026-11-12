@@ -1,4 +1,4 @@
-"""AdaptiveStopping: validation, the compare default, deprecations, and the wire body."""
+"""AdaptiveStopping and QuorumStopping: validation, the compare default, deprecations, and the wire body."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from rapidata import AdaptiveStopping
+from rapidata import AdaptiveStopping, QuorumStopping
 from rapidata.api_client.models.create_job_revision_endpoint_output import (
     CreateJobRevisionEndpointOutput,
 )
@@ -187,10 +187,18 @@ def test_classification_keeps_ten_fixed_responses_by_default():
     assert body["referee"] == {"_t": "NaiveReferee", "totalVotes": 10}
 
 
-def test_quorum_on_compare_caps_at_fifteen_when_omitted():
-    body = _create(quorum_threshold=7)
+@pytest.mark.parametrize(
+    ("method", "cap"),
+    [
+        ("create_compare_job_definition", 15),
+        ("create_classification_job_definition", 10),
+    ],
+)
+def test_quorum_threshold_warns_and_caps_when_omitted(method, cap):
+    with pytest.warns(DeprecationWarning, match="quorum_threshold is deprecated"):
+        body = _create(method, quorum_threshold=7)
 
-    assert body["referee"] == {"_t": "QuorumReferee", "maxVotes": 15, "threshold": 7}
+    assert body["referee"] == {"_t": "QuorumReferee", "maxVotes": cap, "threshold": 7}
 
 
 @pytest.mark.parametrize(
@@ -211,36 +219,138 @@ def test_confidence_threshold_warns_and_caps_when_omitted(method, cap):
     }
 
 
-def test_confidence_threshold_warning_points_at_the_callers_line():
+@pytest.mark.parametrize(
+    "extra", [{"confidence_threshold": 0.99}, {"quorum_threshold": 7}]
+)
+def test_deprecation_warnings_point_at_the_callers_line(extra):
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
-        _create(confidence_threshold=0.99)
+        _create(**extra)
 
     (warning,) = [w for w in caught if w.category is DeprecationWarning]
     assert warning.filename == __file__
 
 
-def test_no_deprecation_warning_without_confidence_threshold():
+def test_no_deprecation_warning_with_the_stopping_classes():
     with warnings.catch_warnings():
         warnings.simplefilter("error", DeprecationWarning)
         _create()
-        _create(quorum_threshold=7)
+        _create(responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10))
+        _create(
+            "create_classification_job_definition",
+            responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10),
+        )
 
 
 @pytest.mark.parametrize(
+    "stopping", [AdaptiveStopping(), QuorumStopping(threshold=3, max_responses=5)]
+)
+@pytest.mark.parametrize(
     "extra", [{"confidence_threshold": 0.99}, {"quorum_threshold": 3}]
 )
-def test_thresholds_cannot_be_combined_with_explicit_adaptive_stopping(extra):
+def test_thresholds_cannot_be_combined_with_a_stopping_class(stopping, extra):
     service = MagicMock()
     with pytest.raises(ValueError, match="cannot be combined"):
         RapidataJobManager(service).create_compare_job_definition(
             name="n",
             instruction="Which is sharper?",
             datapoints=[PAIR],
-            responses_per_datapoint=AdaptiveStopping(),
+            responses_per_datapoint=stopping,
             **extra,
         )
     service.order.job_api.job_definition_post.assert_not_called()
+
+
+# --- QuorumStopping ----------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("threshold", "max_responses", "match"),
+    [
+        (0, 5, "threshold"),
+        (True, 5, "threshold"),
+        (3, 0, "max_responses"),
+        (3, 2.5, "max_responses"),
+        (6, 5, "greater than max_responses"),
+    ],
+)
+def test_quorum_stopping_validates(threshold, max_responses, match):
+    with pytest.raises(ValueError, match=match):
+        QuorumStopping(threshold=threshold, max_responses=max_responses)
+
+
+@pytest.mark.parametrize(
+    "method", ["create_compare_job_definition", "create_classification_job_definition"]
+)
+def test_quorum_stopping_sends_the_quorum_rule(method):
+    body = _create(
+        method, responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)
+    )
+
+    assert body["referee"] == {"_t": "QuorumReferee", "maxVotes": 10, "threshold": 7}
+
+
+def test_quorum_stopping_is_rejected_on_other_job_types():
+    from rapidata.rapidata_client.workflow import FreeTextWorkflow
+
+    service = MagicMock()
+    with pytest.raises(ValueError, match="QuorumStopping only supports"):
+        RapidataJobManager(service)._create_general_job_definition(
+            name="n",
+            workflow=FreeTextWorkflow(instruction="Describe it"),
+            datapoints=[],
+            responses_per_datapoint=QuorumStopping(threshold=3, max_responses=5),
+        )
+    service.order.job_api.job_definition_post.assert_not_called()
+
+
+def test_revision_reads_a_quorum_definition_back_as_quorum_stopping():
+    jd, _ = _loaded(
+        workflow=CLASSIFY_WORKFLOW,
+        referee={"_t": "QuorumReferee", "threshold": 7, "maxVotes": 10},
+    )
+
+    assert jd.responses_per_datapoint == QuorumStopping(threshold=7, max_responses=10)
+
+
+def test_revision_sends_quorum_stopping_on_classify():
+    jd, service = _loaded(workflow=CLASSIFY_WORKFLOW)
+
+    jd.responses_per_datapoint = QuorumStopping(threshold=4, max_responses=6)
+    jd.save()
+
+    assert _sent_referee(service) == {
+        "_t": "QuorumReferee",
+        "maxVotes": 6,
+        "threshold": 4,
+    }
+
+
+def test_revision_int_on_a_quorum_definition_switches_to_a_fixed_count():
+    jd, service = _loaded(
+        referee={"_t": "QuorumReferee", "threshold": 7, "maxVotes": 10}
+    )
+
+    jd.responses_per_datapoint = 12
+    jd.save()
+
+    assert _sent_referee(service) == {"_t": "NaiveReferee", "totalVotes": 12}
+
+
+def test_revision_int_on_a_confidence_definition_changes_its_cap():
+    jd, service = _loaded(
+        referee={"_t": "EarlyStoppingReferee", "threshold": 0.99, "maxVotes": 10}
+    )
+
+    assert jd.responses_per_datapoint == 10
+    jd.responses_per_datapoint = 20
+    jd.save()
+
+    assert _sent_referee(service) == {
+        "_t": "EarlyStoppingReferee",
+        "threshold": 0.99,
+        "maxVotes": 20,
+    }
 
 
 def test_non_compare_create_is_rejected_before_any_request():

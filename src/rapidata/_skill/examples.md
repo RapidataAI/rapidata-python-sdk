@@ -102,7 +102,7 @@ for datapoint in results["results"]:
 ## Classification with Quorum Stopping
 
 ```python
-from rapidata import RapidataClient
+from rapidata import RapidataClient, QuorumStopping
 
 client = RapidataClient()
 audience = client.audience.get_audience_by_id("global")
@@ -112,8 +112,8 @@ job_def = client.job.create_classification_job_definition(
     instruction="What animal is in this image?",
     answer_options=["Cat", "Dog"],
     datapoints=["pet1.jpg", "pet2.jpg"],
-    responses_per_datapoint=10,  # Maximum responses
-    quorum_threshold=7,          # Stop when 7 responses agree
+    # Stop when 7 responses agree, after 10 at most
+    responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10),
 )
 job = audience.assign_job(job_def)
 job.view()

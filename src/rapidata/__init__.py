@@ -44,6 +44,7 @@ from .rapidata_client import (
     Box,
     RapidataResults,
     AdaptiveStopping,
+    QuorumStopping,
     BenchmarkDemographicDimension,
     DemographicSelection,
     LabelingSelection,

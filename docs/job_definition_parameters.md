@@ -9,7 +9,7 @@ When creating a job definition, you'll use parameters to control:
 - **What data** is shown to labelers (datapoints, contexts)
 - **How many responses** you need (responses_per_datapoint)
 - **How tasks are displayed** (settings)
-- **When to stop collecting** (responses_per_datapoint, quorum_threshold)
+- **When to stop collecting** (`responses_per_datapoint`: an `int`, `AdaptiveStopping` or `QuorumStopping`)
 
 ---
 
@@ -102,7 +102,7 @@ An `UploadedAsset` is media, so it cannot be used with `data_type="text"`.
 
 | Property | Value |
 |----------|-------|
-| **Type** | `int`, or `AdaptiveStopping` (compare only) |
+| **Type** | `int`, `AdaptiveStopping` (compare only) or `QuorumStopping` (classification and compare) |
 | **Required** | No |
 | **Default** | `AdaptiveStopping()` for compare jobs, `10` otherwise |
 
@@ -110,14 +110,16 @@ How many responses to collect for each datapoint.
 
 - An `int` collects exactly that many. The actual number may slightly exceed it due to concurrent labelers.
 - `AdaptiveStopping()` stops each compare pair once its verdict is settled, after about 21 responses per pair on average.
+- `QuorumStopping(threshold, max_responses)` stops once `threshold` responses agree.
 
 **Related:** [Adaptive Stopping](confidence_stopping.md)
 
 ```python
-from rapidata import AdaptiveStopping
+from rapidata import AdaptiveStopping, QuorumStopping
 
 responses_per_datapoint=15                                               # fixed
 responses_per_datapoint=AdaptiveStopping(ambiguity_threshold=0.75)  # compare only: fewer pairs called a toss-up, more responses
+responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)
 ```
 
 ---
@@ -255,7 +257,7 @@ media_contexts=[
 | **Default** | `None` |
 | **Range** | `0.0` to `1.0` (typically `0.99` to `0.999`) |
 
-Deprecated: emits a `DeprecationWarning`. Use adaptive stopping (the default) on compare jobs, and `quorum_threshold` or a fixed `responses_per_datapoint` on classification. Takes an `int` `responses_per_datapoint` as the cap (when omitted: 15 on compare jobs, 10 otherwise).
+Deprecated: emits a `DeprecationWarning`. Use adaptive stopping (the default) on compare jobs, and `QuorumStopping` or a fixed `responses_per_datapoint` on classification. Takes an `int` `responses_per_datapoint` as the cap (when omitted: 15 on compare jobs, 10 otherwise).
 
 Enables early stopping when a specified confidence level is reached. The system stops collecting responses once consensus is achieved, reducing costs while maintaining quality.
 
@@ -276,7 +278,7 @@ job_definition = client.job.create_classification_job_definition(
 
 ---
 
-### `quorum_threshold`
+### `quorum_threshold` (deprecated)
 
 | Property | Value |
 |----------|-------|
@@ -284,20 +286,19 @@ job_definition = client.job.create_classification_job_definition(
 | **Required** | No |
 | **Default** | `None` |
 
-Enables early stopping when a specified number of responses agree on the same answer. The system stops collecting responses once quorum is reached, or when quorum becomes mathematically impossible, or after `responses_per_datapoint` responses.
-
-Cannot be used together with `confidence_threshold`. On compare jobs it takes an `int` `responses_per_datapoint` as the cap (15 when omitted).
+Deprecated: emits a `DeprecationWarning`. Pass `responses_per_datapoint=QuorumStopping(threshold, max_responses)` instead. It still takes an `int` `responses_per_datapoint` as the cap (when omitted: 15 on compare jobs, 10 otherwise) and cannot be used together with `confidence_threshold`.
 
 **Related:** [Quorum Stopping](confidence_stopping.md#quorum-stopping)
 
 ```python
+from rapidata import QuorumStopping
+
 job_definition = client.job.create_classification_job_definition(
     name="Cat or Dog with Quorum Stopping",
     instruction="What animal is in this image?",
     answer_options=["Cat", "Dog"],
     datapoints=["pet1.jpg", "pet2.jpg"],
-    responses_per_datapoint=10,  # Maximum responses
-    quorum_threshold=7,          # Stop when 7 agree
+    responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10),
 )
 ```
 
@@ -535,7 +536,8 @@ job_definition = client.job.create_ranking_job_definition(
 | `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
 | `AdaptiveStopping` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `confidence_threshold` (deprecated) | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
-| `quorum_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `QuorumStopping` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `quorum_threshold` (deprecated) | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | `answer_options` | :white_check_mark: | :x: | :x: | :x: | :x: | :x: | :x: |
 | `a_b_names` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |

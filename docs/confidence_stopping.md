@@ -7,9 +7,8 @@ You choose the stopping rule with `responses_per_datapoint`:
 | Value | Rule | Job types |
 |-------|------|-----------|
 | `AdaptiveStopping()` | Stops each pair once its verdict is statistically settled. **Default for compare jobs.** | Compare |
+| `QuorumStopping(threshold, max_responses)` | Stops once `threshold` responses agree. | Classification, Compare |
 | an `int` | Collects exactly that many responses. Default (`10`) for every other job type. | All |
-
-[Quorum Stopping](#quorum-stopping) is still available through `quorum_threshold`.
 
 ## How it Works
 
@@ -115,27 +114,25 @@ for datapoint in results["results"]:
 
 Quorum Stopping uses a simple response-counting approach. A task is completed when:
 
-1. A minimum number of responses (`quorum_threshold`) agree on the same answer, **OR**
+1. `threshold` responses agree on the same answer, **OR**
 2. Quorum becomes mathematically impossible to reach, **OR**
-3. The maximum number of responses (`responses_per_datapoint`) is reached.
+3. `max_responses` responses are reached.
 
-For example, with `quorum_threshold=7` and `responses_per_datapoint=10`:
+For example, with `QuorumStopping(threshold=7, max_responses=10)`:
 
 - The task completes when 7 responses agree (quorum reached).
 - The task completes when both options have 4+ responses (quorum is impossible since neither can reach 7 out of 10).
 - The task completes after 10 total responses if neither condition is met.
 
 !!! note
-    Quorum Stopping is supported for the Classification and Comparison workflows. On a compare job, pass an `int` `responses_per_datapoint` as the cap; it is 15 when omitted.
+    Quorum Stopping is supported for the Classification and Comparison workflows. See the [`QuorumStopping` reference](reference/rapidata/rapidata_client/job/quorum_stopping.md).
 
 ### Using Quorum Stopping in Your Job
-
-You add the `quorum_threshold` parameter when creating the job definition.
 
 #### Example: Classification Job with Quorum Stopping
 
 ```python
-from rapidata import RapidataClient
+from rapidata import RapidataClient, QuorumStopping
 
 client = RapidataClient()
 
@@ -154,8 +151,7 @@ job_definition = client.job.create_classification_job_definition(
     instruction="What do you see in the image?",
     answer_options=["Cat", "Dog"],
     datapoints=["https://assets.rapidata.ai/dog.jpeg"],
-    responses_per_datapoint=10, # (2)!
-    quorum_threshold=7, # (3)!
+    responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10), # (2)!
 )
 
 job = audience.assign_job(job_definition)
@@ -166,8 +162,10 @@ print(results)
 ```
 
 1. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
-2. Sets the **maximum** number of responses per datapoint.
-3. Stops collecting once 7 responses agree on the same answer.
+2. Stops collecting once 7 responses agree on the same answer, and after 10 responses at most.
+
+!!! warning "Deprecated: `quorum_threshold`"
+    The `quorum_threshold` parameter still works but emits a `DeprecationWarning`. Replace `quorum_threshold=7, responses_per_datapoint=10` with `responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)`.
 
 ### When to Use Quorum Stopping
 
@@ -180,7 +178,7 @@ Quorum Stopping is a good choice when:
 ## Confidence Stopping
 
 !!! warning "Deprecated"
-    `confidence_threshold` is deprecated and emits a `DeprecationWarning`. For compare jobs use adaptive stopping, the default. For classification use `quorum_threshold` or a fixed `responses_per_datapoint`.
+    `confidence_threshold` is deprecated and emits a `DeprecationWarning`. For compare jobs use adaptive stopping, the default. For classification use `QuorumStopping` or a fixed `responses_per_datapoint`.
 
 ### How it Works
 

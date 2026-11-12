@@ -15,8 +15,9 @@ The current documentation uses audiences, job definitions, and jobs.
 |--------|-----|
 | no `responses_per_datapoint` on a compare job: 10 responses | adaptive stopping, about 21 responses per pair on average |
 | `confidence_threshold=0.99` on a compare job | `responses_per_datapoint=AdaptiveStopping()` |
+| `quorum_threshold=7, responses_per_datapoint=10` | `responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)` |
 
 - To keep exactly 10 responses per pair, pass `responses_per_datapoint=10`.
-- `confidence_threshold` still works with an `int` `responses_per_datapoint` but emits a `DeprecationWarning`. On compare jobs without `responses_per_datapoint`, it and `quorum_threshold` now cap at 15 responses instead of 10.
-- `job_definition.responses_per_datapoint` returns an `AdaptiveStopping` for definitions that use it. Assigning an `int` sets a fixed number of responses.
+- `confidence_threshold` and `quorum_threshold` still work with an `int` `responses_per_datapoint` but emit a `DeprecationWarning`. On compare jobs without `responses_per_datapoint`, they now cap at 15 responses instead of 10.
+- `job_definition.responses_per_datapoint` returns an `AdaptiveStopping` or `QuorumStopping` for definitions that use them. Assigning an `int` sets a fixed number of responses, also on a quorum definition (it used to change the quorum's cap).
 - Compare results gain an `adaptiveStoppingState` per datapoint — see [Adaptive Stopping](confidence_stopping.md#analyzing-adaptive-stopping-results).

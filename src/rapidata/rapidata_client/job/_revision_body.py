@@ -11,6 +11,7 @@ from rapidata.api_client.models.i_referee import IReferee
 if TYPE_CHECKING:
     from rapidata.api_client.models.feature_flag import FeatureFlag
     from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
+    from rapidata.rapidata_client.job.quorum_stopping import QuorumStopping
     from rapidata.api_client.models.get_job_revision_endpoint_output import (
         GetJobRevisionEndpointOutput,
     )
@@ -112,7 +113,7 @@ def _get_responses(referee: IReferee) -> int:
     return data[field]
 
 
-def _get_stopping(referee: IReferee) -> int | AdaptiveStopping:
+def _get_stopping(referee: IReferee) -> int | AdaptiveStopping | QuorumStopping:
     data = _as_dict(referee)
     if data.get("_t") == "AdaptiveStoppingReferee":
         from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
@@ -122,11 +123,20 @@ def _get_stopping(referee: IReferee) -> int | AdaptiveStopping:
             min_confidence=data.get("minConfidence"),
             ambiguity_threshold=data.get("ambiguityThreshold"),
         )
+    if data.get("_t") == "QuorumReferee":
+        from rapidata.rapidata_client.job.quorum_stopping import QuorumStopping
+
+        return QuorumStopping(
+            threshold=data["threshold"], max_responses=data["maxVotes"]
+        )
     return _get_responses(referee)
 
 
-def _with_responses(referee: IReferee, responses: int | AdaptiveStopping) -> IReferee:
+def _with_responses(
+    referee: IReferee, responses: int | AdaptiveStopping | QuorumStopping
+) -> IReferee:
     from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
+    from rapidata.rapidata_client.job.quorum_stopping import QuorumStopping
     from rapidata.rapidata_client.referee import NaiveReferee
 
     data = _as_dict(referee)
@@ -135,24 +145,30 @@ def _with_responses(referee: IReferee, responses: int | AdaptiveStopping) -> IRe
         raise ValueError(
             f"A '{data.get('_t')}' referee has no responses per datapoint to change."
         )
-    if isinstance(responses, AdaptiveStopping):
+    if isinstance(responses, (AdaptiveStopping, QuorumStopping)):
         return responses._to_referee()._to_model()
-    # An int on an adaptive definition switches it to a fixed count, as on create.
-    if data["_t"] == "AdaptiveStoppingReferee":
-        return NaiveReferee(responses=responses)._to_model()
-    data[field] = responses
-    return IReferee.from_dict(data)  # type: ignore[return-value]
+    # A legacy confidence-threshold rule has no public class, so an int tunes its cap.
+    if data["_t"] == "EarlyStoppingReferee":
+        data[field] = responses
+        return IReferee.from_dict(data)  # type: ignore[return-value]
+    return NaiveReferee(responses=responses)._to_model()
 
 
 def _check_stopping_fits(
-    workflow: IOrderWorkflowInput, responses: int | AdaptiveStopping
+    workflow: IOrderWorkflowInput, responses: int | AdaptiveStopping | QuorumStopping
 ) -> None:
     from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
+    from rapidata.rapidata_client.job.quorum_stopping import QuorumStopping
 
     kind = _workflow_kind(_as_dict(workflow))
     if isinstance(responses, AdaptiveStopping) and kind != "Compare":
         raise ValueError(
             f"AdaptiveStopping only supports compare job definitions, not '{kind}'."
+        )
+    if isinstance(responses, QuorumStopping) and kind not in ("Compare", "Classify"):
+        raise ValueError(
+            "QuorumStopping only supports classification and compare job "
+            f"definitions, not '{kind}'."
         )
 
 

@@ -42,6 +42,7 @@ if TYPE_CHECKING:
         UploadedAsset,
     )
     from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
+    from rapidata.rapidata_client.job.quorum_stopping import QuorumStopping
     from rapidata.rapidata_client.settings import RapidataSetting
 
 RevisionState = Literal["Pending", "Completed", "Failed"]
@@ -218,27 +219,31 @@ class RapidataJobDefinition:
         self._pending["answer_options"] = list(value)
 
     @property
-    def responses_per_datapoint(self) -> int | AdaptiveStopping:
+    def responses_per_datapoint(self) -> int | AdaptiveStopping | QuorumStopping:
         """How many responses are collected per datapoint.
 
-        An int for a fixed count (or the cap of a threshold-based rule), or the
-        ``AdaptiveStopping`` a compare job definition stops by. Assigning an
-        ``AdaptiveStopping`` switches a compare definition to adaptive stopping;
-        assigning an int to an adaptive definition switches it to that fixed count.
+        An int for a fixed count, or the ``AdaptiveStopping`` / ``QuorumStopping`` the
+        job definition stops by. Assigning one of those replaces the rule; assigning an
+        int sets a fixed count. A legacy ``confidence_threshold`` definition reads as its
+        cap, and an int changes that cap.
         """
         return self._effective(
             "responses_per_datapoint", _get_stopping(self._snapshot.referee)
         )
 
     @responses_per_datapoint.setter
-    def responses_per_datapoint(self, value: int | AdaptiveStopping) -> None:
+    def responses_per_datapoint(
+        self, value: int | AdaptiveStopping | QuorumStopping
+    ) -> None:
         from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
+        from rapidata.rapidata_client.job.quorum_stopping import QuorumStopping
 
-        if not isinstance(value, AdaptiveStopping) and (
+        if not isinstance(value, (AdaptiveStopping, QuorumStopping)) and (
             isinstance(value, bool) or not isinstance(value, int) or value < 1
         ):
             raise ValueError(
-                "responses_per_datapoint must be a positive integer or an AdaptiveStopping"
+                "responses_per_datapoint must be a positive integer, "
+                "AdaptiveStopping or QuorumStopping"
             )
         _check_stopping_fits(self._snapshot.workflow, value)
         _with_responses(self._snapshot.referee, value)

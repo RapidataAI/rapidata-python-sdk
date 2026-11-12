@@ -5,3 +5,4 @@ from .rapidata_job import RapidataJob
 from .cost import CostEstimate
 from .progress import JobProgress
 from .adaptive_stopping import AdaptiveStopping
+from .quorum_stopping import QuorumStopping
