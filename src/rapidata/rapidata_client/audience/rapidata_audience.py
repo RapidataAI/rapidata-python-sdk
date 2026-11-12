@@ -153,6 +153,10 @@ class RapidataAudience(RapidataAudienceBase):
         Args:
             filters (list[RapidataFilter]): The new list of filters to apply to the audience.
 
+        Logs a warning when the new filters have no ``LanguageFilter`` while an active
+        job on this audience uses ``OriginalLanguageOnlySetting``: those labelers would
+        see untranslated text.
+
         Returns:
             RapidataAudience: The updated audience instance (self) for method chaining.
         """
@@ -160,6 +164,8 @@ class RapidataAudience(RapidataAudienceBase):
             from rapidata.api_client.models.update_audience_endpoint_input import (
                 UpdateAudienceEndpointInput,
             )
+
+            self._warn_if_language_filter_dropped(filters)
 
             logger.debug(f"Updating filters for audience: {self.id} to {filters}")
             self._openapi_service.audience.audience_api.audience_audience_id_patch(
@@ -170,6 +176,36 @@ class RapidataAudience(RapidataAudienceBase):
             )
             self._filters = filters
             return self
+
+    def _warn_if_language_filter_dropped(self, filters: list[RapidataFilter]) -> None:
+        """Advisory: a failed lookup must not block the filter update."""
+        from rapidata.rapidata_client.audience._original_language_check import (
+            active_jobs_forcing_original_language,
+            filters_require_language,
+        )
+
+        if filters_require_language(filters):
+            return
+        try:
+            job_ids = active_jobs_forcing_original_language(
+                self._openapi_service, self.id
+            )
+        except Exception:
+            logger.debug(
+                "Could not list active jobs of audience '%s'", self.id, exc_info=True
+            )
+            return
+        if not job_ids:
+            return
+        logger.warning(
+            "The new filters of audience '%s' (%s) have no LanguageFilter, but active "
+            "job(s) %s use OriginalLanguageOnlySetting, so labelers who don't speak the "
+            "task's language will see it untranslated. Keep a LanguageFilter in the "
+            "filters, or remove OriginalLanguageOnlySetting from those job definitions.",
+            self._name,
+            self.id,
+            ", ".join(job_ids),
+        )
 
     def update_name(self, name: str) -> RapidataAudience:
         """Update the name of this audience.

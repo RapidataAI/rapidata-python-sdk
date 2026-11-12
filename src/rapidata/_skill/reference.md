@@ -609,7 +609,7 @@ Settings with a `()` constructor are on/off: adding one turns the behavior on, l
 | `FreeTextMaxCharactersSetting` | `(value: int = 1024)` — must be ≥ 1 | Max chars for free-text tasks. Use with caution — see note below the table |
 | `SwapContextInstructionSetting` | `()` | Swap positions of context and instruction |
 | `PlayPercentageVideoSetting` | `(percentage: int = 95)` — 0–95 | Require labelers to watch N% of video |
-| `OriginalLanguageOnlySetting` | `()` | Skip translation; show task in original language. By default the instruction, context and answer options are translated into the labeler's device language. Also overrides `TranslateTextAssetsSetting` |
+| `OriginalLanguageOnlySetting` | `()` | Skip translation; show task in original language. By default the instruction, context and answer options are translated into the labeler's device language. Also overrides `TranslateTextAssetsSetting`. Needs a `LanguageFilter` on the audience or filtered audience, else `assign_job` raises |
 | `NoMistakeOptionSetting` | `()` | Add a "No mistakes" button so labelers can confirm the media has no errors |
 | `DisableAutoloopSetting` | `()` | Disable automatic media looping |
 | `NoInstructionDisplaySetting` | `()` | Hide instruction from task screen |
