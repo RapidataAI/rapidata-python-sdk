@@ -150,24 +150,20 @@ client.job.template.run_coherence(name, datapoints, *, a_b_names=None) -> Rapida
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `name` | str | 1–256 characters; the name of the job and of the job definition the call creates |
-| `datapoints` | list[list[str]] | Pairs of file paths or URLs, `[[a, b], ...]`; 2 different files per pair, all images (`.jpg`, `.jpeg`, `.png`, `.webp`) or all videos (`.mp4`, `.gif`: Rapidata stores GIFs as video) |
-| `contexts` | list[str] | `run_alignment` only, keyword-only: one prompt per pair. Warns above 200 characters; above 400 they are shortened on upload against the template's question, billed like `client.context` |
+| `datapoints` | list[list[str]] | Pairs of file paths or URLs, `[[a, b], ...]`; 2 different files per pair, all images (`.jpg`, `.jpeg`, `.png`, `.webp`) or all videos (`.mp4`, `.gif`) |
+| `contexts` | list[str] | `run_alignment` only, keyword-only: one prompt per pair. Keep prompts under 200 characters (the SDK warns above); prompts over 400 characters are shortened automatically, billed like `client.context` |
 | `a_b_names` | list[str] \| None | Keyword-only: 2 different names for the first and second file of every pair, shown in the results instead of A and B |
 
-Every pair gets 11 votes from the template's audience; there is no `responses_per_datapoint`, `settings` or audience to pass. One call sends:
-
-1. `GET /job/definition/{definitionId}/revision` — the template's question and votes. The template id is pinned per environment and media type. If that revision isn't completed yet, the latest completed one is read instead (`/run` copies it).
-2. `POST /dataset` (`run_alignment`: with `contextShortening: {question}`), then the usual uploads: files, and one `POST /dataset/{datasetId}/datapoint` per pair.
-3. `POST /job/definition/{definitionId}/run` with `{name, datasetId, aName, bName}` → a new job definition in your organization and its job.
+Every pair gets 11 votes from the template's audience; there is no `responses_per_datapoint`, `settings` or audience to pass.
 
 Errors:
 
-- `ValueError` before anything is sent: a mixed call ("Images and videos can't be mixed in one call (the question depends on the media type): 12 datapoints are images, 3 are videos (datapoints[3], [7], [9]). Send them as two calls, …"), a pair that isn't 2 different files, a file that is neither an image nor a video, a missing, empty or whitespace-only prompt, a bad `name` or `a_b_names`.
-- `FailedUploadException` (subclass `TemplateUploadException`): some pairs failed to upload into the named dataset; no job was started. `retry()` raises `RuntimeError`: call the method again, it uploads into a new dataset.
-- `RapidataError` with "No answer from Rapidata, so a job may have started. Look for it with client.job.find_jobs(name) before calling again. This call's job would be named exactly '…' and created after 2026-11-11 10:14:03 UTC." on a 502/503/504 or a lost connection from the start request, which is sent once (only 429 and connection failures before the request left the client are retried). A 500 raises the same, starting "Rapidata failed while starting the job": the jobs API can save the job before the 500. Other errors from it (400, 403) carry the backend's reason.
-- `ApiException` unchanged when the start request never left the client (`ConnectError`, `ConnectTimeout`, `PoolTimeout` after their retries): no job started, so calling the method again is safe.
+- `ValueError` before anything is uploaded: images and videos mixed in one call, a pair that isn't 2 different files, a file that is neither an image nor a video, a missing or empty prompt, a bad `name` or `a_b_names`.
+- `FailedUploadException`: some pairs failed to upload, and no job was started. Call the method again; `retry()` raises `RuntimeError` for template runs.
+- `RapidataError` saying "… so a job may have started": Rapidata didn't confirm the start. Look for the job with `client.job.find_jobs(name)` before calling again; the message gives the exact job name and the time the call began. Other `RapidataError`s carry Rapidata's reason.
+- `ApiException` (a network error): no job started, so calling the method again is safe.
 
-Template runs ignore three upload settings: `contextShortening` (only prompts over 400 characters are shortened), `failureTolerance` (any failed pair stops the run) and `checkForExplicitContent` (your organization decides the content check; the SDK warns when it is `True`).
+Template runs ignore three upload settings: `contextShortening` (only prompts over 400 characters are shortened), `failureTolerance` (any failed pair stops the run) and `checkForExplicitContent` (your account decides the content check; the SDK warns when it is `True`).
 
 ## Audiences
 

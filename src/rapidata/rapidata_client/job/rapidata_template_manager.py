@@ -487,8 +487,8 @@ def _warn_if_content_check_is_forced() -> None:
     if rapidata_config.upload.checkForExplicitContent is True:
         logger.warning(
             "rapidata_config.upload.checkForExplicitContent = True has no effect on "
-            "template runs: POST /job/definition/{definitionId}/run checks content "
-            "unless your organization may skip the check."
+            "template runs: Rapidata checks content unless your account may skip "
+            "the check."
         )
 
 
