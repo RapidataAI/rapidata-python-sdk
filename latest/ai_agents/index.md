@@ -78,4 +78,4 @@ The guide lives in the SDK repository at [`src/rapidata/_skill/`](https://github
 
 When the SDK is imported by a coding agent (Claude Code, Codex, Cursor, Gemini CLI) that has not read the guide yet, it prints a short pointer to `python -m rapidata skill` on stderr. It shows once per agent session and stops as soon as that session reads the guide. Humans running the SDK directly never see it.
 
-Processes an agent merely started — a dev server, a script whose stderr is parsed — inherit its environment and would show the hint too. Set `RAPIDATA_AGENT_HINT=0` for those.
+Processes an agent started, such as a dev server or a script, inherit its environment and show the hint too, until the session reads the guide.

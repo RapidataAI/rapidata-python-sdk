@@ -1,5 +1,8 @@
 # Quickstart Guide
 
+!!! tip "Comparing two models?"
+    [Templates](templates.md) run Rapidata's alignment, preference or coherence setup on your own pairs in one call.
+
 Get real humans to label your data. This guide shows you how to create a labeling job using the Rapidata API.
 
 The workflow consists of three main concepts:

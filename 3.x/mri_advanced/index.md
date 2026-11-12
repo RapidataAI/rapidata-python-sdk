@@ -381,11 +381,11 @@ participant.restore()
 
 ### Hidden and Candidate Models
 
-Two options on `add_model` control who sees a model and who plays it:
+Two options on `add_model` control who sees a model (`is_public`) and who plays it (`is_candidate`):
 
 ```python
 # Only members of the benchmark's organization and staff see it.
-# Models submitted later don't play it.
+# It is paired exactly like a public model.
 participant = benchmark.add_model(
     name="UnreleasedModel",
     media=["https://example.com/img1.png"],

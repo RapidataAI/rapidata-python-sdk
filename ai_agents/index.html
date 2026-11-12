@@ -431,6 +431,8 @@
       
         
       
+        
+      
     
     
     
@@ -500,6 +502,34 @@
     
   
     Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
   
 
     
@@ -1792,7 +1822,7 @@
 <p>The guide lives in the SDK repository at <a href="https://github.com/RapidataAI/rapidata-python-sdk/tree/main/src/rapidata/_skill"><code>src/rapidata/_skill/</code></a> and is edited only there. A pull request that changes SDK behaviour updates it in the same change; the <code>Agent Skill</code> check asks the reviewer to confirm when it does not.</p>
 <h2 id="the-import-time-hint">The import-time hint<a class="headerlink" href="#the-import-time-hint" title="Permanent link">#</a></h2>
 <p>When the SDK is imported by a coding agent (Claude Code, Codex, Cursor, Gemini CLI) that has not read the guide yet, it prints a short pointer to <code>python -m rapidata skill</code> on stderr. It shows once per agent session and stops as soon as that session reads the guide. Humans running the SDK directly never see it.</p>
-<p>Processes an agent merely started — a dev server, a script whose stderr is parsed — inherit its environment and would show the hint too. Set <code>RAPIDATA_AGENT_HINT=0</code> for those.</p>
+<p>Processes an agent started, such as a dev server or a script, inherit its environment and show the hint too, until the session reads the guide.</p>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>
         </div>

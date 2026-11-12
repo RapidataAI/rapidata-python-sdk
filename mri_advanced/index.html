@@ -433,6 +433,8 @@
       
         
       
+        
+      
     
     
     
@@ -502,6 +504,34 @@
     
   
     Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Templates
   
 
     
@@ -2579,9 +2609,9 @@ under changing rules is hard to interpret. To re-scope, create a new leaderboard
 </span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="n">participant</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>
 </span></code></pre></div>
 <h3 id="hidden-and-candidate-models">Hidden and Candidate Models<a class="headerlink" href="#hidden-and-candidate-models" title="Permanent link">#</a></h3>
-<p>Two options on <code>add_model</code> control who sees a model and who plays it:</p>
+<p>Two options on <code>add_model</code> control who sees a model (<code>is_public</code>) and who plays it (<code>is_candidate</code>):</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Only members of the benchmark's organization and staff see it.</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># Models submitted later don't play it.</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># It is paired exactly like a public model.</span>
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="n">participant</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span>
 </span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"UnreleasedModel"</span><span class="p">,</span>
 </span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>    <span class="n">media</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://example.com/img1.png"</span><span class="p">],</span>
