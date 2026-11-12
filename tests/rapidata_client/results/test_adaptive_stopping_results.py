@@ -87,3 +87,22 @@ def test_results_without_the_state_are_unchanged():
 
     assert not any(c.startswith("adaptiveStoppingState") for c in df.columns)
     assert df.iloc[0]["A_aggregatedResults"] == 1
+
+
+def test_unknown_fields_nulls_and_verdicts_pass_through_untouched():
+    future = {
+        **DECIDED,
+        "verdict": "SomethingNew",
+        "winners": [],
+        "minConfidence": None,
+        "futureField": {"nested": [1, None]},
+    }
+    results = _results(_compare_result("p1", future), _compare_result("p2", None))
+
+    assert results["results"][0]["adaptiveStoppingState"] == future
+    assert "adaptiveStoppingState" not in results["results"][1]
+
+    df = results.to_pandas()
+    assert df.iloc[0]["adaptiveStoppingState_verdict"] == "SomethingNew"
+    assert df.iloc[0]["adaptiveStoppingState_futureField_nested"] == [1, None]
+    assert df.iloc[1].isna()["adaptiveStoppingState_verdict"]

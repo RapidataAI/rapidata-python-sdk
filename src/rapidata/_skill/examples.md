@@ -91,9 +91,11 @@ job.display_progress_bar()
 results = job.get_results()
 
 for datapoint in results["results"]:
-    state = datapoint["adaptiveStoppingState"]
+    state = datapoint.get("adaptiveStoppingState")  # absent until the pair has a state
+    if state is None:
+        continue
     # verdict: "Decided" (winners holds "0" or "1"), "Ambiguous" (too close to call),
-    # "Undecided" (hit max_responses) or "Open" (no verdict yet)
+    # "Undecided" (hit max_responses) or "Open" (no verdict yet); may gain new values
     print(state["verdict"], state["winners"], state["responseCount"])
 ```
 

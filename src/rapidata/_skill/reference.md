@@ -506,6 +506,7 @@ Each adaptive compare result gets `adaptiveStoppingState`:
 - `outcomes` keys: `"0"` = first asset of the pair, `"1"` = second. `winners` holds those keys; non-empty only for `Decided`
 - `verdict`: `Decided` · `Ambiguous` · `Undecided` (`outcomes` may be empty if every response was a skip) · `Open` (still collecting, or the job was paused or stopped first). The first non-`Open` verdict is frozen with its outcomes and `responseCount`
 - `weight`: user-score-weighted responses, scaled to sum to `responseCount`. `lower`/`upper`: the range the option's long-run response share lies in with `min_confidence` certainty; it narrows with every response. Wholly above 0.5 → `Decided`; wholly inside the toss-up zone (~0.2–0.8 by default) → `Ambiguous`
+- The key is absent (never `null`) on a datapoint without a state; read it with `.get()`. The value is passed through verbatim: unknown fields and `null` values are kept, and `verdict` may gain new values — don't validate it strictly. There is no `stoppingState` key
 - `to_pandas()` flattens it into `adaptiveStoppingState_*` columns. Never recompute the verdict client-side
 
 ### Quorum Stopping

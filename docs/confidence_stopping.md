@@ -81,6 +81,7 @@ Each compare datapoint in the [results](understanding_the_results.md) gains an `
 - `weight` is the option's user-score-weighted responses, scaled so all weights add up to `responseCount`.
 - `lower` and `upper` are the range the option's share of the responses lies in. See below.
 - With `Undecided`, `outcomes` can be empty when every response was a skip.
+- The key is absent on a datapoint without a state. New verdict values or fields may appear later, so handle values you don't recognize.
 
 ### Reading `lower` and `upper`
 
@@ -99,8 +100,9 @@ The verdict follows from where the range sits:
 ```python
 results = job.get_results()
 for datapoint in results["results"]:
-    state = datapoint["adaptiveStoppingState"]
-    print(state["verdict"], state["winners"], state["responseCount"])
+    state = datapoint.get("adaptiveStoppingState")  # absent until the pair has a state
+    if state is not None:
+        print(state["verdict"], state["winners"], state["responseCount"])
 ```
 
 `results.to_pandas()` flattens the state into columns such as `adaptiveStoppingState_verdict`. The SDK passes the values through unchanged.
