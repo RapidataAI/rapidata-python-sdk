@@ -477,9 +477,6 @@ job_def = client.job.create_compare_job_definition(
     datapoints=[["a.jpg", "b.jpg"]],
     responses_per_datapoint=AdaptiveStoppingReferee(),   # same as omitting it
 )
-
-job_def.responses_per_datapoint = AdaptiveStoppingReferee()   # switch an existing compare definition
-job_def.save()
 ```
 
 `AdaptiveStoppingReferee(max_votes=None, min_confidence=None, ambiguity_threshold=None)` — `None` uses the backend default (100 / 0.9 / 0.64); unset fields are left out of the request:

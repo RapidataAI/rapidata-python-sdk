@@ -56,13 +56,6 @@ The threshold only decides which pairs may stop as a toss-up. A clear winner alw
 
 A parameter left as `None` uses the backend default, and a job definition read back from the backend shows the resolved values. Adaptive stopping is compare-only: passing it to any other job type raises a `ValueError` before anything is sent.
 
-To switch an existing compare job definition, assign the rule and save a new revision:
-
-```python
-job_definition.responses_per_datapoint = AdaptiveStoppingReferee()
-job_definition.save()
-```
-
 Until the backend forecasts how many votes a job will need, the [cost estimate](cost_estimates.md) and [job progress](job_progress.md) count `max_votes` responses per pair, so the estimate is well above what an adaptive job typically costs.
 
 ## Analyzing Adaptive Stopping Results
