@@ -14,14 +14,6 @@ TEMPLATE_IDS: dict[str, dict[str, str]] = {
         "coherence/image": "jdf_1aWZjLcMsSA5DM",
         "coherence/video": "jdf_1aWZpAlATURr9c",
     },
-    "rabbitdata.ch": {
-        "alignment/image": "jdf_1aWV8WjLLGuF9s",
-        "alignment/video": "jdf_1aWVGbJ1uYLNFd",
-        "preference/image": "jdf_1aWVNF0PBivJq0",
-        "preference/video": "jdf_1aWVTwKBWsgSrc",
-        "coherence/image": "jdf_1aWVZnHvATz3L1",
-        "coherence/video": "jdf_1aWVg9DapcWjW7",
-    },
 }
 
 

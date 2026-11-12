@@ -362,12 +362,12 @@ def test_an_override_without_the_id_names_the_variable(monkeypatch, override):
         template_id("rapidata.ai", "alignment/image")
 
 
-@pytest.mark.parametrize("environment", ["rapidata.ai", "rabbitdata.ch"])
-def test_every_environment_pins_all_six_templates(environment):
-    assert sorted(TEMPLATE_IDS[environment]) == sorted(
+def test_only_production_ids_ship_and_all_six_are_pinned():
+    assert list(TEMPLATE_IDS) == ["rapidata.ai"]
+    assert sorted(TEMPLATE_IDS["rapidata.ai"]) == sorted(
         f"{kind}/{media}" for kind in METHODS for media in ("image", "video")
     )
-    ids = list(TEMPLATE_IDS[environment].values())
+    ids = list(TEMPLATE_IDS["rapidata.ai"].values())
     assert all(re.fullmatch(r"jdf_[0-9A-Za-z]{14}", i) for i in ids), ids
     assert len(set(ids)) == 6
 
