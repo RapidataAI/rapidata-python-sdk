@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Pipeline API",
     "description": "The API for the Rapidata Pipeline service",
-    "version": "2026.11.11.1826-7abdb74"
+    "version": "2026.11.12.0946-295794f"
   },
   "servers": [
     {
@@ -1195,6 +1195,9 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IRefereeConfigAdaptiveStoppingRefereeConfig"
+          },
+          {
             "$ref": "#/components/schemas/IRefereeConfigBudgetRefereeConfig"
           },
           {
@@ -1213,11 +1216,40 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "AdaptiveStoppingRefereeConfig": "#/components/schemas/IRefereeConfigAdaptiveStoppingRefereeConfig",
             "BudgetRefereeConfig": "#/components/schemas/IRefereeConfigBudgetRefereeConfig",
             "NaiveRefereeConfig": "#/components/schemas/IRefereeConfigNaiveRefereeConfig",
             "NeverEndingRefereeConfig": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig",
             "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig",
             "QuorumRefereeConfig": "#/components/schemas/IRefereeConfigQuorumRefereeConfig"
+          }
+        }
+      },
+      "IRefereeConfigAdaptiveStoppingRefereeConfig": {
+        "required": [
+          "maxVotes",
+          "minConfidence",
+          "ambiguityThreshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AdaptiveStoppingRefereeConfig"
+            ],
+            "type": "string"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minConfidence": {
+            "type": "number",
+            "format": "double"
+          },
+          "ambiguityThreshold": {
+            "type": "number",
+            "format": "double"
           }
         }
       },

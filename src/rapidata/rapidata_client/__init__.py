@@ -15,6 +15,8 @@ from .job import (
     CostEstimate,
     JobProgress,
     RevisionInfo,
+    AdaptiveStopping,
+    QuorumStopping,
 )
 from .signal import RapidataSignal, RapidataSignalManager
 from .flow import (

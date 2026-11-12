@@ -12,11 +12,11 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `instruction` | str | Question shown to labelers: one criterion, under 80 characters (see **Task design rules** in the main guide). Over 250 characters raises `ValueError` |
 | `datapoints` | list | Data to label: URLs, local paths, or `UploadedAsset` references from `client.asset.upload(...)`, which are never uploaded again |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
-| `responses_per_datapoint` | int | Responses per item (default 10; never set it below 10 — see **Task design rules** in the main guide) |
+| `responses_per_datapoint` | `int \| AdaptiveStopping \| QuorumStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()` (~21 responses per pair on average, ~31 for the hardest pairs); other default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` is compare-only; `QuorumStopping(threshold, max_responses)` works on classification and compare. See **Early Stopping** |
 | `contexts` | list[str] \| None | Text context per datapoint: one sentence under 150 characters with only what the instruction asks about (see **Task design rules** in the main guide). Max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually |
 | `media_contexts` | list[list[str \| UploadedAsset]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths/`UploadedAsset` references (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
-| `confidence_threshold` | float \| None | Confidence-based early stopping threshold (0-1); cannot combine with `quorum_threshold` |
-| `quorum_threshold` | int \| None | Quorum-based early stopping: stop when this many responses agree; cannot combine with `confidence_threshold` |
+| `confidence_threshold` | float \| None | **Deprecated** (`DeprecationWarning`). Confidence-based early stopping threshold (0-1); needs an `int` `responses_per_datapoint` as the cap (when omitted: 15 on compare jobs, 10 otherwise). Use adaptive stopping on compare jobs |
+| `quorum_threshold` | int \| None | **Deprecated** (`DeprecationWarning`) — use `responses_per_datapoint=QuorumStopping(threshold, max_responses)`. Needs an `int` `responses_per_datapoint` as the cap (when omitted: 15 on compare jobs, 10 otherwise); cannot combine with `confidence_threshold` |
 | `settings` | `Sequence[RapidataSetting] \| None` | Display/behavior settings |
 | `failure_tolerance` | float \| None | Fraction of datapoints (0.0–1.0) allowed to fail upload while the definition is still created; `None` falls back to `rapidata_config.upload.failureTolerance` (default `0.0` = strict). See Error Handling |
 | `private_metadata` | `list[dict[str, str]] \| None` | Hidden metadata per datapoint |
@@ -401,6 +401,11 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
       "aggregatedResultsRatios": { "model_a.jpg": 0.375, "model_b.jpg": 0.625 },
       "summedUserScores": { "model_a.jpg": 1.0, "model_b.jpg": 2.5 },
       "summedUserScoresRatios": { "model_a.jpg": 0.286, "model_b.jpg": 0.714 },
+      "adaptiveStoppingState": {
+        "verdict": "Decided", "winners": ["1"],
+        "outcomes": { "0": { "weight": 2.4, "lower": 0.03, "upper": 0.48 }, "1": { "weight": 5.6, "lower": 0.52, "upper": 0.97 } },
+        "responseCount": 8, "minConfidence": 0.9, "ambiguityThreshold": 0.64
+      },
       "detailedResults": [
         {
           "votedFor": "model_b.jpg",
@@ -431,7 +436,8 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 | `aggregatedResultsRatios` | Vote percentages |
 | `summedUserScores` | Per-option sum of each choosing labeler's aggregated `userScore` |
 | `summedUserScoresRatios` | `summedUserScores` normalized to sum to 1 |
-| `confidencePerCategory` | Confidence level per category (with early stopping) |
+| `confidencePerCategory` | Confidence level per category (with `confidence_threshold`) |
+| `adaptiveStoppingState` | Adaptive stopping only (the compare default): the `verdict`, `winners` (`"0"`/`"1"`), per-option `outcomes` (`weight`, `lower`, `upper`), `responseCount` and the parameters used. Absent on non-adaptive datapoints. Prefer it over `winner` on adaptive results — see **Early Stopping** |
 | `userScore` | 0-1 value indicating individual labeler reliability |
 
 A labeler's `demographics` may be empty when no demographic data was collected for them.
@@ -453,52 +459,89 @@ Flow items have a different result shape — see the Flows section.
 
 ## Early Stopping
 
-Two mutually exclusive strategies are available for Classification and Comparison jobs. You cannot set both on the same job.
+The stopping rule is the value of `responses_per_datapoint`:
 
-### Confidence Stopping
+| Value | Rule | Job types |
+|-------|------|-----------|
+| `AdaptiveStopping()` | Stop each pair at its first settled verdict. **Compare default** | Compare |
+| `QuorumStopping(threshold, max_responses)` | Stop once `threshold` responses agree | Classification, Compare |
+| `int` | Exactly that many responses. Default `10` for all other job types | All |
 
-Stop collecting responses once a statistical confidence threshold (weighted by labeler trust scores) is reached.
+### Adaptive Stopping
 
 ```python
-job_def = client.job.create_classification_job_definition(
-    name="Animal Classification",
-    instruction="What animal is in this image?",
-    answer_options=["Cat", "Dog"],
-    datapoints=["pet1.jpg", "pet2.jpg"],
-    responses_per_datapoint=50,   # Maximum
-    confidence_threshold=0.99,    # Stop at 99% confidence
+from rapidata import AdaptiveStopping
+
+job_def = client.job.create_compare_job_definition(
+    name="Image Comparison",
+    instruction="Which image is higher quality?",
+    datapoints=[["a.jpg", "b.jpg"]],
+    responses_per_datapoint=AdaptiveStopping(),   # same as omitting it
 )
 ```
 
-- System calculates confidence using labeler userScores
-- Stops when target confidence is reached
-- Saves cost by collecting fewer responses when consensus is clear
-- Best for unambiguous tasks with clear correct answers
-- Not recommended for subjective preference tasks
+`AdaptiveStopping(max_responses=None, min_confidence=None, ambiguity_threshold=None)` — `None` uses the default (100 / 0.9 / 0.64); unset fields are left out of the request:
+
+- Each response is weighted by the labeler's user score. The SDK only sends the parameters and passes the state through; never recompute it.
+- After every response the pair gets a verdict once it is settled: `Decided` (a winner, wrong with probability below `1 - min_confidence`), `Ambiguous` (the true split lies inside the band, 20/80–80/20 by default), or `Undecided` at `max_responses`. A winner takes priority over ambiguous, so a 70/30 pair can still be `Decided`; the threshold only decides which pairs may stop as ambiguous.
+- Unanimous pairs stop after 7 responses, 50/50 pairs at about 16, ~21 per pair on average, ~31 for the hardest pairs (split around 35/65). `max_responses` is a safety cap the defaults never reach (the longest possible run is under 80 responses) — don't tune it.
+- `ambiguity_threshold` is a normalized Gini impurity: **higher is stricter**. raise it to resolve less decisive pairs: `0.75` resolves pairs down to a 75/25 split (about a third more responses on average, ~49 for the hardest pairs); `0.91` gives 35/65–65/35. The defaults are calibrated; change them only if you know why.
+- `max_responses` must be a positive int; `min_confidence` and `ambiguity_threshold` in (0, 1), else `ValueError`.
+- Raises `ValueError` on any job type other than compare, on create and on revisions, before anything is sent.
+- For now there is no forecast for the expected response count, so cost estimates and progress use the `max_responses` setting per pair, which is well above the expected cost.
+
+Each adaptive compare result gets `adaptiveStoppingState`:
+
+```json
+"adaptiveStoppingState": {
+  "verdict": "Decided",
+  "winners": ["1"],
+  "outcomes": {
+    "0": { "weight": 1.485, "lower": 0.004, "upper": 0.496 },
+    "1": { "weight": 10.515, "lower": 0.504, "upper": 0.996 }
+  },
+  "responseCount": 12, "minConfidence": 0.9, "ambiguityThreshold": 0.64
+}
+```
+
+- `outcomes` keys: `"0"` = first asset of the pair, `"1"` = second. `winners` holds those keys; non-empty only for `Decided`
+- `verdict`: `Decided` · `Ambiguous` · `Undecided` (`outcomes` may be empty if every response was a skip) · `Open` (still collecting, or the job was paused or stopped first). The first non-`Open` verdict is frozen with its outcomes and `responseCount`
+- `weight`: user-score-weighted responses, scaled to sum to `responseCount`. `lower`/`upper`: the range the option's long-run response share lies in with `min_confidence` certainty; it narrows with every response. Wholly above 0.5 → `Decided`; wholly inside the toss-up zone (~0.2–0.8 by default) → `Ambiguous`
+- The key is absent (never `null`) on a datapoint without a state; read it with `.get()`. The value is passed through verbatim: unknown fields and `null` values are kept, and `verdict` may gain new values — don't validate it strictly. There is no `stoppingState` key
+- `to_pandas()` flattens it into `adaptiveStoppingState_*` columns. Never recompute the verdict client-side
 
 ### Quorum Stopping
 
 Stop collecting responses once a fixed number of responses agree on the same answer.
 
 ```python
+from rapidata import QuorumStopping
+
 job_def = client.job.create_classification_job_definition(
     name="Animal Classification",
     instruction="What animal is in this image?",
     answer_options=["Cat", "Dog"],
     datapoints=["pet1.jpg", "pet2.jpg"],
-    responses_per_datapoint=10,   # Maximum
-    quorum_threshold=7,           # Stop when 7 responses agree
+    responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10),
 )
 ```
 
 A datapoint stops when:
-1. `quorum_threshold` responses agree on the same answer, **OR**
-2. Quorum becomes mathematically impossible (e.g. votes are too split to reach the threshold), **OR**
-3. `responses_per_datapoint` total votes are collected
+1. `threshold` responses agree on the same answer, **OR**
+2. Quorum becomes mathematically impossible (e.g. responses are too split to reach the threshold), **OR**
+3. `max_responses` total responses are collected
 
-- Simpler than confidence stopping — based on raw vote counts, not statistics
-- Good when you want predictable cost bounds with early termination
-- Best for unambiguous tasks with a clear correct answer
+`QuorumStopping` is a frozen dataclass; both fields are positive ints and `threshold` ≤ `max_responses`, else `ValueError`. Other job types than classification and compare raise `ValueError`.
+
+### Deprecated `quorum_threshold` and `confidence_threshold`
+
+Both emit a `DeprecationWarning` on every job type. Replace `quorum_threshold=7, responses_per_datapoint=10` with `responses_per_datapoint=QuorumStopping(7, 10)`, and `confidence_threshold` with adaptive stopping (the default) on compare jobs or `QuorumStopping` / a fixed count on classification. They still work with an `int` `responses_per_datapoint` as the cap.
+
+They cannot be set together and raise `ValueError` combined with `AdaptiveStopping` or `QuorumStopping`. On a compare job with the default left in place, they use a cap of 15.
+
+### Reading and editing the rule
+
+`job_def.responses_per_datapoint` returns an `int`, `AdaptiveStopping` or `QuorumStopping` (a legacy `confidence_threshold` definition returns its cap as an `int`). Assigning `AdaptiveStopping` or `QuorumStopping` replaces the rule on `save()`; assigning an `int` sets a fixed count, except on a legacy `confidence_threshold` definition, where it changes the cap.
 
 ## Job Progress
 
@@ -547,7 +590,7 @@ print(job.estimated_cost.estimated_cost)
 | `datapoint_count` | int | Number of datapoints the job will label |
 | `required_responses` | int | Total number of responses the job collects to complete |
 
-This is an **estimate, not the final bill**: it is based on a sample of the job's tasks scaled to the number of responses requested, so the amount actually charged can differ. Early stopping can also lower the final cost by collecting fewer responses than the maximum.
+This is an **estimate, not the final bill**: it is based on a sample of the job's tasks scaled to the number of responses requested, so the amount actually charged can differ. Early stopping can also lower the final cost by collecting fewer responses than the maximum. For adaptive compare jobs (the compare default) there is no forecast for the expected response count yet, so the estimate uses the `max_responses` setting per pair, which is well above the expected cost.
 
 ## Billing
 

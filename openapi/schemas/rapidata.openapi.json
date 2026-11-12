@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.11.1826-7abdb74"
+    "version": "2026.11.12.0946-295794f"
   },
   "servers": [
     {
@@ -63218,6 +63218,76 @@
           "MajorityVote"
         ]
       },
+      "AdaptiveStoppingOutcome": {
+        "required": [
+          "weight",
+          "lower",
+          "upper"
+        ],
+        "type": "object",
+        "properties": {
+          "weight": {
+            "type": "number",
+            "format": "double"
+          },
+          "lower": {
+            "type": "number",
+            "format": "double"
+          },
+          "upper": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "AdaptiveStoppingState": {
+        "required": [
+          "verdict",
+          "winners",
+          "outcomes",
+          "responseCount",
+          "minConfidence",
+          "ambiguityThreshold"
+        ],
+        "type": "object",
+        "properties": {
+          "verdict": {
+            "$ref": "#/components/schemas/AdaptiveStoppingVerdict"
+          },
+          "winners": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "outcomes": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/AdaptiveStoppingOutcome"
+            }
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minConfidence": {
+            "type": "number",
+            "format": "double"
+          },
+          "ambiguityThreshold": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "AdaptiveStoppingVerdict": {
+        "enum": [
+          "Decided",
+          "Ambiguous",
+          "Undecided",
+          "Open"
+        ]
+      },
       "AgeUserFilter_AgeGroup": {
         "enum": [
           "0-17",
@@ -67419,6 +67489,9 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IRefereeAdaptiveStoppingReferee"
+          },
+          {
             "$ref": "#/components/schemas/IRefereeBudgetReferee"
           },
           {
@@ -67434,10 +67507,39 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "AdaptiveStoppingReferee": "#/components/schemas/IRefereeAdaptiveStoppingReferee",
             "BudgetReferee": "#/components/schemas/IRefereeBudgetReferee",
             "EarlyStoppingReferee": "#/components/schemas/IRefereeEarlyStoppingReferee",
             "NaiveReferee": "#/components/schemas/IRefereeNaiveReferee",
             "QuorumReferee": "#/components/schemas/IRefereeQuorumReferee"
+          }
+        }
+      },
+      "IRefereeAdaptiveStoppingReferee": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AdaptiveStoppingReferee"
+            ],
+            "type": "string"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "minConfidence": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ambiguityThreshold": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -68272,6 +68374,15 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/IResponseAggregation"
+              }
+            ],
+            "nullable": true
+          },
+          "adaptiveStoppingState": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AdaptiveStoppingState"
               }
             ],
             "nullable": true
@@ -73426,6 +73537,9 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IRefereeConfigAdaptiveStoppingRefereeConfig"
+          },
+          {
             "$ref": "#/components/schemas/IRefereeConfigBudgetRefereeConfig"
           },
           {
@@ -73444,11 +73558,40 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "AdaptiveStoppingRefereeConfig": "#/components/schemas/IRefereeConfigAdaptiveStoppingRefereeConfig",
             "BudgetRefereeConfig": "#/components/schemas/IRefereeConfigBudgetRefereeConfig",
             "NaiveRefereeConfig": "#/components/schemas/IRefereeConfigNaiveRefereeConfig",
             "NeverEndingRefereeConfig": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig",
             "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig",
             "QuorumRefereeConfig": "#/components/schemas/IRefereeConfigQuorumRefereeConfig"
+          }
+        }
+      },
+      "IRefereeConfigAdaptiveStoppingRefereeConfig": {
+        "required": [
+          "maxVotes",
+          "minConfidence",
+          "ambiguityThreshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AdaptiveStoppingRefereeConfig"
+            ],
+            "type": "string"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minConfidence": {
+            "type": "number",
+            "format": "double"
+          },
+          "ambiguityThreshold": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -74191,6 +74334,15 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/IResponseAggregation"
+              }
+            ],
+            "nullable": true
+          },
+          "adaptiveStoppingState": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AdaptiveStoppingState"
               }
             ],
             "nullable": true
@@ -75133,6 +75285,9 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IRefereeInfoAdaptiveStoppingRefereeInfo"
+          },
+          {
             "$ref": "#/components/schemas/IRefereeInfoNaiveRefereeInfo"
           },
           {
@@ -75148,10 +75303,39 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "AdaptiveStoppingRefereeInfo": "#/components/schemas/IRefereeInfoAdaptiveStoppingRefereeInfo",
             "NaiveRefereeInfo": "#/components/schemas/IRefereeInfoNaiveRefereeInfo",
             "NeverEndingRefereeInfo": "#/components/schemas/IRefereeInfoNeverEndingRefereeInfo",
             "ProbabilisticAttachCategoryRefereeInfo": "#/components/schemas/IRefereeInfoProbabilisticAttachCategoryRefereeInfo",
             "QuorumRefereeInfo": "#/components/schemas/IRefereeInfoQuorumRefereeInfo"
+          }
+        }
+      },
+      "IRefereeInfoAdaptiveStoppingRefereeInfo": {
+        "required": [
+          "maxVotes",
+          "minConfidence",
+          "ambiguityThreshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AdaptiveStoppingRefereeInfo"
+            ],
+            "type": "string"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minConfidence": {
+            "type": "number",
+            "format": "double"
+          },
+          "ambiguityThreshold": {
+            "type": "number",
+            "format": "double"
           }
         }
       },

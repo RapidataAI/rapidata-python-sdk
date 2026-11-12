@@ -21,10 +21,11 @@ from rapidata.rapidata_client.job.cost import (
     _poll_for_cost_estimate,
 )
 from rapidata.rapidata_client.job._revision_body import (
+    _check_stopping_fits,
     _full_body,
     _get_answer_options,
     _get_instruction,
-    _get_responses,
+    _get_stopping,
     _with_answer_options,
     _with_instruction,
     _with_responses,
@@ -40,6 +41,8 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.datapoints.assets.uploaded_asset import (
         UploadedAsset,
     )
+    from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
+    from rapidata.rapidata_client.job.quorum_stopping import QuorumStopping
     from rapidata.rapidata_client.settings import RapidataSetting
 
 RevisionState = Literal["Pending", "Completed", "Failed"]
@@ -216,16 +219,33 @@ class RapidataJobDefinition:
         self._pending["answer_options"] = list(value)
 
     @property
-    def responses_per_datapoint(self) -> int:
-        """The maximum number of responses collected per datapoint."""
+    def responses_per_datapoint(self) -> int | AdaptiveStopping | QuorumStopping:
+        """How many responses are collected per datapoint.
+
+        An int for a fixed count, or the ``AdaptiveStopping`` / ``QuorumStopping`` the
+        job definition stops by. Assigning one of those replaces the rule; assigning an
+        int sets a fixed count. A legacy ``confidence_threshold`` definition reads as its
+        cap, and an int changes that cap.
+        """
         return self._effective(
-            "responses_per_datapoint", _get_responses(self._snapshot.referee)
+            "responses_per_datapoint", _get_stopping(self._snapshot.referee)
         )
 
     @responses_per_datapoint.setter
-    def responses_per_datapoint(self, value: int) -> None:
-        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-            raise ValueError("responses_per_datapoint must be a positive integer")
+    def responses_per_datapoint(
+        self, value: int | AdaptiveStopping | QuorumStopping
+    ) -> None:
+        from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
+        from rapidata.rapidata_client.job.quorum_stopping import QuorumStopping
+
+        if not isinstance(value, (AdaptiveStopping, QuorumStopping)) and (
+            isinstance(value, bool) or not isinstance(value, int) or value < 1
+        ):
+            raise ValueError(
+                "responses_per_datapoint must be a positive integer, "
+                "AdaptiveStopping or QuorumStopping"
+            )
+        _check_stopping_fits(self._snapshot.workflow, value)
         _with_responses(self._snapshot.referee, value)
         self._pending["responses_per_datapoint"] = value
 

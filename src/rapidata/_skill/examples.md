@@ -65,7 +65,9 @@ print(results["summary"])  # {'Flux_wins_total': …, 'Midjourney_wins_total': �
 
 `run_preference` and `run_coherence` take the same arguments without `contexts`. Pass `contexts` and `a_b_names` by keyword. Send image pairs and video pairs as separate calls.
 
-## Comparison with Early Stopping
+## Comparison with Adaptive Stopping
+
+Compare jobs stop each pair once its verdict is settled — `AdaptiveStopping()` is the default, so no stopping argument is needed.
 
 ```python
 from rapidata import RapidataClient
@@ -81,20 +83,26 @@ job_def = client.job.create_compare_job_definition(
         ["flux_sunset.jpg", "mj_sunset.jpg"],
     ],
     contexts=["A cat on a chair", "A sunset over mountains"],
-    responses_per_datapoint=50,
-    confidence_threshold=0.99,
     a_b_names=["Flux", "Midjourney"],
 )
 job = audience.assign_job(job_def)
 job.view()
 job.display_progress_bar()
 results = job.get_results()
+
+for datapoint in results["results"]:
+    state = datapoint.get("adaptiveStoppingState")  # absent until the pair has a state
+    if state is None:
+        continue
+    # verdict: "Decided" (winners holds "0" or "1"), "Ambiguous" (too close to call),
+    # "Undecided" (hit max_responses) or "Open" (no verdict yet); may gain new values
+    print(state["verdict"], state["winners"], state["responseCount"])
 ```
 
 ## Classification with Quorum Stopping
 
 ```python
-from rapidata import RapidataClient
+from rapidata import RapidataClient, QuorumStopping
 
 client = RapidataClient()
 audience = client.audience.get_audience_by_id("global")
@@ -104,8 +112,8 @@ job_def = client.job.create_classification_job_definition(
     instruction="What animal is in this image?",
     answer_options=["Cat", "Dog"],
     datapoints=["pet1.jpg", "pet2.jpg"],
-    responses_per_datapoint=10,  # Maximum responses
-    quorum_threshold=7,          # Stop when 7 responses agree
+    # Stop when 7 responses agree, after 10 at most
+    responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10),
 )
 job = audience.assign_job(job_def)
 job.view()
@@ -940,6 +948,7 @@ job_def = client.job.create_compare_job_definition(
 )
 
 # Reading estimated_cost blocks briefly until the estimate is priced.
+# No forecast for the expected response count yet: adaptive compare jobs are estimated at max_responses per pair.
 estimate = job_def.estimated_cost
 print(
     f"About {estimate.estimated_cost} for {estimate.required_responses} responses "
