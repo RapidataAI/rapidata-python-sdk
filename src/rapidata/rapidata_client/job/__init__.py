@@ -1,5 +1,6 @@
 from .rapidata_job_definition import RapidataJobDefinition, RevisionInfo
 from .rapidata_job_manager import RapidataJobManager
+from .rapidata_template_manager import RapidataTemplateManager
 from .rapidata_job import RapidataJob
 from .cost import CostEstimate
 from .progress import JobProgress

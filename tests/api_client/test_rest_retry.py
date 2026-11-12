@@ -9,12 +9,19 @@ family, so an aborted upload was never retried.
 from __future__ import annotations
 
 import logging
+from unittest.mock import MagicMock
 
 import httpx2
 import pytest
 from httpx2 import USE_CLIENT_DEFAULT
 
-from rapidata.api_client.rest import RESTClientObject, _RetryNoiseThrottle
+from rapidata.api_client import rest
+from rapidata.api_client.exceptions import ApiException
+from rapidata.api_client.rest import (
+    RESTClientObject,
+    _RetryNoiseThrottle,
+    without_unsafe_retries,
+)
 
 
 class _Configuration:
@@ -130,3 +137,95 @@ class TestRetryNoiseThrottle:
         # summaries account for every recorded retry exactly once.
         assert len(caplog.records) == 3
         assert "HTTP 429" in caplog.records[-1].message
+
+
+class TestWithoutUnsafeRetries:
+    """A call that must not run twice is retried only where no handler can have run it."""
+
+    URL = "https://api.rapidata.ai/job/definition/jdf_1/run"
+
+    def _client(self, monkeypatch, outcomes):
+        """A client whose every attempt returns or raises the next outcome; the last repeats."""
+        client = _rest_client()
+        client.session = MagicMock()
+        client._token_file = None
+        attempts: list[int] = []
+
+        def send(*args, **kwargs):
+            attempts.append(1)
+            outcome = outcomes[min(len(attempts), len(outcomes)) - 1]
+            if isinstance(outcome, Exception):
+                raise outcome
+            return httpx2.Response(outcome, request=httpx2.Request("POST", self.URL))
+
+        monkeypatch.setattr(client, "_send_request", send)
+        monkeypatch.setattr(rest.time, "sleep", lambda _: None)
+        return client, attempts
+
+    @pytest.mark.parametrize(
+        "failure",
+        [
+            429,
+            httpx2.ConnectError("connection refused"),
+            httpx2.ConnectTimeout("no connection"),
+            httpx2.PoolTimeout("no free connection"),
+        ],
+    )
+    def test_failures_before_the_handler_are_retried(self, monkeypatch, failure):
+        client, attempts = self._client(monkeypatch, [failure, 200])
+
+        with without_unsafe_retries():
+            response = client.request("POST", self.URL, body={})
+
+        assert response.status == 200
+        assert len(attempts) == 2
+
+    @pytest.mark.parametrize("status", [502, 503, 504])
+    def test_gateway_errors_answer_on_the_first_attempt(self, monkeypatch, status):
+        client, attempts = self._client(monkeypatch, [status, 200])
+
+        with without_unsafe_retries():
+            response = client.request("POST", self.URL, body={})
+
+        assert response.status == status
+        assert len(attempts) == 1
+
+    @pytest.mark.parametrize(
+        "error",
+        [
+            httpx2.ReadTimeout("no response"),
+            httpx2.ReadError("connection reset"),
+            httpx2.WriteError("aborted mid-request"),
+            httpx2.RemoteProtocolError("server disconnected"),
+        ],
+    )
+    def test_errors_after_sending_raise_on_the_first_attempt(self, monkeypatch, error):
+        client, attempts = self._client(monkeypatch, [error, 200])
+
+        with without_unsafe_retries(), pytest.raises(ApiException) as raised:
+            client.request("POST", self.URL, body={})
+
+        assert raised.value.status == 0
+        assert type(error).__name__ in str(raised.value.reason)
+        assert len(attempts) == 1
+
+    @pytest.mark.parametrize(
+        "failure", [503, httpx2.ReadTimeout("no response"), httpx2.ReadError("reset")]
+    )
+    def test_outside_every_transient_failure_is_retried_as_before(
+        self, monkeypatch, failure
+    ):
+        client, attempts = self._client(monkeypatch, [failure, 200])
+
+        response = client.request("POST", self.URL, body={})
+
+        assert response.status == 200
+        assert len(attempts) == 2
+
+    def test_the_rule_ends_with_the_block_even_when_it_raises(self):
+        with pytest.raises(RuntimeError):
+            with without_unsafe_retries():
+                assert rest._unsafe_retries.get() is False
+                raise RuntimeError("boom")
+
+        assert rest._unsafe_retries.get() is True

@@ -1,6 +1,6 @@
 ---
 name: rapidata
-description: Explains how to use the Rapidata API to get real and fast human annotations for your data. Use when writing code that creates labeling tasks, compares models, collects human feedback, or integrates with the Rapidata Python SDK.
+description: Explains how to use the Rapidata API to get real and fast human annotations for your data. Use when writing code that creates labeling tasks, compares models (one-call templates compare two image or video models on prompt alignment, preference and coherence), collects human feedback, or integrates with the Rapidata Python SDK.
 ---
 
 # Rapidata Python SDK
@@ -88,6 +88,7 @@ The file is just one transport. To move the token over any transport (key-value 
 - **MRI/Benchmark**: Compare and rank AI models on leaderboards
 
 **Client entry points:**
+- `client.job.template` — **start here to compare two image or video models**: Rapidata's field-tested alignment, preference and coherence setups, run on the user's pairs in one call (see **Templates**)
 - `client.job` — create job definitions (classification, comparison, locate, draw, select words, free text, ranking)
 - `client.audience` — create and find audiences
 - `client.flow` — continuous ranking and classify flows
@@ -97,6 +98,30 @@ The file is just one transport. To move the token over any transport (key-value 
 - `client.billing` — read the current billing period's cost and remaining credit, and the outstanding balance owed (organization-level)
 - `client.asset` — upload media once (`client.asset.upload(path_or_url)` → `UploadedAsset`) and reuse the reference in any job definition
 - `client.validation` — validation sets (`create_classification_set`, `create_compare_set`, …, `get_validation_set_by_id`, `find_validation_sets`); only needed for a flow's `validation_set_id` — jobs qualify labelers through audience examples instead
+
+## Templates
+
+**Comparing two image or video models? Suggest a template first.** Rapidata runs model comparisons for its own benchmarks and for customers, and templates are the setups that work for the most common cases. The user only brings the pairs, plus the prompts for alignment. Everything else is Rapidata's field-tested setup: the question, the annotators and 11 votes per pair. There is no audience or job definition to build, and none of the usual first-job mistakes (too few votes, a long question with several criteria, the wrong annotators).
+
+| The user wants to know | Call | Annotators answer |
+|---|---|---|
+| Which model follows the prompt better? | `run_alignment`, with one prompt per pair | "Which image matches the description better?" (trained Alignment audience) |
+| Which model do people like more? | `run_preference` | "Which image do you prefer?" (broad global crowd) |
+| Which model makes fewer AI mistakes? | `run_coherence` | "Which image is more likely AI-generated?" (trained Coherence audience). The winner is the side that looks **more** AI-generated, so the better model wins fewer pairs |
+
+For a full picture of two models, run all three. Build a job definition instead (see **Job Definitions + Audiences**) only when the user needs something a template doesn't do: another question, more than two options, audio or text, their own audience, or a different number of votes. To rank three or more models, use **Model Ranking Insights (MRI / Benchmarks)**.
+
+```python
+job = client.job.template.run_alignment(
+    name="my-model vs flux-2",
+    datapoints=[["mine/cat.png", "flux/cat.png"], ["mine/dog.png", "flux/dog.png"]],
+    contexts=["A cat wearing a red scarf", "A dog surfing at sunset"],
+    a_b_names=["my-model", "flux-2"],
+)
+job.get_results()["summary"]  # {'my-model_wins_total': …, 'flux-2_wins_total': …}
+```
+
+Images and videos (`.mp4`, `.gif`) both work; send them as separate calls. Signatures, errors and what to do when a call says a job may have started: `python -m rapidata skill reference`, **Templates**.
 
 ## Task design rules
 
@@ -116,7 +141,7 @@ Follow these for every job definition and audience example. Design each task so 
 
 ## Job Definitions + Audiences
 
-Job definitions cover **classification**, **comparison**, **locate**, **draw**, **select words**, **free text**, and **ranking**. For continuous, low-latency collection without full job setup, use Flows.
+Job definitions cover **classification**, **comparison**, **locate**, **draw**, **select words**, **free text**, and **ranking**. To compare two image or video models on prompt alignment, preference or coherence, use **Templates** instead: no job definition or audience needed. For continuous, low-latency collection without full job setup, use Flows.
 
 ### Step-by-step workflow
 
@@ -554,7 +579,8 @@ settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (ta
 12. **Don't restrict evaluations to English speakers for comprehension** — the instruction, the `context` string and answer options are translated into each labeler's device language automatically, so the global pool understands an English task. Turn this off with `OriginalLanguageOnlySetting()`. Two exceptions:
    - **Text assets are NOT translated by default** — datapoints uploaded with `data_type="text"` (and text `context_assets`) are shown exactly as supplied unless you add `TranslateTextAssetsSetting()`, which translates them into each labeler's language. That setting **always treats the source text as English** — for non-English text, leave it off and target speakers of the text's language with `LanguageFilter`. Results keep referencing the original text. `OriginalLanguageOnlySetting` wins over it.
    - **Text inside images and videos is never translated.** To measure it (e.g. rendered text in a generated image), run it as its own job or leaderboard that asks only about that dimension, on an audience filtered with `LanguageFilter` for the text's language — not `CountryFilter`, since a country's labelers don't all read its language. Keep the other dimensions on the unfiltered audience.
-13. **`assign_job` runs the object's revision, not the latest** — it sends `job_def.revision` and raises `RuntimeError` while the object has unsaved changes; `save()` first. Two objects loaded at the same revision never see each other's changes: each `save()` creates its own revision from what it loaded, and the last save becomes the latest. Use `save(require_latest=True)` to refuse instead: it raises `RevisionConflictError` (`e.latest_revision`) when someone saved since you loaded, creating nothing; then `discard_changes()`, `reload()`, reapply and save
+13. **Don't retry a template run blindly** — a `RapidataError` from `client.job.template.run_*()` saying "… so a job may have started" means exactly that: call `client.job.find_jobs(name)` first, and only call the method again if no job named exactly `name` was created after the call began. `find_jobs` also returns older jobs and longer names that contain the text, so never take its first result blindly.
+14. **`assign_job` runs the object's revision, not the latest** — it sends `job_def.revision` and raises `RuntimeError` while the object has unsaved changes; `save()` first. Two objects loaded at the same revision never see each other's changes: each `save()` creates its own revision from what it loaded, and the last save becomes the latest. Use `save(require_latest=True)` to refuse instead: it raises `RevisionConflictError` (`e.latest_revision`) when someone saved since you loaded, creating nothing; then `discard_changes()`, `reload()`, reapply and save
 
 ## Flows (Continuous Response Collection)
 

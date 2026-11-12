@@ -18,6 +18,9 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.create_job_endpoint_cost_warning import (
         CreateJobEndpointCostWarning,
     )
+    from rapidata.api_client.models.run_job_definition_endpoint_cost_warning import (
+        RunJobDefinitionEndpointCostWarning,
+    )
 
 
 class RapidataAudienceBase:
@@ -139,7 +142,7 @@ class RapidataAudienceBase:
         job._experiment_id = response.experiment_id
         logger.info(f"Assigned job to audience: {self.id}")
         managed_print(f"Job '{job.name}' is now viewable under: {job.job_details_page}")
-        self._warn_if_cost_exceeds_balance(job, response.cost_warning)
+        self._warn_if_cost_exceeds_balance(job.name, response.cost_warning)
         self._warn_if_content_check_skip_denied(job, response.content_check_skip_denied)
         self._warn_if_no_graduated_annotators(job)
         return job
@@ -156,7 +159,10 @@ class RapidataAudienceBase:
 
     @staticmethod
     def _warn_if_cost_exceeds_balance(
-        job: RapidataJob, cost_warning: CreateJobEndpointCostWarning | None
+        job_name: str,
+        cost_warning: (
+            CreateJobEndpointCostWarning | RunJobDefinitionEndpointCostWarning | None
+        ),
     ) -> None:
         """Surface the create response's optional cost warning via the SDK logger.
 
@@ -170,7 +176,7 @@ class RapidataAudienceBase:
             "it will likely pause about %.2f short of finishing. The job was created and "
             "runs as far as the balance allows; top up the account to let it complete. "
             "This is an estimate.",
-            job.name,
+            job_name,
             cost_warning.estimated_cost,
             cost_warning.available_balance,
             cost_warning.shortfall,

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from typing import Literal, TYPE_CHECKING
 
 from pydantic import BaseModel, model_validator, field_validator
@@ -134,11 +135,10 @@ class Datapoint(BaseModel):
         if isinstance(evaluation_asset, UploadedAsset):
             evaluation_asset = evaluation_asset.name
 
-        # Compare extensions case-insensitively and ignore URL query /
-        # fragment so `photo.JPG` and `https://x/image.png?v=2` are both
-        # recognised correctly.
-        parsed_path = urlparse(evaluation_asset).path or evaluation_asset
-        lower = parsed_path.lower()
+        # Only a URL's query and fragment are dropped: a local `take#2.png` keeps its name.
+        if re.match(r"https?://", evaluation_asset, re.IGNORECASE):
+            evaluation_asset = urlparse(evaluation_asset).path
+        lower = evaluation_asset.lower()
 
         if any(lower.endswith(ext) for ext in ALLOWED_IMAGE_EXTENSIONS):
             return AssetType.IMAGE

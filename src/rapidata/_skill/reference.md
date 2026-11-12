@@ -137,6 +137,34 @@ job_def.update_dataset(    # replace the datapoints
 )
 ```
 
+### Templates (`client.job.template`)
+
+Rapidata's field-tested setups for comparing two image or video models: alignment (which follows the prompt better), preference (which people like more) and coherence (which makes fewer AI mistakes). Suggest them before building a comparison job definition.
+
+```python
+client.job.template.run_alignment(name, datapoints, *, contexts, a_b_names=None) -> RapidataJob
+client.job.template.run_preference(name, datapoints, *, a_b_names=None) -> RapidataJob
+client.job.template.run_coherence(name, datapoints, *, a_b_names=None) -> RapidataJob
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | str | 1–256 characters; the name of the job and of the job definition the call creates |
+| `datapoints` | list[list[str]] | Pairs of file paths or URLs, `[[a, b], ...]`; 2 different files per pair, all images (`.jpg`, `.jpeg`, `.png`, `.webp`) or all videos (`.mp4`, `.gif`) |
+| `contexts` | list[str] | `run_alignment` only, keyword-only: one prompt per pair. Keep prompts under 200 characters (the SDK warns above); prompts over 400 characters are shortened automatically, billed like `client.context` |
+| `a_b_names` | list[str] \| None | Keyword-only: 2 different names for the first and second file of every pair, shown in the results instead of A and B |
+
+Every pair gets 11 votes from the template's audience; there is no `responses_per_datapoint`, `settings` or audience to pass.
+
+Errors:
+
+- `ValueError` before anything is uploaded: images and videos mixed in one call, a pair that isn't 2 different files, a file that is neither an image nor a video, a missing or empty prompt, a bad `name` or `a_b_names`.
+- `FailedUploadException`: some pairs failed to upload, and no job was started. Call the method again; `retry()` raises `RuntimeError` for template runs.
+- `RapidataError` saying "… so a job may have started": Rapidata didn't confirm the start. Look for the job with `client.job.find_jobs(name)` before calling again; the message gives the exact job name and the time the call began. Other `RapidataError`s carry Rapidata's reason.
+- `ApiException` (a network error): no job started, so calling the method again is safe.
+
+Template runs ignore three upload settings: `contextShortening` (only prompts over 400 characters are shortened), `failureTolerance` (any failed pair stops the run) and `checkForExplicitContent` (your account decides the content check; the SDK warns when it is `True`).
+
 ## Audiences
 
 **Goal.** An audience selects a specific group of annotators for a **specific task**. You tailor the pool to that task two ways — by training it on **qualification examples** (tasks with a known-correct answer; only labelers who answer them correctly are recruited) and/or by attaching **recruitment filters** (country, language, demographics). The point is to get the *right* annotators onto *that* task.

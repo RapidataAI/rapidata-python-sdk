@@ -41,6 +41,30 @@ job_def = client.job.create_classification_job_definition(
 job = audience.assign_job(job_def)
 ```
 
+## Template Run: Two Models, One Call
+
+The quickest way to compare two models: Rapidata's field-tested setup, with only the pairs and prompts from the user.
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+job = client.job.template.run_alignment(
+    name="flux vs midjourney, cats",
+    datapoints=[
+        ["flux_cat.jpg", "mj_cat.jpg"],
+        ["flux_sunset.jpg", "mj_sunset.jpg"],
+    ],
+    contexts=["A cat on a chair", "A sunset over mountains"],
+    a_b_names=["Flux", "Midjourney"],
+)
+results = job.get_results()
+print(results["summary"])  # {'Flux_wins_total': …, 'Midjourney_wins_total': …}
+```
+
+`run_preference` and `run_coherence` take the same arguments without `contexts`. Pass `contexts` and `a_b_names` by keyword. Send image pairs and video pairs as separate calls.
+
 ## Comparison with Early Stopping
 
 ```python

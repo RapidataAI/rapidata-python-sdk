@@ -1,0 +1,46 @@
+from __future__ import annotations
+
+import json
+import os
+
+TEMPLATE_IDS_VARIABLE = "RAPIDATA_TEMPLATE_IDS"
+
+TEMPLATE_IDS: dict[str, dict[str, str]] = {
+    "rapidata.ai": {
+        "alignment/image": "jdf_1aWZJUJxJsddn3",
+        "alignment/video": "jdf_1aWZS1Sn2D7c3e",
+        "preference/image": "jdf_1aWZYaq69c8Vwb",
+        "preference/video": "jdf_1aWZdzkGIkkWR0",
+        "coherence/image": "jdf_1aWZjLcMsSA5DM",
+        "coherence/video": "jdf_1aWZpAlATURr9c",
+    },
+}
+
+
+def template_id(environment: str, key: str) -> str:
+    """The job definition id of the template ``key``, such as ``"alignment/image"``.
+
+    ``RAPIDATA_TEMPLATE_IDS``, a JSON object of one environment's ids, replaces the built-in ones.
+    """
+    example = f'{{"{key}": "jdf_..."}}'
+    override = os.environ.get(TEMPLATE_IDS_VARIABLE)
+    if not override:
+        ids = TEMPLATE_IDS.get(environment)
+        if ids is None:
+            raise ValueError(
+                f"No Rapidata templates for {environment}. Set {TEMPLATE_IDS_VARIABLE} "
+                f"to a JSON object of their ids, such as {example}."
+            )
+        return ids[key]
+
+    try:
+        ids = json.loads(override)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"{TEMPLATE_IDS_VARIABLE} is not valid JSON: {e}") from e
+    definition_id = ids.get(key) if isinstance(ids, dict) else None
+    if not isinstance(definition_id, str) or not definition_id:
+        raise ValueError(
+            f"{TEMPLATE_IDS_VARIABLE} has no id for {key}. Set it to a JSON object "
+            f"of template ids, such as {example}."
+        )
+    return definition_id

@@ -8,14 +8,18 @@ import random
 import re
 import threading
 import time
-from typing import Dict, Optional
+from contextlib import contextmanager
+from contextvars import ContextVar
+from typing import Dict, Iterator, Optional
 
 import httpx2
 from authlib.integrations.httpx_client import OAuth2Client
 from httpx2 import (
     USE_CLIENT_DEFAULT,
     ConnectError,
+    ConnectTimeout,
     Limits,
+    PoolTimeout,
     ReadError,
     RemoteProtocolError,
     Timeout,
@@ -29,8 +33,8 @@ _logger = logging.getLogger("rapidata.api_client")
 _TRANSIENT_RETRY_MAX_ATTEMPTS = 3
 _TRANSIENT_RETRY_BASE_DELAY = 0.5
 _TRANSIENT_RETRY_MAX_DELAY = 30.0
-# 429 = rate limit, 502/503/504 = transient upstream / gateway errors.
-# All four are safe to retry with exponential backoff.
+# 429 = rate limit, 502/503/504 = transient upstream / gateway errors, all retried
+# with exponential backoff. Inside without_unsafe_retries() only 429 is.
 _RETRYABLE_STATUS_CODES = {429, 502, 503, 504}
 _RETRY_AFTER_MAX_SECONDS = 60.0
 
@@ -53,6 +57,25 @@ _RETRYABLE_TRANSPORT_ERRORS = (
 
 # One summary line per interval instead of one line per retried request.
 _RETRY_SUMMARY_INTERVAL = 30.0
+
+# The request never left the client, or was refused before a handler ran it.
+_SAFE_RETRY_STATUS_CODES = {429}
+_SAFE_RETRY_TRANSPORT_ERRORS = (ConnectError, ConnectTimeout, PoolTimeout)
+
+_unsafe_retries: ContextVar[bool] = ContextVar("rapidata_unsafe_retries", default=True)
+
+
+@contextmanager
+def without_unsafe_retries() -> Iterator[None]:
+    """Inside, a request is retried only on 429, ConnectError, ConnectTimeout and PoolTimeout.
+
+    Any other failure raises on its first attempt, so a call that must not run twice runs once.
+    """
+    token = _unsafe_retries.set(False)
+    try:
+        yield
+    finally:
+        _unsafe_retries.reset(token)
 
 
 def _backoff_delay(attempt: int) -> float:
@@ -304,15 +327,20 @@ class RESTClientObject:
             self._reload_token_from_file_if_expired(self._token_file)
 
         timeout = self._build_timeout(_request_timeout)
+        unsafe_retries = _unsafe_retries.get()
 
         for attempt in range(_TRANSIENT_RETRY_MAX_ATTEMPTS + 1):
             try:
                 r = self._send_request(self.session, method, url, headers, body, post_params, timeout)
             except httpx2.HTTPError as e:
-                self._handle_http_error(e, method, url, attempt)
+                self._handle_http_error(e, method, url, attempt, unsafe_retries)
                 continue
 
-            if r.status_code in _RETRYABLE_STATUS_CODES and attempt < _TRANSIENT_RETRY_MAX_ATTEMPTS:
+            if (
+                r.status_code in _RETRYABLE_STATUS_CODES
+                and (unsafe_retries or r.status_code in _SAFE_RETRY_STATUS_CODES)
+                and attempt < _TRANSIENT_RETRY_MAX_ATTEMPTS
+            ):
                 # Prefer the server's `Retry-After` hint when present
                 # (common for 429). Fall back to exponential backoff.
                 delay = self._retry_after_from_response(r)
@@ -428,7 +456,7 @@ class RESTClientObject:
             return Timeout(timeout=connect_timeout, read=read_timeout)
         return USE_CLIENT_DEFAULT
 
-    def _handle_http_error(self, error, method, url, attempt):
+    def _handle_http_error(self, error, method, url, attempt, unsafe_retries=True):
         """Handle HTTP errors, retrying transient failures with exponential backoff.
 
         Returns normally to signal a retry. Raises ApiException for permanent failures.
@@ -440,7 +468,11 @@ class RESTClientObject:
                 + self._get_ssl_verify_error_message(),
             )
 
-        if self._is_retryable_error(error) and attempt < _TRANSIENT_RETRY_MAX_ATTEMPTS:
+        if (
+            self._is_retryable_error(error)
+            and (unsafe_retries or isinstance(error, _SAFE_RETRY_TRANSPORT_ERRORS))
+            and attempt < _TRANSIENT_RETRY_MAX_ATTEMPTS
+        ):
             delay = _backoff_delay(attempt)
             _logger.debug(
                 "Transient network error on %s %s (attempt %d/%d): %s. Retrying in %.1fs...",
