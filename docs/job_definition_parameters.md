@@ -175,8 +175,6 @@ contexts=["A cat sitting on a red couch", "A blue car in the rain"]
 
 **Length limit:** A context may be at most 400 characters. A longer one is always shortened before upload — tuned to the `instruction` so only the part relevant to the question is kept — because the backend would otherwise reject it. This cannot be turned off, and a warning is logged reporting how many contexts were shortened, so a rewritten context never goes unnoticed. Shortening runs in concurrent batches with a progress bar; the per-context before/after lengths are logged at info level.
 
-**Templates:** `client.job.template.run_alignment` warns about prompts over 200 characters. Prompts over 400 are shortened on upload against the template's question. See [Templates](templates.md).
-
 ```python
 job_definition = client.job.create_classification_job_definition(
     name="Outfit check",
