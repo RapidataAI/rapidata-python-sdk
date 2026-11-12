@@ -946,7 +946,7 @@ job_def = client.job.create_compare_job_definition(
 )
 
 # Reading estimated_cost blocks briefly until the estimate is priced.
-# Adaptive compare jobs are estimated at max_votes per pair until the backend forecasts expected votes.
+# No forecast for the expected response count yet: adaptive compare jobs are estimated at max_votes per pair.
 estimate = job_def.estimated_cost
 print(
     f"About {estimate.estimated_cost} for {estimate.required_responses} responses "

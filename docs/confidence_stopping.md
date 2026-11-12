@@ -13,7 +13,7 @@ You choose the stopping rule with `responses_per_datapoint`:
 
 ## How it Works
 
-Each vote on a compare pair is weighted by the voter's [user score](understanding_the_results.md#understanding-the-user-scores). After every vote, the backend checks the pair for a verdict:
+Each vote on a compare pair is weighted by the voter's [user score](understanding_the_results.md#understanding-the-user-scores). After every vote, the pair is checked for a verdict:
 
 - **`Decided`**: one option is preferred, with at least `min_confidence` certainty.
 - **`Ambiguous`**: the pair is a toss-up. Voters are split too evenly for either option to win clearly. By default, that means neither option would get more than about 80% of the votes, so more votes would not produce a winner.
@@ -50,13 +50,13 @@ The threshold only decides which pairs may stop as a toss-up. A clear winner alw
 
 | Parameter | Default | Meaning |
 |-----------|---------|---------|
-| `min_confidence` | 0.9 | How certain the backend must be before it calls a winner, between 0 and 1. |
+| `min_confidence` | 0.9 | How certain the result must be before a winner is called, between 0 and 1. |
 | `ambiguity_threshold` | 0.64 | How even the split must be before a pair is called a toss-up, between 0 and 1. Higher calls fewer pairs a toss-up and costs more votes. |
 | `max_votes` | 100 | The hard cap on votes per pair. With the default `min_confidence` and `ambiguity_threshold`, no pair can reach it: every pair reaches a verdict in under 80 votes. |
 
-A parameter left as `None` uses the backend default, and a job definition read back from the backend shows the resolved values. Adaptive stopping is compare-only: passing it to any other job type raises a `ValueError` before anything is sent.
+A parameter left as `None` uses the default above, and a saved job definition shows the resolved values. Adaptive stopping is compare-only: passing it to any other job type raises a `ValueError` before anything is sent.
 
-Until the backend forecasts how many votes a job will need, the [cost estimate](cost_estimates.md) and [job progress](job_progress.md) count `max_votes` responses per pair, so the estimate is well above what an adaptive job typically costs.
+For now, there is no forecast for the expected response count, so the [cost estimate](cost_estimates.md) and [job progress](job_progress.md) use the `max_votes` setting per pair, which is well above the expected cost.
 
 ## Analyzing Adaptive Stopping Results
 
@@ -89,7 +89,7 @@ for datapoint in results["results"]:
     print(state["verdict"], state["winners"], state["responseCount"])
 ```
 
-`results.to_pandas()` flattens the state into columns such as `adaptiveStoppingState_verdict`. The SDK shows the values exactly as the backend sent them.
+`results.to_pandas()` flattens the state into columns such as `adaptiveStoppingState_verdict`. The SDK passes the values through unchanged.
 
 ---
 

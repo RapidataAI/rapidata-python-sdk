@@ -437,7 +437,7 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 | `summedUserScores` | Per-option sum of each choosing labeler's aggregated `userScore` |
 | `summedUserScoresRatios` | `summedUserScores` normalized to sum to 1 |
 | `confidencePerCategory` | Confidence level per category (with `confidence_threshold`) |
-| `adaptiveStoppingState` | Adaptive stopping only (the compare default): the backend's `verdict`, `winners` (`"0"`/`"1"`), per-option `outcomes` (`weight`, `lower`, `upper`), `responseCount` and the parameters used. Absent on non-adaptive datapoints. Prefer it over `winner` on adaptive results — see **Early Stopping** |
+| `adaptiveStoppingState` | Adaptive stopping only (the compare default): the `verdict`, `winners` (`"0"`/`"1"`), per-option `outcomes` (`weight`, `lower`, `upper`), `responseCount` and the parameters used. Absent on non-adaptive datapoints. Prefer it over `winner` on adaptive results — see **Early Stopping** |
 | `userScore` | 0-1 value indicating individual labeler reliability |
 
 A labeler's `demographics` may be empty when no demographic data was collected for them.
@@ -479,15 +479,15 @@ job_def = client.job.create_compare_job_definition(
 )
 ```
 
-`AdaptiveStoppingReferee(max_votes=None, min_confidence=None, ambiguity_threshold=None)` — `None` uses the backend default (100 / 0.9 / 0.64); unset fields are left out of the request:
+`AdaptiveStoppingReferee(max_votes=None, min_confidence=None, ambiguity_threshold=None)` — `None` uses the default (100 / 0.9 / 0.64); unset fields are left out of the request:
 
-- The backend weights each vote by the voter's user score and runs the stopping math; the SDK only sends the parameters and passes the state through.
+- Each vote is weighted by the voter's user score. The SDK only sends the parameters and passes the state through; never recompute it.
 - After every vote the pair gets a verdict once it is settled: `Decided` (a winner, wrong with probability below `1 - min_confidence`), `Ambiguous` (the true split lies inside the band, 20/80–80/20 by default), or `Undecided` at `max_votes`. A winner takes priority over ambiguous, so a 70/30 pair can still be `Decided`; the threshold only decides which pairs may stop as ambiguous.
 - Unanimous pairs stop after 7 votes, 50/50 pairs at about 16, ~21 per pair on average, ~31 for the hardest pairs (split around 35/65). `max_votes` is a safety cap the defaults never reach (the longest possible run is under 80 votes) — don't tune it.
 - `ambiguity_threshold` is a normalized Gini impurity: **higher is stricter**. raise it to resolve less decisive pairs: `0.75` resolves pairs down to a 75/25 split (about a third more votes on average, ~49 for the hardest pairs); `0.91` gives 35/65–65/35. The defaults are calibrated; change them only if you know why.
 - `max_votes` must be a positive int; `min_confidence` and `ambiguity_threshold` in (0, 1), else `ValueError`.
 - Raises `ValueError` on any job type other than compare, on create and on revisions, before anything is sent.
-- Cost estimates and progress count `max_votes` per pair until the backend forecasts expected votes, so the estimate is well above the typical cost.
+- For now there is no forecast for the expected response count, so cost estimates and progress use the `max_votes` setting per pair, which is well above the expected cost.
 
 Each adaptive compare result gets `adaptiveStoppingState`:
 

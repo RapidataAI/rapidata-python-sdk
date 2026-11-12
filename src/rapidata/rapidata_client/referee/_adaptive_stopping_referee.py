@@ -23,32 +23,31 @@ def _check_open_unit_interval(name: str, value: float | None) -> None:
 class AdaptiveStoppingReferee(Referee):
     """Stops collecting votes on a compare datapoint once the outcome is clear.
 
-    The backend keeps collecting votes until it is confident which option wins, or
-    until the two options are so close that the datapoint is called ambiguous, or
-    until ``max_votes`` is reached. Clear pairs finish after a few votes; close pairs
-    use more. The backend runs the stopping math; the SDK only sends the parameters.
+    Votes are collected until it is clear which option wins, until the two options
+    are so close that the datapoint is called ambiguous, or until ``max_votes`` is
+    reached. Clear pairs finish after a few votes; close pairs use more.
 
     It is the default for compare job definitions. Pass it as ``responses_per_datapoint``
     to change a parameter, or assign it to ``RapidataJobDefinition.responses_per_datapoint``
     to switch an existing compare definition. Other job types raise ``ValueError``.
 
-    Leave a parameter as ``None`` to use the backend default. A revision read back
-    from the backend always carries the resolved values.
+    Leave a parameter as ``None`` to use its default. A saved job definition always
+    carries the resolved values.
 
     Args:
         max_votes (int, optional): The most votes collected per datapoint.
-            Backend default: 100. Cost and progress count this many votes per datapoint.
-        min_confidence (float, optional): How confident the backend must be before it
-            calls a winner, between 0 and 1 (exclusive). Backend default: 0.9.
+            Default: 100. Cost and progress count this many votes per datapoint.
+        min_confidence (float, optional): How certain the result must be before a
+            winner is called, between 0 and 1 (exclusive). Default: 0.9.
         ambiguity_threshold (float, optional): How close the two options must be before
             the datapoint is called ambiguous, as a normalized Gini impurity between 0
             and 1 (exclusive). Higher is stricter: it needs a closer tie, so it costs
-            more votes. Backend default: 0.64, which matches a 20%-80% vote split.
+            more votes. Default: 0.64, which matches a 20%-80% vote split.
 
     Attributes:
-        max_votes (int | None): The vote cap, or None for the backend default.
-        min_confidence (float | None): The confidence level, or None for the backend default.
-        ambiguity_threshold (float | None): The ambiguity threshold, or None for the backend default.
+        max_votes (int | None): The vote cap, or None for the default.
+        min_confidence (float | None): The confidence level, or None for the default.
+        ambiguity_threshold (float | None): The ambiguity threshold, or None for the default.
     """
 
     def __init__(
