@@ -224,5 +224,5 @@ print(results)
 - Create [Custom Audiences](audiences.md) for higher quality results
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
 - Understand the [Results Format](understanding_the_results.md)
-- Configure [Adaptive Stopping](confidence_stopping.md) to stop each item once its answer is settled
+- Configure [Adaptive Stopping](confidence_stopping.md) to stop collecting votes on each compare pair once its result is settled
 - Let your [AI agent](ai_agents.md) write the integration code for you — one-line install for Claude Code, Cursor, Copilot, and many more
