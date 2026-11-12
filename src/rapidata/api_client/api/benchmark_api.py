@@ -9835,7 +9835,7 @@ class BenchmarkApi:
     ) -> CreateBenchmarkCustomRunsEndpointOutput:
         """Creates one run per targeted leaderboard of the benchmark, all evaluating the same matchups.
 
-        Answers 202 with one entry per created run and the seed they all share, so every leaderboard  evaluates identical image pairs; a seed is generated when none is supplied. Without  leaderboardIds, hidden and excluded-from-overall leaderboards are left out; listed  leaderboards run even when hidden or excluded, and ids not on the benchmark are a 400. See  POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated  and resolved.
+        Answers 202 with one entry per created run and the seed they all share, so every leaderboard  evaluates identical image pairs; a seed is generated when none is supplied. Without  leaderboardIds, hidden and excluded-from-overall leaderboards are left out; listed  leaderboards run even when hidden or excluded, and ids not on the benchmark are a 400. See  POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated  and resolved.  Two candidates are never paired: a configuration whose participantIds or  sampleIds can only pair candidates is a 400.
 
         :param benchmark_id: The id of the benchmark whose leaderboards should run the matchups. (required)
         :type benchmark_id: str
@@ -9909,7 +9909,7 @@ class BenchmarkApi:
     ) -> ApiResponse[CreateBenchmarkCustomRunsEndpointOutput]:
         """Creates one run per targeted leaderboard of the benchmark, all evaluating the same matchups.
 
-        Answers 202 with one entry per created run and the seed they all share, so every leaderboard  evaluates identical image pairs; a seed is generated when none is supplied. Without  leaderboardIds, hidden and excluded-from-overall leaderboards are left out; listed  leaderboards run even when hidden or excluded, and ids not on the benchmark are a 400. See  POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated  and resolved.
+        Answers 202 with one entry per created run and the seed they all share, so every leaderboard  evaluates identical image pairs; a seed is generated when none is supplied. Without  leaderboardIds, hidden and excluded-from-overall leaderboards are left out; listed  leaderboards run even when hidden or excluded, and ids not on the benchmark are a 400. See  POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated  and resolved.  Two candidates are never paired: a configuration whose participantIds or  sampleIds can only pair candidates is a 400.
 
         :param benchmark_id: The id of the benchmark whose leaderboards should run the matchups. (required)
         :type benchmark_id: str
@@ -9983,7 +9983,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Creates one run per targeted leaderboard of the benchmark, all evaluating the same matchups.
 
-        Answers 202 with one entry per created run and the seed they all share, so every leaderboard  evaluates identical image pairs; a seed is generated when none is supplied. Without  leaderboardIds, hidden and excluded-from-overall leaderboards are left out; listed  leaderboards run even when hidden or excluded, and ids not on the benchmark are a 400. See  POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated  and resolved.
+        Answers 202 with one entry per created run and the seed they all share, so every leaderboard  evaluates identical image pairs; a seed is generated when none is supplied. Without  leaderboardIds, hidden and excluded-from-overall leaderboards are left out; listed  leaderboards run even when hidden or excluded, and ids not on the benchmark are a 400. See  POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated  and resolved.  Two candidates are never paired: a configuration whose participantIds or  sampleIds can only pair candidates is a 400.
 
         :param benchmark_id: The id of the benchmark whose leaderboards should run the matchups. (required)
         :type benchmark_id: str

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.10.2217-0adf303"
+    "version": "2026.11.11.1826-7abdb74"
   },
   "servers": [
     {
@@ -12389,7 +12389,7 @@
           "Benchmark"
         ],
         "summary": "Creates one run per targeted leaderboard of the benchmark, all evaluating the same matchups.",
-        "description": "Answers 202 with one entry per created run and the seed they all share, so every leaderboard\n evaluates identical image pairs; a seed is generated when none is supplied. Without\n leaderboardIds, hidden and excluded-from-overall leaderboards are left out; listed\n leaderboards run even when hidden or excluded, and ids not on the benchmark are a 400. See\n POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated\n and resolved.",
+        "description": "Answers 202 with one entry per created run and the seed they all share, so every leaderboard\n evaluates identical image pairs; a seed is generated when none is supplied. Without\n leaderboardIds, hidden and excluded-from-overall leaderboards are left out; listed\n leaderboards run even when hidden or excluded, and ids not on the benchmark are a 400. See\n POST /leaderboard/{leaderboardId}/runs/custom for how configurations are validated\n and resolved.\n Two candidates are never paired: a configuration whose participantIds or\n sampleIds can only pair candidates is a 400.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -23452,7 +23452,7 @@
           "Leaderboard"
         ],
         "summary": "Creates a run that evaluates an explicit list of matchup configurations, each with its own\n response count.",
-        "description": "Answers 202 once the configurations are validated and the run is queued; it then starts\n behind whatever else is queued on the leaderboard, and its matchups are resolved at that\n point. Poll GET /leaderboard/{leaderboardId}/runs for its status. Every id is\n verified before the 202, but a configuration that resolves to no matchups is only found at\n start and is skipped; the run fails when all of them do. At most 2000 configurations,\n 1000000 responses and 10000 referenced ids per request.",
+        "description": "Answers 202 once the configurations are validated and the run is queued; it then starts\n behind whatever else is queued on the leaderboard, and its matchups are resolved at that\n point. Poll GET /leaderboard/{leaderboardId}/runs for its status. Every id is\n verified before the 202, but a configuration that resolves to no matchups is only found at\n start and is skipped; the run fails when all of them do. At most 2000 configurations,\n 1000000 responses and 10000 referenced ids per request.\n Two candidates are never paired: a configuration whose participantIds or\n sampleIds can only pair candidates is a 400.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -28516,6 +28516,59 @@
         ]
       }
     },
+    "/benchmark/sample-generation/{sampleGenerationId}/cancel": {
+      "post": {
+        "tags": [
+          "SampleGeneration"
+        ],
+        "summary": "Cancels a sample generation, including items that are queued or being generated.",
+        "description": "Generated samples are kept; a cancelled generation cannot be retried. Returns 400 when it already finished.",
+        "parameters": [
+          {
+            "name": "sampleGenerationId",
+            "in": "path",
+            "description": "The id of the sample generation request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/benchmark/sample-generation/{sampleGenerationId}": {
       "get": {
         "tags": [
@@ -29088,7 +29141,7 @@
           "SampleGeneration"
         ],
         "summary": "Re-queues failed items of a sample generation so they run again.",
-        "description": "When no item ids are supplied, every failed item of the generation qualifies. Item ids that\n do not belong to the generation or are not in a failed state are ignored. Returns the ids\n that were re-queued; a generation with no failed items yields an empty result.\n When no failure categories are supplied, the retry covers only the items whose failure a\n re-run can plausibly fix, so items rejected for the request itself — an unknown model,\n refused credentials, a content-policy or configuration rejection — are left alone rather than\n re-run to collect the same rejection. Naming those categories explicitly retries them anyway;\n combining categories with item ids intersects the two.\n Returns 403 unless the caller's organization has been granted the Faucets capability.",
+        "description": "When no item ids are supplied, every failed item of the generation qualifies. Item ids that\n do not belong to the generation or are not in a failed state are ignored. Returns the ids\n that were re-queued; a generation with no failed items yields an empty result.\n When no failure categories are supplied, the retry covers only the items whose failure a\n re-run can plausibly fix, so items rejected for the request itself — an unknown model,\n refused credentials, a content-policy or configuration rejection — are left alone rather than\n re-run to collect the same rejection. Naming those categories explicitly retries them anyway;\n combining categories with item ids intersects the two.\n Returns 400 for a cancelled generation, and 403 unless the caller's organization has been\n granted the Faucets capability.",
         "parameters": [
           {
             "name": "sampleGenerationId",
@@ -62499,7 +62552,8 @@
           "Pending",
           "Running",
           "Succeeded",
-          "Failed"
+          "Failed",
+          "Cancelled"
         ]
       },
       "SampleGenerationMode": {

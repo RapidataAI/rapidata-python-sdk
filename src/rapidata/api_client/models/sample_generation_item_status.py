@@ -28,6 +28,7 @@ class SampleGenerationItemStatus(str, Enum):
     RUNNING = 'Running'
     SUCCEEDED = 'Succeeded'
     FAILED = 'Failed'
+    CANCELLED = 'Cancelled'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
