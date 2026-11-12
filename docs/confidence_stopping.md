@@ -17,7 +17,7 @@ Each vote on a compare pair is weighted by the voter's [user score](understandin
 
 - **`Decided`**: one option is preferred, with at least `min_confidence` certainty.
 - **`Ambiguous`**: the pair is a toss-up. Voters are split too evenly for either option to win clearly. By default, that means neither option would get more than about 80% of the votes, so more votes would not produce a winner.
-- **`Undecided`**: neither happened before `max_votes` votes. `max_votes` is a safety cap: with the defaults, no pair comes close to it.
+- **`Undecided`**: neither happened before `max_votes` votes. `max_votes` is a hard cap that the defaults never reach: every pair reaches a verdict in under 80 votes.
 - **`Open`**: no verdict yet. The pair is still collecting, or the job was paused or stopped before it finished.
 
 The pair stops at the first verdict. A clear pair stops after as few as 7 votes and a 50/50 pair after about 16. A pair needs about 21 votes on average; the hardest pairs, split around 35/65, need about 31.
@@ -52,7 +52,7 @@ The threshold only decides which pairs may stop as a toss-up. A clear winner alw
 |-----------|---------|---------|
 | `min_confidence` | 0.9 | How certain the backend must be before it calls a winner, between 0 and 1. |
 | `ambiguity_threshold` | 0.64 | How even the split must be before a pair is called a toss-up, between 0 and 1. Higher calls fewer pairs a toss-up and costs more votes. |
-| `max_votes` | 100 | The safety cap on votes per pair. |
+| `max_votes` | 100 | The hard cap on votes per pair. With the default `min_confidence` and `ambiguity_threshold`, no pair can reach it: every pair reaches a verdict in under 80 votes. |
 
 A parameter left as `None` uses the backend default, and a job definition read back from the backend shows the resolved values. Adaptive stopping is compare-only: passing it to any other job type raises a `ValueError` before anything is sent.
 
