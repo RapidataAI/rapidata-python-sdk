@@ -102,22 +102,22 @@ An `UploadedAsset` is media, so it cannot be used with `data_type="text"`.
 
 | Property | Value |
 |----------|-------|
-| **Type** | `int`, or `AdaptiveStoppingReferee` (compare only) |
+| **Type** | `int`, or `AdaptiveStopping` (compare only) |
 | **Required** | No |
-| **Default** | `AdaptiveStoppingReferee()` for compare jobs, `10` otherwise |
+| **Default** | `AdaptiveStopping()` for compare jobs, `10` otherwise |
 
 How many responses to collect for each datapoint.
 
 - An `int` collects exactly that many. The actual number may slightly exceed it due to concurrent labelers.
-- `AdaptiveStoppingReferee()` stops each compare pair once its verdict is settled, after about 21 responses per pair on average.
+- `AdaptiveStopping()` stops each compare pair once its verdict is settled, after about 21 responses per pair on average.
 
 **Related:** [Adaptive Stopping](confidence_stopping.md)
 
 ```python
-from rapidata import AdaptiveStoppingReferee
+from rapidata import AdaptiveStopping
 
 responses_per_datapoint=15                                               # fixed
-responses_per_datapoint=AdaptiveStoppingReferee(ambiguity_threshold=0.75)  # compare only: fewer pairs called a toss-up, more responses
+responses_per_datapoint=AdaptiveStopping(ambiguity_threshold=0.75)  # compare only: fewer pairs called a toss-up, more responses
 ```
 
 ---
@@ -533,7 +533,7 @@ job_definition = client.job.create_ranking_job_definition(
 | `data_type` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :white_check_mark: | :white_check_mark: |
 | `contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
 | `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
-| `AdaptiveStoppingReferee` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `AdaptiveStopping` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `confidence_threshold` (deprecated) | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `quorum_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |

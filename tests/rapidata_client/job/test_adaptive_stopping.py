@@ -1,4 +1,4 @@
-"""AdaptiveStoppingReferee: validation, the compare default, deprecations, and the wire body."""
+"""AdaptiveStopping: validation, the compare default, deprecations, and the wire body."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from rapidata import AdaptiveStoppingReferee
+from rapidata import AdaptiveStopping
 from rapidata.api_client.models.create_job_revision_endpoint_output import (
     CreateJobRevisionEndpointOutput,
 )
@@ -58,20 +58,22 @@ RESOLVED = {
 
 
 def test_defaults_are_left_to_the_backend():
-    referee = AdaptiveStoppingReferee()
+    stopping = AdaptiveStopping()
 
-    assert referee.max_responses is None
-    assert referee.min_confidence is None
-    assert referee.ambiguity_threshold is None
-    assert referee._to_model().to_dict() == {"_t": "AdaptiveStoppingReferee"}
+    assert stopping.max_responses is None
+    assert stopping.min_confidence is None
+    assert stopping.ambiguity_threshold is None
+    assert stopping._to_referee()._to_model().to_dict() == {
+        "_t": "AdaptiveStoppingReferee"
+    }
 
 
 def test_set_fields_go_out_with_their_wire_names():
-    referee = AdaptiveStoppingReferee(
+    stopping = AdaptiveStopping(
         max_responses=40, min_confidence=0.95, ambiguity_threshold=0.75
     )
 
-    assert referee._to_model().to_dict() == {
+    assert stopping._to_referee()._to_model().to_dict() == {
         "_t": "AdaptiveStoppingReferee",
         "maxVotes": 40,
         "minConfidence": 0.95,
@@ -82,32 +84,32 @@ def test_set_fields_go_out_with_their_wire_names():
 @pytest.mark.parametrize("max_responses", [0, -1, 1.5, True, "10"])
 def test_max_responses_must_be_a_positive_integer(max_responses):
     with pytest.raises(ValueError, match="max_responses"):
-        AdaptiveStoppingReferee(max_responses=max_responses)
+        AdaptiveStopping(max_responses=max_responses)
 
 
 @pytest.mark.parametrize("field", ["min_confidence", "ambiguity_threshold"])
 @pytest.mark.parametrize("value", [0, 1, 0.0, 1.0, -0.1, 1.1, True, "0.5"])
 def test_probabilities_must_be_strictly_between_zero_and_one(field, value):
     with pytest.raises(ValueError, match=field):
-        AdaptiveStoppingReferee(**{field: value})
+        AdaptiveStopping(**{field: value})
 
 
 @pytest.mark.parametrize("value", [0.01, 0.5, 0.99])
 def test_probabilities_inside_the_open_interval_are_accepted(value):
-    referee = AdaptiveStoppingReferee(min_confidence=value, ambiguity_threshold=value)
+    stopping = AdaptiveStopping(min_confidence=value, ambiguity_threshold=value)
 
-    assert referee.min_confidence == referee.ambiguity_threshold == value
+    assert stopping.min_confidence == stopping.ambiguity_threshold == value
 
 
 # --- cost and progress count max_responses per datapoint -------------------------
 
 
 def test_responses_per_datapoint_is_the_backend_default_without_max_responses():
-    assert AdaptiveStoppingReferee()._responses_per_datapoint == 100
+    assert AdaptiveStopping()._responses_per_datapoint == 100
 
 
 def test_responses_per_datapoint_is_max_responses_when_set():
-    assert AdaptiveStoppingReferee(max_responses=25)._responses_per_datapoint == 25
+    assert AdaptiveStopping(max_responses=25)._responses_per_datapoint == 25
 
 
 def test_votes_count_falls_back_to_the_default_cap_without_max_responses():
@@ -164,10 +166,8 @@ def test_compare_defaults_to_adaptive_stopping_with_backend_defaults():
     assert body["referee"] == {"_t": "AdaptiveStoppingReferee"}
 
 
-def test_compare_sends_the_configured_referee():
-    body = _create(
-        responses_per_datapoint=AdaptiveStoppingReferee(ambiguity_threshold=0.75)
-    )
+def test_compare_sends_the_configured_stopping():
+    body = _create(responses_per_datapoint=AdaptiveStopping(ambiguity_threshold=0.75))
 
     assert body["referee"] == {
         "_t": "AdaptiveStoppingReferee",
@@ -230,14 +230,14 @@ def test_no_deprecation_warning_without_confidence_threshold():
 @pytest.mark.parametrize(
     "extra", [{"confidence_threshold": 0.99}, {"quorum_threshold": 3}]
 )
-def test_thresholds_cannot_be_combined_with_an_explicit_adaptive_referee(extra):
+def test_thresholds_cannot_be_combined_with_explicit_adaptive_stopping(extra):
     service = MagicMock()
     with pytest.raises(ValueError, match="cannot be combined"):
         RapidataJobManager(service).create_compare_job_definition(
             name="n",
             instruction="Which is sharper?",
             datapoints=[PAIR],
-            responses_per_datapoint=AdaptiveStoppingReferee(),
+            responses_per_datapoint=AdaptiveStopping(),
             **extra,
         )
     service.order.job_api.job_definition_post.assert_not_called()
@@ -250,7 +250,7 @@ def test_non_compare_create_is_rejected_before_any_request():
             name="n",
             workflow=ClassifyWorkflow(instruction="What is it?"),
             datapoints=[],
-            responses_per_datapoint=AdaptiveStoppingReferee(),
+            responses_per_datapoint=AdaptiveStopping(),
         )
     service.dataset.dataset_api.dataset_post.assert_not_called()
     service.order.job_api.job_definition_post.assert_not_called()
@@ -310,16 +310,16 @@ def _sent_referee(service: MagicMock) -> dict:
 def test_revision_switches_a_compare_definition_to_adaptive_stopping():
     jd, service = _loaded()
 
-    jd.responses_per_datapoint = AdaptiveStoppingReferee()
+    jd.responses_per_datapoint = AdaptiveStopping()
     jd.save()
 
     assert _sent_referee(service) == {"_t": "AdaptiveStoppingReferee"}
 
 
-def test_revision_sends_the_configured_referee():
+def test_revision_sends_the_configured_stopping():
     jd, service = _loaded()
 
-    jd.responses_per_datapoint = AdaptiveStoppingReferee(
+    jd.responses_per_datapoint = AdaptiveStopping(
         max_responses=30, ambiguity_threshold=0.75
     )
     jd.save()
@@ -335,17 +335,17 @@ def test_revision_rejects_adaptive_stopping_on_classify_before_any_request():
     jd, service = _loaded(workflow=CLASSIFY_WORKFLOW)
 
     with pytest.raises(ValueError, match="only supports compare"):
-        jd.responses_per_datapoint = AdaptiveStoppingReferee()
+        jd.responses_per_datapoint = AdaptiveStopping()
 
     assert not jd.has_unsaved_changes
     service.order.job_api.job_definition_definition_id_revision_post.assert_not_called()
 
 
-def test_revision_reads_back_the_resolved_referee():
+def test_revision_reads_back_the_resolved_stopping():
     jd, _ = _loaded(referee=RESOLVED)
 
     stopping = jd.responses_per_datapoint
-    assert isinstance(stopping, AdaptiveStoppingReferee)
+    assert isinstance(stopping, AdaptiveStopping)
     assert (
         stopping.max_responses,
         stopping.min_confidence,
@@ -374,3 +374,14 @@ def test_revision_int_on_a_fixed_definition_keeps_working():
     jd.save()
 
     assert _sent_referee(service) == {"_t": "NaiveReferee", "totalVotes": 15}
+
+
+def test_is_exported_publicly_and_immutable():
+    import dataclasses
+
+    import rapidata
+    from rapidata.rapidata_client.job import adaptive_stopping
+
+    assert rapidata.AdaptiveStopping is adaptive_stopping.AdaptiveStopping
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        AdaptiveStopping().max_responses = 5  # type: ignore[misc]

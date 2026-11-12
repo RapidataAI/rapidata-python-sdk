@@ -10,10 +10,10 @@ from rapidata.api_client.models.i_referee import IReferee
 
 if TYPE_CHECKING:
     from rapidata.api_client.models.feature_flag import FeatureFlag
+    from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
     from rapidata.api_client.models.get_job_revision_endpoint_output import (
         GetJobRevisionEndpointOutput,
     )
-    from rapidata.rapidata_client.referee import AdaptiveStoppingReferee
     from rapidata.rapidata_client.settings import RapidataSetting
 
 _INSTRUCTION_FIELD_BY_RAPID = {
@@ -104,20 +104,20 @@ def _get_responses(referee: IReferee) -> int:
             f"A '{data.get('_t')}' referee has no responses per datapoint."
         )
     if data.get(field) is None and data.get("_t") == "AdaptiveStoppingReferee":
-        from rapidata.rapidata_client.referee._adaptive_stopping_referee import (
-            DEFAULT_ADAPTIVE_MAX_RESPONSES,
+        from rapidata.rapidata_client.job.adaptive_stopping import (
+            _DEFAULT_MAX_RESPONSES,
         )
 
-        return DEFAULT_ADAPTIVE_MAX_RESPONSES
+        return _DEFAULT_MAX_RESPONSES
     return data[field]
 
 
-def _get_stopping(referee: IReferee) -> int | AdaptiveStoppingReferee:
+def _get_stopping(referee: IReferee) -> int | AdaptiveStopping:
     data = _as_dict(referee)
     if data.get("_t") == "AdaptiveStoppingReferee":
-        from rapidata.rapidata_client.referee import AdaptiveStoppingReferee
+        from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
 
-        return AdaptiveStoppingReferee(
+        return AdaptiveStopping(
             max_responses=data.get("maxVotes"),
             min_confidence=data.get("minConfidence"),
             ambiguity_threshold=data.get("ambiguityThreshold"),
@@ -125,10 +125,9 @@ def _get_stopping(referee: IReferee) -> int | AdaptiveStoppingReferee:
     return _get_responses(referee)
 
 
-def _with_responses(
-    referee: IReferee, responses: int | AdaptiveStoppingReferee
-) -> IReferee:
-    from rapidata.rapidata_client.referee import AdaptiveStoppingReferee, NaiveReferee
+def _with_responses(referee: IReferee, responses: int | AdaptiveStopping) -> IReferee:
+    from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
+    from rapidata.rapidata_client.referee import NaiveReferee
 
     data = _as_dict(referee)
     field = _VOTES_FIELD_BY_REFEREE.get(data.get("_t", ""))
@@ -136,8 +135,8 @@ def _with_responses(
         raise ValueError(
             f"A '{data.get('_t')}' referee has no responses per datapoint to change."
         )
-    if isinstance(responses, AdaptiveStoppingReferee):
-        return responses._to_model()
+    if isinstance(responses, AdaptiveStopping):
+        return responses._to_referee()._to_model()
     # An int on an adaptive definition switches it to a fixed count, as on create.
     if data["_t"] == "AdaptiveStoppingReferee":
         return NaiveReferee(responses=responses)._to_model()
@@ -146,14 +145,14 @@ def _with_responses(
 
 
 def _check_stopping_fits(
-    workflow: IOrderWorkflowInput, responses: int | AdaptiveStoppingReferee
+    workflow: IOrderWorkflowInput, responses: int | AdaptiveStopping
 ) -> None:
-    from rapidata.rapidata_client.referee import AdaptiveStoppingReferee
+    from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
 
     kind = _workflow_kind(_as_dict(workflow))
-    if isinstance(responses, AdaptiveStoppingReferee) and kind != "Compare":
+    if isinstance(responses, AdaptiveStopping) and kind != "Compare":
         raise ValueError(
-            f"AdaptiveStoppingReferee only supports compare job definitions, not '{kind}'."
+            f"AdaptiveStopping only supports compare job definitions, not '{kind}'."
         )
 
 

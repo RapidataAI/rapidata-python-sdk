@@ -67,7 +67,7 @@ print(results["summary"])  # {'Flux_wins_total': …, 'Midjourney_wins_total': �
 
 ## Comparison with Adaptive Stopping
 
-Compare jobs stop each pair once its verdict is settled — `AdaptiveStoppingReferee()` is the default, so no stopping argument is needed.
+Compare jobs stop each pair once its verdict is settled — `AdaptiveStopping()` is the default, so no stopping argument is needed.
 
 ```python
 from rapidata import RapidataClient

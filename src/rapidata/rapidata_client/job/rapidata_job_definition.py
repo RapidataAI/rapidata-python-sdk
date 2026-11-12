@@ -41,7 +41,7 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.datapoints.assets.uploaded_asset import (
         UploadedAsset,
     )
-    from rapidata.rapidata_client.referee import AdaptiveStoppingReferee
+    from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
     from rapidata.rapidata_client.settings import RapidataSetting
 
 RevisionState = Literal["Pending", "Completed", "Failed"]
@@ -218,12 +218,12 @@ class RapidataJobDefinition:
         self._pending["answer_options"] = list(value)
 
     @property
-    def responses_per_datapoint(self) -> int | AdaptiveStoppingReferee:
+    def responses_per_datapoint(self) -> int | AdaptiveStopping:
         """How many responses are collected per datapoint.
 
         An int for a fixed count (or the cap of a threshold-based rule), or the
-        ``AdaptiveStoppingReferee`` a compare job definition stops by. Assigning an
-        ``AdaptiveStoppingReferee`` switches a compare definition to adaptive stopping;
+        ``AdaptiveStopping`` a compare job definition stops by. Assigning an
+        ``AdaptiveStopping`` switches a compare definition to adaptive stopping;
         assigning an int to an adaptive definition switches it to that fixed count.
         """
         return self._effective(
@@ -231,14 +231,14 @@ class RapidataJobDefinition:
         )
 
     @responses_per_datapoint.setter
-    def responses_per_datapoint(self, value: int | AdaptiveStoppingReferee) -> None:
-        from rapidata.rapidata_client.referee import AdaptiveStoppingReferee
+    def responses_per_datapoint(self, value: int | AdaptiveStopping) -> None:
+        from rapidata.rapidata_client.job.adaptive_stopping import AdaptiveStopping
 
-        if not isinstance(value, AdaptiveStoppingReferee) and (
+        if not isinstance(value, AdaptiveStopping) and (
             isinstance(value, bool) or not isinstance(value, int) or value < 1
         ):
             raise ValueError(
-                "responses_per_datapoint must be a positive integer or an AdaptiveStoppingReferee"
+                "responses_per_datapoint must be a positive integer or an AdaptiveStopping"
             )
         _check_stopping_fits(self._snapshot.workflow, value)
         _with_responses(self._snapshot.referee, value)

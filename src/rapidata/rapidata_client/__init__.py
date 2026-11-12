@@ -15,6 +15,7 @@ from .job import (
     CostEstimate,
     JobProgress,
     RevisionInfo,
+    AdaptiveStopping,
 )
 from .signal import RapidataSignal, RapidataSignalManager
 from .flow import (
@@ -29,7 +30,6 @@ from .billing import BillingPeriod, RapidataBillingManager
 from .asset import RapidataAssetManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box
 from .results import RapidataResults
-from .referee import AdaptiveStoppingReferee
 from rapidata.api_client.models.benchmark_demographic_dimension import (
     BenchmarkDemographicDimension,
 )

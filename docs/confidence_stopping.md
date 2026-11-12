@@ -6,7 +6,7 @@ You choose the stopping rule with `responses_per_datapoint`:
 
 | Value | Rule | Job types |
 |-------|------|-----------|
-| `AdaptiveStoppingReferee()` | Stops each pair once its verdict is statistically settled. **Default for compare jobs.** | Compare |
+| `AdaptiveStopping()` | Stops each pair once its verdict is statistically settled. **Default for compare jobs.** | Compare |
 | an `int` | Collects exactly that many responses. Default (`10`) for every other job type. | All |
 
 [Quorum Stopping](#quorum-stopping) is still available through `quorum_threshold`.
@@ -27,7 +27,7 @@ The pair stops at the first verdict. A clear pair stops after as few as 7 respon
 Compare jobs use adaptive stopping unless you pass something else:
 
 ```python
-from rapidata import RapidataClient, AdaptiveStoppingReferee
+from rapidata import RapidataClient, AdaptiveStopping
 
 client = RapidataClient()
 
@@ -36,7 +36,7 @@ job_definition = client.job.create_compare_job_definition(
     instruction="Which image matches the description better?",
     datapoints=[["https://assets.rapidata.ai/a.jpg", "https://assets.rapidata.ai/b.jpg"]],
     contexts=["A small blue book sitting on a large red book."],
-    responses_per_datapoint=AdaptiveStoppingReferee(), # (1)!
+    responses_per_datapoint=AdaptiveStopping(), # (1)!
 )
 ```
 
@@ -44,7 +44,7 @@ job_definition = client.job.create_compare_job_definition(
 
 `ambiguity_threshold` sets how even the split must be before a pair is called a toss-up. With the default 0.64, a pair is a toss-up when neither option would get more than about 80% of the responses.
 
-**Raise `ambiguity_threshold` to resolve less decisive pairs, at the cost of more responses.** For example, `AdaptiveStoppingReferee(ambiguity_threshold=0.75)` resolves pairs down to a 75%/25% split: a pair is a toss-up only when neither option would get more than about 75% of the responses. That takes about a third more responses per pair on average, and about 49 for the hardest pairs. With `0.91`, the limit is about 65%.
+**Raise `ambiguity_threshold` to resolve less decisive pairs, at the cost of more responses.** For example, `AdaptiveStopping(ambiguity_threshold=0.75)` resolves pairs down to a 75%/25% split: a pair is a toss-up only when neither option would get more than about 75% of the responses. That takes about a third more responses per pair on average, and about 49 for the hardest pairs. With `0.91`, the limit is about 65%.
 
 The threshold only decides which pairs may stop as a toss-up. A clear winner always takes priority, so a pair where one option gets 70% of the responses can still end `Decided`.
 
@@ -54,7 +54,7 @@ The threshold only decides which pairs may stop as a toss-up. A clear winner alw
 | `ambiguity_threshold` | 0.64 | How even the split must be before a pair is called a toss-up, between 0 and 1. Higher calls fewer pairs a toss-up and costs more responses. |
 | `max_responses` | 100 | The hard cap on responses per pair. With the default `min_confidence` and `ambiguity_threshold`, no pair can reach it: every pair reaches a verdict in under 80 responses. |
 
-A parameter left as `None` uses the default above, and a saved job definition shows the resolved values. Adaptive stopping is compare-only: passing it to any other job type raises a `ValueError` before anything is sent.
+A parameter left as `None` uses the default above, and a saved job definition shows the resolved values (see the [`AdaptiveStopping` reference](reference/rapidata/rapidata_client/job/adaptive_stopping.md)). Adaptive stopping is compare-only: passing it to any other job type raises a `ValueError` before anything is sent.
 
 For now, there is no forecast for the expected response count, so the [cost estimate](cost_estimates.md) and [job progress](job_progress.md) use the `max_responses` setting per pair, which is well above the expected cost.
 

@@ -12,7 +12,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `instruction` | str | Question shown to labelers: one criterion, under 80 characters (see **Task design rules** in the main guide). Over 250 characters raises `ValueError` |
 | `datapoints` | list | Data to label: URLs, local paths, or `UploadedAsset` references from `client.asset.upload(...)`, which are never uploaded again |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
-| `responses_per_datapoint` | `int \| AdaptiveStoppingReferee` | When to stop collecting per item. Compare default `AdaptiveStoppingReferee()` (~21 responses per pair on average, ~31 for the hardest pairs); other default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStoppingReferee` is compare-only. See **Early Stopping** |
+| `responses_per_datapoint` | `int \| AdaptiveStopping` | When to stop collecting per item. Compare default `AdaptiveStopping()` (~21 responses per pair on average, ~31 for the hardest pairs); other default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStopping` is compare-only. See **Early Stopping** |
 | `contexts` | list[str] \| None | Text context per datapoint: one sentence under 150 characters with only what the instruction asks about (see **Task design rules** in the main guide). Max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually |
 | `media_contexts` | list[list[str \| UploadedAsset]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths/`UploadedAsset` references (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
 | `confidence_threshold` | float \| None | **Deprecated** (`DeprecationWarning`). Confidence-based early stopping threshold (0-1); needs an `int` `responses_per_datapoint` as the cap (when omitted: 15 on compare jobs, 10 otherwise). Use adaptive stopping on compare jobs |
@@ -463,23 +463,23 @@ The stopping rule is the value of `responses_per_datapoint`:
 
 | Value | Rule | Job types |
 |-------|------|-----------|
-| `AdaptiveStoppingReferee()` | Stop each pair at its first settled verdict. **Compare default** | Compare |
+| `AdaptiveStopping()` | Stop each pair at its first settled verdict. **Compare default** | Compare |
 | `int` | Exactly that many responses. Default `10` for all other job types | All |
 
 ### Adaptive Stopping
 
 ```python
-from rapidata import AdaptiveStoppingReferee
+from rapidata import AdaptiveStopping
 
 job_def = client.job.create_compare_job_definition(
     name="Image Comparison",
     instruction="Which image is higher quality?",
     datapoints=[["a.jpg", "b.jpg"]],
-    responses_per_datapoint=AdaptiveStoppingReferee(),   # same as omitting it
+    responses_per_datapoint=AdaptiveStopping(),   # same as omitting it
 )
 ```
 
-`AdaptiveStoppingReferee(max_responses=None, min_confidence=None, ambiguity_threshold=None)` — `None` uses the default (100 / 0.9 / 0.64); unset fields are left out of the request:
+`AdaptiveStopping(max_responses=None, min_confidence=None, ambiguity_threshold=None)` — `None` uses the default (100 / 0.9 / 0.64); unset fields are left out of the request:
 
 - Each response is weighted by the labeler's user score. The SDK only sends the parameters and passes the state through; never recompute it.
 - After every response the pair gets a verdict once it is settled: `Decided` (a winner, wrong with probability below `1 - min_confidence`), `Ambiguous` (the true split lies inside the band, 20/80–80/20 by default), or `Undecided` at `max_responses`. A winner takes priority over ambiguous, so a 70/30 pair can still be `Decided`; the threshold only decides which pairs may stop as ambiguous.
@@ -533,11 +533,11 @@ A datapoint stops when:
 
 `confidence_threshold` emits a `DeprecationWarning` on every job type. Use adaptive stopping (the default) on compare jobs; on classification use `quorum_threshold` or a fixed count. It still works with an `int` `responses_per_datapoint` as the cap.
 
-Both thresholds cannot be set together and raise `ValueError` combined with an explicit `AdaptiveStoppingReferee`. On a compare job with the default left in place, they use a cap of 15.
+Both thresholds cannot be set together and raise `ValueError` combined with an explicit `AdaptiveStopping`. On a compare job with the default left in place, they use a cap of 15.
 
 ### Reading and editing the rule
 
-`job_def.responses_per_datapoint` returns an `int`, or an `AdaptiveStoppingReferee` with the resolved values for adaptive definitions. Assigning an `AdaptiveStoppingReferee` switches a compare definition to adaptive stopping on `save()`; assigning an `int` to an adaptive definition switches it to that fixed count, and on any other definition changes its count or cap.
+`job_def.responses_per_datapoint` returns an `int`, or an `AdaptiveStopping` with the resolved values for adaptive definitions. Assigning an `AdaptiveStopping` switches a compare definition to adaptive stopping on `save()`; assigning an `int` to an adaptive definition switches it to that fixed count, and on any other definition changes its count or cap.
 
 ## Job Progress
 
