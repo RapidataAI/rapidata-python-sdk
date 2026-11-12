@@ -195,8 +195,6 @@ from rapidata import rapidata_config
 rapidata_config.upload.contextShortening = True
 ```
 
-Template runs ignore it: they shorten only prompts over 400 characters.
-
 You can also shorten contexts directly via the client, without creating a job definition:
 
 ```python
