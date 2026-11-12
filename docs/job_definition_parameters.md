@@ -117,7 +117,7 @@ How many responses to collect for each datapoint.
 from rapidata import AdaptiveStoppingReferee
 
 responses_per_datapoint=15                                               # fixed
-responses_per_datapoint=AdaptiveStoppingReferee(ambiguity_threshold=0.75)  # compare only: narrower ambiguous band (25/75–75/25), more votes
+responses_per_datapoint=AdaptiveStoppingReferee(ambiguity_threshold=0.75)  # compare only: fewer pairs called a toss-up, more votes
 ```
 
 ---

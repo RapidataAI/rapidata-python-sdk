@@ -16,7 +16,7 @@ You choose the stopping rule with `responses_per_datapoint`:
 Each vote on a compare pair is weighted by the voter's [user score](understanding_the_results.md#understanding-the-user-scores). After every vote, the backend checks the pair for a verdict:
 
 - **`Decided`**: one option is preferred, with at least `min_confidence` certainty.
-- **`Ambiguous`**: the pair is too close to call. The true preference lies inside the ambiguous band, 20/80 to 80/20 by default, so further votes would not produce a winner.
+- **`Ambiguous`**: the pair is a toss-up. Voters are split too evenly for either option to win clearly. By default, that means neither option would get more than about 80% of the votes, so more votes would not produce a winner.
 - **`Undecided`**: neither happened before `max_votes` votes. `max_votes` is a safety cap: with the defaults, no pair comes close to it.
 - **`Open`**: no verdict yet. The pair is still collecting, or the job was paused or stopped before it finished.
 
@@ -42,16 +42,16 @@ job_definition = client.job.create_compare_job_definition(
 
 1. The same as leaving the argument out. Pass `responses_per_datapoint=10` to collect exactly 10 responses per pair instead.
 
-`ambiguity_threshold` sets how close a pair must be before it stops as ambiguous. The default 0.64 gives the 20/80–80/20 band.
+`ambiguity_threshold` sets how even the split must be before a pair is called a toss-up. With the default 0.64, a pair is a toss-up when neither option would get more than about 80% of the votes.
 
-**Raise `ambiguity_threshold` to push closer pairs to a winner, at the cost of more votes.** For example, `AdaptiveStoppingReferee(ambiguity_threshold=0.75)` narrows the band to 25/75–75/25, which takes about a third more votes per pair on average, and about 49 for the hardest pairs; `0.91` narrows it to 35/65–65/35.
+**Raise `ambiguity_threshold` to call fewer pairs a toss-up and get a winner for closer pairs, at the cost of more votes.** For example, with `AdaptiveStoppingReferee(ambiguity_threshold=0.75)` a pair is a toss-up only when neither option would get more than about 75% of the votes. That takes about a third more votes per pair on average, and about 49 for the hardest pairs. With `0.91`, the limit is about 65%.
 
-The threshold only decides which pairs may stop as ambiguous. A winner always takes priority, so a 70/30 pair can still be `Decided` even though it lies inside the band.
+The threshold only decides which pairs may stop as a toss-up. A clear winner always takes priority, so a pair where one option gets 70% of the votes can still end `Decided`.
 
 | Parameter | Default | Meaning |
 |-----------|---------|---------|
 | `min_confidence` | 0.9 | How certain the backend must be before it calls a winner, between 0 and 1. |
-| `ambiguity_threshold` | 0.64 | How close the pair must be before it stops as ambiguous, between 0 and 1. Higher is stricter. |
+| `ambiguity_threshold` | 0.64 | How even the split must be before a pair is called a toss-up, between 0 and 1. Higher calls fewer pairs a toss-up and costs more votes. |
 | `max_votes` | 100 | The safety cap on votes per pair. |
 
 A parameter left as `None` uses the backend default, and a job definition read back from the backend shows the resolved values. Adaptive stopping is compare-only: passing it to any other job type raises a `ValueError` before anything is sent.
