@@ -79,8 +79,22 @@ Each compare datapoint in the [results](understanding_the_results.md) gains an `
 - `outcomes` is keyed by option: `"0"` is the first asset of the pair, `"1"` the second. `winners` names the winning key and is only filled for `Decided`.
 - `verdict` is final once it is not `Open`, together with the `outcomes` and `responseCount` at that moment.
 - `weight` is the option's user-score-weighted votes, scaled so all weights add up to `responseCount`.
-- `lower` and `upper` bound the option's share of the vote at the chosen confidence.
+- `lower` and `upper` are the range the option's share of the vote lies in. See below.
 - With `Undecided`, `outcomes` can be empty when every response was a skip.
+
+### Reading `lower` and `upper`
+
+A pair never gets every possible vote, so its true split is unknown. `lower` and `upper` give the range that an option's share of the vote would fall in if you kept asking labelers, with `min_confidence` certainty (90% by default). The range starts wide and narrows with every vote.
+
+In the example, option `"1"` holds 10.5 of the 12 weighted votes, and its range is 50.4% to 99.6%. The whole range lies above 50%, so `"1"` is the winner even though only 12 votes were collected. Option `"0"` mirrors it: 0.4% to 49.6%.
+
+The verdict follows from where the range sits:
+
+| Range of the leading option | Verdict |
+|------|---------|
+| entirely above 50% | `Decided` |
+| entirely inside the toss-up zone, about 20% to 80% by default | `Ambiguous` |
+| neither yet | `Open`, or `Undecided` once `max_votes` is reached |
 
 ```python
 results = job.get_results()
