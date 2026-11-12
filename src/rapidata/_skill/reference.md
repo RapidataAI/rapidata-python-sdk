@@ -487,7 +487,7 @@ job_def.save()
 - The backend weights each vote by the voter's user score and runs the stopping math; the SDK only sends the parameters and passes the state through.
 - After every vote the pair gets a verdict once it is settled: `Decided` (a winner, wrong with probability below `1 - min_confidence`), `Ambiguous` (the true split lies inside the band, 20/80–80/20 by default), or `Undecided` at `max_votes`. A winner takes priority over ambiguous, so a 70/30 pair can still be `Decided`; the threshold only decides which pairs may stop as ambiguous.
 - Unanimous pairs stop after 7 votes, 50/50 pairs at about 16, ~21 per pair on average, ~31 for the hardest pairs (split around 35/65). `max_votes` is a safety cap the defaults never reach (the longest possible run is under 80 votes) — don't tune it.
-- `ambiguity_threshold` is a normalized Gini impurity: **higher is stricter**. `0.75` narrows the band to 25/75–75/25 (about a third more votes on average, ~49 for the hardest pairs); `0.91` gives 35/65–65/35. The defaults are calibrated; change them only if you know why.
+- `ambiguity_threshold` is a normalized Gini impurity: **higher is stricter**. raise it to resolve less decisive pairs: `0.75` resolves pairs down to a 75/25 split (about a third more votes on average, ~49 for the hardest pairs); `0.91` gives 35/65–65/35. The defaults are calibrated; change them only if you know why.
 - `max_votes` must be a positive int; `min_confidence` and `ambiguity_threshold` in (0, 1), else `ValueError`.
 - Raises `ValueError` on any job type other than compare, on create and on revisions, before anything is sent.
 - Cost estimates and progress count `max_votes` per pair until the backend forecasts expected votes, so the estimate is well above the typical cost.
