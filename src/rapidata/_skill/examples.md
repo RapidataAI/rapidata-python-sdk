@@ -93,7 +93,7 @@ results = job.get_results()
 for datapoint in results["results"]:
     state = datapoint["adaptiveStoppingState"]
     # verdict: "Decided" (winners holds "0" or "1"), "Ambiguous" (too close to call),
-    # "Undecided" (hit max_votes) or "Open" (no verdict yet)
+    # "Undecided" (hit max_responses) or "Open" (no verdict yet)
     print(state["verdict"], state["winners"], state["responseCount"])
 ```
 
@@ -946,7 +946,7 @@ job_def = client.job.create_compare_job_definition(
 )
 
 # Reading estimated_cost blocks briefly until the estimate is priced.
-# No forecast for the expected response count yet: adaptive compare jobs are estimated at max_votes per pair.
+# No forecast for the expected response count yet: adaptive compare jobs are estimated at max_responses per pair.
 estimate = job_def.estimated_cost
 print(
     f"About {estimate.estimated_cost} for {estimate.required_responses} responses "

@@ -105,10 +105,10 @@ def _get_responses(referee: IReferee) -> int:
         )
     if data.get(field) is None and data.get("_t") == "AdaptiveStoppingReferee":
         from rapidata.rapidata_client.referee._adaptive_stopping_referee import (
-            DEFAULT_ADAPTIVE_MAX_VOTES,
+            DEFAULT_ADAPTIVE_MAX_RESPONSES,
         )
 
-        return DEFAULT_ADAPTIVE_MAX_VOTES
+        return DEFAULT_ADAPTIVE_MAX_RESPONSES
     return data[field]
 
 
@@ -118,7 +118,7 @@ def _get_stopping(referee: IReferee) -> int | AdaptiveStoppingReferee:
         from rapidata.rapidata_client.referee import AdaptiveStoppingReferee
 
         return AdaptiveStoppingReferee(
-            max_votes=data.get("maxVotes"),
+            max_responses=data.get("maxVotes"),
             min_confidence=data.get("minConfidence"),
             ambiguity_threshold=data.get("ambiguityThreshold"),
         )

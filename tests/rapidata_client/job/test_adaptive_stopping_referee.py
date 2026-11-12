@@ -60,7 +60,7 @@ RESOLVED = {
 def test_defaults_are_left_to_the_backend():
     referee = AdaptiveStoppingReferee()
 
-    assert referee.max_votes is None
+    assert referee.max_responses is None
     assert referee.min_confidence is None
     assert referee.ambiguity_threshold is None
     assert referee._to_model().to_dict() == {"_t": "AdaptiveStoppingReferee"}
@@ -68,7 +68,7 @@ def test_defaults_are_left_to_the_backend():
 
 def test_set_fields_go_out_with_their_wire_names():
     referee = AdaptiveStoppingReferee(
-        max_votes=40, min_confidence=0.95, ambiguity_threshold=0.75
+        max_responses=40, min_confidence=0.95, ambiguity_threshold=0.75
     )
 
     assert referee._to_model().to_dict() == {
@@ -79,10 +79,10 @@ def test_set_fields_go_out_with_their_wire_names():
     }
 
 
-@pytest.mark.parametrize("max_votes", [0, -1, 1.5, True, "10"])
-def test_max_votes_must_be_a_positive_integer(max_votes):
-    with pytest.raises(ValueError, match="max_votes"):
-        AdaptiveStoppingReferee(max_votes=max_votes)
+@pytest.mark.parametrize("max_responses", [0, -1, 1.5, True, "10"])
+def test_max_responses_must_be_a_positive_integer(max_responses):
+    with pytest.raises(ValueError, match="max_responses"):
+        AdaptiveStoppingReferee(max_responses=max_responses)
 
 
 @pytest.mark.parametrize("field", ["min_confidence", "ambiguity_threshold"])
@@ -99,24 +99,24 @@ def test_probabilities_inside_the_open_interval_are_accepted(value):
     assert referee.min_confidence == referee.ambiguity_threshold == value
 
 
-# --- cost and progress count max_votes per datapoint -------------------------
+# --- cost and progress count max_responses per datapoint -------------------------
 
 
-def test_responses_per_datapoint_is_the_backend_default_without_max_votes():
+def test_responses_per_datapoint_is_the_backend_default_without_max_responses():
     assert AdaptiveStoppingReferee()._responses_per_datapoint == 100
 
 
-def test_responses_per_datapoint_is_max_votes_when_set():
-    assert AdaptiveStoppingReferee(max_votes=25)._responses_per_datapoint == 25
+def test_responses_per_datapoint_is_max_responses_when_set():
+    assert AdaptiveStoppingReferee(max_responses=25)._responses_per_datapoint == 25
 
 
-def test_votes_count_falls_back_to_the_default_cap_without_max_votes():
+def test_votes_count_falls_back_to_the_default_cap_without_max_responses():
     revision = _revision(COMPARE_WORKFLOW, {"_t": "AdaptiveStoppingReferee"})
 
     assert _votes(revision) == ", 100 votes each"
 
 
-def test_votes_count_uses_max_votes_when_set():
+def test_votes_count_uses_max_responses_when_set():
     revision = _revision(
         COMPARE_WORKFLOW, {"_t": "AdaptiveStoppingReferee", "maxVotes": 35}
     )
@@ -316,7 +316,7 @@ def test_revision_sends_the_configured_referee():
     jd, service = _loaded()
 
     jd.responses_per_datapoint = AdaptiveStoppingReferee(
-        max_votes=30, ambiguity_threshold=0.75
+        max_responses=30, ambiguity_threshold=0.75
     )
     jd.save()
 
@@ -343,7 +343,7 @@ def test_revision_reads_back_the_resolved_referee():
     stopping = jd.responses_per_datapoint
     assert isinstance(stopping, AdaptiveStoppingReferee)
     assert (
-        stopping.max_votes,
+        stopping.max_responses,
         stopping.min_confidence,
         stopping.ambiguity_threshold,
     ) == (

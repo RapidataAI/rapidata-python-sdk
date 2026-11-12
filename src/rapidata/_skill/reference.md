@@ -12,7 +12,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 | `instruction` | str | Question shown to labelers: one criterion, under 80 characters (see **Task design rules** in the main guide). Over 250 characters raises `ValueError` |
 | `datapoints` | list | Data to label: URLs, local paths, or `UploadedAsset` references from `client.asset.upload(...)`, which are never uploaded again |
 | `data_type` | `"media"` \| `"text"` | `"media"` (default, covers image/video/audio) or `"text"`. **Text assets are NOT translated** unless `TranslateTextAssetsSetting` is added (source assumed English) — otherwise labelers see them verbatim |
-| `responses_per_datapoint` | `int \| AdaptiveStoppingReferee` | When to stop collecting per item. Compare default `AdaptiveStoppingReferee()` (~21 votes per pair on average, ~31 for the hardest pairs); other default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStoppingReferee` is compare-only. See **Early Stopping** |
+| `responses_per_datapoint` | `int \| AdaptiveStoppingReferee` | When to stop collecting per item. Compare default `AdaptiveStoppingReferee()` (~21 responses per pair on average, ~31 for the hardest pairs); other default `10`. An `int` is a fixed count (never below 10 — see **Task design rules** in the main guide). `AdaptiveStoppingReferee` is compare-only. See **Early Stopping** |
 | `contexts` | list[str] \| None | Text context per datapoint: one sentence under 150 characters with only what the instruction asks about (see **Task design rules** in the main guide). Max 400 characters each; contexts over the limit are always shortened against the instruction before upload — set `rapidata_config.upload.contextShortening = True` to shorten every context, or use `client.context` to shorten manually |
 | `media_contexts` | list[list[str \| UploadedAsset]] \| None | Reference images per datapoint; each entry is a list of at most 10 image URLs/paths/`UploadedAsset` references (one inner list per datapoint). Shown in a collapsible drawer unless `PinContextMediaSetting` is added (only when there is enough space — check the preview); for a compare of two image edits, `ReferenceOverlaySetting` lays a single image context over both options instead |
 | `confidence_threshold` | float \| None | **Deprecated** (`DeprecationWarning`). Confidence-based early stopping threshold (0-1); needs an `int` `responses_per_datapoint` as the cap (10 when omitted). Use adaptive stopping on compare jobs |
@@ -479,15 +479,15 @@ job_def = client.job.create_compare_job_definition(
 )
 ```
 
-`AdaptiveStoppingReferee(max_votes=None, min_confidence=None, ambiguity_threshold=None)` — `None` uses the default (100 / 0.9 / 0.64); unset fields are left out of the request:
+`AdaptiveStoppingReferee(max_responses=None, min_confidence=None, ambiguity_threshold=None)` — `None` uses the default (100 / 0.9 / 0.64); unset fields are left out of the request:
 
-- Each vote is weighted by the voter's user score. The SDK only sends the parameters and passes the state through; never recompute it.
-- After every vote the pair gets a verdict once it is settled: `Decided` (a winner, wrong with probability below `1 - min_confidence`), `Ambiguous` (the true split lies inside the band, 20/80–80/20 by default), or `Undecided` at `max_votes`. A winner takes priority over ambiguous, so a 70/30 pair can still be `Decided`; the threshold only decides which pairs may stop as ambiguous.
-- Unanimous pairs stop after 7 votes, 50/50 pairs at about 16, ~21 per pair on average, ~31 for the hardest pairs (split around 35/65). `max_votes` is a safety cap the defaults never reach (the longest possible run is under 80 votes) — don't tune it.
-- `ambiguity_threshold` is a normalized Gini impurity: **higher is stricter**. raise it to resolve less decisive pairs: `0.75` resolves pairs down to a 75/25 split (about a third more votes on average, ~49 for the hardest pairs); `0.91` gives 35/65–65/35. The defaults are calibrated; change them only if you know why.
-- `max_votes` must be a positive int; `min_confidence` and `ambiguity_threshold` in (0, 1), else `ValueError`.
+- Each response is weighted by the labeler's user score. The SDK only sends the parameters and passes the state through; never recompute it.
+- After every response the pair gets a verdict once it is settled: `Decided` (a winner, wrong with probability below `1 - min_confidence`), `Ambiguous` (the true split lies inside the band, 20/80–80/20 by default), or `Undecided` at `max_responses`. A winner takes priority over ambiguous, so a 70/30 pair can still be `Decided`; the threshold only decides which pairs may stop as ambiguous.
+- Unanimous pairs stop after 7 responses, 50/50 pairs at about 16, ~21 per pair on average, ~31 for the hardest pairs (split around 35/65). `max_responses` is a safety cap the defaults never reach (the longest possible run is under 80 responses) — don't tune it.
+- `ambiguity_threshold` is a normalized Gini impurity: **higher is stricter**. raise it to resolve less decisive pairs: `0.75` resolves pairs down to a 75/25 split (about a third more responses on average, ~49 for the hardest pairs); `0.91` gives 35/65–65/35. The defaults are calibrated; change them only if you know why.
+- `max_responses` must be a positive int; `min_confidence` and `ambiguity_threshold` in (0, 1), else `ValueError`.
 - Raises `ValueError` on any job type other than compare, on create and on revisions, before anything is sent.
-- For now there is no forecast for the expected response count, so cost estimates and progress use the `max_votes` setting per pair, which is well above the expected cost.
+- For now there is no forecast for the expected response count, so cost estimates and progress use the `max_responses` setting per pair, which is well above the expected cost.
 
 Each adaptive compare result gets `adaptiveStoppingState`:
 
@@ -505,7 +505,7 @@ Each adaptive compare result gets `adaptiveStoppingState`:
 
 - `outcomes` keys: `"0"` = first asset of the pair, `"1"` = second. `winners` holds those keys; non-empty only for `Decided`
 - `verdict`: `Decided` · `Ambiguous` · `Undecided` (`outcomes` may be empty if every response was a skip) · `Open` (still collecting, or the job was paused or stopped first). The first non-`Open` verdict is frozen with its outcomes and `responseCount`
-- `weight`: user-score-weighted votes, scaled to sum to `responseCount`. `lower`/`upper`: the range the option's long-run vote share lies in with `min_confidence` certainty; it narrows with every vote. Wholly above 0.5 → `Decided`; wholly inside the toss-up zone (~0.2–0.8 by default) → `Ambiguous`
+- `weight`: user-score-weighted responses, scaled to sum to `responseCount`. `lower`/`upper`: the range the option's long-run response share lies in with `min_confidence` certainty; it narrows with every response. Wholly above 0.5 → `Decided`; wholly inside the toss-up zone (~0.2–0.8 by default) → `Ambiguous`
 - `to_pandas()` flattens it into `adaptiveStoppingState_*` columns. Never recompute the verdict client-side
 
 ### Quorum Stopping
@@ -525,8 +525,8 @@ job_def = client.job.create_classification_job_definition(
 
 A datapoint stops when:
 1. `quorum_threshold` responses agree on the same answer, **OR**
-2. Quorum becomes mathematically impossible (e.g. votes are too split to reach the threshold), **OR**
-3. `responses_per_datapoint` total votes are collected
+2. Quorum becomes mathematically impossible (e.g. responses are too split to reach the threshold), **OR**
+3. `responses_per_datapoint` total responses are collected
 
 ### Deprecated `confidence_threshold`
 
@@ -585,7 +585,7 @@ print(job.estimated_cost.estimated_cost)
 | `datapoint_count` | int | Number of datapoints the job will label |
 | `required_responses` | int | Total number of responses the job collects to complete |
 
-This is an **estimate, not the final bill**: it is based on a sample of the job's tasks scaled to the number of responses requested, so the amount actually charged can differ. Early stopping can also lower the final cost by collecting fewer responses than the maximum. Adaptive compare jobs (the compare default) are estimated at `max_votes` responses per pair until the backend forecasts expected votes, well above what they typically need.
+This is an **estimate, not the final bill**: it is based on a sample of the job's tasks scaled to the number of responses requested, so the amount actually charged can differ. Early stopping can also lower the final cost by collecting fewer responses than the maximum. For adaptive compare jobs (the compare default) there is no forecast for the expected response count yet, so the estimate uses the `max_responses` setting per pair, which is well above the expected cost.
 
 ## Billing
 

@@ -384,4 +384,4 @@ leaderboard = benchmark.create_leaderboard(
 
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
 - Understand the [Results Format](understanding_the_results.md)
-- Configure [Adaptive Stopping](confidence_stopping.md) to stop collecting votes on each compare pair once its result is settled
+- Configure [Adaptive Stopping](confidence_stopping.md) to stop collecting responses on each compare pair once its result is settled

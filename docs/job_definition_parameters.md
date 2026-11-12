@@ -117,7 +117,7 @@ How many responses to collect for each datapoint.
 from rapidata import AdaptiveStoppingReferee
 
 responses_per_datapoint=15                                               # fixed
-responses_per_datapoint=AdaptiveStoppingReferee(ambiguity_threshold=0.75)  # compare only: fewer pairs called a toss-up, more votes
+responses_per_datapoint=AdaptiveStoppingReferee(ambiguity_threshold=0.75)  # compare only: fewer pairs called a toss-up, more responses
 ```
 
 ---
@@ -284,7 +284,7 @@ job_definition = client.job.create_classification_job_definition(
 | **Required** | No |
 | **Default** | `None` |
 
-Enables early stopping when a specified number of responses agree on the same answer. The system stops collecting responses once quorum is reached, or when quorum becomes mathematically impossible, or after `responses_per_datapoint` votes.
+Enables early stopping when a specified number of responses agree on the same answer. The system stops collecting responses once quorum is reached, or when quorum becomes mathematically impossible, or after `responses_per_datapoint` responses.
 
 Cannot be used together with `confidence_threshold`. On compare jobs it takes an `int` `responses_per_datapoint` as the cap (10 when omitted).
 

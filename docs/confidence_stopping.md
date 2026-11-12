@@ -13,14 +13,14 @@ You choose the stopping rule with `responses_per_datapoint`:
 
 ## How it Works
 
-Each vote on a compare pair is weighted by the voter's [user score](understanding_the_results.md#understanding-the-user-scores). After every vote, the pair is checked for a verdict:
+Each response on a compare pair is weighted by the labeler's [user score](understanding_the_results.md#understanding-the-user-scores). After every response, the pair is checked for a verdict:
 
 - **`Decided`**: one option is preferred, with at least `min_confidence` certainty.
-- **`Ambiguous`**: the pair is a toss-up. Voters are split too evenly for either option to win clearly. By default, that means neither option would get more than about 80% of the votes, so more votes would not produce a winner.
-- **`Undecided`**: neither happened before `max_votes` votes. `max_votes` is a hard cap that the defaults never reach: every pair reaches a verdict in under 80 votes.
+- **`Ambiguous`**: the pair is a toss-up. Labelers are split too evenly for either option to win clearly. By default, that means neither option would get more than about 80% of the responses, so more responses would not produce a winner.
+- **`Undecided`**: neither happened before `max_responses` responses. `max_responses` is a hard cap that the defaults never reach: every pair reaches a verdict in under 80 responses.
 - **`Open`**: no verdict yet. The pair is still collecting, or the job was paused or stopped before it finished.
 
-The pair stops at the first verdict. A clear pair stops after as few as 7 votes and a 50/50 pair after about 16. A pair needs about 21 votes on average; the hardest pairs, split around 35/65, need about 31.
+The pair stops at the first verdict. A clear pair stops after as few as 7 responses and a 50/50 pair after about 16. A pair needs about 21 responses on average; the hardest pairs, split around 35/65, need about 31.
 
 ## Using Adaptive Stopping in Your Job
 
@@ -42,21 +42,21 @@ job_definition = client.job.create_compare_job_definition(
 
 1. The same as leaving the argument out. Pass `responses_per_datapoint=15` to collect exactly 15 responses per pair instead.
 
-`ambiguity_threshold` sets how even the split must be before a pair is called a toss-up. With the default 0.64, a pair is a toss-up when neither option would get more than about 80% of the votes.
+`ambiguity_threshold` sets how even the split must be before a pair is called a toss-up. With the default 0.64, a pair is a toss-up when neither option would get more than about 80% of the responses.
 
-**Raise `ambiguity_threshold` to resolve less decisive pairs, at the cost of more votes.** For example, `AdaptiveStoppingReferee(ambiguity_threshold=0.75)` resolves pairs down to a 75%/25% split: a pair is a toss-up only when neither option would get more than about 75% of the votes. That takes about a third more votes per pair on average, and about 49 for the hardest pairs. With `0.91`, the limit is about 65%.
+**Raise `ambiguity_threshold` to resolve less decisive pairs, at the cost of more responses.** For example, `AdaptiveStoppingReferee(ambiguity_threshold=0.75)` resolves pairs down to a 75%/25% split: a pair is a toss-up only when neither option would get more than about 75% of the responses. That takes about a third more responses per pair on average, and about 49 for the hardest pairs. With `0.91`, the limit is about 65%.
 
-The threshold only decides which pairs may stop as a toss-up. A clear winner always takes priority, so a pair where one option gets 70% of the votes can still end `Decided`.
+The threshold only decides which pairs may stop as a toss-up. A clear winner always takes priority, so a pair where one option gets 70% of the responses can still end `Decided`.
 
 | Parameter | Default | Meaning |
 |-----------|---------|---------|
 | `min_confidence` | 0.9 | How certain the result must be before a winner is called, between 0 and 1. |
-| `ambiguity_threshold` | 0.64 | How even the split must be before a pair is called a toss-up, between 0 and 1. Higher calls fewer pairs a toss-up and costs more votes. |
-| `max_votes` | 100 | The hard cap on votes per pair. With the default `min_confidence` and `ambiguity_threshold`, no pair can reach it: every pair reaches a verdict in under 80 votes. |
+| `ambiguity_threshold` | 0.64 | How even the split must be before a pair is called a toss-up, between 0 and 1. Higher calls fewer pairs a toss-up and costs more responses. |
+| `max_responses` | 100 | The hard cap on responses per pair. With the default `min_confidence` and `ambiguity_threshold`, no pair can reach it: every pair reaches a verdict in under 80 responses. |
 
 A parameter left as `None` uses the default above, and a saved job definition shows the resolved values. Adaptive stopping is compare-only: passing it to any other job type raises a `ValueError` before anything is sent.
 
-For now, there is no forecast for the expected response count, so the [cost estimate](cost_estimates.md) and [job progress](job_progress.md) use the `max_votes` setting per pair, which is well above the expected cost.
+For now, there is no forecast for the expected response count, so the [cost estimate](cost_estimates.md) and [job progress](job_progress.md) use the `max_responses` setting per pair, which is well above the expected cost.
 
 ## Analyzing Adaptive Stopping Results
 
@@ -78,15 +78,15 @@ Each compare datapoint in the [results](understanding_the_results.md) gains an `
 
 - `outcomes` is keyed by option: `"0"` is the first asset of the pair, `"1"` the second. `winners` names the winning key and is only filled for `Decided`.
 - `verdict` is final once it is not `Open`, together with the `outcomes` and `responseCount` at that moment.
-- `weight` is the option's user-score-weighted votes, scaled so all weights add up to `responseCount`.
-- `lower` and `upper` are the range the option's share of the vote lies in. See below.
+- `weight` is the option's user-score-weighted responses, scaled so all weights add up to `responseCount`.
+- `lower` and `upper` are the range the option's share of the responses lies in. See below.
 - With `Undecided`, `outcomes` can be empty when every response was a skip.
 
 ### Reading `lower` and `upper`
 
-A pair never gets every possible vote, so its true split is unknown. `lower` and `upper` give the range that an option's share of the vote would fall in if you kept asking labelers, with `min_confidence` certainty (90% by default). The range starts wide and narrows with every vote.
+A pair never gets every possible response, so its true split is unknown. `lower` and `upper` give the range that an option's share of the responses would fall in if you kept asking labelers, with `min_confidence` certainty (90% by default). The range starts wide and narrows with every response.
 
-In the example, option `"1"` holds 10.5 of the 12 weighted votes, and its range is 50.4% to 99.6%. The whole range lies above 50%, so `"1"` is the winner even though only 12 votes were collected. Option `"0"` mirrors it: 0.4% to 49.6%.
+In the example, option `"1"` holds 10.5 of the 12 weighted responses, and its range is 50.4% to 99.6%. The whole range lies above 50%, so `"1"` is the winner even though only 12 responses were collected. Option `"0"` mirrors it: 0.4% to 49.6%.
 
 The verdict follows from where the range sits:
 
@@ -94,7 +94,7 @@ The verdict follows from where the range sits:
 |------|---------|
 | entirely above 50% | `Decided` |
 | entirely inside the toss-up zone, about 20% to 80% by default | `Ambiguous` |
-| neither yet | `Open`, or `Undecided` once `max_votes` is reached |
+| neither yet | `Open`, or `Undecided` once `max_responses` is reached |
 
 ```python
 results = job.get_results()
@@ -111,17 +111,17 @@ for datapoint in results["results"]:
 
 ### How it Works
 
-Quorum Stopping uses a simple vote-counting approach. A task is completed when:
+Quorum Stopping uses a simple response-counting approach. A task is completed when:
 
 1. A minimum number of responses (`quorum_threshold`) agree on the same answer, **OR**
 2. Quorum becomes mathematically impossible to reach, **OR**
-3. The maximum number of votes (`responses_per_datapoint`) is reached.
+3. The maximum number of responses (`responses_per_datapoint`) is reached.
 
 For example, with `quorum_threshold=7` and `responses_per_datapoint=10`:
 
 - The task completes when 7 responses agree (quorum reached).
 - The task completes when both options have 4+ responses (quorum is impossible since neither can reach 7 out of 10).
-- The task completes after 10 total votes if neither condition is met.
+- The task completes after 10 total responses if neither condition is met.
 
 !!! note
     Quorum Stopping is supported for the Classification and Comparison workflows. On a compare job, pass an `int` `responses_per_datapoint` as the cap; it is 10 when omitted.
@@ -171,7 +171,7 @@ print(results)
 
 Quorum Stopping is a good choice when:
 
-- **Simplicity**: You want a straightforward stopping rule based on raw vote counts rather than statistical confidence.
+- **Simplicity**: You want a straightforward stopping rule based on raw response counts rather than statistical confidence.
 
 ---
 
