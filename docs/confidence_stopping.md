@@ -172,7 +172,6 @@ print(results)
 Quorum Stopping is a good choice when:
 
 - **Simplicity**: You want a straightforward stopping rule based on raw vote counts rather than statistical confidence.
-- **Clear Correct Answer**: The task has a clear correct answer, and you expect most labelers to agree.
 
 ---
 
