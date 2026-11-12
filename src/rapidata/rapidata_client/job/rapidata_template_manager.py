@@ -46,16 +46,14 @@ FAILED_START = "Rapidata failed while starting the job"
 
 
 class TemplateUploadException(FailedUploadException):
-    """Some pairs failed to upload into the template run's dataset, so no job was started."""
+    """Some pairs failed to upload, so no job was started."""
 
     def __init__(
         self,
         dataset: RapidataDataset,
         failed_uploads: list[FailedUpload[Datapoint]],
-        total: int,
         method: str,
     ):
-        self._total = total
         self._method = method
         super().__init__(dataset, failed_uploads)
 
@@ -65,11 +63,11 @@ class TemplateUploadException(FailedUploadException):
             "again. It uploads into a new dataset."
         )
 
+    # The parent's text points to retry() and assign_job; a template run has neither.
     def __str__(self) -> str:
         return (
-            f"{len(self.detailed_failures)} of {self._total} pairs failed to upload into "
-            f"dataset {self.dataset.id}, so no job was started. Fix them and call "
-            f"client.job.template.{self._method}() again.\n\n{self._failures_message()}"
+            f"{self._failures_message()}\n\nNo job was started. Fix the failed pairs and "
+            f"call client.job.template.{self._method}() again."
         )
 
 
@@ -246,7 +244,7 @@ class RapidataTemplateManager:
         with tracer.start_as_current_span("add_datapoints"):
             _, failed = dataset.add_datapoints(points)
         if failed:
-            raise TemplateUploadException(dataset, failed, len(points), method)
+            raise TemplateUploadException(dataset, failed, method)
         return dataset
 
     def _start(

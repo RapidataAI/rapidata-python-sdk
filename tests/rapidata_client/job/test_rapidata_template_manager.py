@@ -457,7 +457,7 @@ def test_bad_name_or_side_names_are_rejected_before_upload(name, a_b_names, mess
     _assert_nothing_sent(service)
 
 
-def test_a_failed_upload_raises_before_run_naming_the_dataset(dataset):
+def test_a_failed_upload_raises_before_run(dataset):
     service = _service()
     dataset.add_datapoints.side_effect = lambda points: (
         points[:1],
@@ -472,12 +472,13 @@ def test_a_failed_upload_raises_before_run_naming_the_dataset(dataset):
         _call(RapidataTemplateManager(service), "alignment", IMAGE_PAIRS)
 
     assert isinstance(raised.value, TemplateUploadException)
-    assert str(raised.value).startswith(
-        "1 of 2 pairs failed to upload into dataset dst_1, so no job was started. "
-        "Fix them and call client.job.template.run_alignment() again."
+    message = str(raised.value)
+    assert message.startswith("1 datapoint(s) failed to upload")
+    assert message.endswith(
+        "No job was started. Fix the failed pairs and call "
+        "client.job.template.run_alignment() again."
     )
-    assert "1 datapoint(s) failed to upload" in str(raised.value)
-    assert "error_handling" not in str(raised.value)
+    assert "error_handling" not in message
     with pytest.raises(RuntimeError, match="can't be retried"):
         raised.value.retry()
     service.order.job_api.job_definition_definition_id_run_post.assert_not_called()
