@@ -20,6 +20,10 @@ ORIGINAL_LANGUAGE_REQUIRES_LANGUAGE_FILTER = (
     "from the job definition."
 )
 
+SKIP_HINT = (
+    "To override deliberately, set rapidata_config.skipLanguageFilterCheck = True."
+)
+
 _TERMINAL_JOB_STATES = {"Completed", "Failed", "StaleResults"}
 _JOB_PAGE_SIZE = 100
 

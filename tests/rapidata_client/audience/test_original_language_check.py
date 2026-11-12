@@ -2,8 +2,8 @@
 
 Forward: job creation raises before the API call when the audience (or a filtered
 audience's filter, or its base) has no LanguageFilter. Unlisted audiences are exempt.
-Reverse: update_filters warns when new filters drop language while an active job
-on the audience uses the setting.
+Reverse: update_filters raises when new filters drop language while an active job
+on the audience uses the setting. rapidata_config.skipLanguageFilterCheck skips both.
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-import rapidata.rapidata_client.audience.rapidata_audience as audience_module
+from rapidata.rapidata_client.config import rapidata_config
 from rapidata.api_client.models.audience_job_state import AudienceJobState
 from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
 from rapidata.rapidata_client.audience._original_language_check import (
@@ -123,6 +123,7 @@ def test_assign_job_rejects_flag_on_audience_without_language():
     assert "audience.filter([LanguageFilter" in message
     assert "update_filters" in message
     assert "remove OriginalLanguageOnlySetting" in message
+    assert "skipLanguageFilterCheck" in message
     service.order.job_api.job_post.assert_not_called()
 
 
@@ -162,6 +163,19 @@ def test_assign_job_rejects_flag_on_filtered_audience_without_language():
     with pytest.raises(ValueError):
         audience.assign_job(_definition([OriginalLanguageOnlySetting()]))
     service.order.job_api.job_post.assert_not_called()
+
+
+def test_assign_job_override_skips_check(monkeypatch):
+    service = _service([US])
+    audience = RapidataAudienceBase(
+        id="global", name="Global", filters=[], openapi_service=service
+    )
+    monkeypatch.setattr(rapidata_config, "skipLanguageFilterCheck", True)
+
+    audience.assign_job(_definition([OriginalLanguageOnlySetting()]))
+
+    service.audience.audience_api.audience_audience_id_get.assert_not_called()
+    service.order.job_api.job_post.assert_called_once()
 
 
 def test_assign_job_without_flag_skips_audience_lookup():
@@ -229,7 +243,7 @@ def _audience_with_jobs(jobs: list, flagged_definitions: set[str]):
     return audience, service
 
 
-def test_update_filters_warns_when_dropping_language_under_flagged_job(monkeypatch):
+def test_update_filters_rejects_dropping_language_under_flagged_job():
     audience, service = _audience_with_jobs(
         [
             _job("job-a", "jdf-1", 1),
@@ -238,13 +252,14 @@ def test_update_filters_warns_when_dropping_language_under_flagged_job(monkeypat
         ],
         flagged_definitions={"jdf-1"},
     )
-    warn = MagicMock()
-    monkeypatch.setattr(audience_module.logger, "warning", warn)
 
-    audience.update_filters([US])
+    with pytest.raises(ValueError) as exc:
+        audience.update_filters([US])
 
-    warn.assert_called_once()
-    assert "job-a, job-b" in warn.call_args.args
+    assert "job-a, job-b" in str(exc.value)
+    assert "skipLanguageFilterCheck" in str(exc.value)
+    service.audience.audience_api.audience_audience_id_patch.assert_not_called()
+    assert audience.filters == [EN]
     query = service.order.job_api.jobs_get.call_args.kwargs
     assert query["audience_id"].eq == "aud-1"
     assert set(query["state"].var_in) == {
@@ -257,32 +272,39 @@ def test_update_filters_warns_when_dropping_language_under_flagged_job(monkeypat
         service.order.job_api.job_definition_definition_id_revision_revision_number_get
     )
     assert revision_get.call_count == 2
-    service.audience.audience_api.audience_audience_id_patch.assert_called_once()
 
 
-def test_update_filters_keeping_language_makes_no_extra_request(monkeypatch):
+def test_update_filters_override_skips_check(monkeypatch):
     audience, service = _audience_with_jobs(
         [_job("job-a", "jdf-1", 1)], flagged_definitions={"jdf-1"}
     )
-    warn = MagicMock()
-    monkeypatch.setattr(audience_module.logger, "warning", warn)
+    monkeypatch.setattr(rapidata_config, "skipLanguageFilterCheck", True)
+
+    audience.update_filters([US])
+
+    service.order.job_api.jobs_get.assert_not_called()
+    service.audience.audience_api.audience_audience_id_patch.assert_called_once()
+
+
+def test_update_filters_keeping_language_makes_no_extra_request():
+    audience, service = _audience_with_jobs(
+        [_job("job-a", "jdf-1", 1)], flagged_definitions={"jdf-1"}
+    )
 
     audience.update_filters([AndFilter([US, LanguageFilter(["de"])])])
 
-    warn.assert_not_called()
     service.order.job_api.jobs_get.assert_not_called()
+    service.audience.audience_api.audience_audience_id_patch.assert_called_once()
 
 
-def test_update_filters_no_warning_without_flagged_jobs(monkeypatch):
-    audience, _ = _audience_with_jobs(
+def test_update_filters_allowed_without_flagged_jobs():
+    audience, service = _audience_with_jobs(
         [_job("job-a", "jdf-1", 1)], flagged_definitions=set()
     )
-    warn = MagicMock()
-    monkeypatch.setattr(audience_module.logger, "warning", warn)
 
     audience.update_filters([])
 
-    warn.assert_not_called()
+    service.audience.audience_api.audience_audience_id_patch.assert_called_once()
 
 
 def test_update_filters_pages_through_active_jobs():

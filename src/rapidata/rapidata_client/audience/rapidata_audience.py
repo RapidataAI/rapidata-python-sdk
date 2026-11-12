@@ -1,7 +1,12 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, Sequence
-from rapidata.rapidata_client.config import logger, managed_print, tracer
+from rapidata.rapidata_client.config import (
+    logger,
+    managed_print,
+    rapidata_config,
+    tracer,
+)
 from rapidata.rapidata_client.audience._audience_base import RapidataAudienceBase
 from rapidata.rapidata_client.audience.audience_example_handler import (
     AudienceExampleHandler,
@@ -153,9 +158,10 @@ class RapidataAudience(RapidataAudienceBase):
         Args:
             filters (list[RapidataFilter]): The new list of filters to apply to the audience.
 
-        Logs a warning when the new filters have no ``LanguageFilter`` while an active
-        job on this audience uses ``OriginalLanguageOnlySetting``: those labelers would
-        see untranslated text.
+        Raises ``ValueError`` before changing anything when the new filters have no
+        ``LanguageFilter`` while an active job on this audience uses
+        ``OriginalLanguageOnlySetting``: those labelers would see untranslated text.
+        Set ``rapidata_config.skipLanguageFilterCheck = True`` to override.
 
         Returns:
             RapidataAudience: The updated audience instance (self) for method chaining.
@@ -165,7 +171,7 @@ class RapidataAudience(RapidataAudienceBase):
                 UpdateAudienceEndpointInput,
             )
 
-            self._warn_if_language_filter_dropped(filters)
+            self._check_language_filter_kept(filters)
 
             logger.debug(f"Updating filters for audience: {self.id} to {filters}")
             self._openapi_service.audience.audience_api.audience_audience_id_patch(
@@ -177,14 +183,15 @@ class RapidataAudience(RapidataAudienceBase):
             self._filters = filters
             return self
 
-    def _warn_if_language_filter_dropped(self, filters: list[RapidataFilter]) -> None:
-        """Advisory: a failed lookup must not block the filter update."""
+    def _check_language_filter_kept(self, filters: list[RapidataFilter]) -> None:
+        """A failed job lookup lets the update through rather than blocking on a read error."""
         from rapidata.rapidata_client.audience._original_language_check import (
+            SKIP_HINT,
             active_jobs_forcing_original_language,
             filters_require_language,
         )
 
-        if filters_require_language(filters):
+        if rapidata_config.skipLanguageFilterCheck or filters_require_language(filters):
             return
         try:
             job_ids = active_jobs_forcing_original_language(
@@ -197,14 +204,12 @@ class RapidataAudience(RapidataAudienceBase):
             return
         if not job_ids:
             return
-        logger.warning(
-            "The new filters of audience '%s' (%s) have no LanguageFilter, but active "
-            "job(s) %s use OriginalLanguageOnlySetting, so labelers who don't speak the "
-            "task's language will see it untranslated. Keep a LanguageFilter in the "
-            "filters, or remove OriginalLanguageOnlySetting from those job definitions.",
-            self._name,
-            self.id,
-            ", ".join(job_ids),
+        raise ValueError(
+            f"The new filters of audience '{self._name}' ({self.id}) have no LanguageFilter, "
+            f"but active job(s) {', '.join(job_ids)} use OriginalLanguageOnlySetting, so "
+            "labelers who don't speak the task's language would see it untranslated. Keep "
+            "a LanguageFilter in the filters, or remove OriginalLanguageOnlySetting from "
+            f"those job definitions. {SKIP_HINT}"
         )
 
     def update_name(self, name: str) -> RapidataAudience:

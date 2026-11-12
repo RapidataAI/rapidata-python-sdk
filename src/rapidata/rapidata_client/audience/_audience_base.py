@@ -156,10 +156,13 @@ class RapidataAudienceBase:
         """
         from rapidata.rapidata_client.audience._original_language_check import (
             ORIGINAL_LANGUAGE_REQUIRES_LANGUAGE_FILTER,
+            SKIP_HINT,
             audience_requires_language,
             forces_original_language,
         )
 
+        if rapidata_config.skipLanguageFilterCheck:
+            return
         try:
             if not forces_original_language(job_definition.settings):
                 return
@@ -174,7 +177,7 @@ class RapidataAudienceBase:
             return
         raise ValueError(
             f"Job definition '{job_definition.name}' cannot run on audience '{self._name}' "
-            f"({self.id}): {ORIGINAL_LANGUAGE_REQUIRES_LANGUAGE_FILTER}"
+            f"({self.id}): {ORIGINAL_LANGUAGE_REQUIRES_LANGUAGE_FILTER} {SKIP_HINT}"
         )
 
     def _warn_if_no_graduated_annotators(self, job: RapidataJob) -> None:
