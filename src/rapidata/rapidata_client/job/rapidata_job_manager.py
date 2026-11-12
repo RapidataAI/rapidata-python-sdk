@@ -24,6 +24,7 @@ from rapidata.rapidata_client.job.rapidata_template_manager import (
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+    from rapidata.rapidata_client.referee import AdaptiveStoppingReferee, Referee
 
 
 class RapidataJobManager:
@@ -81,6 +82,7 @@ class RapidataJobManager:
         quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         failure_tolerance: float | None = None,
+        referee: Referee | None = None,
     ) -> RapidataJobDefinition:
         if settings is None:
             settings = []
@@ -100,7 +102,23 @@ class RapidataJobManager:
                 "Cannot set both confidence_threshold and quorum_threshold. Choose one stopping strategy."
             )
 
-        if confidence_threshold is None and quorum_threshold is None:
+        if referee is not None:
+            from rapidata.rapidata_client.referee._adaptive_stopping_referee import (
+                AdaptiveStoppingReferee,
+            )
+
+            if confidence_threshold is not None or quorum_threshold is not None:
+                raise ValueError(
+                    "Cannot combine referee with confidence_threshold or quorum_threshold. Choose one stopping strategy."
+                )
+            if (
+                isinstance(referee, AdaptiveStoppingReferee)
+                and workflow.task_type != "Compare"
+            ):
+                raise ValueError(
+                    f"AdaptiveStoppingReferee only supports compare job definitions, not {workflow.task_type or type(workflow).__name__}."
+                )
+        elif confidence_threshold is None and quorum_threshold is None:
             from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 
             referee = NaiveReferee(responses=responses_per_datapoint)
@@ -123,13 +141,14 @@ class RapidataJobManager:
             )
 
         logger.debug(
-            "Creating job with parameters: name %s, workflow %s, datapoints %s, responses_per_datapoint %s, confidence_threshold %s, quorum_threshold %s, settings %s",
+            "Creating job with parameters: name %s, workflow %s, datapoints %s, responses_per_datapoint %s, confidence_threshold %s, quorum_threshold %s, referee %s, settings %s",
             name,
             workflow,
             datapoints,
             responses_per_datapoint,
             confidence_threshold,
             quorum_threshold,
+            referee,
             settings,
         )
         rapid_feature_flags = (
@@ -266,7 +285,7 @@ class RapidataJobManager:
             | list[list[str | UploadedAsset]]
         ),
         data_type: Literal["media", "text"] = "media",
-        responses_per_datapoint: int = 10,
+        responses_per_datapoint: int | None = None,
         contexts: list[str] | None = None,
         media_contexts: (
             list[list[str]]
@@ -280,6 +299,7 @@ class RapidataJobManager:
         settings: Sequence[RapidataSetting] | None = None,
         failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
+        referee: AdaptiveStoppingReferee | None = None,
     ) -> RapidataJobDefinition:
         """Create a compare job definition.
 
@@ -291,7 +311,7 @@ class RapidataJobManager:
             datapoints (list[list[str | UploadedAsset]]): Outher list is the datapoints, inner list is the options for the comparison - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
-            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10. Leave it unset when you pass a referee.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
@@ -318,6 +338,10 @@ class RapidataJobManager:
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+            referee (AdaptiveStoppingReferee, optional): Stop each datapoint adaptively once the backend is confident of the winner
+                or calls it ambiguous. Defaults to None (a fixed number of responses).\n
+                Its ``max_votes`` caps the responses per datapoint, so it cannot be combined with
+                responses_per_datapoint, confidence_threshold or quorum_threshold.
         """
         with tracer.start_as_current_span("JobManager.create_compare_job"):
             if any(not isinstance(datapoint, list) for datapoint in datapoints):
@@ -335,6 +359,11 @@ class RapidataJobManager:
 
             from rapidata.rapidata_client.workflow import CompareWorkflow
 
+            if referee is not None and responses_per_datapoint is not None:
+                raise ValueError(
+                    "Cannot combine referee with responses_per_datapoint. Set the cap with the referee's max_votes."
+                )
+
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 contexts=contexts,
@@ -347,11 +376,16 @@ class RapidataJobManager:
                 name=name,
                 workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
                 datapoints=datapoints_instances,
-                responses_per_datapoint=responses_per_datapoint,
+                responses_per_datapoint=(
+                    responses_per_datapoint
+                    if responses_per_datapoint is not None
+                    else 10
+                ),
                 confidence_threshold=confidence_threshold,
                 quorum_threshold=quorum_threshold,
                 settings=settings,
                 failure_tolerance=failure_tolerance,
+                referee=referee,
             )
 
     def create_ranking_job_definition(

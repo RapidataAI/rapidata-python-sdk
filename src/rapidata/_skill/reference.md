@@ -37,6 +37,7 @@ The new job-definition API exposes **classification**, **comparison**, **locate*
 |-----------|------|-------------|
 | `datapoints` | list[list[str \| UploadedAsset]] | Pairs: `[["a1.jpg","b1.jpg"], ...]` |
 | `a_b_names` | list[str] \| None | Custom labels for results, e.g. `["Model A","Model B"]` |
+| `referee` | `AdaptiveStoppingReferee` \| None | Adaptive stopping (see **Early Stopping**); cannot combine with `responses_per_datapoint`, `confidence_threshold` or `quorum_threshold` |
 
 ### Locate-specific
 
@@ -453,7 +454,7 @@ Flow items have a different result shape — see the Flows section.
 
 ## Early Stopping
 
-Two mutually exclusive strategies are available for Classification and Comparison jobs. You cannot set both on the same job.
+Confidence and quorum stopping are available for Classification and Comparison jobs; adaptive stopping for Comparison only. Use one strategy per job.
 
 ### Confidence Stopping
 
@@ -499,6 +500,49 @@ A datapoint stops when:
 - Simpler than confidence stopping — based on raw vote counts, not statistics
 - Good when you want predictable cost bounds with early termination
 - Best for unambiguous tasks with a clear correct answer
+
+### Adaptive Stopping (compare only)
+
+Each pair stops once one option clearly wins, the pair is clearly a tie, or `max_votes` is reached. The backend runs the math; the SDK sends the parameters and passes the state through untouched.
+
+```python
+from rapidata import AdaptiveStoppingReferee
+
+job_def = client.job.create_compare_job_definition(
+    name="Image Comparison",
+    instruction="Which image is higher quality?",
+    datapoints=[["a.jpg", "b.jpg"]],
+    referee=AdaptiveStoppingReferee(),   # backend defaults
+)
+
+job_def.referee = AdaptiveStoppingReferee(max_votes=60)   # or on an existing compare definition
+job_def.save()
+```
+
+| Parameter | Default (`None`) | Meaning |
+|-----------|---------|---------|
+| `max_votes` | 100 | Vote cap per pair; cost estimates and progress count this many votes per pair |
+| `min_confidence` | 0.9 | Confidence needed to call a winner, in (0, 1) |
+| `ambiguity_threshold` | 0.64 | Normalized Gini impurity, in (0, 1). **Higher is stricter**: needs a closer tie, costs more votes. 0.64 ≈ a 20%–80% split |
+
+Each compare result gets `adaptiveStoppingState`:
+
+```json
+"adaptiveStoppingState": {
+  "verdict": "Decided",
+  "winners": ["1"],
+  "outcomes": {
+    "0": { "weight": 1.485, "lower": 0.004, "upper": 0.496 },
+    "1": { "weight": 10.515, "lower": 0.504, "upper": 0.996 }
+  },
+  "responseCount": 12, "minConfidence": 0.9, "ambiguityThreshold": 0.64
+}
+```
+
+- `outcomes` keys: `"0"` = first asset of the pair, `"1"` = second. `winners` holds those keys; non-empty only for `Decided`
+- `verdict`: `Decided` · `Ambiguous` (tie) · `Undecided` (`max_votes` reached; `outcomes` may be empty if every response was a skip) · `Open` (still collecting). The first non-`Open` verdict is frozen with its outcomes and `responseCount`
+- `weight`: `userScore`-weighted votes, scaled to sum to `responseCount`. `lower`/`upper`: bounds on the option's vote share within the confidence set
+- `to_pandas()` flattens it into `adaptiveStoppingState_*` columns, e.g. `adaptiveStoppingState_outcomes_1_weight`. Never recompute the verdict client-side
 
 ## Job Progress
 

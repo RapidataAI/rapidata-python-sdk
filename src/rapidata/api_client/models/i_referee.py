@@ -15,6 +15,7 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
+from rapidata.api_client.models.i_referee_adaptive_stopping_referee import IRefereeAdaptiveStoppingReferee
 from rapidata.api_client.models.i_referee_budget_referee import IRefereeBudgetReferee
 from rapidata.api_client.models.i_referee_early_stopping_referee import IRefereeEarlyStoppingReferee
 from rapidata.api_client.models.i_referee_naive_referee import IRefereeNaiveReferee
@@ -24,22 +25,24 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IREFEREE_ONE_OF_SCHEMAS = ["IRefereeBudgetReferee", "IRefereeEarlyStoppingReferee", "IRefereeNaiveReferee", "IRefereeQuorumReferee"]
+IREFEREE_ONE_OF_SCHEMAS = ["IRefereeAdaptiveStoppingReferee", "IRefereeBudgetReferee", "IRefereeEarlyStoppingReferee", "IRefereeNaiveReferee", "IRefereeQuorumReferee"]
 
 class IReferee(LazyValidatedModel):
     """
     IReferee
     """
+    # data type: IRefereeAdaptiveStoppingReferee
+    oneof_schema_1_validator: Optional[IRefereeAdaptiveStoppingReferee] = None
     # data type: IRefereeBudgetReferee
-    oneof_schema_1_validator: Optional[IRefereeBudgetReferee] = None
+    oneof_schema_2_validator: Optional[IRefereeBudgetReferee] = None
     # data type: IRefereeEarlyStoppingReferee
-    oneof_schema_2_validator: Optional[IRefereeEarlyStoppingReferee] = None
+    oneof_schema_3_validator: Optional[IRefereeEarlyStoppingReferee] = None
     # data type: IRefereeNaiveReferee
-    oneof_schema_3_validator: Optional[IRefereeNaiveReferee] = None
+    oneof_schema_4_validator: Optional[IRefereeNaiveReferee] = None
     # data type: IRefereeQuorumReferee
-    oneof_schema_4_validator: Optional[IRefereeQuorumReferee] = None
-    actual_instance: Optional[Union[IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee]] = None
-    one_of_schemas: Set[str] = { "IRefereeBudgetReferee", "IRefereeEarlyStoppingReferee", "IRefereeNaiveReferee", "IRefereeQuorumReferee" }
+    oneof_schema_5_validator: Optional[IRefereeQuorumReferee] = None
+    actual_instance: Optional[Union[IRefereeAdaptiveStoppingReferee, IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee]] = None
+    one_of_schemas: Set[str] = { "IRefereeAdaptiveStoppingReferee", "IRefereeBudgetReferee", "IRefereeEarlyStoppingReferee", "IRefereeNaiveReferee", "IRefereeQuorumReferee" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -62,6 +65,11 @@ class IReferee(LazyValidatedModel):
         instance = IReferee.model_construct()
         error_messages = []
         match = 0
+        # validate data type: IRefereeAdaptiveStoppingReferee
+        if not isinstance(v, IRefereeAdaptiveStoppingReferee):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeAdaptiveStoppingReferee`")
+        else:
+            match += 1
         # validate data type: IRefereeBudgetReferee
         if not isinstance(v, IRefereeBudgetReferee):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeBudgetReferee`")
@@ -84,10 +92,10 @@ class IReferee(LazyValidatedModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IReferee with oneOf schemas: IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IReferee with oneOf schemas: IRefereeAdaptiveStoppingReferee, IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IReferee with oneOf schemas: IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IReferee with oneOf schemas: IRefereeAdaptiveStoppingReferee, IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -102,6 +110,12 @@ class IReferee(LazyValidatedModel):
         error_messages = []
         match = 0
 
+        # deserialize data into IRefereeAdaptiveStoppingReferee
+        try:
+            instance.actual_instance = IRefereeAdaptiveStoppingReferee.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IRefereeBudgetReferee
         try:
             instance.actual_instance = IRefereeBudgetReferee.from_json(json_str)
@@ -129,10 +143,10 @@ class IReferee(LazyValidatedModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IReferee with oneOf schemas: IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IReferee with oneOf schemas: IRefereeAdaptiveStoppingReferee, IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IReferee with oneOf schemas: IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IReferee with oneOf schemas: IRefereeAdaptiveStoppingReferee, IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -146,7 +160,7 @@ class IReferee(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeAdaptiveStoppingReferee, IRefereeBudgetReferee, IRefereeEarlyStoppingReferee, IRefereeNaiveReferee, IRefereeQuorumReferee]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

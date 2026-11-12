@@ -17,6 +17,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.adaptive_stopping_state import AdaptiveStoppingState
 from rapidata.api_client.models.i_asset import IAsset
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.api_client.models.i_response_aggregation import IResponseAggregation
@@ -41,7 +42,8 @@ class JobRapidResult(LazyValidatedModel):
     context_asset: Optional[IAsset] = Field(default=None, alias="contextAsset")
     decisiveness: Optional[Union[StrictFloat, StrictInt]] = None
     aggregation: Optional[IResponseAggregation] = None
-    __properties: ClassVar[List[str]] = ["rapidId", "asset", "responses", "totalResponseCount", "state", "payload", "context", "contextAsset", "decisiveness", "aggregation"]
+    adaptive_stopping_state: Optional[AdaptiveStoppingState] = Field(default=None, alias="adaptiveStoppingState")
+    __properties: ClassVar[List[str]] = ["rapidId", "asset", "responses", "totalResponseCount", "state", "payload", "context", "contextAsset", "decisiveness", "aggregation", "adaptiveStoppingState"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -97,6 +99,9 @@ class JobRapidResult(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of aggregation
         if self.aggregation:
             _dict['aggregation'] = self.aggregation.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of adaptive_stopping_state
+        if self.adaptive_stopping_state:
+            _dict['adaptiveStoppingState'] = self.adaptive_stopping_state.to_dict()
         # set to None if context (nullable) is None
         # and model_fields_set contains the field
         if self.context is None and "context" in self.model_fields_set:
@@ -116,6 +121,11 @@ class JobRapidResult(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.aggregation is None and "aggregation" in self.model_fields_set:
             _dict['aggregation'] = None
+
+        # set to None if adaptive_stopping_state (nullable) is None
+        # and model_fields_set contains the field
+        if self.adaptive_stopping_state is None and "adaptive_stopping_state" in self.model_fields_set:
+            _dict['adaptiveStoppingState'] = None
 
         return _dict
 
@@ -138,7 +148,8 @@ class JobRapidResult(LazyValidatedModel):
             "context": obj.get("context"),
             "contextAsset": IAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "decisiveness": obj.get("decisiveness"),
-            "aggregation": IResponseAggregation.from_dict(obj["aggregation"]) if obj.get("aggregation") is not None else None
+            "aggregation": IResponseAggregation.from_dict(obj["aggregation"]) if obj.get("aggregation") is not None else None,
+            "adaptiveStoppingState": AdaptiveStoppingState.from_dict(obj["adaptiveStoppingState"]) if obj.get("adaptiveStoppingState") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

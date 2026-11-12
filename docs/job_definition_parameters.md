@@ -9,7 +9,7 @@ When creating a job definition, you'll use parameters to control:
 - **What data** is shown to labelers (datapoints, contexts)
 - **How many responses** you need (responses_per_datapoint)
 - **How tasks are displayed** (settings)
-- **Quality assurance** (confidence_threshold, quorum_threshold)
+- **Quality assurance** (confidence_threshold, quorum_threshold, referee)
 
 ---
 
@@ -298,6 +298,31 @@ job_definition = client.job.create_classification_job_definition(
 
 ---
 
+### `referee`
+
+| Property | Value |
+|----------|-------|
+| **Type** | `Optional[AdaptiveStoppingReferee]` |
+| **Required** | No |
+| **Default** | `None` |
+
+Compare only. Stops each pair once one option clearly wins or the pair is clearly a tie, up to `max_votes` (default 100) votes. Cannot be used together with `responses_per_datapoint`, `confidence_threshold` or `quorum_threshold`.
+
+**Related:** [Adaptive Stopping](confidence_stopping.md#adaptive-stopping)
+
+```python
+from rapidata import AdaptiveStoppingReferee
+
+job_definition = client.job.create_compare_job_definition(
+    name="Image Quality with Adaptive Stopping",
+    instruction="Which image looks better?",
+    datapoints=[["a.jpg", "b.jpg"]],
+    referee=AdaptiveStoppingReferee(max_votes=60),
+)
+```
+
+---
+
 ## Settings
 
 Settings allow you to customize how tasks are displayed.
@@ -530,6 +555,7 @@ job_definition = client.job.create_ranking_job_definition(
 | `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
 | `confidence_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `quorum_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `referee` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | `answer_options` | :white_check_mark: | :x: | :x: | :x: | :x: | :x: | :x: |
 | `a_b_names` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |

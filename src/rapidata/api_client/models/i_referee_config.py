@@ -15,6 +15,7 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
+from rapidata.api_client.models.i_referee_config_adaptive_stopping_referee_config import IRefereeConfigAdaptiveStoppingRefereeConfig
 from rapidata.api_client.models.i_referee_config_budget_referee_config import IRefereeConfigBudgetRefereeConfig
 from rapidata.api_client.models.i_referee_config_naive_referee_config import IRefereeConfigNaiveRefereeConfig
 from rapidata.api_client.models.i_referee_config_never_ending_referee_config import IRefereeConfigNeverEndingRefereeConfig
@@ -25,24 +26,26 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IREFEREECONFIG_ONE_OF_SCHEMAS = ["IRefereeConfigBudgetRefereeConfig", "IRefereeConfigNaiveRefereeConfig", "IRefereeConfigNeverEndingRefereeConfig", "IRefereeConfigProbabilisticAttachCategoryRefereeConfig", "IRefereeConfigQuorumRefereeConfig"]
+IREFEREECONFIG_ONE_OF_SCHEMAS = ["IRefereeConfigAdaptiveStoppingRefereeConfig", "IRefereeConfigBudgetRefereeConfig", "IRefereeConfigNaiveRefereeConfig", "IRefereeConfigNeverEndingRefereeConfig", "IRefereeConfigProbabilisticAttachCategoryRefereeConfig", "IRefereeConfigQuorumRefereeConfig"]
 
 class IRefereeConfig(LazyValidatedModel):
     """
     IRefereeConfig
     """
+    # data type: IRefereeConfigAdaptiveStoppingRefereeConfig
+    oneof_schema_1_validator: Optional[IRefereeConfigAdaptiveStoppingRefereeConfig] = None
     # data type: IRefereeConfigBudgetRefereeConfig
-    oneof_schema_1_validator: Optional[IRefereeConfigBudgetRefereeConfig] = None
+    oneof_schema_2_validator: Optional[IRefereeConfigBudgetRefereeConfig] = None
     # data type: IRefereeConfigNaiveRefereeConfig
-    oneof_schema_2_validator: Optional[IRefereeConfigNaiveRefereeConfig] = None
+    oneof_schema_3_validator: Optional[IRefereeConfigNaiveRefereeConfig] = None
     # data type: IRefereeConfigNeverEndingRefereeConfig
-    oneof_schema_3_validator: Optional[IRefereeConfigNeverEndingRefereeConfig] = None
+    oneof_schema_4_validator: Optional[IRefereeConfigNeverEndingRefereeConfig] = None
     # data type: IRefereeConfigProbabilisticAttachCategoryRefereeConfig
-    oneof_schema_4_validator: Optional[IRefereeConfigProbabilisticAttachCategoryRefereeConfig] = None
+    oneof_schema_5_validator: Optional[IRefereeConfigProbabilisticAttachCategoryRefereeConfig] = None
     # data type: IRefereeConfigQuorumRefereeConfig
-    oneof_schema_5_validator: Optional[IRefereeConfigQuorumRefereeConfig] = None
-    actual_instance: Optional[Union[IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig]] = None
-    one_of_schemas: Set[str] = { "IRefereeConfigBudgetRefereeConfig", "IRefereeConfigNaiveRefereeConfig", "IRefereeConfigNeverEndingRefereeConfig", "IRefereeConfigProbabilisticAttachCategoryRefereeConfig", "IRefereeConfigQuorumRefereeConfig" }
+    oneof_schema_6_validator: Optional[IRefereeConfigQuorumRefereeConfig] = None
+    actual_instance: Optional[Union[IRefereeConfigAdaptiveStoppingRefereeConfig, IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig]] = None
+    one_of_schemas: Set[str] = { "IRefereeConfigAdaptiveStoppingRefereeConfig", "IRefereeConfigBudgetRefereeConfig", "IRefereeConfigNaiveRefereeConfig", "IRefereeConfigNeverEndingRefereeConfig", "IRefereeConfigProbabilisticAttachCategoryRefereeConfig", "IRefereeConfigQuorumRefereeConfig" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -65,6 +68,11 @@ class IRefereeConfig(LazyValidatedModel):
         instance = IRefereeConfig.model_construct()
         error_messages = []
         match = 0
+        # validate data type: IRefereeConfigAdaptiveStoppingRefereeConfig
+        if not isinstance(v, IRefereeConfigAdaptiveStoppingRefereeConfig):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeConfigAdaptiveStoppingRefereeConfig`")
+        else:
+            match += 1
         # validate data type: IRefereeConfigBudgetRefereeConfig
         if not isinstance(v, IRefereeConfigBudgetRefereeConfig):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeConfigBudgetRefereeConfig`")
@@ -92,10 +100,10 @@ class IRefereeConfig(LazyValidatedModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IRefereeConfig with oneOf schemas: IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IRefereeConfig with oneOf schemas: IRefereeConfigAdaptiveStoppingRefereeConfig, IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IRefereeConfig with oneOf schemas: IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IRefereeConfig with oneOf schemas: IRefereeConfigAdaptiveStoppingRefereeConfig, IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -110,6 +118,12 @@ class IRefereeConfig(LazyValidatedModel):
         error_messages = []
         match = 0
 
+        # deserialize data into IRefereeConfigAdaptiveStoppingRefereeConfig
+        try:
+            instance.actual_instance = IRefereeConfigAdaptiveStoppingRefereeConfig.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IRefereeConfigBudgetRefereeConfig
         try:
             instance.actual_instance = IRefereeConfigBudgetRefereeConfig.from_json(json_str)
@@ -143,10 +157,10 @@ class IRefereeConfig(LazyValidatedModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IRefereeConfig with oneOf schemas: IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IRefereeConfig with oneOf schemas: IRefereeConfigAdaptiveStoppingRefereeConfig, IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IRefereeConfig with oneOf schemas: IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IRefereeConfig with oneOf schemas: IRefereeConfigAdaptiveStoppingRefereeConfig, IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -160,7 +174,7 @@ class IRefereeConfig(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeConfigAdaptiveStoppingRefereeConfig, IRefereeConfigBudgetRefereeConfig, IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

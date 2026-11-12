@@ -15,6 +15,7 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
+from rapidata.api_client.models.i_referee_info_adaptive_stopping_referee_info import IRefereeInfoAdaptiveStoppingRefereeInfo
 from rapidata.api_client.models.i_referee_info_naive_referee_info import IRefereeInfoNaiveRefereeInfo
 from rapidata.api_client.models.i_referee_info_never_ending_referee_info import IRefereeInfoNeverEndingRefereeInfo
 from rapidata.api_client.models.i_referee_info_probabilistic_attach_category_referee_info import IRefereeInfoProbabilisticAttachCategoryRefereeInfo
@@ -24,22 +25,24 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IREFEREEINFO_ONE_OF_SCHEMAS = ["IRefereeInfoNaiveRefereeInfo", "IRefereeInfoNeverEndingRefereeInfo", "IRefereeInfoProbabilisticAttachCategoryRefereeInfo", "IRefereeInfoQuorumRefereeInfo"]
+IREFEREEINFO_ONE_OF_SCHEMAS = ["IRefereeInfoAdaptiveStoppingRefereeInfo", "IRefereeInfoNaiveRefereeInfo", "IRefereeInfoNeverEndingRefereeInfo", "IRefereeInfoProbabilisticAttachCategoryRefereeInfo", "IRefereeInfoQuorumRefereeInfo"]
 
 class IRefereeInfo(LazyValidatedModel):
     """
     IRefereeInfo
     """
+    # data type: IRefereeInfoAdaptiveStoppingRefereeInfo
+    oneof_schema_1_validator: Optional[IRefereeInfoAdaptiveStoppingRefereeInfo] = None
     # data type: IRefereeInfoNaiveRefereeInfo
-    oneof_schema_1_validator: Optional[IRefereeInfoNaiveRefereeInfo] = None
+    oneof_schema_2_validator: Optional[IRefereeInfoNaiveRefereeInfo] = None
     # data type: IRefereeInfoNeverEndingRefereeInfo
-    oneof_schema_2_validator: Optional[IRefereeInfoNeverEndingRefereeInfo] = None
+    oneof_schema_3_validator: Optional[IRefereeInfoNeverEndingRefereeInfo] = None
     # data type: IRefereeInfoProbabilisticAttachCategoryRefereeInfo
-    oneof_schema_3_validator: Optional[IRefereeInfoProbabilisticAttachCategoryRefereeInfo] = None
+    oneof_schema_4_validator: Optional[IRefereeInfoProbabilisticAttachCategoryRefereeInfo] = None
     # data type: IRefereeInfoQuorumRefereeInfo
-    oneof_schema_4_validator: Optional[IRefereeInfoQuorumRefereeInfo] = None
-    actual_instance: Optional[Union[IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo]] = None
-    one_of_schemas: Set[str] = { "IRefereeInfoNaiveRefereeInfo", "IRefereeInfoNeverEndingRefereeInfo", "IRefereeInfoProbabilisticAttachCategoryRefereeInfo", "IRefereeInfoQuorumRefereeInfo" }
+    oneof_schema_5_validator: Optional[IRefereeInfoQuorumRefereeInfo] = None
+    actual_instance: Optional[Union[IRefereeInfoAdaptiveStoppingRefereeInfo, IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo]] = None
+    one_of_schemas: Set[str] = { "IRefereeInfoAdaptiveStoppingRefereeInfo", "IRefereeInfoNaiveRefereeInfo", "IRefereeInfoNeverEndingRefereeInfo", "IRefereeInfoProbabilisticAttachCategoryRefereeInfo", "IRefereeInfoQuorumRefereeInfo" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -62,6 +65,11 @@ class IRefereeInfo(LazyValidatedModel):
         instance = IRefereeInfo.model_construct()
         error_messages = []
         match = 0
+        # validate data type: IRefereeInfoAdaptiveStoppingRefereeInfo
+        if not isinstance(v, IRefereeInfoAdaptiveStoppingRefereeInfo):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeInfoAdaptiveStoppingRefereeInfo`")
+        else:
+            match += 1
         # validate data type: IRefereeInfoNaiveRefereeInfo
         if not isinstance(v, IRefereeInfoNaiveRefereeInfo):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeInfoNaiveRefereeInfo`")
@@ -84,10 +92,10 @@ class IRefereeInfo(LazyValidatedModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IRefereeInfo with oneOf schemas: IRefereeInfoAdaptiveStoppingRefereeInfo, IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IRefereeInfo with oneOf schemas: IRefereeInfoAdaptiveStoppingRefereeInfo, IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -102,6 +110,12 @@ class IRefereeInfo(LazyValidatedModel):
         error_messages = []
         match = 0
 
+        # deserialize data into IRefereeInfoAdaptiveStoppingRefereeInfo
+        try:
+            instance.actual_instance = IRefereeInfoAdaptiveStoppingRefereeInfo.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IRefereeInfoNaiveRefereeInfo
         try:
             instance.actual_instance = IRefereeInfoNaiveRefereeInfo.from_json(json_str)
@@ -129,10 +143,10 @@ class IRefereeInfo(LazyValidatedModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IRefereeInfo with oneOf schemas: IRefereeInfoAdaptiveStoppingRefereeInfo, IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IRefereeInfo with oneOf schemas: IRefereeInfoAdaptiveStoppingRefereeInfo, IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -146,7 +160,7 @@ class IRefereeInfo(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeInfoAdaptiveStoppingRefereeInfo, IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

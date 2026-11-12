@@ -21,10 +21,12 @@ from rapidata.rapidata_client.job.cost import (
     _poll_for_cost_estimate,
 )
 from rapidata.rapidata_client.job._revision_body import (
+    _check_referee_fits,
     _full_body,
     _get_answer_options,
     _get_instruction,
     _get_responses,
+    _referee_from_model,
     _with_answer_options,
     _with_instruction,
     _with_responses,
@@ -40,6 +42,8 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.datapoints.assets.uploaded_asset import (
         UploadedAsset,
     )
+    from rapidata.api_client.models.i_referee import IReferee
+    from rapidata.rapidata_client.referee import Referee
     from rapidata.rapidata_client.settings import RapidataSetting
 
 RevisionState = Literal["Pending", "Completed", "Failed"]
@@ -216,18 +220,50 @@ class RapidataJobDefinition:
         self._pending["answer_options"] = list(value)
 
     @property
+    def _referee_model(self) -> IReferee:
+        return self._effective("referee", self._snapshot.referee)
+
+    @property
     def responses_per_datapoint(self) -> int:
-        """The maximum number of responses collected per datapoint."""
+        """The maximum number of responses collected per datapoint.
+
+        On an adaptive stopping job definition this is the referee's ``max_votes``.
+        """
         return self._effective(
-            "responses_per_datapoint", _get_responses(self._snapshot.referee)
+            "responses_per_datapoint", _get_responses(self._referee_model)
         )
 
     @responses_per_datapoint.setter
     def responses_per_datapoint(self, value: int) -> None:
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
             raise ValueError("responses_per_datapoint must be a positive integer")
-        _with_responses(self._snapshot.referee, value)
+        _with_responses(self._referee_model, value)
         self._pending["responses_per_datapoint"] = value
+
+    @property
+    def referee(self) -> Referee | None:
+        """The stopping rule of this revision, including an unsaved change.
+
+        None when the revision uses a stopping rule the SDK has no class for.
+        Assign an ``AdaptiveStoppingReferee`` to switch a compare job definition to
+        adaptive stopping; it replaces any staged ``responses_per_datapoint``.
+        """
+        model = self._referee_model
+        if "responses_per_datapoint" in self._pending:
+            model = _with_responses(model, self._pending["responses_per_datapoint"])
+        return _referee_from_model(model)
+
+    @referee.setter
+    def referee(self, value: Referee) -> None:
+        from rapidata.rapidata_client.referee import Referee
+
+        if not isinstance(value, Referee):
+            raise ValueError(
+                "referee must be a Referee, e.g. AdaptiveStoppingReferee()"
+            )
+        _check_referee_fits(self._snapshot.workflow, value)
+        self._pending["referee"] = value._to_model()
+        self._pending.pop("responses_per_datapoint", None)
 
     @property
     def settings(self) -> list[RapidataSetting]:

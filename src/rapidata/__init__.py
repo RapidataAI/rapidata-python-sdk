@@ -43,6 +43,7 @@ from .rapidata_client import (
     RapidataValidationSet,
     Box,
     RapidataResults,
+    AdaptiveStoppingReferee,
     BenchmarkDemographicDimension,
     DemographicSelection,
     LabelingSelection,

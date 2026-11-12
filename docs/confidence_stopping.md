@@ -2,12 +2,13 @@
 
 To improve the efficiency and cost-effectiveness of your data labeling tasks, Rapidata offers Early Stopping features that automatically stop collecting responses for a datapoint once a stopping condition is met, saving time and resources without compromising quality.
 
-There are two early stopping strategies:
+There are three early stopping strategies:
 
 - **Confidence Stopping**: Stops when a statistical confidence threshold is reached, using labeler trust scores.
 - **Quorum Stopping**: Stops when a fixed number of responses agree on the same answer.
+- **Adaptive Stopping** (compare only): Stops when one option clearly wins or the pair is clearly a tie.
 
-You can use one or the other, but not both at the same time.
+You can use one of them per job definition, not several at once.
 
 ## Why Use Early Stopping?
 
@@ -253,3 +254,72 @@ Quorum Stopping is a good choice when:
 - **Simplicity**: You want a straightforward stopping rule based on raw vote counts rather than statistical confidence.
 - **Predictable Costs**: You want to set an upper bound on responses while still allowing early termination.
 - **Clear Correct Answer**: The task has a clear correct answer, and you expect most labelers to agree.
+
+---
+
+## Adaptive Stopping
+
+Adaptive Stopping is available for **compare** job definitions only. Each pair keeps collecting votes until the backend is confident which option wins, until the two options are close enough to call the pair ambiguous, or until a vote cap is reached. Clear pairs finish after a few votes; close pairs use more. The backend runs the stopping math, weighting each vote by the labeler's `userScore`.
+
+### Using Adaptive Stopping in Your Job
+
+Pass an `AdaptiveStoppingReferee` as `referee`. Leave `responses_per_datapoint`, `confidence_threshold` and `quorum_threshold` unset; the referee's `max_votes` is the cap.
+
+```python
+from rapidata import RapidataClient, AdaptiveStoppingReferee
+
+client = RapidataClient()
+
+job_definition = client.job.create_compare_job_definition(
+    name="Prompt Alignment with Adaptive Stopping",
+    instruction="Which image follows the prompt more accurately?",
+    datapoints=[["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"]],
+    contexts=["psychedelic duck"],
+    referee=AdaptiveStoppingReferee(), # (1)!
+)
+```
+
+1. Uses the backend defaults. Pass `max_votes`, `min_confidence` or `ambiguity_threshold` to change them.
+
+To switch an existing compare job definition, assign the referee and save a new revision:
+
+```python
+job_definition.referee = AdaptiveStoppingReferee(max_votes=60)
+job_definition.save()
+```
+
+Using it with any other job type raises a `ValueError` before anything is sent.
+
+| Parameter | Default | Meaning |
+|-----------|---------|---------|
+| `max_votes` | 100 | The most votes collected per pair. Cost estimates and progress count this many votes per pair. |
+| `min_confidence` | 0.9 | How confident the backend must be before it calls a winner, between 0 and 1. |
+| `ambiguity_threshold` | 0.64 | How close the pair must be before it is called ambiguous, between 0 and 1. **Higher is stricter**: it needs a closer tie, so it costs more votes. 0.64 corresponds to a 20%–80% vote split. |
+
+A parameter left as `None` uses the backend default, and a revision read back from the backend shows the resolved values.
+
+### Reading the Stopping State
+
+Each compare result in `job.get_results()` carries an `adaptiveStoppingState`:
+
+```json
+"adaptiveStoppingState": {
+    "verdict": "Decided",
+    "winners": ["1"],
+    "outcomes": {
+        "0": {"weight": 1.485, "lower": 0.004, "upper": 0.496},
+        "1": {"weight": 10.515, "lower": 0.504, "upper": 0.996}
+    },
+    "responseCount": 12,
+    "minConfidence": 0.9,
+    "ambiguityThreshold": 0.64
+}
+```
+
+- `outcomes` is keyed by option: `"0"` is the first asset of the pair, `"1"` the second.
+- `verdict` is `Decided` (one option wins; `winners` names it), `Ambiguous` (the pair is a tie), `Undecided` (`max_votes` was reached first) or `Open` (still collecting votes). The first verdict other than `Open` is final, together with the outcomes and `responseCount` at that moment.
+- `weight` is the option's `userScore`-weighted votes, scaled so all weights add up to `responseCount`.
+- `lower` and `upper` bound the option's share of the vote at the chosen confidence.
+- With `Undecided`, `outcomes` can be empty when every response was a skip.
+
+`results.to_pandas()` flattens the state into columns such as `adaptiveStoppingState_verdict` and `adaptiveStoppingState_outcomes_1_weight`. The SDK shows the values exactly as the backend sent them and does not recompute them.

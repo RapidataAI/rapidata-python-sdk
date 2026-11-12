@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.get_job_revision_endpoint_output import (
         GetJobRevisionEndpointOutput,
     )
+    from rapidata.rapidata_client.referee import Referee
     from rapidata.rapidata_client.settings import RapidataSetting
 
 _INSTRUCTION_FIELD_BY_RAPID = {
@@ -32,6 +33,7 @@ _VOTES_FIELD_BY_REFEREE = {
     "NaiveReferee": "totalVotes",
     "QuorumReferee": "maxVotes",
     "EarlyStoppingReferee": "maxVotes",
+    "AdaptiveStoppingReferee": "maxVotes",
 }
 
 
@@ -101,6 +103,12 @@ def _get_responses(referee: IReferee) -> int:
         raise ValueError(
             f"A '{data.get('_t')}' referee has no responses per datapoint."
         )
+    if data.get(field) is None and data.get("_t") == "AdaptiveStoppingReferee":
+        from rapidata.rapidata_client.referee._adaptive_stopping_referee import (
+            DEFAULT_ADAPTIVE_MAX_VOTES,
+        )
+
+        return DEFAULT_ADAPTIVE_MAX_VOTES
     return data[field]
 
 
@@ -112,7 +120,52 @@ def _with_responses(referee: IReferee, responses: int) -> IReferee:
             f"A '{data.get('_t')}' referee has no responses per datapoint to change."
         )
     data[field] = responses
+    if data.get("_t") == "AdaptiveStoppingReferee":
+        from rapidata.api_client.models.i_referee_adaptive_stopping_referee import (
+            IRefereeAdaptiveStoppingReferee,
+        )
+
+        # from_dict would turn omitted fields into explicit nulls.
+        set_fields = {key: value for key, value in data.items() if value is not None}
+        return IReferee(actual_instance=IRefereeAdaptiveStoppingReferee(**set_fields))
     return IReferee.from_dict(data)  # type: ignore[return-value]
+
+
+def _referee_from_model(referee: IReferee) -> Referee | None:
+    from rapidata.rapidata_client.referee import (
+        AdaptiveStoppingReferee,
+        EarlyStoppingReferee,
+        NaiveReferee,
+        QuorumReferee,
+    )
+
+    data = _as_dict(referee)
+    kind = data.get("_t")
+    if kind == "AdaptiveStoppingReferee":
+        return AdaptiveStoppingReferee(
+            max_votes=data.get("maxVotes"),
+            min_confidence=data.get("minConfidence"),
+            ambiguity_threshold=data.get("ambiguityThreshold"),
+        )
+    if kind == "NaiveReferee":
+        return NaiveReferee(responses=data["totalVotes"])
+    if kind == "QuorumReferee":
+        return QuorumReferee(threshold=data["threshold"], max_votes=data["maxVotes"])
+    if kind == "EarlyStoppingReferee":
+        return EarlyStoppingReferee(
+            threshold=data["threshold"], max_responses=data["maxVotes"]
+        )
+    return None
+
+
+def _check_referee_fits(workflow: IOrderWorkflowInput, referee: Referee) -> None:
+    from rapidata.rapidata_client.referee import AdaptiveStoppingReferee
+
+    kind = _workflow_kind(_as_dict(workflow))
+    if isinstance(referee, AdaptiveStoppingReferee) and kind != "Compare":
+        raise ValueError(
+            f"AdaptiveStoppingReferee only supports compare job definitions, not '{kind}'."
+        )
 
 
 def _split_settings(
@@ -134,7 +187,7 @@ def _full_body(
     if "answer_options" in pending:
         workflow = _with_answer_options(workflow, pending["answer_options"])
 
-    referee = snapshot.referee
+    referee = pending.get("referee", snapshot.referee)
     if "responses_per_datapoint" in pending:
         referee = _with_responses(referee, pending["responses_per_datapoint"])
 
