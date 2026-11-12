@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.referee import Referee
 
 _DEFAULT_COMPARE_STOPPING = AdaptiveStoppingReferee()
-_LEGACY_DEFAULT_RESPONSES = 10
+_COMPARE_THRESHOLD_CAP = 15
 
 
 class RapidataJobManager:
@@ -98,9 +98,8 @@ class RapidataJobManager:
             )
 
         if confidence_threshold is not None or quorum_threshold is not None:
-            # The thresholds keep their old cap of 10 when the compare default is left in place.
             if responses_per_datapoint is _DEFAULT_COMPARE_STOPPING:
-                responses_per_datapoint = _LEGACY_DEFAULT_RESPONSES
+                responses_per_datapoint = _COMPARE_THRESHOLD_CAP
             elif isinstance(responses_per_datapoint, AdaptiveStoppingReferee):
                 raise ValueError(
                     "confidence_threshold and quorum_threshold cannot be combined with "
@@ -354,10 +353,10 @@ class RapidataJobManager:
                 The results will then correctly show "Model A" and "Model B".
                 If not provided, the results will be shown as "A" and "B".
             confidence_threshold (float, optional): Deprecated, use ``responses_per_datapoint=AdaptiveStoppingReferee()``. Defaults to None.\n
-                The probability threshold for the comparison. Takes an int ``responses_per_datapoint`` as the cap (10 when omitted).
+                The probability threshold for the comparison. Takes an int ``responses_per_datapoint`` as the cap (15 when omitted).
             quorum_threshold (int, optional): The number of matching responses required to reach quorum. Defaults to None.\n
                 If provided, the comparison datapoint will stop after the quorum is reached or at the number of responses, whatever happens first.
-                Takes an int ``responses_per_datapoint`` as the cap (10 when omitted). Cannot be used together with confidence_threshold.
+                Takes an int ``responses_per_datapoint`` as the cap (15 when omitted). Cannot be used together with confidence_threshold.
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
             failure_tolerance (float, optional): The fraction of datapoints allowed to fail while still creating the job definition (0.0-1.0). Defaults to None, which uses rapidata_config.upload.failureTolerance (default 0.0 = strict).\n                0.0 means any failed upload aborts creation so no incomplete definition is left behind; the failed datapoints can then be retried into the same dataset via the raised FailedUploadException.retry(). 1.0 creates the definition regardless of failures, as long as at least one datapoint uploads successfully.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n

@@ -124,7 +124,7 @@ For example, with `quorum_threshold=7` and `responses_per_datapoint=10`:
 - The task completes after 10 total responses if neither condition is met.
 
 !!! note
-    Quorum Stopping is supported for the Classification and Comparison workflows. On a compare job, pass an `int` `responses_per_datapoint` as the cap; it is 10 when omitted.
+    Quorum Stopping is supported for the Classification and Comparison workflows. On a compare job, pass an `int` `responses_per_datapoint` as the cap; it is 15 when omitted.
 
 ### Using Quorum Stopping in Your Job
 

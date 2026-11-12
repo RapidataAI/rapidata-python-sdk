@@ -187,23 +187,27 @@ def test_classification_keeps_ten_fixed_responses_by_default():
     assert body["referee"] == {"_t": "NaiveReferee", "totalVotes": 10}
 
 
-def test_quorum_on_compare_keeps_the_old_cap_of_ten():
+def test_quorum_on_compare_caps_at_fifteen_when_omitted():
     body = _create(quorum_threshold=7)
 
-    assert body["referee"] == {"_t": "QuorumReferee", "maxVotes": 10, "threshold": 7}
+    assert body["referee"] == {"_t": "QuorumReferee", "maxVotes": 15, "threshold": 7}
 
 
 @pytest.mark.parametrize(
-    "method", ["create_compare_job_definition", "create_classification_job_definition"]
+    ("method", "cap"),
+    [
+        ("create_compare_job_definition", 15),
+        ("create_classification_job_definition", 10),
+    ],
 )
-def test_confidence_threshold_warns_and_keeps_the_old_cap_of_ten(method):
+def test_confidence_threshold_warns_and_caps_when_omitted(method, cap):
     with pytest.warns(DeprecationWarning, match="confidence_threshold is deprecated"):
         body = _create(method, confidence_threshold=0.99)
 
     assert body["referee"] == {
         "_t": "EarlyStoppingReferee",
         "threshold": 0.99,
-        "maxVotes": 10,
+        "maxVotes": cap,
     }
 
 

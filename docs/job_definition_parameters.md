@@ -255,7 +255,7 @@ media_contexts=[
 | **Default** | `None` |
 | **Range** | `0.0` to `1.0` (typically `0.99` to `0.999`) |
 
-Deprecated: emits a `DeprecationWarning`. Use adaptive stopping (the default) on compare jobs, and `quorum_threshold` or a fixed `responses_per_datapoint` on classification. Takes an `int` `responses_per_datapoint` as the cap (10 when omitted).
+Deprecated: emits a `DeprecationWarning`. Use adaptive stopping (the default) on compare jobs, and `quorum_threshold` or a fixed `responses_per_datapoint` on classification. Takes an `int` `responses_per_datapoint` as the cap (when omitted: 15 on compare jobs, 10 otherwise).
 
 Enables early stopping when a specified confidence level is reached. The system stops collecting responses once consensus is achieved, reducing costs while maintaining quality.
 
@@ -286,7 +286,7 @@ job_definition = client.job.create_classification_job_definition(
 
 Enables early stopping when a specified number of responses agree on the same answer. The system stops collecting responses once quorum is reached, or when quorum becomes mathematically impossible, or after `responses_per_datapoint` responses.
 
-Cannot be used together with `confidence_threshold`. On compare jobs it takes an `int` `responses_per_datapoint` as the cap (10 when omitted).
+Cannot be used together with `confidence_threshold`. On compare jobs it takes an `int` `responses_per_datapoint` as the cap (15 when omitted).
 
 **Related:** [Quorum Stopping](confidence_stopping.md#quorum-stopping)
 
