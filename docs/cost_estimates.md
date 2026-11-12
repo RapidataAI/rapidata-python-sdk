@@ -44,5 +44,7 @@ A `CostEstimate` has three fields:
 | `datapoint_count` | The number of datapoints the job will label. |
 | `required_responses` | The total number of responses the job collects to complete. |
 
+Compare jobs use [adaptive stopping](confidence_stopping.md) by default. Until the backend forecasts how many votes each pair needs, `estimated_cost` and `required_responses` count `max_votes` responses per pair, so they are well above what an adaptive job typically needs.
+
 !!! note
-    This is an **estimate, not the final bill**. It is based on a sample of the job's tasks scaled to the number of responses requested, so the amount you are actually charged can differ. Features like [Early Stopping](confidence_stopping.md) can also lower the final cost by collecting fewer responses than the maximum.
+    This is an **estimate, not the final bill**. It is based on a sample of the job's tasks scaled to the number of responses requested, so the amount you are actually charged can differ. Features like [Adaptive Stopping](confidence_stopping.md) can also lower the final cost by collecting fewer responses than the maximum.

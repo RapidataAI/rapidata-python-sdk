@@ -9,7 +9,7 @@ When creating a job definition, you'll use parameters to control:
 - **What data** is shown to labelers (datapoints, contexts)
 - **How many responses** you need (responses_per_datapoint)
 - **How tasks are displayed** (settings)
-- **Quality assurance** (confidence_threshold, quorum_threshold, referee)
+- **When to stop collecting** (responses_per_datapoint, quorum_threshold)
 
 ---
 
@@ -102,19 +102,22 @@ An `UploadedAsset` is media, so it cannot be used with `data_type="text"`.
 
 | Property | Value |
 |----------|-------|
-| **Type** | `int` |
+| **Type** | `int`, or `AdaptiveStoppingReferee` (compare only) |
 | **Required** | No |
-| **Default** | `10` |
+| **Default** | `AdaptiveStoppingReferee()` for compare jobs, `10` otherwise |
 
-The minimum number of responses to collect for each datapoint. The actual number may slightly exceed this due to concurrent labelers.
+How many responses to collect for each datapoint.
 
-**Best Practices:**
+- An `int` collects exactly that many. The actual number may slightly exceed it due to concurrent labelers.
+- `AdaptiveStoppingReferee()` stops each compare pair once its verdict is settled, after about 21 responses per pair on average.
 
-- Use 15-25 for ambiguous or subjective tasks
-- Use 5-10 for clear-cut decisions
+**Related:** [Adaptive Stopping](confidence_stopping.md)
 
 ```python
-responses_per_datapoint=15
+from rapidata import AdaptiveStoppingReferee
+
+responses_per_datapoint=15                                               # fixed
+responses_per_datapoint=AdaptiveStoppingReferee(ambiguity_threshold=0.75)  # compare only: narrower ambiguous band (25/75–75/25), more votes
 ```
 
 ---
@@ -252,11 +255,13 @@ media_contexts=[
 | **Default** | `None` |
 | **Range** | `0.0` to `1.0` (typically `0.99` to `0.999`) |
 
+Deprecated: emits a `DeprecationWarning`. Use adaptive stopping (the default) on compare jobs, and `quorum_threshold` or a fixed `responses_per_datapoint` on classification. Takes an `int` `responses_per_datapoint` as the cap (10 when omitted).
+
 Enables early stopping when a specified confidence level is reached. The system stops collecting responses once consensus is achieved, reducing costs while maintaining quality.
 
 **How It Works:** Uses labeler trust scores (`userScore`) to calculate statistical confidence for each category.
 
-**Related:** [Confidence Stopping](confidence_stopping.md)
+**Related:** [Confidence Stopping](confidence_stopping.md#confidence-stopping)
 
 ```python
 job_definition = client.job.create_classification_job_definition(
@@ -281,9 +286,9 @@ job_definition = client.job.create_classification_job_definition(
 
 Enables early stopping when a specified number of responses agree on the same answer. The system stops collecting responses once quorum is reached, or when quorum becomes mathematically impossible, or after `responses_per_datapoint` votes.
 
-Cannot be used together with `confidence_threshold`.
+Cannot be used together with `confidence_threshold`. On compare jobs it takes an `int` `responses_per_datapoint` as the cap (10 when omitted).
 
-**Related:** [Early Stopping](confidence_stopping.md#quorum-stopping)
+**Related:** [Quorum Stopping](confidence_stopping.md#quorum-stopping)
 
 ```python
 job_definition = client.job.create_classification_job_definition(
@@ -293,31 +298,6 @@ job_definition = client.job.create_classification_job_definition(
     datapoints=["pet1.jpg", "pet2.jpg"],
     responses_per_datapoint=10,  # Maximum responses
     quorum_threshold=7,          # Stop when 7 agree
-)
-```
-
----
-
-### `referee`
-
-| Property | Value |
-|----------|-------|
-| **Type** | `Optional[AdaptiveStoppingReferee]` |
-| **Required** | No |
-| **Default** | `None` |
-
-Compare only. Stops each pair once one option clearly wins or the pair is clearly a tie, up to `max_votes` (default 100) votes. Cannot be used together with `responses_per_datapoint`, `confidence_threshold` or `quorum_threshold`.
-
-**Related:** [Adaptive Stopping](confidence_stopping.md#adaptive-stopping)
-
-```python
-from rapidata import AdaptiveStoppingReferee
-
-job_definition = client.job.create_compare_job_definition(
-    name="Image Quality with Adaptive Stopping",
-    instruction="Which image looks better?",
-    datapoints=[["a.jpg", "b.jpg"]],
-    referee=AdaptiveStoppingReferee(max_votes=60),
 )
 ```
 
@@ -553,9 +533,9 @@ job_definition = client.job.create_ranking_job_definition(
 | `data_type` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :white_check_mark: | :white_check_mark: |
 | `contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
 | `media_contexts` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: | :white_check_mark: |
-| `confidence_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `AdaptiveStoppingReferee` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
+| `confidence_threshold` (deprecated) | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `quorum_threshold` | :white_check_mark: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
-| `referee` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |
 | `settings` | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | `answer_options` | :white_check_mark: | :x: | :x: | :x: | :x: | :x: | :x: |
 | `a_b_names` | :x: | :white_check_mark: | :x: | :x: | :x: | :x: | :x: |

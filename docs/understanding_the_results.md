@@ -165,6 +165,8 @@ Here's an example of the results you might receive when running a COMPARE task (
                 - `global`: The global userScore of the labeler, which is a measure of their overall reliability
             - `demographics`: Demographic attributes collected for the labeler, keyed by attribute name (e.g. `age`, `gender`, `occupation`). May be empty if no demographic data was collected for the labeler.
 
+    - `adaptiveStoppingState`: Present only for pairs collected with [adaptive stopping](confidence_stopping.md) (the compare default). `verdict` is `Decided`, `Ambiguous`, `Undecided` or `Open` (no verdict yet); `winners` names the winning option (`"0"` for the first asset, `"1"` for the second) when the verdict is `Decided`. Prefer it over `winner` for these pairs: it only names a winner once the evidence is strong enough. See [Analyzing Adaptive Stopping Results](confidence_stopping.md#analyzing-adaptive-stopping-results).
+
 3. `summary`
     - `A_wins_total`: The total number of comparisons won by option A (index 0) across all pairs
     - `B_wins_total`: The total number of comparisons won by option B (index 1) across all pairs

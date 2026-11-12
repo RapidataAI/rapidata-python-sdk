@@ -28,7 +28,9 @@ class AdaptiveStoppingReferee(Referee):
     until ``max_votes`` is reached. Clear pairs finish after a few votes; close pairs
     use more. The backend runs the stopping math; the SDK only sends the parameters.
 
-    Only compare job definitions support this referee.
+    It is the default for compare job definitions. Pass it as ``responses_per_datapoint``
+    to change a parameter, or assign it to ``RapidataJobDefinition.responses_per_datapoint``
+    to switch an existing compare definition. Other job types raise ``ValueError``.
 
     Leave a parameter as ``None`` to use the backend default. A revision read back
     from the backend always carries the resolved values.

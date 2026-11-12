@@ -1,26 +1,179 @@
-# Early Stopping
+# Adaptive Stopping
 
-To improve the efficiency and cost-effectiveness of your data labeling tasks, Rapidata offers Early Stopping features that automatically stop collecting responses for a datapoint once a stopping condition is met, saving time and resources without compromising quality.
+Adaptive stopping ends response collection for a datapoint once a stopping condition is met, so you pay for the responses that change the outcome and not for the ones after it.
 
-There are three early stopping strategies:
+You choose the stopping rule with `responses_per_datapoint`:
 
-- **Confidence Stopping**: Stops when a statistical confidence threshold is reached, using labeler trust scores.
-- **Quorum Stopping**: Stops when a fixed number of responses agree on the same answer.
-- **Adaptive Stopping** (compare only): Stops when one option clearly wins or the pair is clearly a tie.
+| Value | Rule | Job types |
+|-------|------|-----------|
+| `AdaptiveStoppingReferee()` | Stops each pair once its verdict is statistically settled. **Default for compare jobs.** | Compare |
+| an `int` | Collects exactly that many responses. Default (`10`) for every other job type. | All |
 
-You can use one of them per job definition, not several at once.
+[Quorum Stopping](#quorum-stopping) is still available through `quorum_threshold`.
 
-## Why Use Early Stopping?
+## How it Works
 
-In traditional data labeling workflows, you might request a fixed number of responses per datapoint to ensure accuracy. However, once a consensus is reached, continuing to collect more responses becomes redundant and incurs unnecessary costs.
+Each vote on a compare pair is weighted by the voter's [user score](understanding_the_results.md#understanding-the-user-scores). After every vote, the backend checks the pair for a verdict:
 
-Early Stopping addresses this by:
+- **`Decided`**: one option is preferred, with at least `min_confidence` certainty.
+- **`Ambiguous`**: the pair is too close to call. The true preference lies inside the ambiguous band, 20/80 to 80/20 by default, so further votes would not produce a winner.
+- **`Undecided`**: neither happened before `max_votes` votes. `max_votes` is a safety cap: with the defaults, no pair comes close to it.
+- **`Open`**: no verdict yet. The pair is still collecting, or the job was paused or stopped before it finished.
 
-- **Reducing Costs**: Stop collecting responses when sufficient agreement is achieved.
-- **Improving Efficiency**: Accelerate the labeling process by focusing resources where they are most needed.
-- **Maintaining Quality**: Ensure that each datapoint meets your specified stopping condition before stopping.
+The pair stops at the first verdict. A clear pair stops after as few as 7 votes and a 50/50 pair after about 16. A pair needs about 21 votes on average; the hardest pairs, split around 35/65, need about 31.
+
+## Using Adaptive Stopping in Your Job
+
+Compare jobs use adaptive stopping unless you pass something else:
+
+```python
+from rapidata import RapidataClient, AdaptiveStoppingReferee
+
+client = RapidataClient()
+
+job_definition = client.job.create_compare_job_definition(
+    name="Prompt alignment",
+    instruction="Which image matches the description better?",
+    datapoints=[["https://assets.rapidata.ai/a.jpg", "https://assets.rapidata.ai/b.jpg"]],
+    contexts=["A small blue book sitting on a large red book."],
+    responses_per_datapoint=AdaptiveStoppingReferee(), # (1)!
+)
+```
+
+1. The same as leaving the argument out. Pass `responses_per_datapoint=10` to collect exactly 10 responses per pair instead.
+
+`ambiguity_threshold` sets how close a pair must be before it stops as ambiguous. The default 0.64 gives the 20/80–80/20 band.
+
+**Raise `ambiguity_threshold` to push closer pairs to a winner, at the cost of more votes.** For example, `AdaptiveStoppingReferee(ambiguity_threshold=0.75)` narrows the band to 25/75–75/25, which takes about a third more votes per pair on average, and about 49 for the hardest pairs; `0.91` narrows it to 35/65–65/35.
+
+The threshold only decides which pairs may stop as ambiguous. A winner always takes priority, so a 70/30 pair can still be `Decided` even though it lies inside the band.
+
+| Parameter | Default | Meaning |
+|-----------|---------|---------|
+| `min_confidence` | 0.9 | How certain the backend must be before it calls a winner, between 0 and 1. |
+| `ambiguity_threshold` | 0.64 | How close the pair must be before it stops as ambiguous, between 0 and 1. Higher is stricter. |
+| `max_votes` | 100 | The safety cap on votes per pair. |
+
+A parameter left as `None` uses the backend default, and a job definition read back from the backend shows the resolved values. Adaptive stopping is compare-only: passing it to any other job type raises a `ValueError` before anything is sent.
+
+To switch an existing compare job definition, assign the rule and save a new revision:
+
+```python
+job_definition.responses_per_datapoint = AdaptiveStoppingReferee()
+job_definition.save()
+```
+
+Until the backend forecasts how many votes a job will need, the [cost estimate](cost_estimates.md) and [job progress](job_progress.md) count `max_votes` responses per pair, so the estimate is well above what an adaptive job typically costs.
+
+## Analyzing Adaptive Stopping Results
+
+Each compare datapoint in the [results](understanding_the_results.md) gains an `adaptiveStoppingState`:
+
+```json
+"adaptiveStoppingState": {
+    "verdict": "Decided",
+    "winners": ["1"],
+    "outcomes": {
+        "0": {"weight": 1.485, "lower": 0.004, "upper": 0.496},
+        "1": {"weight": 10.515, "lower": 0.504, "upper": 0.996}
+    },
+    "responseCount": 12,
+    "minConfidence": 0.9,
+    "ambiguityThreshold": 0.64
+}
+```
+
+- `outcomes` is keyed by option: `"0"` is the first asset of the pair, `"1"` the second. `winners` names the winning key and is only filled for `Decided`.
+- `verdict` is final once it is not `Open`, together with the `outcomes` and `responseCount` at that moment.
+- `weight` is the option's user-score-weighted votes, scaled so all weights add up to `responseCount`.
+- `lower` and `upper` bound the option's share of the vote at the chosen confidence.
+- With `Undecided`, `outcomes` can be empty when every response was a skip.
+
+```python
+results = job.get_results()
+for datapoint in results["results"]:
+    state = datapoint["adaptiveStoppingState"]
+    print(state["verdict"], state["winners"], state["responseCount"])
+```
+
+`results.to_pandas()` flattens the state into columns such as `adaptiveStoppingState_verdict`. The SDK shows the values exactly as the backend sent them.
+
+---
+
+## Quorum Stopping
+
+### How it Works
+
+Quorum Stopping uses a simple vote-counting approach. A task is completed when:
+
+1. A minimum number of responses (`quorum_threshold`) agree on the same answer, **OR**
+2. Quorum becomes mathematically impossible to reach, **OR**
+3. The maximum number of votes (`responses_per_datapoint`) is reached.
+
+For example, with `quorum_threshold=7` and `responses_per_datapoint=10`:
+
+- The task completes when 7 responses agree (quorum reached).
+- The task completes when both options have 4+ responses (quorum is impossible since neither can reach 7 out of 10).
+- The task completes after 10 total votes if neither condition is met.
+
+!!! note
+    Quorum Stopping is supported for the Classification and Comparison workflows. On a compare job, pass an `int` `responses_per_datapoint` as the cap; it is 10 when omitted.
+
+### Using Quorum Stopping in Your Job
+
+You add the `quorum_threshold` parameter when creating the job definition.
+
+#### Example: Classification Job with Quorum Stopping
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+audience = client.audience.create_audience(name="Animal Classification Audience")
+audience.add_classification_example(
+    instruction="What do you see in the image?",
+    answer_options=["Cat", "Dog"],
+    datapoint="https://assets.rapidata.ai/cat.jpeg",
+    truth=["Cat"]
+)
+
+audience.start_recruiting() # (1)!
+
+job_definition = client.job.create_classification_job_definition(
+    name="Test Classification with Quorum Stopping",
+    instruction="What do you see in the image?",
+    answer_options=["Cat", "Dog"],
+    datapoints=["https://assets.rapidata.ai/dog.jpeg"],
+    responses_per_datapoint=10, # (2)!
+    quorum_threshold=7, # (3)!
+)
+
+job = audience.assign_job(job_definition)
+job.view()
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+1. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
+2. Sets the **maximum** number of responses per datapoint.
+3. Stops collecting once 7 responses agree on the same answer.
+
+### When to Use Quorum Stopping
+
+Quorum Stopping is a good choice when:
+
+- **Simplicity**: You want a straightforward stopping rule based on raw vote counts rather than statistical confidence.
+- **Predictable Costs**: You want to set an upper bound on responses while still allowing early termination.
+- **Clear Correct Answer**: The task has a clear correct answer, and you expect most labelers to agree.
+
+---
 
 ## Confidence Stopping
+
+!!! warning "Deprecated"
+    `confidence_threshold` is deprecated and emits a `DeprecationWarning`. For compare jobs use adaptive stopping, the default. For classification use `quorum_threshold` or a fixed `responses_per_datapoint`.
 
 ### How it Works
 
@@ -54,7 +207,7 @@ There are a few things to keep in mind when interpreting the results:
 </div>
 
 !!! note
-    The Early Stopping feature is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.
+    Confidence Stopping is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.
 
 ### Using Confidence Stopping in Your Job
 
@@ -184,142 +337,3 @@ Example:
     }
 }
 ```
-
----
-
-## Quorum Stopping
-
-### How it Works
-
-Quorum Stopping uses a simple vote-counting approach. A task is completed when:
-
-1. A minimum number of responses (`quorum_threshold`) agree on the same answer, **OR**
-2. Quorum becomes mathematically impossible to reach, **OR**
-3. The maximum number of votes (`responses_per_datapoint`) is reached.
-
-For example, with `quorum_threshold=7` and `responses_per_datapoint=10`:
-
-- The task completes when 7 responses agree (quorum reached).
-- The task completes when both options have 4+ responses (quorum is impossible since neither can reach 7 out of 10).
-- The task completes after 10 total votes if neither condition is met.
-
-!!! note
-    Quorum Stopping is supported for the Classification and Comparison workflows, just like Confidence Stopping.
-
-### Using Quorum Stopping in Your Job
-
-You add the `quorum_threshold` parameter when creating the job definition.
-
-#### Example: Classification Job with Quorum Stopping
-
-```python
-from rapidata import RapidataClient
-
-client = RapidataClient()
-
-audience = client.audience.create_audience(name="Animal Classification Audience")
-audience.add_classification_example(
-    instruction="What do you see in the image?",
-    answer_options=["Cat", "Dog"],
-    datapoint="https://assets.rapidata.ai/cat.jpeg",
-    truth=["Cat"]
-)
-
-audience.start_recruiting() # (1)!
-
-job_definition = client.job.create_classification_job_definition(
-    name="Test Classification with Quorum Stopping",
-    instruction="What do you see in the image?",
-    answer_options=["Cat", "Dog"],
-    datapoints=["https://assets.rapidata.ai/dog.jpeg"],
-    responses_per_datapoint=10, # (2)!
-    quorum_threshold=7, # (3)!
-)
-
-job = audience.assign_job(job_definition)
-job.view()
-job.display_progress_bar()
-results = job.get_results()
-print(results)
-```
-
-1. Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.
-2. Sets the **maximum** number of responses per datapoint.
-3. Stops collecting once 7 responses agree on the same answer.
-
-### When to Use Quorum Stopping
-
-Quorum Stopping is a good choice when:
-
-- **Simplicity**: You want a straightforward stopping rule based on raw vote counts rather than statistical confidence.
-- **Predictable Costs**: You want to set an upper bound on responses while still allowing early termination.
-- **Clear Correct Answer**: The task has a clear correct answer, and you expect most labelers to agree.
-
----
-
-## Adaptive Stopping
-
-Adaptive Stopping is available for **compare** job definitions only. Each pair keeps collecting votes until the backend is confident which option wins, until the two options are close enough to call the pair ambiguous, or until a vote cap is reached. Clear pairs finish after a few votes; close pairs use more. The backend runs the stopping math, weighting each vote by the labeler's `userScore`.
-
-### Using Adaptive Stopping in Your Job
-
-Pass an `AdaptiveStoppingReferee` as `referee`. Leave `responses_per_datapoint`, `confidence_threshold` and `quorum_threshold` unset; the referee's `max_votes` is the cap.
-
-```python
-from rapidata import RapidataClient, AdaptiveStoppingReferee
-
-client = RapidataClient()
-
-job_definition = client.job.create_compare_job_definition(
-    name="Prompt Alignment with Adaptive Stopping",
-    instruction="Which image follows the prompt more accurately?",
-    datapoints=[["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"]],
-    contexts=["psychedelic duck"],
-    referee=AdaptiveStoppingReferee(), # (1)!
-)
-```
-
-1. Uses the backend defaults. Pass `max_votes`, `min_confidence` or `ambiguity_threshold` to change them.
-
-To switch an existing compare job definition, assign the referee and save a new revision:
-
-```python
-job_definition.referee = AdaptiveStoppingReferee(max_votes=60)
-job_definition.save()
-```
-
-Using it with any other job type raises a `ValueError` before anything is sent.
-
-| Parameter | Default | Meaning |
-|-----------|---------|---------|
-| `max_votes` | 100 | The most votes collected per pair. Cost estimates and progress count this many votes per pair. |
-| `min_confidence` | 0.9 | How confident the backend must be before it calls a winner, between 0 and 1. |
-| `ambiguity_threshold` | 0.64 | How close the pair must be before it is called ambiguous, between 0 and 1. **Higher is stricter**: it needs a closer tie, so it costs more votes. 0.64 corresponds to a 20%–80% vote split. |
-
-A parameter left as `None` uses the backend default, and a revision read back from the backend shows the resolved values.
-
-### Reading the Stopping State
-
-Each compare result in `job.get_results()` carries an `adaptiveStoppingState`:
-
-```json
-"adaptiveStoppingState": {
-    "verdict": "Decided",
-    "winners": ["1"],
-    "outcomes": {
-        "0": {"weight": 1.485, "lower": 0.004, "upper": 0.496},
-        "1": {"weight": 10.515, "lower": 0.504, "upper": 0.996}
-    },
-    "responseCount": 12,
-    "minConfidence": 0.9,
-    "ambiguityThreshold": 0.64
-}
-```
-
-- `outcomes` is keyed by option: `"0"` is the first asset of the pair, `"1"` the second.
-- `verdict` is `Decided` (one option wins; `winners` names it), `Ambiguous` (the pair is a tie), `Undecided` (`max_votes` was reached first) or `Open` (still collecting votes). The first verdict other than `Open` is final, together with the outcomes and `responseCount` at that moment.
-- `weight` is the option's `userScore`-weighted votes, scaled so all weights add up to `responseCount`.
-- `lower` and `upper` bound the option's share of the vote at the chosen confidence.
-- With `Undecided`, `outcomes` can be empty when every response was a skip.
-
-`results.to_pandas()` flattens the state into columns such as `adaptiveStoppingState_verdict` and `adaptiveStoppingState_outcomes_1_weight`. The SDK shows the values exactly as the backend sent them and does not recompute them.

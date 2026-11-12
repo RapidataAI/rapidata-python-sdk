@@ -65,7 +65,9 @@ print(results["summary"])  # {'Flux_wins_total': …, 'Midjourney_wins_total': �
 
 `run_preference` and `run_coherence` take the same arguments without `contexts`. Pass `contexts` and `a_b_names` by keyword. Send image pairs and video pairs as separate calls.
 
-## Comparison with Early Stopping
+## Comparison with Adaptive Stopping
+
+Compare jobs stop each pair once its verdict is settled — `AdaptiveStoppingReferee()` is the default, so no stopping argument is needed.
 
 ```python
 from rapidata import RapidataClient
@@ -81,14 +83,18 @@ job_def = client.job.create_compare_job_definition(
         ["flux_sunset.jpg", "mj_sunset.jpg"],
     ],
     contexts=["A cat on a chair", "A sunset over mountains"],
-    responses_per_datapoint=50,
-    confidence_threshold=0.99,
     a_b_names=["Flux", "Midjourney"],
 )
 job = audience.assign_job(job_def)
 job.view()
 job.display_progress_bar()
 results = job.get_results()
+
+for datapoint in results["results"]:
+    state = datapoint["adaptiveStoppingState"]
+    # verdict: "Decided" (winners holds "0" or "1"), "Ambiguous" (too close to call),
+    # "Undecided" (hit max_votes) or "Open" (no verdict yet)
+    print(state["verdict"], state["winners"], state["responseCount"])
 ```
 
 ## Classification with Quorum Stopping
@@ -940,6 +946,7 @@ job_def = client.job.create_compare_job_definition(
 )
 
 # Reading estimated_cost blocks briefly until the estimate is priced.
+# Adaptive compare jobs are estimated at max_votes per pair until the backend forecasts expected votes.
 estimate = job_def.estimated_cost
 print(
     f"About {estimate.estimated_cost} for {estimate.required_responses} responses "

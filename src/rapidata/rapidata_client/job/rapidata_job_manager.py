@@ -21,10 +21,17 @@ from rapidata.rapidata_client.context.context_manager import ContextManager
 from rapidata.rapidata_client.job.rapidata_template_manager import (
     RapidataTemplateManager,
 )
+from rapidata.rapidata_client.referee._adaptive_stopping_referee import (
+    AdaptiveStoppingReferee,
+)
+import warnings
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
-    from rapidata.rapidata_client.referee import AdaptiveStoppingReferee, Referee
+    from rapidata.rapidata_client.referee import Referee
+
+_DEFAULT_COMPARE_STOPPING = AdaptiveStoppingReferee()
+_LEGACY_DEFAULT_RESPONSES = 10
 
 
 class RapidataJobManager:
@@ -72,17 +79,74 @@ class RapidataJobManager:
                 ", ".join(supported),
             )
 
+    @staticmethod
+    def _resolve_referee(
+        workflow: Workflow,
+        responses_per_datapoint: int | AdaptiveStoppingReferee,
+        confidence_threshold: float | None,
+        quorum_threshold: int | None,
+    ) -> Referee:
+        from rapidata.rapidata_client.referee import (
+            EarlyStoppingReferee,
+            NaiveReferee,
+            QuorumReferee,
+        )
+
+        if confidence_threshold is not None and quorum_threshold is not None:
+            raise ValueError(
+                "Cannot set both confidence_threshold and quorum_threshold. Choose one stopping strategy."
+            )
+
+        if confidence_threshold is not None or quorum_threshold is not None:
+            # The thresholds keep their old cap of 10 when the compare default is left in place.
+            if responses_per_datapoint is _DEFAULT_COMPARE_STOPPING:
+                responses_per_datapoint = _LEGACY_DEFAULT_RESPONSES
+            elif isinstance(responses_per_datapoint, AdaptiveStoppingReferee):
+                raise ValueError(
+                    "confidence_threshold and quorum_threshold cannot be combined with "
+                    "responses_per_datapoint=AdaptiveStoppingReferee(). Choose one stopping strategy."
+                )
+
+        if isinstance(responses_per_datapoint, AdaptiveStoppingReferee):
+            if workflow.task_type != "Compare":
+                raise ValueError(
+                    "AdaptiveStoppingReferee only supports compare job definitions, "
+                    f"not {workflow.task_type or type(workflow).__name__}."
+                )
+            return responses_per_datapoint
+
+        if quorum_threshold is not None:
+            return QuorumReferee(
+                threshold=quorum_threshold, max_votes=responses_per_datapoint
+            )
+
+        if confidence_threshold is not None:
+            replacement = (
+                "responses_per_datapoint=AdaptiveStoppingReferee()"
+                if workflow.task_type == "Compare"
+                else "quorum_threshold or a fixed responses_per_datapoint"
+            )
+            warnings.warn(
+                f"confidence_threshold is deprecated; use {replacement} instead.",
+                DeprecationWarning,
+                stacklevel=4,
+            )
+            return EarlyStoppingReferee(
+                threshold=confidence_threshold, max_responses=responses_per_datapoint
+            )
+
+        return NaiveReferee(responses=responses_per_datapoint)
+
     def _create_general_job_definition(
         self,
         name: str,
         workflow: Workflow,
         datapoints: list[Datapoint],
-        responses_per_datapoint: int = 10,
+        responses_per_datapoint: int | AdaptiveStoppingReferee = 10,
         confidence_threshold: float | None = None,
         quorum_threshold: int | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         failure_tolerance: float | None = None,
-        referee: Referee | None = None,
     ) -> RapidataJobDefinition:
         if settings is None:
             settings = []
@@ -92,62 +156,20 @@ class RapidataJobManager:
 
         self._warn_unsupported_settings(workflow, settings)
 
+        referee = self._resolve_referee(
+            workflow, responses_per_datapoint, confidence_threshold, quorum_threshold
+        )
+
         self.__context_manager._apply_context_shortening(
             datapoints=datapoints,
             question=workflow._get_instruction(),
         )
 
-        if confidence_threshold is not None and quorum_threshold is not None:
-            raise ValueError(
-                "Cannot set both confidence_threshold and quorum_threshold. Choose one stopping strategy."
-            )
-
-        if referee is not None:
-            from rapidata.rapidata_client.referee._adaptive_stopping_referee import (
-                AdaptiveStoppingReferee,
-            )
-
-            if confidence_threshold is not None or quorum_threshold is not None:
-                raise ValueError(
-                    "Cannot combine referee with confidence_threshold or quorum_threshold. Choose one stopping strategy."
-                )
-            if (
-                isinstance(referee, AdaptiveStoppingReferee)
-                and workflow.task_type != "Compare"
-            ):
-                raise ValueError(
-                    f"AdaptiveStoppingReferee only supports compare job definitions, not {workflow.task_type or type(workflow).__name__}."
-                )
-        elif confidence_threshold is None and quorum_threshold is None:
-            from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
-
-            referee = NaiveReferee(responses=responses_per_datapoint)
-        elif quorum_threshold is not None:
-            from rapidata.rapidata_client.referee._quorum_referee import QuorumReferee
-
-            referee = QuorumReferee(
-                threshold=quorum_threshold,
-                max_votes=responses_per_datapoint,
-            )
-        else:
-            from rapidata.rapidata_client.referee._early_stopping_referee import (
-                EarlyStoppingReferee,
-            )
-
-            assert confidence_threshold is not None
-            referee = EarlyStoppingReferee(
-                threshold=confidence_threshold,
-                max_responses=responses_per_datapoint,
-            )
-
         logger.debug(
-            "Creating job with parameters: name %s, workflow %s, datapoints %s, responses_per_datapoint %s, confidence_threshold %s, quorum_threshold %s, referee %s, settings %s",
+            "Creating job with parameters: name %s, workflow %s, datapoints %s, referee %s, settings %s",
             name,
             workflow,
             datapoints,
-            responses_per_datapoint,
-            confidence_threshold,
-            quorum_threshold,
             referee,
             settings,
         )
@@ -223,7 +245,7 @@ class RapidataJobManager:
             media_contexts (list[list[str | UploadedAsset]], optional): The list of image URLs / paths / UploadedAsset references shown for the classification (each inner list is the images shown for that datapoint). Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
-            confidence_threshold (float, optional): The probability threshold for the classification. Defaults to None.\n
+            confidence_threshold (float, optional): Deprecated, use quorum_threshold or a fixed responses_per_datapoint. Defaults to None.\n
                 If provided, the classification datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             quorum_threshold (int, optional): The number of matching responses required to reach quorum. Defaults to None.\n
                 If provided, the classification datapoint will stop after the quorum is reached or at the number of responses, whatever happens first.
@@ -285,7 +307,9 @@ class RapidataJobManager:
             | list[list[str | UploadedAsset]]
         ),
         data_type: Literal["media", "text"] = "media",
-        responses_per_datapoint: int | None = None,
+        responses_per_datapoint: (
+            int | AdaptiveStoppingReferee
+        ) = _DEFAULT_COMPARE_STOPPING,
         contexts: list[str] | None = None,
         media_contexts: (
             list[list[str]]
@@ -299,7 +323,6 @@ class RapidataJobManager:
         settings: Sequence[RapidataSetting] | None = None,
         failure_tolerance: float | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-        referee: AdaptiveStoppingReferee | None = None,
     ) -> RapidataJobDefinition:
         """Create a compare job definition.
 
@@ -311,7 +334,9 @@ class RapidataJobManager:
             datapoints (list[list[str | UploadedAsset]]): Outher list is the datapoints, inner list is the options for the comparison - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
-            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10. Leave it unset when you pass a referee.
+            responses_per_datapoint (int | AdaptiveStoppingReferee, optional): How many responses to collect per pair.
+                Defaults to ``AdaptiveStoppingReferee()``, which stops each pair once one option clearly wins or the pair is clearly a tie.\n
+                An int collects exactly that many responses; pass ``10`` for the previous default.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
@@ -328,20 +353,16 @@ class RapidataJobManager:
                 ```
                 The results will then correctly show "Model A" and "Model B".
                 If not provided, the results will be shown as "A" and "B".
-            confidence_threshold (float, optional): The probability threshold for the comparison. Defaults to None.\n
-                If provided, the comparison datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
+            confidence_threshold (float, optional): Deprecated, use ``responses_per_datapoint=AdaptiveStoppingReferee()``. Defaults to None.\n
+                The probability threshold for the comparison. Takes an int ``responses_per_datapoint`` as the cap (10 when omitted).
             quorum_threshold (int, optional): The number of matching responses required to reach quorum. Defaults to None.\n
                 If provided, the comparison datapoint will stop after the quorum is reached or at the number of responses, whatever happens first.
-                Cannot be used together with confidence_threshold.
+                Takes an int ``responses_per_datapoint`` as the cap (10 when omitted). Cannot be used together with confidence_threshold.
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
             failure_tolerance (float, optional): The fraction of datapoints allowed to fail while still creating the job definition (0.0-1.0). Defaults to None, which uses rapidata_config.upload.failureTolerance (default 0.0 = strict).\n                0.0 means any failed upload aborts creation so no incomplete definition is left behind; the failed datapoints can then be retried into the same dataset via the raised FailedUploadException.retry(). 1.0 creates the definition regardless of failures, as long as at least one datapoint uploads successfully.
             private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
-            referee (AdaptiveStoppingReferee, optional): Stop each datapoint adaptively once the backend is confident of the winner
-                or calls it ambiguous. Defaults to None (a fixed number of responses).\n
-                Its ``max_votes`` caps the responses per datapoint, so it cannot be combined with
-                responses_per_datapoint, confidence_threshold or quorum_threshold.
         """
         with tracer.start_as_current_span("JobManager.create_compare_job"):
             if any(not isinstance(datapoint, list) for datapoint in datapoints):
@@ -359,11 +380,6 @@ class RapidataJobManager:
 
             from rapidata.rapidata_client.workflow import CompareWorkflow
 
-            if referee is not None and responses_per_datapoint is not None:
-                raise ValueError(
-                    "Cannot combine referee with responses_per_datapoint. Set the cap with the referee's max_votes."
-                )
-
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 contexts=contexts,
@@ -376,16 +392,11 @@ class RapidataJobManager:
                 name=name,
                 workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
                 datapoints=datapoints_instances,
-                responses_per_datapoint=(
-                    responses_per_datapoint
-                    if responses_per_datapoint is not None
-                    else 10
-                ),
+                responses_per_datapoint=responses_per_datapoint,
                 confidence_threshold=confidence_threshold,
                 quorum_threshold=quorum_threshold,
                 settings=settings,
                 failure_tolerance=failure_tolerance,
-                referee=referee,
             )
 
     def create_ranking_job_definition(

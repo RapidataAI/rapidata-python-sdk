@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.get_job_revision_endpoint_output import (
         GetJobRevisionEndpointOutput,
     )
-    from rapidata.rapidata_client.referee import Referee
+    from rapidata.rapidata_client.referee import AdaptiveStoppingReferee
     from rapidata.rapidata_client.settings import RapidataSetting
 
 _INSTRUCTION_FIELD_BY_RAPID = {
@@ -112,57 +112,46 @@ def _get_responses(referee: IReferee) -> int:
     return data[field]
 
 
-def _with_responses(referee: IReferee, responses: int) -> IReferee:
+def _get_stopping(referee: IReferee) -> int | AdaptiveStoppingReferee:
+    data = _as_dict(referee)
+    if data.get("_t") == "AdaptiveStoppingReferee":
+        from rapidata.rapidata_client.referee import AdaptiveStoppingReferee
+
+        return AdaptiveStoppingReferee(
+            max_votes=data.get("maxVotes"),
+            min_confidence=data.get("minConfidence"),
+            ambiguity_threshold=data.get("ambiguityThreshold"),
+        )
+    return _get_responses(referee)
+
+
+def _with_responses(
+    referee: IReferee, responses: int | AdaptiveStoppingReferee
+) -> IReferee:
+    from rapidata.rapidata_client.referee import AdaptiveStoppingReferee, NaiveReferee
+
     data = _as_dict(referee)
     field = _VOTES_FIELD_BY_REFEREE.get(data.get("_t", ""))
     if field is None:
         raise ValueError(
             f"A '{data.get('_t')}' referee has no responses per datapoint to change."
         )
+    if isinstance(responses, AdaptiveStoppingReferee):
+        return responses._to_model()
+    # An int on an adaptive definition switches it to a fixed count, as on create.
+    if data["_t"] == "AdaptiveStoppingReferee":
+        return NaiveReferee(responses=responses)._to_model()
     data[field] = responses
-    if data.get("_t") == "AdaptiveStoppingReferee":
-        from rapidata.api_client.models.i_referee_adaptive_stopping_referee import (
-            IRefereeAdaptiveStoppingReferee,
-        )
-
-        # from_dict would turn omitted fields into explicit nulls.
-        set_fields = {key: value for key, value in data.items() if value is not None}
-        return IReferee(actual_instance=IRefereeAdaptiveStoppingReferee(**set_fields))
     return IReferee.from_dict(data)  # type: ignore[return-value]
 
 
-def _referee_from_model(referee: IReferee) -> Referee | None:
-    from rapidata.rapidata_client.referee import (
-        AdaptiveStoppingReferee,
-        EarlyStoppingReferee,
-        NaiveReferee,
-        QuorumReferee,
-    )
-
-    data = _as_dict(referee)
-    kind = data.get("_t")
-    if kind == "AdaptiveStoppingReferee":
-        return AdaptiveStoppingReferee(
-            max_votes=data.get("maxVotes"),
-            min_confidence=data.get("minConfidence"),
-            ambiguity_threshold=data.get("ambiguityThreshold"),
-        )
-    if kind == "NaiveReferee":
-        return NaiveReferee(responses=data["totalVotes"])
-    if kind == "QuorumReferee":
-        return QuorumReferee(threshold=data["threshold"], max_votes=data["maxVotes"])
-    if kind == "EarlyStoppingReferee":
-        return EarlyStoppingReferee(
-            threshold=data["threshold"], max_responses=data["maxVotes"]
-        )
-    return None
-
-
-def _check_referee_fits(workflow: IOrderWorkflowInput, referee: Referee) -> None:
+def _check_stopping_fits(
+    workflow: IOrderWorkflowInput, responses: int | AdaptiveStoppingReferee
+) -> None:
     from rapidata.rapidata_client.referee import AdaptiveStoppingReferee
 
     kind = _workflow_kind(_as_dict(workflow))
-    if isinstance(referee, AdaptiveStoppingReferee) and kind != "Compare":
+    if isinstance(responses, AdaptiveStoppingReferee) and kind != "Compare":
         raise ValueError(
             f"AdaptiveStoppingReferee only supports compare job definitions, not '{kind}'."
         )
@@ -187,7 +176,7 @@ def _full_body(
     if "answer_options" in pending:
         workflow = _with_answer_options(workflow, pending["answer_options"])
 
-    referee = pending.get("referee", snapshot.referee)
+    referee = snapshot.referee
     if "responses_per_datapoint" in pending:
         referee = _with_responses(referee, pending["responses_per_datapoint"])
 

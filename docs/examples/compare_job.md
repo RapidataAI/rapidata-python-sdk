@@ -35,7 +35,6 @@ In this example, we compare images from two image generation models (Flux and Mi
         name="Example Image Prompt Alignment Job",
         instruction="Which image follows the prompt more accurately?",
         datapoints=IMAGE_PAIRS,
-        responses_per_datapoint=25,
         contexts=PROMPTS
     )
 
@@ -117,7 +116,6 @@ In this example, we compare images from two image generation models (Flux and Mi
         name="Example Image Prompt Alignment Job",
         instruction="Which image follows the prompt more accurately?",
         datapoints=IMAGE_PAIRS,
-        responses_per_datapoint=25,
         contexts=PROMPTS
     )
 
@@ -133,7 +131,3 @@ In this example, we compare images from two image generation models (Flux and Mi
 
     !!! note
         Review every qualification example and its truth carefully, and add more than the few shown here for production workloads — see [Custom Audiences](../audiences.md) for the full guide.
-
-## Stopping Early on Clear Pairs
-
-Pass `referee=AdaptiveStoppingReferee()` instead of `responses_per_datapoint` to stop each pair once one image clearly wins or the pair is clearly a tie. See [Adaptive Stopping](../confidence_stopping.md#adaptive-stopping) for the parameters and how to read the `adaptiveStoppingState` in the results.
