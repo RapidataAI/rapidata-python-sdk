@@ -40,7 +40,7 @@ job_definition = client.job.create_compare_job_definition(
 )
 ```
 
-1. The same as leaving the argument out. Pass `responses_per_datapoint=10` to collect exactly 10 responses per pair instead.
+1. The same as leaving the argument out. Pass `responses_per_datapoint=15` to collect exactly 15 responses per pair instead.
 
 `ambiguity_threshold` sets how even the split must be before a pair is called a toss-up. With the default 0.64, a pair is a toss-up when neither option would get more than about 80% of the votes.
 
