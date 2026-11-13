@@ -152,7 +152,7 @@ class RapidataAudienceBase:
 
     def _check_original_language(self, job_definition: RapidataJobDefinition) -> None:
         """Raise before job creation when OriginalLanguageOnlySetting meets an audience
-        without a LanguageFilter. A failed lookup defers to the backend, which enforces the same rule.
+        without a LanguageFilter. A failed lookup lets the job through.
         """
         from rapidata.rapidata_client.audience._original_language_check import (
             ORIGINAL_LANGUAGE_REQUIRES_LANGUAGE_FILTER,

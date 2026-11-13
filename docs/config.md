@@ -28,7 +28,7 @@ logger.info("This will be shown") # (2)!
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `skipLanguageFilterCheck` | `bool` | `False` | Skip the SDK check that `OriginalLanguageOnlySetting` only runs on audiences with a `LanguageFilter`. By default `assign_job` and `update_filters` raise `ValueError` when untranslated tasks would reach labelers without a language filter. The backend still rejects such new jobs. |
+| `skipLanguageFilterCheck` | `bool` | `False` | Skip the SDK check that `OriginalLanguageOnlySetting` only runs on audiences with a `LanguageFilter`. By default `assign_job` and `update_filters` raise `ValueError` when untranslated tasks would reach labelers without a language filter. |
 
 ### Logging Configuration Options
 

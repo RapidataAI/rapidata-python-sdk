@@ -19,7 +19,7 @@ class RapidataConfig(BaseModel):
         enableBetaFeatures (bool): Whether to enable beta features. Defaults to False.
         skipLanguageFilterCheck (bool): Skip the SDK check that ``OriginalLanguageOnlySetting``
             only runs on audiences with a ``LanguageFilter`` (in ``assign_job`` and
-            ``update_filters``). The backend still rejects such new jobs. Defaults to False.
+            ``update_filters``). Defaults to False.
         upload (UploadConfig): The configuration for the upload process.
             Such as the maximum number of worker threads for processing media paths and the maximum number of retries for failed uploads.
         logging (LoggingConfig): The configuration for the logging process.

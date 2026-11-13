@@ -202,7 +202,7 @@ def test_assign_job_unlisted_audience_is_exempt():
     service.order.job_api.job_post.assert_called_once()
 
 
-def test_assign_job_defers_to_backend_when_lookup_fails():
+def test_assign_job_proceeds_when_lookup_fails():
     service = _service([])
     service.audience.audience_api.audience_audience_id_get.side_effect = RuntimeError
     audience = RapidataAudienceBase(
