@@ -8,6 +8,9 @@ from rapidata.rapidata_client.config import managed_print
 if TYPE_CHECKING:
     from rapidata.service.openapi_service import OpenAPIService
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+    from rapidata.rapidata_client.job.rapidata_job_definition import (
+        RapidataJobDefinition,
+    )
 
 UNLISTED_AUDIENCE_PREFIX = "ula_"
 
@@ -47,6 +50,9 @@ class RapidataUnlistedAudience(RapidataAudienceBase):
         """
         job_id = job if isinstance(job, str) else job.id
         return f"{self.link}/job/{job_id}"
+
+    def _check_original_language(self, job_definition: RapidataJobDefinition) -> None:
+        return None
 
     def _warn_if_no_graduated_annotators(self, job: RapidataJob) -> None:
         managed_print(

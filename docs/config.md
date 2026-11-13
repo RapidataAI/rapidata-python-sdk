@@ -24,6 +24,12 @@ logger.info("This will be shown") # (2)!
 !!! note
     The logging system is now fully managed through `rapidata_config.logging`. Changes to the configuration are automatically applied to the logger in real-time.
 
+### Top-level Options
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `skipLanguageFilterCheck` | `bool` | `False` | Skip the SDK check that `OriginalLanguageOnlySetting` only runs on audiences with a `LanguageFilter`. By default `assign_job` and `update_filters` raise `ValueError` when untranslated tasks would reach labelers without a language filter. |
+
 ### Logging Configuration Options
 
 | Parameter | Type | Default | Description |
