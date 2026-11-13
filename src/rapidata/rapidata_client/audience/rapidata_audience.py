@@ -160,7 +160,8 @@ class RapidataAudience(RapidataAudienceBase):
 
         Raises ``ValueError`` before changing anything when the new filters have no
         ``LanguageFilter`` while an active job on this audience uses
-        ``OriginalLanguageOnlySetting``: those labelers would see untranslated text.
+        ``OriginalLanguageOnlySetting``, or has text assets without
+        ``TranslateTextAssetsSetting``: those labelers would see untranslated text.
         Set ``rapidata_config.skipLanguageFilterCheck = True`` to override.
 
         Returns:
@@ -185,31 +186,39 @@ class RapidataAudience(RapidataAudienceBase):
 
     def _check_language_filter_kept(self, filters: list[RapidataFilter]) -> None:
         """A failed job lookup lets the update through rather than blocking on a read error."""
-        from rapidata.rapidata_client.audience._original_language_check import (
+        from rapidata.rapidata_client.audience._language_filter_check import (
             SKIP_HINT,
-            active_jobs_forcing_original_language,
+            active_jobs_needing_language,
             filters_require_language,
         )
 
         if rapidata_config.skipLanguageFilterCheck or filters_require_language(filters):
             return
         try:
-            job_ids = active_jobs_forcing_original_language(
-                self._openapi_service, self.id
-            )
+            jobs = active_jobs_needing_language(self._openapi_service, self.id)
         except Exception:
             logger.debug(
                 "Could not list active jobs of audience '%s'", self.id, exc_info=True
             )
             return
-        if not job_ids:
+        if not jobs:
             return
+        reasons = []
+        if jobs.original_language:
+            reasons.append(
+                f"job(s) {', '.join(jobs.original_language)} use OriginalLanguageOnlySetting"
+            )
+        if jobs.text_assets:
+            reasons.append(
+                f"job(s) {', '.join(jobs.text_assets)} have text assets without "
+                "TranslateTextAssetsSetting"
+            )
         raise ValueError(
             f"The new filters of audience '{self._name}' ({self.id}) have no LanguageFilter, "
-            f"but active job(s) {', '.join(job_ids)} use OriginalLanguageOnlySetting, so "
-            "labelers who don't speak the task's language would see it untranslated. Keep "
-            "a LanguageFilter in the filters, or remove OriginalLanguageOnlySetting from "
-            f"those job definitions. {SKIP_HINT}"
+            f"but active {' and '.join(reasons)}, so labelers who don't read the text's "
+            "language would see it untranslated. Keep a LanguageFilter in the filters, or "
+            "change those job definitions (remove OriginalLanguageOnlySetting, add "
+            f"TranslateTextAssetsSetting). {SKIP_HINT}"
         )
 
     def update_name(self, name: str) -> RapidataAudience:

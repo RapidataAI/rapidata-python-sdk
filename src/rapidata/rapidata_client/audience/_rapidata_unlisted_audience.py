@@ -51,7 +51,7 @@ class RapidataUnlistedAudience(RapidataAudienceBase):
         job_id = job if isinstance(job, str) else job.id
         return f"{self.link}/job/{job_id}"
 
-    def _check_original_language(self, job_definition: RapidataJobDefinition) -> None:
+    def _check_language_filter(self, job_definition: RapidataJobDefinition) -> None:
         return None
 
     def _warn_if_no_graduated_annotators(self, job: RapidataJob) -> None:
