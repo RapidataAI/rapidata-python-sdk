@@ -188,3 +188,21 @@ def test_all_fail_never_creates_definition_even_at_full_tolerance():
             machine.run()
 
     svc.order.job_api.job_definition_post.assert_not_called()
+
+
+@pytest.mark.parametrize("data_type", ["text", "media"])
+def test_created_definition_knows_its_text_assets_without_a_request(data_type):
+    from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+
+    svc = _make_openapi_service()
+    svc.order.job_api.job_definition_definition_id_revision_revision_number_get.return_value = MagicMock(
+        dataset_id="ds-1", revision_number=1
+    )
+    dps = [Datapoint(asset="hello there", data_type=data_type)]
+
+    _, _, job_def = _run(
+        svc, dps, tolerance=0.0, add_datapoints_side_effect=[(dps, [])]
+    )
+
+    assert job_def._has_text_assets() is (data_type == "text")
+    svc.dataset.datapoints_api.dataset_dataset_id_datapoints_get.assert_not_called()

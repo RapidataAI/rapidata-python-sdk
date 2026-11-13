@@ -69,6 +69,9 @@ class JobDefinitionCreationMachine:
         self._campaign_feature_flags = campaign_feature_flags
 
         self._total_datapoints = len(datapoints)
+        self._has_text_assets = any(
+            getattr(dp, "data_type", None) == "text" for dp in datapoints
+        )
         self._pending: list[Datapoint] = list(datapoints)
         self._succeeded_count = 0
 
@@ -202,6 +205,7 @@ class JobDefinitionCreationMachine:
             openapi_service=self._openapi_service,
             revision=1,
         )
+        self.job_definition._text_assets = (self.dataset.id, self._has_text_assets)
 
         print_job_definition_preview_link(
             environment=self._openapi_service.environment,

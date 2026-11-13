@@ -84,6 +84,7 @@ class RapidataJobDefinition:
         self._revision_number = revision
         self._loaded_snapshot: GetJobRevisionEndpointOutput | None = None
         self._pending: dict[str, Any] = {}
+        self._text_assets: tuple[str, bool] | None = None
 
     @property
     def estimated_cost(self) -> CostEstimate:
@@ -173,6 +174,20 @@ class RapidataJobDefinition:
         with tracer.start_as_current_span("RapidataJobDefinition.state"):
             self._loaded_snapshot = self._fetch_revision(self.revision)
             return self._loaded_snapshot.state.value  # type: ignore[return-value]
+
+    def _has_text_assets(self) -> bool:
+        """Known locally for a dataset this object uploaded, otherwise one datapoint read."""
+        from rapidata.rapidata_client.audience._language_filter_check import (
+            dataset_has_text_assets,
+        )
+
+        dataset_id = self.dataset_id
+        if self._text_assets is None or self._text_assets[0] != dataset_id:
+            self._text_assets = (
+                dataset_id,
+                dataset_has_text_assets(self._openapi_service, dataset_id),
+            )
+        return self._text_assets[1]
 
     @property
     def dataset_id(self) -> str:
@@ -400,6 +415,7 @@ class RapidataJobDefinition:
                 )
 
             self._pending["dataset_id"] = rapidata_dataset.id
+            self._text_assets = (rapidata_dataset.id, data_type == "text")
 
     def save(self, require_latest: bool = False) -> int:
         """Create a new revision from this object and move the object to it.
