@@ -382,7 +382,7 @@ class Configuration:
         return "Python SDK Debug Report:\n"\
                "OS: {env}\n"\
                "Python Version: {pyversion}\n"\
-               "Version of the API: 2026.11.13.1727-7db9464\n"\
+               "Version of the API: 2026.11.14.1243-31465f9\n"\
                "SDK Package Version: 1.0.0".\
                format(env=sys.platform, pyversion=sys.version)
 
