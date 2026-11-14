@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.11.13.1727-7db9464"
+    "version": "2026.11.14.1243-31465f9"
   },
   "servers": [
     {

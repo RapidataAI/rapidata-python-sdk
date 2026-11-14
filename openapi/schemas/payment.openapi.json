@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Payment API",
     "description": "The API for the Rapidata Payment service",
-    "version": "2026.11.13.1727-7db9464"
+    "version": "2026.11.14.1243-31465f9"
   },
   "servers": [
     {
