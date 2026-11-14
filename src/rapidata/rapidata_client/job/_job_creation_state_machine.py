@@ -13,6 +13,7 @@ from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
 from rapidata.rapidata_client.job.rapidata_job_definition import RapidataJobDefinition
+from rapidata.rapidata_client.job._playback_check import warn_long_playback
 
 if TYPE_CHECKING:
     from rapidata.api_client.models.feature_flag import FeatureFlag
@@ -206,6 +207,7 @@ class JobDefinitionCreationMachine:
             revision=1,
         )
         self.job_definition._text_assets = (self.dataset.id, self._has_text_assets)
+        warn_long_playback(self._openapi_service, self.dataset.id)
 
         print_job_definition_preview_link(
             environment=self._openapi_service.environment,
