@@ -173,6 +173,12 @@ Passing a bare `str` per prompt is still accepted but **deprecated** — it is w
 
 Replaces the tags and/or sets the origin of an already-registered prompt. A field left as `None` is not sent and stays unchanged; local caches are updated in place. Raises `ValueError` if both are `None` ("Provide tags and/or origin to update."), on bad tag/origin types, or if the identifier is not registered on the benchmark.
 
+## Prompt-tag scoping (`included_tags` / `excluded_tags`)
+
+These restrict **which benchmark prompts the leaderboard collects matchups for**. A prompt is used when it carries at least one `included_tags` value and no `excluded_tags` value; `excluded_tags` always wins, and a non-empty `included_tags` drops untagged prompts. Matching is on the tag value only — the category is irrelevant. The filter is applied when a run starts, not snapshotted at creation, and is fixed for the life of the leaderboard.
+
+Distinct from `get_standings(tags=...)`, which filters what you read back rather than what gets collected.
+
 ## Example
 
 ### Model Benchmark — Recovering a Partial Upload

@@ -4,7 +4,7 @@
 
 To compare **two** image or video models once, a template is quicker: `python -m rapidata skill comparison`.
 
-Compare and rank AI models on leaderboards. Supports images, videos, audio, and text. Participants, uploads and prompt metadata: `python -m rapidata skill benchmark-participants`. Standings, win/loss matrices and voter demographics: `python -m rapidata skill benchmark-results`.
+Compare and rank AI models on leaderboards. Supports images, videos, audio, and text. Participants, uploads, prompt metadata and prompt-tag scoping: `python -m rapidata skill benchmark-participants`. Standings, win/loss matrices and voter demographics: `python -m rapidata skill benchmark-results`.
 
 ## Create a benchmark, leaderboards and models
 
@@ -133,6 +133,19 @@ benchmark = client.mri.get_benchmark_by_id("benchmark_id")
 
 Set `min_responses_per_matchup` to **5 or more** on every leaderboard (task design rule 6 in the main guide). The SDK default of 3 is too low: one labeler who misreads the question decides a third of a matchup. The SDK only rejects values below 3. Pick `level_of_detail` so the budget covers it: one leaderboard needs at least models × (models − 1) / 2 × prompts × `min_responses_per_matchup` responses for one round of every pair on every prompt (3 models, 6 prompts, 5 per matchup = 90).
 
+## Prompts shown to labelers
+
+A prompt shown to labelers (`show_prompt=True`, e.g. on a prompt-alignment leaderboard) is a context: one sentence under 150 characters, holding only what the question checks (task design rule 3). When the generation prompts are longer, register a short display text as each benchmark prompt, give it a stable identifier, keep the full generation prompt in your own data, and pair every model's media through `identifiers`:
+
+```python
+benchmark = client.mri.create_new_benchmark(
+    name="Text-to-image",
+    identifiers=["p01", "p02"],                 # stable ids; your full generation prompts stay keyed by these
+    prompts=["A cat in a red scarf on a sofa", "A city street at night in the rain"],  # display text, < 150 chars
+)
+benchmark.evaluate_model(name="model-a", media=["a/p01.png", "a/p02.png"], identifiers=["p01", "p02"])
+```
+
 ## Response budgets (`level_of_detail`)
 
 `level_of_detail` accepts a named level or a positive integer response budget. Named levels map to fixed budgets:
@@ -219,12 +232,6 @@ leaderboard = benchmark.create_leaderboard(
 )
 print(leaderboard.vote_aggregation)   # VoteAggregation.ALL_VOTES
 ```
-
-## Prompt-tag scoping (`included_tags` / `excluded_tags`)
-
-These restrict **which benchmark prompts the leaderboard collects matchups for**. A prompt is used when it carries at least one `included_tags` value and no `excluded_tags` value; `excluded_tags` always wins, and a non-empty `included_tags` drops untagged prompts. Matching is on the tag value only — the category is irrelevant. The filter is applied when a run starts, not snapshotted at creation, and is fixed for the life of the leaderboard.
-
-Distinct from `get_standings(tags=...)`, which filters what you read back rather than what gets collected.
 
 ## Examples
 

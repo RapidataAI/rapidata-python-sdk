@@ -13,12 +13,12 @@ Follow these for every job definition, audience example and leaderboard. The SDK
 
 1. **Keep `responses_per_datapoint` at 10 or more.** Never lower it to cut cost; label fewer datapoints instead. Comparisons: keep the default `AdaptiveStopping()`.
 2. **Ask one short question about one criterion, in under 80 characters.** One job definition per aspect. Definitions and edge cases never go into the instruction.
-3. **Keep each context to one sentence under 150 characters**, holding only what the question checks. Never pass the full generation prompt.
+3. **Keep each context to one sentence under 150 characters**, holding only what the question checks. Never pass the full generation prompt. A benchmark prompt shown to labelers is a context too.
 4. **Use plain words that translate cleanly** in the instruction, context and answer options.
 5. **Design each task to be answered in about 10 seconds, 15 at most, including playback.** Audio clips add up, videos don't. Longer tasks: contact Rapidata (info@rapidata.ai) first.
 6. **Set `min_responses_per_matchup` to 5 or more on every leaderboard.** The SDK default of 3 is too low.
 
-**Next, print your task's guide:** `python -m rapidata skill <guide>`, e.g. `comparison` (two models, A vs B), `classification`, `ranking`, `annotation`, `benchmarks`, `audiences`, `flows`. Full index and rule details below.
+**Next, print your task's guide, one guide per command** (`python -m rapidata skill <guide>`; never several in one command, or the output gets too long and is cut to a preview), e.g. `comparison` (two models, A vs B), `classification`, `ranking`, `annotation`, `benchmarks`, `audiences`, `flows`. Full index and rule details below.
 
 ## Which guide to read
 
@@ -54,7 +54,7 @@ Labelers answer validation tasks in the same session, mostly on phones, and with
    - ❌ `"Which video is better overall? Consider the motion, timing, camera, style, on-screen text and sound."` (several criteria)
    - ❌ `"Is there a real dog in the red circle? It is small and often blurred. A dog on a poster or a toy dog does not count."` (one criterion, but definitions and edge cases make it 116 characters)
    - ❌ `"Which option best describes the image? Select one answer."` (classification and comparison already accept exactly one answer, so "Select one answer" only adds words to translate and read)
-3. **Context.** Nobody reads 300 characters and judges two videos in 15 seconds. The backend rejects contexts over 400 characters, so longer ones are always shortened against the instruction before upload (a warning says how many). Shortening (`python -m rapidata skill settings`, **Context management**) focuses a context on the question but rarely gets it under 150 characters, so write the short version yourself.
+3. **Context.** Nobody reads 300 characters and judges two videos in 15 seconds. The backend rejects contexts over 400 characters, so longer ones are always shortened against the instruction before upload (a warning says how many). Shortening (`python -m rapidata skill settings`, **Context management**) focuses a context on the question but rarely gets it under 150 characters, so write the short version yourself. A benchmark prompt shown to labelers (`show_prompt=True` on a leaderboard, e.g. prompt alignment) counts as context: register a short display text as the benchmark's prompt and pair the media through `identifiers` (`python -m rapidata skill benchmarks`, **Prompts shown to labelers**).
 4. **Translation.** The instruction, context and answer options are machine-translated into each labeler's device language by default (Key Gotcha 9), so most labelers read a translation, not your English. Use common words and literal phrasing; avoid idioms, slang, wordplay, abbreviations and words with several meanings, which come out wrong or meaningless in translation.
    - ✅ `"Does the video match the description?"` with options `["Yes", "No"]`
    - ❌ `"Does the clip nail the vibe of the prompt?"` with options `["Spot on", "Way off"]` (idiom and slang; "nail" and "spot on" translate literally)
@@ -105,12 +105,8 @@ from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# 1. Get an audience. Default: the global pool — ready to go, zero setup.
+# 1. Get an audience: the global pool needs no setup (curated or custom audiences: Core Concepts)
 audience = client.audience.get_audience_by_id("global")
-# Curated domain pool (e.g. alignment): client.audience.get_audience_by_id("aud_MU1GZYoESyO")
-# Only if you need task-specific qualification: client.audience.create_audience(name="My Evaluators")
-#   — then add >= min_tasks qualification examples AND call audience.start_recruiting()
-#   BEFORE assign_job (Key Gotcha 3).
 
 # 2. Create a job definition (print the task's guide first)
 job_def = client.job.create_classification_job_definition(
@@ -121,15 +117,10 @@ job_def = client.job.create_classification_job_definition(
     responses_per_datapoint=10,
 )
 
-# 3. Assign to audience (starts labeling)
-job = audience.assign_job(job_def)
-
-# 4. Watch responses come in (opens browser on the running job)
-job.view()
-
-# 5. Monitor and get results
-progress = job.get_progress()   # Non-blocking snapshot: state, completion_percentage, recruiting
-job.display_progress_bar()      # Or block on a live progress bar
+job = audience.assign_job(job_def)  # 3. starts labeling
+job.view()                          # 4. watch the first responses in the browser
+progress = job.get_progress()       # 5. non-blocking: state, completion_percentage, recruiting
+job.display_progress_bar()          #    or block on a live progress bar
 results = job.get_results()     # dict: {"info", "results": [...], "summary"}; shape per job type in its guide
 df = results.to_pandas()
 ```
