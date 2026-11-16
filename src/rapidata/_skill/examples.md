@@ -124,10 +124,10 @@ results = job.get_results()
 ## Comparison Allowing "Neither" / "Both"
 
 ```python
-from rapidata import RapidataClient, AllowNeitherBothSetting
+from rapidata import RapidataClient, AllowNeitherBothSetting, LanguageFilter
 
 client = RapidataClient()
-audience = client.audience.get_audience_by_id("global")
+audience = client.audience.get_audience_by_id("global").filter([LanguageFilter(["en"])])
 
 job_def = client.job.create_compare_job_definition(
     name="Text Comparison",

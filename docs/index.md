@@ -81,11 +81,11 @@ The SDK has three building blocks: **audiences** (who labels), **job definitions
 
 === "Text"
     ```python
-    from rapidata import RapidataClient
+    from rapidata import RapidataClient, LanguageFilter
 
     client = RapidataClient()
 
-    audience = client.audience.get_audience_by_id("global")
+    audience = client.audience.get_audience_by_id("global").filter([LanguageFilter(["en"])])
 
     job_definition = client.job.create_compare_job_definition(
         name="Example Text Comparison",
