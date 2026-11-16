@@ -183,9 +183,25 @@ job.view()
 # 5. Monitor and get results
 progress = job.get_progress()   # Non-blocking snapshot: state, completion_percentage, recruiting
 job.display_progress_bar()      # Or block on a live progress bar
-results = job.get_results()
+results = job.get_results()     # dict: {"info", "results": [...], "summary"} — shape per job type below
 df = results.to_pandas()
 ```
+
+### Reading results
+
+Every job type returns `{"info": {type, name, instruction, version, createdAt}, "results": [...], "summary"?}`. What one `results` entry is, and where each labeler's answer sits in its `detailedResults`:
+
+| Job type (`info.type`) | One `results` entry | Aggregate fields | Answer in `detailedResults[]` | `summary` |
+|---|---|---|---|---|
+| `Classification` | one datapoint | `aggregatedResults` (votes per option), `summedUserScores` (+ `…Ratios`) | `selectedCategory` | votes per option |
+| `Compare` | one pair | `winner`/`winnerIndex`, `weightedWinner`, `aggregatedResults`, `summedUserScores`, `adaptiveStoppingState` | `votedFor` | `A_wins_total`/`B_wins_total` |
+| `Ranking` | **one ranking** (`group` = its index in `datapoints`) | `summary`: datapoint → Elo score; `results`: its matchups, each shaped like a Compare pair | `votedFor` (inside each matchup) | none at top level |
+| `Locate` | one datapoint | `aggregatedResults`: every tapped `{x, y}` (percent of width/height), `notApplicable` | `locations` | none |
+| `Draw` | one datapoint | `aggregatedResults`: every `{size, points}` line, `notApplicable` | `lines` | none |
+| `SelectWords` | one datapoint | `sentence`, `aggregatedResults`: `{word, wordIndex, selectedAmount}` per word | `selectedWords` | none |
+| `FreeText` | one datapoint | `aggregatedResults`: list of answers | `answerText` | none |
+
+Datapoint entries carry `identifier` (your URL, file name or text — join on it), `assetUrl`, and `context` / `privateMetadata` when set. Full examples and every field: **Results Format** in `python -m rapidata skill reference`.
 
 ### Classification
 
@@ -248,7 +264,8 @@ job_def = client.job.create_ranking_job_definition(
 )
 job = audience.assign_job(job_def)
 job.display_progress_bar()
-results = job.get_results()
+results = job.get_results()  # one entry per ranking: results["results"][0]["summary"] = {datapoint: Elo score}
+df = results.to_pandas()     # one row per ranked datapoint: group, datapoint, score, rank
 ```
 
 **Small rankings are matched exhaustively.** A ranking with **more than 10 datapoints** is matched adaptively (Elo-style) within `comparison_budget_per_ranking`, and `random_comparisons_ratio` applies as usual. A ranking with **10 or fewer datapoints** instead compares every unique pair, spreading the budget evenly across pairs (rounded down to a multiple of the pair count; every pair is compared at least once even if the budget is smaller than the pair count) — here `random_comparisons_ratio` has **no effect**.

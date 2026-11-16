@@ -422,11 +422,99 @@ Note: use `CountryFilter`, `LanguageFilter`, and the `And`/`Or`/`Not` combinator
 }
 ```
 
+### Ranking Results
+
+One `results` entry **per ranking** (per inner list of `datapoints`), not per matchup. There is no top-level `summary`.
+
+```json
+{
+  "info": { "type": "Ranking", "name": "Image Quality Ranking", "instruction": "Which image looks better?", "version": "4.1.0" },
+  "results": [
+    {
+      "group": "0",
+      "context": "Optional context",
+      "summary": { "img3.jpg": 1335, "img1.jpg": 1200, "img2.jpg": 1064 },
+      "results": [
+        {
+          "winner": "img3.jpg", "winnerIndex": 1, "weightedWinner": "img3.jpg", "weightedWinnerIndex": 1,
+          "assetUrls": { "img1.jpg": "https://assets.rapidata.ai/<random-uuid>.jpg", "img3.jpg": "https://assets.rapidata.ai/<random-uuid>.jpg" },
+          "aggregatedResults": { "img1.jpg": 0, "img3.jpg": 1 },
+          "aggregatedResultsRatios": { "img1.jpg": 0.0, "img3.jpg": 1.0 },
+          "summedUserScores": { "img1.jpg": 0.0, "img3.jpg": 0.73 },
+          "summedUserScoresRatios": { "img1.jpg": 0.0, "img3.jpg": 1.0 },
+          "detailedResults": [ { "votedFor": "img3.jpg", "userDetails": { "country": "DE", "language": "de", "userScores": { "global": 0.73 } } } ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+`group` is the ranking's index in `datapoints`, as a string. `summary` is **the ranking**: each datapoint's identifier → Elo score, highest first, starting from 1200. The inner `results` are the matchups, shaped like Comparison datapoints (no `adaptiveStoppingState`, no `winner_index`). If two datapoints in one ranking share a file name, every identifier in it gets an index prefix (`0/img.jpg`, `1/img.jpg`).
+
+### Locate and Draw Results
+
+```json
+{
+  "info": { "type": "Locate", "name": "Artifact Detection", "instruction": "Tap on any visual glitches.", "version": "4.1.0" },
+  "results": [
+    {
+      "identifier": "img1.jpg", "originalFileName": "img1.jpg", "assetUrl": "https://assets.rapidata.ai/<random-uuid>.jpg",
+      "notApplicable": 1, "notApplicableRatio": 0.0286,
+      "aggregatedResults": [ { "x": 68.1007, "y": 32.4029 }, { "x": 23.3924, "y": 31.883 } ],
+      "detailedResults": [ { "locations": [ { "x": 68.1007, "y": 32.4029 } ], "userDetails": { "country": "ES", "language": "es", "userScores": { "global": 0.67 } } } ]
+    }
+  ]
+}
+```
+
+`x` / `y` are **percentages** (0–100) of the image width and height. `aggregatedResults` is every point from every labeler, flattened and not clustered; `detailedResults[].locations` is one labeler's points (empty when they marked it not applicable). `notApplicable` counts those labelers.
+
+Draw (`"type": "Draw"`) has the same shape with lines instead of points: `aggregatedResults` is a list of `{ "size": 12, "points": [ { "x": 83.85, "y": 79.45 }, ... ] }` (`size` = brush size), and the per-labeler key is `detailedResults[].lines`.
+
+### Select Words Results
+
+```json
+{
+  "info": { "type": "SelectWords", "name": "Image-Text Alignment", "instruction": "Select the words not shown in the image.", "version": "4.1.0" },
+  "results": [
+    {
+      "identifier": "img1.jpg", "originalFileName": "img1.jpg", "assetUrl": "https://assets.rapidata.ai/<random-uuid>.jpg",
+      "sentence": "Four cars on the street.",
+      "aggregatedResults": [
+        { "word": "Four", "wordIndex": 0, "selectedAmount": 0 },
+        { "word": "cars", "wordIndex": 1, "selectedAmount": 4 }
+      ],
+      "detailedResults": [ { "selectedWords": [ { "word": "cars", "wordIndex": 1 } ], "userDetails": { "country": "BR", "language": "pt", "userScores": { "global": 0.71 } } } ]
+    }
+  ]
+}
+```
+
+`aggregatedResults` has one entry per word of the sentence, in order, including unselected words. Match on `wordIndex` (position after splitting by spaces), not `word`, when a word repeats.
+
+### Free Text Results
+
+```json
+{
+  "info": { "type": "FreeText", "name": "Prompt generation", "instruction": "What would you like to ask an AI?", "version": "4.1.0" },
+  "results": [
+    {
+      "identifier": "img1.png", "originalFileName": "img1.png", "assetUrl": "https://assets.rapidata.ai/<random-uuid>.png",
+      "aggregatedResults": [ "How do I bake bread?", "What is the tallest mountain?" ],
+      "detailedResults": [ { "answerText": "How do I bake bread?", "userDetails": { "country": "US", "language": "en", "userScores": { "global": 0.81 } } } ]
+    }
+  ]
+}
+```
+
+Datapoint-based results (all but Comparison and Ranking) carry `context`, `mediaContext` and `privateMetadata` when you set them; keys that don't apply are omitted rather than `null`.
+
 ### Key Result Fields
 
 | Field | Meaning |
 |-------|---------|
-| `info.type` / `info.name` / `info.instruction` | Task type (e.g. `Compare`, `Classify`), the job name, and the instruction shown to labelers |
+| `info.type` / `info.name` / `info.instruction` | Task type (`Classification`, `Compare`, `Ranking`, `Locate`, `Draw`, `SelectWords`, `FreeText`), the job name, and the instruction shown to labelers |
 | `assetUrls` | Maps each option to the Rapidata-hosted URL of the exact file shown to labelers (random-UUID filenames; not encrypted) |
 | `winner` | Most-voted option by raw vote count (`argmax` of `aggregatedResults`); `null` when nothing was voted or the top count is tied |
 | `winnerIndex` | Position of `winner` in the ordered option list (`0` = first asset, `1` = second; `Both`/`Neither` appear as trailing indexes when voted); `null` under the same conditions as `winner` |
@@ -450,8 +538,9 @@ A labeler's `demographics` may be empty when no demographic data was collected f
 results = job.get_results()              # RapidataResults — a dict subclass holding the raw JSON
 snapshot = job.get_results(preliminary_results=True)  # unfinished job: responses so far, no waiting
 df = results.to_pandas()                  # one row per datapoint; compare results get A_/B_ columns,
-                                          # classification gets one row per datapoint and answer option
-df = results.to_pandas(split_details=True)  # one row per individual response
+                                          # classification gets one row per datapoint and answer option,
+                                          # ranking one row per ranked datapoint (group, datapoint, score, rank)
+df = results.to_pandas(split_details=True)  # one row per individual response (ranking: per matchup response)
 results.to_json("results.json")           # writes the file (default "./results.json"); returns None
 ```
 

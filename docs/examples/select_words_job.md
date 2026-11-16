@@ -47,7 +47,7 @@ Like any other job, a select words job can be assigned to any audience — a rea
     job.view()
     job.display_progress_bar()
     results = job.get_results()
-    print(results)
+    print(results)  # every field explained: https://docs.rapidata.ai/understanding_the_results/#select-words
     ```
 
     1. The selection is split based on spaces. Appending a `[No_mistakes]` token gives labelers an explicit way to say the prompt is depicted correctly.
@@ -139,7 +139,7 @@ Like any other job, a select words job can be assigned to any audience — a rea
     job.view()
     job.display_progress_bar()
     results = job.get_results()
-    print(results)
+    print(results)  # every field explained: https://docs.rapidata.ai/understanding_the_results/#select-words
     ```
 
     1. Creates a new, empty audience. The `add_select_words_example` calls train and filter the labelers who join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.

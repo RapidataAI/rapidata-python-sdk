@@ -22,8 +22,10 @@ class RapidataResults(dict):
 
         For Compare results (exactly 2 assets), creates standardized ``A_``/``B_``
         columns for each metric (plus ``Both_``/``Neither_`` when those options
-        are present). For Ranking results with N assets, creates one
-        ``<asset>_<metric>`` column per asset. For Classification results,
+        are present). For Ranking results, creates one row per ranked datapoint
+        with its ``group``, ``datapoint``, ``score`` and ``rank``; with
+        ``split_details=True``, one row per matchup response in the Compare
+        layout, tagged with its ``group``. For Classification results,
         creates one row per datapoint and answer option, with ``option``,
         ``count``, ``ratio``, ``summedUserScore`` and ``summedUserScoreRatio``
         columns. For other results, flattens nested dictionaries into columns
@@ -50,6 +52,9 @@ class RapidataResults(dict):
             managed_print(
                 "Warning: Results are old and Order type is not specified. Dataframe might be wrong."
             )
+
+        if task_type == "Ranking" and self._is_grouped_ranking():
+            return self._ranking_to_pandas(split_details=split_details)
 
         if split_details and not self._has_detailed_results():
             raise ValueError("No detailed results found in the data")
@@ -305,6 +310,50 @@ class RapidataResults(dict):
             else:
                 rows.append(base_row)
 
+        return pd.DataFrame(rows)
+
+    def _is_grouped_ranking(self) -> bool:
+        first = self["results"][0]
+        return isinstance(first, dict) and isinstance(first.get("results"), list)
+
+    def _ranking_to_pandas(self, split_details: bool = False) -> "pd.DataFrame":
+        """Each ranking entry nests its matchups under ``results`` and its Elo scores under ``summary``."""
+        import pandas as pd
+
+        frames = []
+        rows = []
+        for ranking in self["results"]:
+            ranking_fields = {
+                key: value
+                for key, value in ranking.items()
+                if not isinstance(value, (dict, list))
+            }
+            if split_details:
+                matchups = RapidataResults(
+                    {"info": self.get("info", {}), "results": ranking["results"]}
+                )._compare_to_pandas(split_details=True)
+                for column, value in reversed(list(ranking_fields.items())):
+                    matchups.insert(0, column, value)
+                frames.append(matchups)
+                continue
+
+            scores = sorted(
+                (ranking.get("summary") or {}).items(),
+                key=lambda item: item[1],
+                reverse=True,
+            )
+            for rank, (datapoint, score) in enumerate(scores, start=1):
+                rows.append(
+                    {
+                        **ranking_fields,
+                        "datapoint": datapoint,
+                        "score": score,
+                        "rank": rank,
+                    }
+                )
+
+        if split_details:
+            return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
         return pd.DataFrame(rows)
 
     _CLASSIFICATION_OPTION_METRICS = {
