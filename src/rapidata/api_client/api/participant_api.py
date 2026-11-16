@@ -1968,6 +1968,7 @@ class ParticipantApi:
     ) -> CreateSampleEndpointOutput:
         """Adds a sample to a participant.
 
+        Send the sample as segments keyed by the benchmark's sample structure; the deprecated asset still  fills its sample part. Returns 409 when the participant already holds a sample with the same content.
 
         :param participant_id: The id of the participant to add the sample to. (required)
         :type participant_id: str
@@ -2041,6 +2042,7 @@ class ParticipantApi:
     ) -> ApiResponse[CreateSampleEndpointOutput]:
         """Adds a sample to a participant.
 
+        Send the sample as segments keyed by the benchmark's sample structure; the deprecated asset still  fills its sample part. Returns 409 when the participant already holds a sample with the same content.
 
         :param participant_id: The id of the participant to add the sample to. (required)
         :type participant_id: str
@@ -2114,6 +2116,7 @@ class ParticipantApi:
     ) -> RESTResponseType:
         """Adds a sample to a participant.
 
+        Send the sample as segments keyed by the benchmark's sample structure; the deprecated asset still  fills its sample part. Returns 409 when the participant already holds a sample with the same content.
 
         :param participant_id: The id of the participant to add the sample to. (required)
         :type participant_id: str

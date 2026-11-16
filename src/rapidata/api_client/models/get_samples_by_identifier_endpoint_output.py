@@ -20,6 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from rapidata.api_client.models.i_asset import IAsset
+from rapidata.api_client.models.sample_segment import SampleSegment
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -33,7 +34,7 @@ class GetSamplesByIdentifierEndpointOutput(LazyValidatedModel):
     identifier: StrictStr = Field(description="The identifier used to correlate samples of different participants.")
     participant_id: StrictStr = Field(description="The id of the participant that owns the sample.", alias="participantId")
     participant_name: StrictStr = Field(description="The name of the participant that owns the sample.", alias="participantName")
-    asset: IAsset = Field(description="The asset associated with the sample.")
+    segments: List[SampleSegment]
     english_prompt: Optional[StrictStr] = Field(default=None, description="An optional prompt text translated to English.", alias="englishPrompt")
     original_prompt: Optional[StrictStr] = Field(default=None, description="An optional prompt text as originally provided.", alias="originalPrompt")
     prompt_asset: Optional[IAsset] = Field(default=None, description="An optional prompt asset associated with the sample.", alias="promptAsset")
@@ -43,7 +44,7 @@ class GetSamplesByIdentifierEndpointOutput(LazyValidatedModel):
     owner_id: Optional[UUID] = Field(default=None, description="The sample's owner; null unless the caller is platform staff or in the owning organization.", alias="ownerId")
     owner_mail: Optional[StrictStr] = Field(default=None, description="The owner's mail; null unless the caller is platform staff or in the owning organization.", alias="ownerMail")
     organization_id: Optional[StrictStr] = Field(default=None, description="The owner's organization; null unless the caller is platform staff or in the owning organization.", alias="organizationId")
-    __properties: ClassVar[List[str]] = ["id", "identifier", "participantId", "participantName", "asset", "englishPrompt", "originalPrompt", "promptAsset", "tags", "createdAt", "votesExcluded", "ownerId", "ownerMail", "organizationId"]
+    __properties: ClassVar[List[str]] = ["id", "identifier", "participantId", "participantName", "segments", "englishPrompt", "originalPrompt", "promptAsset", "tags", "createdAt", "votesExcluded", "ownerId", "ownerMail", "organizationId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -80,9 +81,13 @@ class GetSamplesByIdentifierEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in segments (list)
+        _items = []
+        if self.segments:
+            for _item_segments in self.segments:
+                if _item_segments:
+                    _items.append(_item_segments.to_dict())
+            _dict['segments'] = _items
         # override the default output from pydantic by calling `to_dict()` of prompt_asset
         if self.prompt_asset:
             _dict['promptAsset'] = self.prompt_asset.to_dict()
@@ -127,7 +132,7 @@ class GetSamplesByIdentifierEndpointOutput(LazyValidatedModel):
             "identifier": obj.get("identifier"),
             "participantId": obj.get("participantId"),
             "participantName": obj.get("participantName"),
-            "asset": IAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "segments": [SampleSegment.from_dict(_item) for _item in obj["segments"]] if obj.get("segments") is not None else None,
             "englishPrompt": obj.get("englishPrompt"),
             "originalPrompt": obj.get("originalPrompt"),
             "promptAsset": IAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
