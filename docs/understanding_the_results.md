@@ -1,18 +1,102 @@
-# Interpreting the Results
+# Understanding the Results
 
-After running your job and collecting responses, you'll receive a structured result containing valuable insights from the labelers. Understanding each component of this result is crucial for analyzing and utilizing the data effectively.
-
-Here's an example of the results you might receive when running a COMPARE task (for simplicity, this example uses 3 responses):
+`job.get_results()` returns a `RapidataResults` object, a `dict` holding the JSON below. Every job type shares the same top level:
 
 ```json
 {
-  "info": {
-    "createdAt": "2026-07-13T11:07:53.577348+00:00",
-    "version": "4.1.0",
-    "type": "Compare",
-    "name": "Example Image Prompt Alignment",
-    "instruction": "Which image matches the description better?"
-  },
+  "info": { ... },
+  "results": [ ... ],
+  "summary": { ... }
+}
+```
+
+What one entry in `results` looks like depends on the job type. Jump to yours:
+
+| Job type | `info.type` | One `results` entry is | `summary` |
+| --- | --- | --- | --- |
+| [Classification](#classification) | `Classification` | one datapoint | votes per category, all datapoints |
+| [Compare](#compare) | `Compare` | one pair | wins per side, all pairs |
+| [Ranking](#ranking) | `Ranking` | one ranking, with its matchups inside | none (each ranking has its own) |
+| [Locate](#locate) | `Locate` | one datapoint | none |
+| [Draw](#draw) | `Draw` | one datapoint | none |
+| [Select Words](#select-words) | `SelectWords` | one datapoint | none |
+| [Free Text](#free-text) | `FreeText` | one datapoint | none |
+
+## Fields every job type shares
+
+### `info`
+
+| Field | Meaning |
+| --- | --- |
+| `createdAt` | When the results were generated, UTC |
+| `version` | Version of the aggregator that produced them. Some fields only exist from a given version on |
+| `type` | The job type, as in the table above |
+| `name` | The job's name |
+| `instruction` | The instruction shown to labelers |
+
+### Which datapoint an entry belongs to
+
+Datapoint-based results (everything except Compare and Ranking) identify the datapoint with:
+
+| Field | Meaning |
+| --- | --- |
+| `identifier` | The URL you passed, else the original file name, else the text of a text datapoint. Use it to join results back to your input |
+| `url` / `originalFileName` / `text` | Whichever of the three `identifier` came from |
+| `assetUrl` | The Rapidata-hosted copy of the exact file labelers saw. Random UUID name; not encrypted |
+| `context` / `mediaContext` | The context you attached to the datapoint, if any |
+| `privateMetadata` | The `private_metadata` you attached to the datapoint, if any |
+
+Keys that don't apply are left out, not set to `null`.
+
+### `detailedResults`
+
+Every entry carries a `detailedResults` list with one item per response. Each item has the labeler's answer (the field name depends on the job type and is listed in its section) and `userDetails`:
+
+| Field | Meaning |
+| --- | --- |
+| `country` | Labeler's country code |
+| `language` | Language the labeler saw the task in |
+| `userScores` | The labeler's reliability per dimension; `global` is the one to use by default. See [below](#understanding-the-user-scores) |
+| `demographics` | Demographic attributes by name (e.g. `age`, `gender`, `occupation`). Can be empty |
+
+## Classification
+
+```json
+{
+  "info": { "type": "Classification", "version": "4.1.0", "name": "Cat or dog", "instruction": "What animal is in the image?", "createdAt": "..." },
+  "results": [
+    {
+      "identifier": "https://example.com/image1.jpg",
+      "url": "https://example.com/image1.jpg",
+      "assetUrl": "https://assets.rapidata.ai/<uuid>.jpg",
+      "aggregatedResults": { "Cat": 15, "Dog": 8 },
+      "aggregatedResultsRatios": { "Cat": 0.6522, "Dog": 0.3478 },
+      "summedUserScores": { "Cat": 9.5, "Dog": 4.2 },
+      "summedUserScoresRatios": { "Cat": 0.6934, "Dog": 0.3066 },
+      "detailedResults": [
+        { "selectedCategory": "Cat", "userDetails": { "country": "US", "language": "en", "userScores": { "global": 0.75 }, "demographics": {} } }
+      ]
+    }
+  ],
+  "summary": { "Cat": 15, "Dog": 8 }
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `aggregatedResults` | Votes per answer option |
+| `aggregatedResultsRatios` | Share of votes per option |
+| `summedUserScores` | Per option, the sum of the user scores of the labelers who picked it: votes weighted by reliability |
+| `summedUserScoresRatios` | `summedUserScores` normalized to sum to 1 |
+| `confidencePerCategory` | Only with `confidence_threshold`: confidence per option. See [Adaptive Stopping](confidence_stopping.md) |
+| `detailedResults[].selectedCategory` | The option this labeler picked |
+| `summary` | Votes per option, summed over all datapoints |
+
+## Compare
+
+```json
+{
+  "info": { "type": "Compare", "version": "4.1.0", "name": "Image Prompt Alignment", "instruction": "Which image matches the description better?", "createdAt": "..." },
   "results": [
     {
       "context": "A small blue book sitting on a large red book.",
@@ -22,180 +106,227 @@ Here's an example of the results you might receive when running a COMPARE task (
       "weightedWinnerIndex": 1,
       "winner_index": 1,
       "assetUrls": {
-        "midjourney-5.2_37_3.jpg": "https://assets.rapidata.ai/f8bb5e14-fbba-4f8a-a3dd-88530b5eae48.jpg",
-        "flux-1-pro_37_0.jpg": "https://assets.rapidata.ai/e8563fc4-a452-4557-9ab2-d0f06d09ccd7.jpg"
+        "midjourney-5.2_37_3.jpg": "https://assets.rapidata.ai/<uuid>.jpg",
+        "flux-1-pro_37_0.jpg": "https://assets.rapidata.ai/<uuid>.jpg"
       },
-      "aggregatedResults": {
-        "midjourney-5.2_37_3.jpg": 0,
-        "flux-1-pro_37_0.jpg": 3
-      },
-      "aggregatedResultsRatios": {
-        "midjourney-5.2_37_3.jpg": 0.0,
-        "flux-1-pro_37_0.jpg": 1.0
-      },
-      "summedUserScores": {
-        "midjourney-5.2_37_3.jpg": 0.0,
-        "flux-1-pro_37_0.jpg": 2.552
-      },
-      "summedUserScoresRatios": {
-        "midjourney-5.2_37_3.jpg": 0.0,
-        "flux-1-pro_37_0.jpg": 1.0
-      },
+      "aggregatedResults": { "midjourney-5.2_37_3.jpg": 0, "flux-1-pro_37_0.jpg": 3 },
+      "aggregatedResultsRatios": { "midjourney-5.2_37_3.jpg": 0.0, "flux-1-pro_37_0.jpg": 1.0 },
+      "summedUserScores": { "midjourney-5.2_37_3.jpg": 0.0, "flux-1-pro_37_0.jpg": 2.552 },
+      "summedUserScoresRatios": { "midjourney-5.2_37_3.jpg": 0.0, "flux-1-pro_37_0.jpg": 1.0 },
+      "adaptiveStoppingState": { "verdict": "Decided", "winners": ["1"], "responseCount": 7, "...": "..." },
       "detailedResults": [
-          {
-              "votedFor": "flux-1-pro_37_0.jpg",
-              "userDetails": {
-                  "country": "EG",
-                  "language": "ar",
-                  "userScores": {
-                      "global": 0.845
-                  },
-                  "demographics": {
-                      "age": "18-29",
-                      "gender": "Other",
-                      "occupation": "Not currently working"
-                  }
-              }
-          },
-          {
-              "votedFor": "flux-1-pro_37_0.jpg",
-              "userDetails": {
-                  "country": "BD",
-                  "language": "en",
-                  "userScores": {
-                      "global": 0.8349
-                  },
-                  "demographics": {
-                      "age": "65+",
-                      "gender": "Other",
-                      "occupation": "Retired"
-                  }
-              }
-          },
-          {
-              "votedFor": "flux-1-pro_37_0.jpg",
-              "userDetails": {
-                  "country": "ES",
-                  "language": "es",
-                  "userScores": {
-                      "global": 0.8721
-                  },
-                  "demographics": {
-                      "age": "0-17",
-                      "gender": "Female",
-                      "occupation": "Not currently working"
-                  }
-              }
-          }
+        { "votedFor": "flux-1-pro_37_0.jpg", "userDetails": { "country": "EG", "language": "ar", "userScores": { "global": 0.845 }, "demographics": { "age": "18-29" } } }
       ]
     }
   ],
-  "summary": {
-    "A_wins_total": 0,
-    "B_wins_total": 1
-  }
+  "summary": { "A_wins_total": 0, "B_wins_total": 1 }
 }
 ```
 
-## Breakdown of the Results
+The two options are keyed by their identifier (URL, file name or text). Text comparisons have no `assetUrls`.
 
-1. `info`
-    - `createdAt`: The timestamp indicating when the results overview was generated, in UTC time.
-    - `version`: The version of the aggregator system that produced the results.
-    - `type`: The type of task that was run (e.g. `Compare`, `Classify`).
-    - `name`: The name given to the job.
-    - `instruction`: The instruction that was shown to the labelers.
+| Field | Meaning |
+| --- | --- |
+| `winner` / `winnerIndex` | Winner by **raw vote count** (`argmax` of `aggregatedResults`) and its position: `0` = first asset, `1` = second; `Both` / `Neither` get trailing indexes when they received votes. Both are `null` when nothing was voted or the top count is tied |
+| `weightedWinner` / `weightedWinnerIndex` | Winner by **reliability-weighted** votes (`argmax` of `summedUserScores`). Same index space and `null` rule. Can differ from `winner` on close votes, so say which one you mean |
+| `winner_index` | **Deprecated** alias of `winnerIndex`; will be removed |
+| `assetUrls` | Each option's Rapidata-hosted file |
+| `aggregatedResults` / `aggregatedResultsRatios` | Votes per option, and their share |
+| `summedUserScores` / `summedUserScoresRatios` | Reliability-weighted votes per option, and their share (sums to 1) |
+| `adaptiveStoppingState` | Only for pairs collected with [adaptive stopping](confidence_stopping.md) (the compare default). `verdict` is `Decided`, `Ambiguous`, `Undecided` or `Open`; `winners` names the winner (`"0"` / `"1"`) once `Decided`. Prefer it over `winner` for these pairs. See [Analyzing Adaptive Stopping Results](confidence_stopping.md#analyzing-adaptive-stopping-results) |
+| `detailedResults[].votedFor` | The option this labeler picked (`Both` / `Neither` when allowed) |
+| `summary` | Pairs won by each side over all pairs: `A_wins_total`, `B_wins_total`, or `<name>_wins_total` when you set `a_b_names` |
 
-2. `results`: This section contains the actual comparison data collected from the labelers. For comparison jobs, each item includes:
+!!! note
+    `winnerIndex` and `weightedWinner*` exist from aggregator version `4.1.0` (`info.version`). Older results only have `winner` and `winner_index`.
 
-    - `context`: The context shown alongside this datapoint (present when `contexts` were provided for the job)
-    - `winner` / `winnerIndex`: The winning option by **raw vote count** — the option that received the most responses, i.e. `argmax` of `aggregatedResults`. `winnerIndex` is the option's position in the ordered option list (`0` = first asset, `1` = second; `Both` / `Neither` appear as trailing indexes when they received votes); `winner` is its identifier. Both are `null` when there is **no clear winner** (nothing was voted, or the top count is tied across options).
-    - `weightedWinner` / `weightedWinnerIndex`: The **reliability-weighted** winner — `argmax` of `summedUserScores`, so more-reliable labelers count for more. Same index space and same `null`-on-tie behavior as `winner` / `winnerIndex`. On close votes the raw and weighted winners can differ; this is why both are surfaced, so you can be explicit about which notion of "won" you mean.
-    - `winner_index`: **Deprecated** — the older, snake_case name for `winnerIndex`. Kept as a backward-compatible alias; prefer `winnerIndex` in new code, as this field will be removed in a future release.
+## Ranking
 
-    !!! note
-        `winnerIndex` / `weightedWinner*` are emitted by aggregator version `4.1.0` and later (see `info.version`). Results generated by an older aggregator won't contain these keys until their pipeline is re-run — `winner` / `winner_index` are always present as a fallback.
+A ranking job returns one `results` entry **per ranking** (per inner list of `datapoints`). Each entry holds the final order in its `summary` and every matchup labelers judged in its own `results`.
 
-    - `assetUrls`: Maps each option to the URL under which the asset is hosted by Rapidata — the exact file that was shown to the labelers. The hosted files are not encrypted, but are assigned a random UUID name so they can't be accessed by guessing URLs.
-        ```json
-        "assetUrls": {
-            "midjourney-5.2_37_3.jpg": "https://assets.rapidata.ai/f8bb5e14-fbba-4f8a-a3dd-88530b5eae48.jpg",
-            "flux-1-pro_37_0.jpg": "https://assets.rapidata.ai/e8563fc4-a452-4557-9ab2-d0f06d09ccd7.jpg"
+```json
+{
+  "info": { "type": "Ranking", "version": "4.1.0", "name": "Example Ranking Job", "instruction": "Which rabbit looks cooler?", "createdAt": "..." },
+  "results": [
+    {
+      "group": "0",
+      "context": "Optional context",
+      "summary": {
+        "https://example.com/rabbit_3.webp": 1335,
+        "https://example.com/rabbit_1.webp": 1200,
+        "https://example.com/rabbit_2.webp": 1064
+      },
+      "results": [
+        {
+          "winner": "https://example.com/rabbit_3.webp",
+          "winnerIndex": 1,
+          "weightedWinner": "https://example.com/rabbit_3.webp",
+          "weightedWinnerIndex": 1,
+          "assetUrls": {
+            "https://example.com/rabbit_2.webp": "https://assets.rapidata.ai/<uuid>.webp",
+            "https://example.com/rabbit_3.webp": "https://assets.rapidata.ai/<uuid>.webp"
+          },
+          "aggregatedResults": { "https://example.com/rabbit_2.webp": 0, "https://example.com/rabbit_3.webp": 1 },
+          "aggregatedResultsRatios": { "https://example.com/rabbit_2.webp": 0.0, "https://example.com/rabbit_3.webp": 1.0 },
+          "summedUserScores": { "https://example.com/rabbit_2.webp": 0.0, "https://example.com/rabbit_3.webp": 0.7306 },
+          "summedUserScoresRatios": { "https://example.com/rabbit_2.webp": 0.0, "https://example.com/rabbit_3.webp": 1.0 },
+          "detailedResults": [
+            { "votedFor": "https://example.com/rabbit_3.webp", "userDetails": { "country": "DE", "language": "de", "userScores": { "global": 0.7306 }, "demographics": {} } }
+          ]
         }
-        ```
+      ]
+    }
+  ]
+}
+```
 
-    - `aggregatedResults`: The total number of responses each option received for this specific comparison.
-        ```json
-        "aggregatedResults": {
-            "midjourney-5.2_37_3.jpg": 0,
-            "flux-1-pro_37_0.jpg": 3
-        }
-        ```
+| Field | Meaning |
+| --- | --- |
+| `group` | Position of this ranking in your `datapoints` list, as a string (`"0"` is the first inner list) |
+| `context` / `mediaContext` | The context you attached to this ranking, if any |
+| `summary` | **The ranking.** Each datapoint's identifier mapped to its Elo rating, highest first. Everyone starts at 1200; the gap between two ratings says how strongly one was preferred |
+| `results` | One entry per matchup, with the same fields as a [Compare](#compare) pair (no `adaptiveStoppingState`, no `winner_index`) |
 
-    - `aggregatedResultsRatios`: The proportion of responses each option received, calculated as the number of responses for the option divided by the total number of responses.
-        ```json
-        "aggregatedResultsRatios": {
-            "midjourney-5.2_37_3.jpg": 0.0,
-            "flux-1-pro_37_0.jpg": 1.0
-        }
-        ```
+There is no top-level `summary` for ranking jobs. If two datapoints in one ranking share a file name, every identifier in that ranking is prefixed with its position (`0/image.jpg`, `1/image.jpg`) to keep them apart.
 
-    - `summedUserScores`: For each option, the sum over the labelers who chose it of that labeler's aggregated `userScore` (the mean of their `userScores` dimensions, which is just the `global` score in the common single-dimension case). This is reliability-weighted vote mass, and `weightedWinner` is the `argmax` of this dict.
-        ```json
-        "summedUserScores": {
-            "midjourney-5.2_37_3.jpg": 0.0,
-            "flux-1-pro_37_0.jpg": 2.552
-        }
-        ```
+## Locate
 
-    - `summedUserScoresRatios`: `summedUserScores` normalized to sum to 1 — each option's summed score divided by the total across all options — giving a reliability-weighted proportion directly comparable to `aggregatedResultsRatios` (the unweighted proportion).
-        ```json
-        "summedUserScoresRatios": {
-            "midjourney-5.2_37_3.jpg": 0.0,
-            "flux-1-pro_37_0.jpg": 1.0
-        }
-        ```
+```json
+{
+  "info": { "type": "Locate", "version": "4.1.0", "name": "Artifact Detection", "instruction": "Tap on any visual glitches or errors in the image.", "createdAt": "..." },
+  "results": [
+    {
+      "identifier": "https://example.com/image1.jpg",
+      "url": "https://example.com/image1.jpg",
+      "assetUrl": "https://assets.rapidata.ai/<uuid>.jpg",
+      "notApplicable": 0,
+      "notApplicableRatio": 0.0,
+      "aggregatedResults": [ { "x": 68.1007, "y": 32.4029 }, { "x": 23.3924, "y": 31.883 } ],
+      "detailedResults": [
+        { "locations": [ { "x": 68.1007, "y": 32.4029 }, { "x": 23.3924, "y": 31.883 } ], "userDetails": { "country": "ES", "language": "es", "userScores": { "global": 0.6709 }, "demographics": {} } }
+      ]
+    }
+  ]
+}
+```
 
-    - `detailedResults`: A list of individual responses from each labeler, including:
-        - `votedFor`: The option chosen by the labeler
-        - `userDetails`: Information about the labeler
-            - `country`: Country code of the labeler
-            - `language`: Language in which the labeler viewed the task
-            - `userScores`: A score representing the labeler's reliability across different dimensions
-                - `global`: The global userScore of the labeler, which is a measure of their overall reliability
-            - `demographics`: Demographic attributes collected for the labeler, keyed by attribute name (e.g. `age`, `gender`, `occupation`). May be empty if no demographic data was collected for the labeler.
+| Field | Meaning |
+| --- | --- |
+| `aggregatedResults` | Every point tapped by every labeler, flattened into one list. Not clustered |
+| `x` / `y` | Position as a **percentage** of the image's width and height (0–100), from the top-left corner |
+| `notApplicable` / `notApplicableRatio` | How many labelers, and what share, said there was nothing to tap |
+| `detailedResults[].locations` | The points this labeler tapped; empty if they marked the datapoint as not applicable |
 
-    - `adaptiveStoppingState`: Present only for pairs collected with [adaptive stopping](confidence_stopping.md) (the compare default). `verdict` is `Decided`, `Ambiguous`, `Undecided` or `Open` (no verdict yet); `winners` names the winning option (`"0"` for the first asset, `"1"` for the second) when the verdict is `Decided`. Prefer it over `winner` for these pairs: it only names a winner once the evidence is strong enough. See [Analyzing Adaptive Stopping Results](confidence_stopping.md#analyzing-adaptive-stopping-results).
+## Draw
 
-3. `summary`
-    - `A_wins_total`: The total number of comparisons won by option A (index 0) across all pairs
-    - `B_wins_total`: The total number of comparisons won by option B (index 1) across all pairs
+```json
+{
+  "info": { "type": "Draw", "version": "4.1.0", "name": "Blue Books", "instruction": "Color in all the blue books", "createdAt": "..." },
+  "results": [
+    {
+      "identifier": "https://example.com/image1.jpg",
+      "url": "https://example.com/image1.jpg",
+      "assetUrl": "https://assets.rapidata.ai/<uuid>.jpg",
+      "notApplicable": 0,
+      "notApplicableRatio": 0.0,
+      "aggregatedResults": [
+        { "size": 12, "points": [ { "x": 83.8539, "y": 79.4461 }, { "x": 64.4864, "y": 81.5653 }, { "x": 64.5551, "y": 80.0596 } ] }
+      ],
+      "detailedResults": [
+        { "lines": [ { "size": 12, "points": [ { "x": 83.8539, "y": 79.4461 }, "..." ] } ], "userDetails": { "country": "US", "language": "en", "userScores": { "global": 0.71 }, "demographics": {} } }
+      ]
+    }
+  ]
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `aggregatedResults` | Every line drawn by every labeler, flattened into one list |
+| `size` | Brush size of the line |
+| `points` | The line's points, in the same percentage coordinates as [Locate](#locate) |
+| `notApplicable` / `notApplicableRatio` | How many labelers, and what share, said there was nothing to draw |
+| `detailedResults[].lines` | The lines this labeler drew; empty if they marked the datapoint as not applicable |
+
+## Select Words
+
+```json
+{
+  "info": { "type": "SelectWords", "version": "4.1.0", "name": "Image-Text Alignment", "instruction": "Select the words that are not shown in the image.", "createdAt": "..." },
+  "results": [
+    {
+      "identifier": "https://example.com/image1.jpg",
+      "url": "https://example.com/image1.jpg",
+      "assetUrl": "https://assets.rapidata.ai/<uuid>.jpg",
+      "sentence": "Four cars on the street.",
+      "aggregatedResults": [
+        { "word": "Four", "wordIndex": 0, "selectedAmount": 0 },
+        { "word": "cars", "wordIndex": 1, "selectedAmount": 4 },
+        { "word": "on", "wordIndex": 2, "selectedAmount": 0 }
+      ],
+      "detailedResults": [
+        { "selectedWords": [ { "word": "cars", "wordIndex": 1 } ], "userDetails": { "country": "BR", "language": "pt", "userScores": { "global": 0.7115 }, "demographics": {} } }
+      ]
+    }
+  ]
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `sentence` | The sentence shown, rebuilt from its words |
+| `aggregatedResults` | One entry per word of the sentence, in order, including words nobody selected |
+| `wordIndex` | The word's position in the sentence (split by spaces), from 0. Use it rather than `word` when a word repeats |
+| `selectedAmount` | How many labelers selected this word |
+| `detailedResults[].selectedWords` | The words this labeler selected |
+
+## Free Text
+
+```json
+{
+  "info": { "type": "FreeText", "version": "4.1.0", "name": "Prompt generation", "instruction": "What would you like to ask an AI?", "createdAt": "..." },
+  "results": [
+    {
+      "identifier": "https://example.com/image1.png",
+      "url": "https://example.com/image1.png",
+      "assetUrl": "https://assets.rapidata.ai/<uuid>.png",
+      "aggregatedResults": [ "How do I bake bread?", "What is the tallest mountain?" ],
+      "detailedResults": [
+        { "answerText": "How do I bake bread?", "userDetails": { "country": "US", "language": "en", "userScores": { "global": 0.81 }, "demographics": {} } }
+      ]
+    }
+  ]
+}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `aggregatedResults` | Every answer, as written |
+| `detailedResults[].answerText` | This labeler's answer |
 
 ## Understanding the User Scores
 
-The `userScore` is a value between 0 and 1 (1 can never be reached, but can appear because of rounding) that indicates the reliability or trustworthiness of a labeler's responses. A higher score suggests that the labeler consistently provides accurate and reliable answers.
+The `userScore` is a value between 0 and 1 (1 is never reached, but can appear through rounding) that indicates how reliable a labeler's responses are.
 
-### How is it Calculated?
+It is derived from the labeler's performance on **qualification tasks**: examples with known correct answers that labelers must pass before working on your data. It is not plain accuracy, since it also accounts for how difficult the tasks were, but it is closely related to it.
 
-The `userScore` is derived from the labeler's performance on **Qualification Tasks**—tasks with known correct answers. By evaluating how accurately a labeler completes these tasks, we assign a score that reflects their understanding and adherence to the task requirements. It is not simply the accuracy, as it also takes into account the difficulties of the tasks, but strongly related to it.
+For most tasks, the `global` score is the one to use. If you need more specific dimensions, contact us at <info@rapidata.ai>.
 
-For most tasks, the `global` userScore is the most relevant and can be used per default. If you need more specific information, you may contact us directly at <info@rapidata.ai>.
+Use it to:
 
-Qualification tasks are examples with known correct answers that labelers must pass before working on your data.
+- **Weight responses:** the `summedUserScores` fields already do this for you.
+- **Filter:** keep only responses from labelers above a score you choose.
+- **Inspect:** see who contributed to your data and how reliably.
 
-### Why is it Important?
+## Working with the Results
 
-- **Weighted Analysis**: Responses from labelers with higher `userScores` can be given more weight, improving the overall quality of the aggregated results.
-- **Quality Control**: It helps in identifying and filtering for the most reliable responses.
-- **Insight into Labeler Performance**: Provides transparency into who is contributing to your data and how reliably.
+```python
+results = job.get_results()                 # RapidataResults, a dict of the JSON above
+df = results.to_pandas()                    # one row per datapoint
+df = results.to_pandas(split_details=True)  # one row per individual response
+results.to_json("results.json")             # save to a file
+```
 
-## Utilizing the Results
+`to_pandas()` gives Compare results `A_` / `B_` columns, Ranking results one row per ranked datapoint (`group`, `datapoint`, `score`, `rank`), and Classification results one row per datapoint and option. For Ranking, `split_details=True` gives one row per matchup response instead.
 
-- **Clear Winners**: Use `winner` / `winnerIndex` (the raw-majority winner) or `weightedWinner` / `weightedWinnerIndex` (the reliability-weighted winner) to identify which option was preferred — and be explicit about which notion of "won" you mean, since the two can differ on close votes. Both are `null` when there is no clear winner. The older `winner_index` is a deprecated alias of `winnerIndex`; prefer `winnerIndex`.
-- **Aggregated Insights**: Use `aggregatedResults` and `aggregatedResultsRatios` to understand the strength of preference between options
-- **Weighted Decisions**: Consider `summedUserScores` and `summedUserScoresRatios` to make decisions based on annotator reliability
-- **Detailed Analysis**: Explore `detailedResults` to see individual responses and gather insights about labeler demographics and performance
-
-## Conclusion
-
-By thoroughly understanding each component of the results, you can effectively interpret the data and make informed decisions. Leveraging the userScore and qualification examples ensures high-quality, reliable data for your projects.
+[Flows](flows.md) return their own result objects, not this format.

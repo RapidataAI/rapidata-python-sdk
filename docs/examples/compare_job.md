@@ -42,7 +42,7 @@ In this example, we compare images from two image generation models (Flux and Mi
     job.view()
     job.display_progress_bar()
     results = job.get_results()
-    print(results)
+    print(results)  # every field explained: https://docs.rapidata.ai/understanding_the_results/#compare
     ```
 
     1. Looks up the curated **Alignment** audience by id, which already has trained labelers. A freshly created audience has no qualified labelers yet, so a job assigned to it would never collect responses — see the Advanced tab for how to build and train your own. You can browse the curated audiences and copy their ids from the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
@@ -123,7 +123,7 @@ In this example, we compare images from two image generation models (Flux and Mi
     job.view()
     job.display_progress_bar()
     results = job.get_results()
-    print(results)
+    print(results)  # every field explained: https://docs.rapidata.ai/understanding_the_results/#compare
     ```
 
     1. Creates a new, empty audience. The `add_compare_example` calls train and filter the labelers who join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.
