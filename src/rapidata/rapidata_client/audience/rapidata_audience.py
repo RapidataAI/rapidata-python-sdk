@@ -100,7 +100,7 @@ class RapidataAudience(RapidataAudienceBase):
         Returns:
             RapidataFilteredAudience: A slim audience handle representing the filtered view.
             Only exposes operations that make sense for a filtered audience
-            (``assign_job``, ``find_jobs``, ``delete``); methods like
+            (``assign_job``, ``find_jobs``); methods like
             ``add_classification_example`` are intentionally absent because the filtered
             audience reuses the base's qualified pool.
 
