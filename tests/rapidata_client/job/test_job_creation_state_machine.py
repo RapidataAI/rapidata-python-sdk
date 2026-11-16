@@ -60,9 +60,12 @@ def _run(svc, datapoints, tolerance, add_datapoints_side_effect):
     with (
         patch(f"{MODULE}.RapidataDataset", return_value=dataset),
         patch(f"{MODULE}.print_job_definition_preview_link"),
+        patch(f"{MODULE}.warn_long_playback") as playback_check,
         patch(JOB_INPUT),
     ):
-        return machine, dataset, machine.run()
+        job_def = machine.run()
+        machine.playback_check = playback_check
+        return machine, dataset, job_def
 
 
 def test_full_success_creates_definition():
@@ -76,6 +79,7 @@ def test_full_success_creates_definition():
     assert job_def.id == "def-1"
     svc.dataset.dataset_api.dataset_post.assert_called_once()
     svc.order.job_api.job_definition_post.assert_called_once()
+    machine.playback_check.assert_called_once_with(svc, "ds-1")
 
 
 def test_failure_within_tolerance_creates_definition():
