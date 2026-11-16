@@ -34,15 +34,19 @@ SKILL_GUIDES: dict[str, str] = {
     "ranking": "ranking.md",
     "annotation": "annotation.md",
     "benchmarks": "benchmarks.md",
+    "benchmark-participants": "benchmark-participants.md",
+    "benchmark-results": "benchmark-results.md",
     "audiences": "audiences.md",
+    "filters": "filters.md",
     "flows": "flows.md",
+    "flows-for-preference-data": "flows-for-preference-data.md",
     "signals": "signals.md",
     "billing": "billing.md",
     "settings": "settings.md",
     "reference": "reference.md",
-    # Names printed by SDK versions before the split; installed skill copies may still use them.
+    "errors": "errors.md",
+    # Printed by SDK versions before the split; installed skill copies may still use it.
     "examples": "reference.md",
-    "flows-for-preference-data": "flows.md",
 }
 
 

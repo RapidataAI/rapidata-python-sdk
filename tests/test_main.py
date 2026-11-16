@@ -49,7 +49,13 @@ def test_main_guide_names_every_guide():
 
 def test_main_guide_states_the_task_design_rules_first():
     head = cli.bundled_skill().encode()[:2048].decode(errors="ignore")
-    for rule in ("10 or more", "under 80 characters", "under 150 characters", "15 at most"):
+    for rule in (
+        "10 or more",
+        "under 80 characters",
+        "under 150 characters",
+        "15 at most",
+        "`min_responses_per_matchup` to 5 or more",
+    ):
         assert rule in head, rule
 
 
@@ -168,3 +174,12 @@ def test_login_runs_the_browser_flow_when_not_authenticated(
     monkeypatch.setattr(CredentialManager, "get_client_credentials", fake_login)
     assert cli.main(["login", "--environment", "rapidata.ai"]) == 0
     assert calls == ["https://auth.rapidata.ai"]
+
+
+@pytest.mark.parametrize("guide", sorted(set(cli.SKILL_GUIDES.values())))
+def test_every_guide_fits_inline_in_a_coding_agent(guide: str):
+    # Claude Code replaces longer command output with a 2 KB preview.
+    from importlib import resources
+
+    text = resources.files("rapidata").joinpath(f"_skill/{guide}").read_text("utf-8")
+    assert len(text.encode()) < 20_000

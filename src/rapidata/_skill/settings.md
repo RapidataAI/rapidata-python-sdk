@@ -1,6 +1,6 @@
-# Task settings and SDK configuration
+# Task settings, SDK configuration, context shortening and shared tokens
 
-> Part of the Rapidata agent skill: `python -m rapidata skill settings`. The **Task design rules** and **Key Gotchas** in the main guide (`python -m rapidata skill`) apply to everything here; parameters shared by every job type are in `python -m rapidata skill reference`.
+> Part of the Rapidata agent skill: `python -m rapidata skill settings`. The **Task design rules** and **Key Gotchas** in the main guide (`python -m rapidata skill`) apply to everything here.
 
 ## Task settings
 
@@ -106,3 +106,136 @@ Governs compression of images **and** videos. Applies to single-asset uploads (`
 **`OSError: [Errno 24] Too many open files`:** raise `ulimit -n`, lower `RAPIDATA_cacheShards` / `RAPIDATA_maxWorkers`, or set `cacheToDisk = False` (in-memory cache, no cache file descriptors, but you lose cross-run upload dedup).
 
 All config fields support environment-variable overrides with the `RAPIDATA_` prefix (e.g., `RAPIDATA_maxWorkers=10`, `RAPIDATA_failureTolerance=0.0`, `RAPIDATA_DISABLE_OTLP=1`).
+
+## Context management
+
+Write contexts as one sentence under 150 characters (**Task design rules**, rule 3, in the main guide); shortening is a fallback, not a substitute, and rarely gets a context under 150 characters. Datapoint contexts have a backend maximum of **400 characters** (`MAX_CONTEXT_LENGTH`) and the backend rejects longer ones, so any context over 400 characters is **always** shortened against the task instruction before upload. This cannot be turned off. A warning reports how many contexts were shortened, per-context before/after lengths are logged at info level, and if shortening returns an empty result the original context is kept and a warning is logged.
+
+A context tuned to the question focuses the labeler even when it already fits the limit. Set `rapidata_config.upload.contextShortening = True` (default `False`) to have **every** context shortened, not just the over-long ones:
+
+```python
+from rapidata import rapidata_config
+
+rapidata_config.upload.contextShortening = True
+```
+
+Shorten contexts directly, without creating a job, via `client.context` (a `ContextManager`, also importable directly: `from rapidata import ContextManager`):
+
+- `client.context.shorten_context(context, question) → str`: shorten a single context for the given question. Results are cached server-side.
+- `client.context.shorten_contexts(pairs) → list[str]`: shorten a batch of `(context, question)` pairs, returned in the same order. Batches of ≤10 pairs go out as a single request; larger batches are split into chunks of 10 and sent concurrently using `rapidata_config.upload.maxWorkers`, with a `Shortening contexts` progress bar (suppressed by `rapidata_config.logging.silent_mode`).
+
+```python
+short = client.context.shorten_context(
+    context="<a very long description ...>",
+    question="Does the main character wear the right clothing?",
+)
+shortened = client.context.shorten_contexts([
+    (context_a, question_a),
+    (context_b, question_b),
+])
+```
+
+## Shared token files (distributed training)
+
+When Rapidata is queried from a large distributed job (e.g. hundreds or thousands of GPU workers hitting a ranking flow), don't let every worker authenticate on its own: each `RapidataClient()` exchanges the client credentials for an access token that expires ~1 hour later, so all workers re-auth in the same instant and the burst gets rate-limited. Authenticate **once** and share the token via a file that all workers can read.
+
+### `RapidataClient` authentication parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `leeway` | int | Seconds before token expiry at which the SDK refreshes/re-reads the token (default 60). A coordinator typically uses a larger value, e.g. `leeway=300`, to renew well before workers need a fresh token |
+| `token_file` | str | Path to a shared token file to read the access token from; the SDK re-reads it whenever the in-memory token is within `leeway` of expiry. Also settable via the `RAPIDATA_TOKEN_FILE` env var |
+| `token` | dict | An access-token dict passed directly; the SDK never re-reads it, so inject a fresh one with `client.set_token(...)` (or construct a new client) once the token expires |
+
+### `client.maintain_token_file(path, interval=60) → threading.Thread`
+
+Writes the token file at `path` immediately, then keeps rewriting it atomically from a background daemon thread every `interval` seconds, creating the directory if needed. Returns the thread; `.join()` blocks the process forever (drop it if the coordinator also does other work).
+
+### `client.get_token() → dict`
+
+Returns the current access token as a dict. Cheap to call at any frequency: it only contacts the auth server once the token is within `leeway` of expiry. Use it to write the shared token file yourself (write atomically, and keep the absolute `expires_at` field so workers know when to re-read).
+
+### `client.set_token(token) → None`
+
+The counterpart to `get_token()`: replace the token a running client authenticates with, effective from its next request, without reconstructing the client. Expects the complete token object (`access_token`, `token_type`, and an absolute `expires_at` timestamp — pass what `get_token()` returned). Together, `get_token()` and `set_token()` let you move the token over any transport (key-value store, RPC, secret manager, message queue) — a **push** system (the coordinator distributes a fresh token to every worker before the old one expires, each worker applies it with `set_token`) or a **pull** system (each worker periodically fetches the current token from your own endpoint).
+
+```python
+from rapidata import RapidataClient
+
+# Coordinator: holds the client credentials and keeps the file fresh
+coordinator = RapidataClient(leeway=300)
+coordinator.maintain_token_file("/shared/rapidata_token.json").join()
+
+# Worker: reads the shared token, never sees the client secret
+client = RapidataClient(token_file="/shared/rapidata_token.json")
+
+# Any transport: export from the coordinator, inject into a worker
+token = coordinator.get_token()          # refreshes first if near expiry
+worker = RapidataClient(token=token)     # bootstrap a worker from a token object
+worker.set_token(coordinator.get_token())  # renew a running worker later
+```
+
+The token file contains a bearer token: write it only to storage your job alone can access. The SDK reads the token at startup and re-reads the file whenever the in-memory token is within `leeway` of expiry. Whatever the transport, pass the complete token object around and keep its absolute `expires_at` field. On older SDKs without `token_file`, pass the token dict directly with `RapidataClient(token=json.load(f))`; the SDK never re-reads it, so each worker must call `set_token()` (or construct a new client) when the token expires.
+
+## Example
+
+### Sharing a Token Across Workers (Distributed Training)
+
+Authenticate once in a coordinator process and share the token with many workers via a file, so thousands of workers don't all re-authenticate at the same instant.
+
+```python
+# --- Coordinator (holds the client credentials) ---
+from rapidata import RapidataClient
+
+coordinator = RapidataClient(leeway=300)  # renew 5 min before expiry
+# Writes the file now, then keeps it fresh from a background thread.
+# .join() blocks forever; drop it if the coordinator also does other work.
+coordinator.maintain_token_file("/shared/rapidata_token.json").join()
+```
+
+```python
+# --- Worker (never sees the client secret) ---
+from rapidata import RapidataClient
+
+client = RapidataClient(token_file="/shared/rapidata_token.json")
+# or set RAPIDATA_TOKEN_FILE and construct with no arguments.
+# The SDK re-reads the file whenever the in-memory token nears expiry.
+```
+
+Rolling your own file writer with `get_token()`:
+
+```python
+import json, os, time
+from rapidata import RapidataClient
+
+TOKEN_FILE = "/shared/rapidata_token.json"
+coordinator = RapidataClient(leeway=300)
+os.makedirs(os.path.dirname(TOKEN_FILE), exist_ok=True)
+
+def write_token(token: dict) -> None:
+    tmp = TOKEN_FILE + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(token, f)          # keep the absolute expires_at field
+    os.replace(tmp, TOKEN_FILE)      # atomic: workers never read a half-written file
+
+while True:
+    write_token(coordinator.get_token())  # only re-auths when near expiry
+    time.sleep(60)
+```
+
+The file is just one transport. To move the token over any transport (key-value store, RPC, secret manager, message queue), pair `get_token()` on the coordinator with `set_token()` on the worker — no shared file needed:
+
+```python
+from rapidata import RapidataClient
+
+# --- Coordinator: export the current token (refreshes it first if near expiry) ---
+coordinator = RapidataClient(leeway=300)
+token = coordinator.get_token()
+# ... distribute `token` through any transport you like ...
+
+# --- Worker: bootstrap directly from a token object, then renew in place ---
+worker = RapidataClient(token=token)
+# Later, when a fresh token arrives, inject it without reconstructing the client:
+fresh_token = coordinator.get_token()  # in practice received over your transport
+worker.set_token(fresh_token)  # used from the next request on
+```
