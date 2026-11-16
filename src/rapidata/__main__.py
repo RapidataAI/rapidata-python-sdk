@@ -29,9 +29,20 @@ from rapidata._agent_hint import (
 # `python -m rapidata skill <guide>` -> file in rapidata/_skill/.
 SKILL_GUIDES: dict[str, str] = {
     "main": "SKILL.md",
+    "comparison": "comparison.md",
+    "classification": "classification.md",
+    "ranking": "ranking.md",
+    "annotation": "annotation.md",
+    "benchmarks": "benchmarks.md",
+    "audiences": "audiences.md",
+    "flows": "flows.md",
+    "signals": "signals.md",
+    "billing": "billing.md",
+    "settings": "settings.md",
     "reference": "reference.md",
-    "examples": "examples.md",
-    "flows-for-preference-data": "flows-for-preference-data.md",
+    # Names printed by SDK versions before the split; installed skill copies may still use them.
+    "examples": "reference.md",
+    "flows-for-preference-data": "flows.md",
 }
 
 

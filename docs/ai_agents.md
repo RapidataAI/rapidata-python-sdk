@@ -14,7 +14,7 @@ When a coding agent imports `rapidata`, the SDK points it at the guide. To read 
 
 ```bash
 python -m rapidata skill                             # print the guide
-python -m rapidata skill reference                   # companion guides: reference, examples, flows-for-preference-data
+python -m rapidata skill comparison                  # task guides: comparison, classification, ranking, annotation, benchmarks, audiences, flows, signals, billing, settings, reference
 python -m rapidata skill --install                   # write it to .claude/skills/rapidata/SKILL.md
 python -m rapidata skill --install --agent cursor    # or codex, generic (AGENTS.md)
 ```

@@ -18,17 +18,39 @@ def test_skill_prints_the_bundled_guide(capsys: pytest.CaptureFixture[str]):
     assert cli.main(["skill"]) == 0
     out = capsys.readouterr().out
     assert out.startswith("---\nname: rapidata\n")
-    assert "python -m rapidata skill reference" in out
+    assert "python -m rapidata skill <guide>" in out
 
 
-@pytest.mark.parametrize(
-    "guide", ["reference", "examples", "flows-for-preference-data"]
-)
+@pytest.mark.parametrize("guide", [g for g in cli.SKILL_GUIDES if g != "main"])
 def test_skill_prints_each_companion_guide(
     guide: str, capsys: pytest.CaptureFixture[str]
 ):
     assert cli.main(["skill", guide]) == 0
     assert capsys.readouterr().out.startswith("# ")
+
+
+def test_every_bundled_guide_is_printable():
+    from importlib import resources
+
+    bundled = {
+        f.name
+        for f in resources.files("rapidata").joinpath("_skill").iterdir()
+        if f.name.endswith(".md")
+    }
+    assert bundled == set(cli.SKILL_GUIDES.values())
+
+
+def test_main_guide_names_every_guide():
+    main = cli.bundled_skill()
+    for guide, file in cli.SKILL_GUIDES.items():
+        if guide != "main" and file == f"{guide}.md":
+            assert f"`{guide}`" in main, guide
+
+
+def test_main_guide_states_the_task_design_rules_first():
+    head = cli.bundled_skill().encode()[:2048].decode(errors="ignore")
+    for rule in ("10 or more", "under 80 characters", "under 150 characters", "15 at most"):
+        assert rule in head, rule
 
 
 def test_skill_does_not_touch_the_network(monkeypatch: pytest.MonkeyPatch):
