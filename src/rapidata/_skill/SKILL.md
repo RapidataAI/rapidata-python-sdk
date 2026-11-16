@@ -5,11 +5,11 @@ description: Explains how to use the Rapidata API to get real and fast human ann
 
 # Rapidata Python SDK
 
-Rapidata connects you with human labelers worldwide. Run `pip install -U rapidata` (or `uv add rapidata --upgrade`) first: outdated versions can fail against the API. Upgrade when `RapidataClient()` says a new version exists, then re-read this guide.
+Rapidata connects you with human labelers. Run `pip install -U rapidata` (or `uv add rapidata --upgrade`) first: outdated versions can fail against the API. Upgrade when `RapidataClient()` says a new version exists, then re-read this guide.
 
 ## Task design rules
 
-Follow these for every job definition, audience example and leaderboard. The SDK only rejects instructions over 250 characters and contexts over 400; design to the limits below, not to the SDK's.
+Follow these for every job definition, audience example and leaderboard. The SDK only rejects instructions over 250 and contexts over 400 characters; design to the limits below.
 
 1. **Keep `responses_per_datapoint` at 10 or more.** Never lower it to cut cost; label fewer datapoints instead. Comparisons: keep the default `AdaptiveStopping()`.
 2. **Ask one short question about one criterion, in under 80 characters.** One job definition per aspect. Definitions and edge cases never go into the instruction.

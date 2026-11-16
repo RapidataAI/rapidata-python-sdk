@@ -55,6 +55,8 @@ def test_main_guide_states_the_task_design_rules_first():
         "under 150 characters",
         "15 at most",
         "`min_responses_per_matchup` to 5 or more",
+        "one guide per command",
+        "Full index below",
     ):
         assert rule in head, rule
 
