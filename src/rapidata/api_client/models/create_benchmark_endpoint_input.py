@@ -18,6 +18,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.prompt_segment_definition import PromptSegmentDefinition
+from rapidata.api_client.models.sample_segment_definition import SampleSegmentDefinition
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -34,7 +35,8 @@ class CreateBenchmarkEndpointInput(LazyValidatedModel):
     score_shift: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Additive offset applied to displayed scores on the benchmark's overall scoreboard; defaults to 0.", alias="scoreShift")
     score_scale: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Multiplicative factor applied to displayed scores on the benchmark's overall scoreboard,  relative to the Bradley-Terry center. Defaults to 1.0; must be strictly positive.", alias="scoreScale")
     prompt_structure: Optional[List[PromptSegmentDefinition]] = Field(default=None, alias="promptStructure")
-    __properties: ClassVar[List[str]] = ["name", "description", "initialBoostLevel", "minAssetsPerPrompt", "scoreShift", "scoreScale", "promptStructure"]
+    sample_structure: Optional[List[SampleSegmentDefinition]] = Field(default=None, alias="sampleStructure")
+    __properties: ClassVar[List[str]] = ["name", "description", "initialBoostLevel", "minAssetsPerPrompt", "scoreShift", "scoreScale", "promptStructure", "sampleStructure"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -78,6 +80,13 @@ class CreateBenchmarkEndpointInput(LazyValidatedModel):
                 if _item_prompt_structure:
                     _items.append(_item_prompt_structure.to_dict())
             _dict['promptStructure'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in sample_structure (list)
+        _items = []
+        if self.sample_structure:
+            for _item_sample_structure in self.sample_structure:
+                if _item_sample_structure:
+                    _items.append(_item_sample_structure.to_dict())
+            _dict['sampleStructure'] = _items
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
         if self.description is None and "description" in self.model_fields_set:
@@ -108,6 +117,11 @@ class CreateBenchmarkEndpointInput(LazyValidatedModel):
         if self.prompt_structure is None and "prompt_structure" in self.model_fields_set:
             _dict['promptStructure'] = None
 
+        # set to None if sample_structure (nullable) is None
+        # and model_fields_set contains the field
+        if self.sample_structure is None and "sample_structure" in self.model_fields_set:
+            _dict['sampleStructure'] = None
+
         return _dict
 
     @classmethod
@@ -126,7 +140,8 @@ class CreateBenchmarkEndpointInput(LazyValidatedModel):
             "minAssetsPerPrompt": obj.get("minAssetsPerPrompt"),
             "scoreShift": obj.get("scoreShift"),
             "scoreScale": obj.get("scoreScale"),
-            "promptStructure": [PromptSegmentDefinition.from_dict(_item) for _item in obj["promptStructure"]] if obj.get("promptStructure") is not None else None
+            "promptStructure": [PromptSegmentDefinition.from_dict(_item) for _item in obj["promptStructure"]] if obj.get("promptStructure") is not None else None,
+            "sampleStructure": [SampleSegmentDefinition.from_dict(_item) for _item in obj["sampleStructure"]] if obj.get("sampleStructure") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

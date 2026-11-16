@@ -18,6 +18,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.asset_segment_source import AssetSegmentSource
+from rapidata.api_client.models.sample_segment_source import SampleSegmentSource
 from rapidata.api_client.models.text_segment_source import TextSegmentSource
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -30,7 +31,8 @@ class RapidContextProjection(LazyValidatedModel):
     """ # noqa: E501
     context: Optional[TextSegmentSource] = None
     context_asset: Optional[AssetSegmentSource] = Field(default=None, alias="contextAsset")
-    __properties: ClassVar[List[str]] = ["context", "contextAsset"]
+    sample: Optional[SampleSegmentSource] = None
+    __properties: ClassVar[List[str]] = ["context", "contextAsset", "sample"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -73,6 +75,9 @@ class RapidContextProjection(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of context_asset
         if self.context_asset:
             _dict['contextAsset'] = self.context_asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of sample
+        if self.sample:
+            _dict['sample'] = self.sample.to_dict()
         # set to None if context (nullable) is None
         # and model_fields_set contains the field
         if self.context is None and "context" in self.model_fields_set:
@@ -82,6 +87,11 @@ class RapidContextProjection(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.context_asset is None and "context_asset" in self.model_fields_set:
             _dict['contextAsset'] = None
+
+        # set to None if sample (nullable) is None
+        # and model_fields_set contains the field
+        if self.sample is None and "sample" in self.model_fields_set:
+            _dict['sample'] = None
 
         return _dict
 
@@ -96,7 +106,8 @@ class RapidContextProjection(LazyValidatedModel):
 
         _data = {
             "context": TextSegmentSource.from_dict(obj["context"]) if obj.get("context") is not None else None,
-            "contextAsset": AssetSegmentSource.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None
+            "contextAsset": AssetSegmentSource.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
+            "sample": SampleSegmentSource.from_dict(obj["sample"]) if obj.get("sample") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

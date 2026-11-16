@@ -21,6 +21,7 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from uuid import UUID
 from rapidata.api_client.models.benchmark_fork_status import BenchmarkForkStatus
 from rapidata.api_client.models.prompt_segment_definition import PromptSegmentDefinition
+from rapidata.api_client.models.sample_segment_definition import SampleSegmentDefinition
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -46,7 +47,8 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
     fork_status: BenchmarkForkStatus = Field(description="Whether the copy behind a forked benchmark has finished. Always Ready for a benchmark that was  not forked; a fork is Forking until its job completes and Failed when the job gave up.", alias="forkStatus")
     last_updated_at: Optional[datetime] = Field(description="When the benchmark's rankings last changed — the latest vote recording across the leaderboards contributing to its  overall; null when none ever received votes.", alias="lastUpdatedAt")
     prompt_structure: List[PromptSegmentDefinition] = Field(alias="promptStructure")
-    __properties: ClassVar[List[str]] = ["id", "name", "description", "isPublic", "isPublished", "publicationDate", "createdAt", "ownerId", "ownerMail", "organizationId", "initialBoostLevel", "scoreShift", "scoreScale", "forkStatus", "lastUpdatedAt", "promptStructure"]
+    sample_structure: List[SampleSegmentDefinition] = Field(alias="sampleStructure")
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "isPublic", "isPublished", "publicationDate", "createdAt", "ownerId", "ownerMail", "organizationId", "initialBoostLevel", "scoreShift", "scoreScale", "forkStatus", "lastUpdatedAt", "promptStructure", "sampleStructure"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -90,6 +92,13 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
                 if _item_prompt_structure:
                     _items.append(_item_prompt_structure.to_dict())
             _dict['promptStructure'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in sample_structure (list)
+        _items = []
+        if self.sample_structure:
+            for _item_sample_structure in self.sample_structure:
+                if _item_sample_structure:
+                    _items.append(_item_sample_structure.to_dict())
+            _dict['sampleStructure'] = _items
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
         if self.description is None and "description" in self.model_fields_set:
@@ -152,7 +161,8 @@ class GetBenchmarkByIdEndpointOutput(LazyValidatedModel):
             "scoreScale": obj.get("scoreScale"),
             "forkStatus": obj.get("forkStatus"),
             "lastUpdatedAt": obj.get("lastUpdatedAt"),
-            "promptStructure": [PromptSegmentDefinition.from_dict(_item) for _item in obj["promptStructure"]] if obj.get("promptStructure") is not None else None
+            "promptStructure": [PromptSegmentDefinition.from_dict(_item) for _item in obj["promptStructure"]] if obj.get("promptStructure") is not None else None,
+            "sampleStructure": [SampleSegmentDefinition.from_dict(_item) for _item in obj["sampleStructure"]] if obj.get("sampleStructure") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

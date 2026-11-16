@@ -30,6 +30,7 @@ class TaskSetupFindingKind(str, Enum):
     UNTRANSLATABLE = 'untranslatable'
     CONTEXTOFFTOPIC = 'contextOffTopic'
     TOOSLOWTOANSWER = 'tooSlowToAnswer'
+    POSITIONREFERENCE = 'positionReference'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

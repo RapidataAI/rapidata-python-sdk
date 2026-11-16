@@ -18,6 +18,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.faucet_input_binding_output import FaucetInputBindingOutput
+from rapidata.api_client.models.faucet_output_binding import FaucetOutputBinding
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -31,7 +32,8 @@ class IFaucetOutputManagedForgeFaucetOutput(LazyValidatedModel):
     procedure_id: StrictStr = Field(alias="procedureId")
     model: StrictStr
     inputs: Dict[str, FaucetInputBindingOutput]
-    __properties: ClassVar[List[str]] = ["_t", "procedureId", "model", "inputs"]
+    outputs: Dict[str, FaucetOutputBinding]
+    __properties: ClassVar[List[str]] = ["_t", "procedureId", "model", "inputs", "outputs"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -82,6 +84,13 @@ class IFaucetOutputManagedForgeFaucetOutput(LazyValidatedModel):
                 if self.inputs[_key_inputs]:
                     _field_dict[_key_inputs] = self.inputs[_key_inputs].to_dict()
             _dict['inputs'] = _field_dict
+        # override the default output from pydantic by calling `to_dict()` of each value in outputs (dict)
+        _field_dict = {}
+        if self.outputs:
+            for _key_outputs in self.outputs:
+                if self.outputs[_key_outputs]:
+                    _field_dict[_key_outputs] = self.outputs[_key_outputs].to_dict()
+            _dict['outputs'] = _field_dict
         return _dict
 
     @classmethod
@@ -102,6 +111,12 @@ class IFaucetOutputManagedForgeFaucetOutput(LazyValidatedModel):
                 for _k, _v in obj["inputs"].items()
             )
             if obj.get("inputs") is not None
+            else None,
+            "outputs": dict(
+                (_k, FaucetOutputBinding.from_dict(_v))
+                for _k, _v in obj["outputs"].items()
+            )
+            if obj.get("outputs") is not None
             else None
         }
         try:

@@ -36,6 +36,7 @@ _SAMPLES_PAGE_SIZE = 100
 # Returned when the participant already holds this sample. The only conflict the
 # sample endpoint raises, so the status alone identifies it.
 _ALREADY_EXISTS_STATUS = 409
+_DEFAULT_SAMPLE_SEGMENT_KEY = "sample"
 
 
 class BenchmarkParticipant:
@@ -314,6 +315,10 @@ class BenchmarkParticipant:
         from rapidata.api_client.models.create_sample_endpoint_input import (
             CreateSampleEndpointInput,
         )
+        from rapidata.api_client.models.prompt_segment_kind import PromptSegmentKind
+        from rapidata.api_client.models.sample_segment_input import (
+            SampleSegmentInput,
+        )
 
         last_exception = None
         for attempt in range(rapidata_config.upload.maxRetries):
@@ -325,7 +330,13 @@ class BenchmarkParticipant:
                         participant_id=self.id,
                         create_sample_endpoint_input=CreateSampleEndpointInput(
                             identifier=identifier,
-                            asset=asset_input,
+                            segments=[
+                                SampleSegmentInput(
+                                    key=_DEFAULT_SAMPLE_SEGMENT_KEY,
+                                    kind=PromptSegmentKind.ASSET,
+                                    asset=asset_input,
+                                )
+                            ],
                         ),
                     )
 

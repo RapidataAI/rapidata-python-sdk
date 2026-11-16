@@ -17,7 +17,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.i_asset_input import IAssetInput
+from rapidata.api_client.models.sample_segment_input import SampleSegmentInput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -28,9 +28,9 @@ class CreateSampleEndpointInput(LazyValidatedModel):
     CreateSampleEndpointInput
     """ # noqa: E501
     identifier: StrictStr = Field(description="The identifier used to correlate samples of different participants.")
-    asset: IAssetInput = Field(description="The asset input for the sample.")
+    segments: Optional[List[SampleSegmentInput]] = None
     cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="What generating the sample cost in USD, or null if unknown. The participant's calculated  cost is the average over its samples that carry one.")
-    __properties: ClassVar[List[str]] = ["identifier", "asset", "cost"]
+    __properties: ClassVar[List[str]] = ["identifier", "segments", "cost"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -67,9 +67,18 @@ class CreateSampleEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in segments (list)
+        _items = []
+        if self.segments:
+            for _item_segments in self.segments:
+                if _item_segments:
+                    _items.append(_item_segments.to_dict())
+            _dict['segments'] = _items
+        # set to None if segments (nullable) is None
+        # and model_fields_set contains the field
+        if self.segments is None and "segments" in self.model_fields_set:
+            _dict['segments'] = None
+
         # set to None if cost (nullable) is None
         # and model_fields_set contains the field
         if self.cost is None and "cost" in self.model_fields_set:
@@ -88,7 +97,7 @@ class CreateSampleEndpointInput(LazyValidatedModel):
 
         _data = {
             "identifier": obj.get("identifier"),
-            "asset": IAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "segments": [SampleSegmentInput.from_dict(_item) for _item in obj["segments"]] if obj.get("segments") is not None else None,
             "cost": obj.get("cost")
         }
         try:

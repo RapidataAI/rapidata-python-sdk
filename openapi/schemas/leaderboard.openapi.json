@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.11.13.1727-7db9464"
+    "version": "2026.11.16.1246-f7eb589"
   },
   "servers": [
     {
@@ -47,6 +47,76 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApplyPromptStructureEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "benchmark:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/sample-structure": {
+      "put": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Replaces a benchmark's sample structure; 409 if a board compares a removed part or a change is still applying.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark to change.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The complete replacement structure and what to do with invalid samples.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplySampleStructureEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplySampleStructureEndpoint_Output"
                 }
               }
             }
@@ -14450,6 +14520,7 @@
           "Participant"
         ],
         "summary": "Adds a sample to a participant.",
+        "description": "Send the sample as segments keyed by the benchmark's sample structure; the deprecated asset still\n fills its sample part. Returns 409 when the participant already holds a sample with the same content.",
         "parameters": [
           {
             "name": "participantId",
@@ -16788,6 +16859,42 @@
           }
         }
       },
+      "ApplySampleStructureEndpoint_Input": {
+        "required": [
+          "segments"
+        ],
+        "type": "object",
+        "properties": {
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SampleSegmentDefinition"
+                }
+              }
+            ],
+            "description": "The complete replacement structure, in order."
+          },
+          "deleteInvalidSamples": {
+            "type": "boolean",
+            "description": "Whether samples that no longer fit are deleted; false (the default) rejects the change."
+          }
+        }
+      },
+      "ApplySampleStructureEndpoint_Output": {
+        "required": [
+          "deletedSampleCount"
+        ],
+        "type": "object",
+        "properties": {
+          "deletedSampleCount": {
+            "type": "integer",
+            "description": "How many samples no longer fit the new structure and will be deleted in the background.",
+            "format": "int32"
+          }
+        }
+      },
       "AssetSegmentSource": {
         "required": [
           "segmentKeys"
@@ -16976,6 +17083,18 @@
               }
             ],
             "description": "The benchmark's prompt structure, in render order. Leave unset for the default optional\n text + asset structure."
+          },
+          "sampleStructure": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SampleSegmentDefinition"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The parts every sample carries, in order. Leave unset for one required asset part, sample."
           }
         }
       },
@@ -17492,8 +17611,7 @@
       },
       "CreateSampleEndpoint_Input": {
         "required": [
-          "identifier",
-          "asset"
+          "identifier"
         ],
         "type": "object",
         "properties": {
@@ -17507,7 +17625,20 @@
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ],
-            "description": "The asset input for the sample."
+            "description": "The sample as a single asset, stored as its sample part. Send this or segments, not both.",
+            "deprecated": true
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SampleSegmentInput"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The sample's parts, keyed by the benchmark's sample structure."
           },
           "cost": {
             "type": "number",
@@ -17678,6 +17809,17 @@
           }
         }
       },
+      "FaucetOutputBinding": {
+        "required": [
+          "segment"
+        ],
+        "type": "object",
+        "properties": {
+          "segment": {
+            "type": "string"
+          }
+        }
+      },
       "FeatureFlag": {
         "required": [
           "key",
@@ -17726,7 +17868,8 @@
           "scoreScale",
           "forkStatus",
           "lastUpdatedAt",
-          "promptStructure"
+          "promptStructure",
+          "sampleStructure"
         ],
         "type": "object",
         "properties": {
@@ -17818,6 +17961,17 @@
               }
             ],
             "description": "The benchmark's prompt structure, in render order."
+          },
+          "sampleStructure": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SampleSegmentDefinition"
+                }
+              }
+            ],
+            "description": "The parts every sample of the benchmark carries, in order."
           }
         }
       },
@@ -19262,7 +19416,7 @@
           "identifier",
           "participantId",
           "participantName",
-          "asset",
+          "segments",
           "tags"
         ],
         "type": "object",
@@ -19289,7 +19443,19 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The asset associated with the sample."
+            "description": "The asset associated with the sample.",
+            "deprecated": true
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SampleSegment"
+                }
+              }
+            ],
+            "description": "The sample's parts, in the order of the benchmark's sample structure."
           },
           "prompt": {
             "type": "string",
@@ -19713,7 +19879,7 @@
           "identifier",
           "participantId",
           "participantName",
-          "asset",
+          "segments",
           "tags"
         ],
         "type": "object",
@@ -19731,7 +19897,18 @@
             "type": "string"
           },
           "asset": {
-            "$ref": "#/components/schemas/IAsset"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "deprecated": true
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SampleSegment"
+            }
           },
           "prompt": {
             "type": "string",
@@ -19789,7 +19966,7 @@
           "identifier",
           "participantId",
           "participantName",
-          "asset",
+          "segments",
           "tags"
         ],
         "type": "object",
@@ -19816,7 +19993,19 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The asset associated with the sample."
+            "description": "The asset associated with the sample.",
+            "deprecated": true
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SampleSegment"
+                }
+              }
+            ],
+            "description": "The sample's parts, in the order of the benchmark's sample structure."
           },
           "prompt": {
             "type": "string",
@@ -19993,7 +20182,7 @@
         "required": [
           "id",
           "identifier",
-          "asset",
+          "segments",
           "tags",
           "_t"
         ],
@@ -20018,7 +20207,19 @@
                 "$ref": "#/components/schemas/IAsset"
               }
             ],
-            "description": "The asset associated with the sample."
+            "description": "The asset associated with the sample.",
+            "deprecated": true
+          },
+          "segments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SampleSegment"
+                }
+              }
+            ],
+            "description": "The sample's parts, in the order of the benchmark's sample structure."
           },
           "prompt": {
             "type": "string",
@@ -20558,6 +20759,7 @@
           "procedureId",
           "model",
           "inputs",
+          "outputs",
           "_t"
         ],
         "properties": {
@@ -20577,6 +20779,12 @@
             "type": "object",
             "additionalProperties": {
               "$ref": "#/components/schemas/FaucetInputBindingOutput"
+            }
+          },
+          "outputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/FaucetOutputBinding"
             }
           }
         }
@@ -23461,6 +23669,15 @@
               }
             ],
             "nullable": true
+          },
+          "sample": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SampleSegmentSource"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -23610,6 +23827,96 @@
           "Failed",
           "Cancelled"
         ]
+      },
+      "SampleSegment": {
+        "required": [
+          "key",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PromptSegmentKind"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "SampleSegmentDefinition": {
+        "required": [
+          "key",
+          "kind",
+          "label",
+          "required"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PromptSegmentKind"
+          },
+          "label": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SampleSegmentInput": {
+        "required": [
+          "key",
+          "kind"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PromptSegmentKind"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "asset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "SampleSegmentSource": {
+        "required": [
+          "segmentKey"
+        ],
+        "type": "object",
+        "properties": {
+          "segmentKey": {
+            "type": "string"
+          }
+        }
       },
       "SearchReplicateModelsEndpoint_Model": {
         "required": [
