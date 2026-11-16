@@ -18,7 +18,7 @@ Follow these for every job definition, audience example and leaderboard. The SDK
 5. **Design each task to be answered in about 10 seconds, 15 at most, including playback.** Audio clips add up, videos don't. Longer tasks: contact Rapidata (info@rapidata.ai) first.
 6. **Set `min_responses_per_matchup` to 5 or more on every leaderboard.** The SDK default of 3 is too low.
 
-**Next, print your task's guide, one guide per command** (`python -m rapidata skill <guide>`; never several in one command, or the output gets too long and is cut to a preview), e.g. `comparison` (two models, A vs B), `classification`, `ranking`, `annotation`, `benchmarks`, `audiences`, `flows`. Full index and rule details below.
+**Next, print your task's guide, one guide per command** (`python -m rapidata skill <guide>`; several in one command get cut to a preview), e.g. `comparison` (A vs B), `classification`, `ranking`, `annotation`, `benchmarks`, `audiences`, `flows`. Full index below.
 
 ## Which guide to read
 
