@@ -1,4 +1,8 @@
-# Flows for Preference Data (DPO / RLHF / Best-of-N)
+# Flows for preference data (DPO / RLHF / best-of-N)
+
+> Part of the Rapidata agent skill: `python -m rapidata skill flows-for-preference-data`. The **Task design rules** and **Key Gotchas** in the main guide (`python -m rapidata skill`) apply to everything here.
+
+Flow API (creating flows, batches, results): `python -m rapidata skill flows`.
 
 Guidance for using ranking flows as the human-preference signal in a training loop: collecting DPO/RLHF pairs while a model generates, or picking the best of N candidates at inference time. The flow API itself is documented in the "Flows" section of the main guide (`python -m rapidata skill`).
 
@@ -70,5 +74,5 @@ These tips apply to any Rapidata task. They matter most when the signal trains a
 - **One criterion per task.** Several criteria folded into one question reduce consistency. Split them into separate flows or leaderboards.
 - **Plain, short instructions.** No jargon; design for an answer in about 10 seconds (15 at most), mostly on phones.
 - **Match annotators to the content.** When rating text in a script, target people who read that script. Flows take no audience or filters in the SDK: ask Rapidata to restrict a flow's annotators, or use a ranking job definition on an audience filtered with `LanguageFilter`.
-- **Check the layout with a preview** before scaling. Some content renders better with a setting (see Settings in the main guide, `python -m rapidata skill`).
+- **Check the layout with a preview** before scaling. Some content renders better with a setting (`python -m rapidata skill settings`).
 - **Pilot small.** Try a few setups (instruction wording, context, thresholds) at small scale, compare agreement, then roll out the best one.
