@@ -18,17 +18,47 @@ def test_skill_prints_the_bundled_guide(capsys: pytest.CaptureFixture[str]):
     assert cli.main(["skill"]) == 0
     out = capsys.readouterr().out
     assert out.startswith("---\nname: rapidata\n")
-    assert "python -m rapidata skill reference" in out
+    assert "python -m rapidata skill <guide>" in out
 
 
-@pytest.mark.parametrize(
-    "guide", ["reference", "examples", "flows-for-preference-data"]
-)
+@pytest.mark.parametrize("guide", [g for g in cli.SKILL_GUIDES if g != "main"])
 def test_skill_prints_each_companion_guide(
     guide: str, capsys: pytest.CaptureFixture[str]
 ):
     assert cli.main(["skill", guide]) == 0
     assert capsys.readouterr().out.startswith("# ")
+
+
+def test_every_bundled_guide_is_printable():
+    from importlib import resources
+
+    bundled = {
+        f.name
+        for f in resources.files("rapidata").joinpath("_skill").iterdir()
+        if f.name.endswith(".md")
+    }
+    assert bundled == set(cli.SKILL_GUIDES.values())
+
+
+def test_main_guide_names_every_guide():
+    main = cli.bundled_skill()
+    for guide, file in cli.SKILL_GUIDES.items():
+        if guide != "main" and file == f"{guide}.md":
+            assert f"`{guide}`" in main, guide
+
+
+def test_main_guide_states_the_task_design_rules_first():
+    head = cli.bundled_skill().encode()[:2048].decode(errors="ignore")
+    for rule in (
+        "10 or more",
+        "under 80 characters",
+        "under 150 characters",
+        "15 at most",
+        "`min_responses_per_matchup` to 5 or more",
+        "one guide per command",
+        "Full index below",
+    ):
+        assert rule in head, rule
 
 
 def test_skill_does_not_touch_the_network(monkeypatch: pytest.MonkeyPatch):
@@ -146,3 +176,12 @@ def test_login_runs_the_browser_flow_when_not_authenticated(
     monkeypatch.setattr(CredentialManager, "get_client_credentials", fake_login)
     assert cli.main(["login", "--environment", "rapidata.ai"]) == 0
     assert calls == ["https://auth.rapidata.ai"]
+
+
+@pytest.mark.parametrize("guide", sorted(set(cli.SKILL_GUIDES.values())))
+def test_every_guide_fits_inline_in_a_coding_agent(guide: str):
+    # Claude Code replaces longer command output with a 2 KB preview.
+    from importlib import resources
+
+    text = resources.files("rapidata").joinpath(f"_skill/{guide}").read_text("utf-8")
+    assert len(text.encode()) < 20_000

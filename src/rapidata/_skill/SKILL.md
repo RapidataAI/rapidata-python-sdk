@@ -5,167 +5,110 @@ description: Explains how to use the Rapidata API to get real and fast human ann
 
 # Rapidata Python SDK
 
-> **IMPORTANT: keep the `rapidata` package up to date.** Before writing or running any Rapidata code, run `pip install -U rapidata` (or `uv add rapidata --upgrade`) and re-read this guide with `python -m rapidata skill`. Outdated versions miss fixes and features, and their calls can fail against the current API. If `RapidataClient()` prints "A new version of the Rapidata SDK is available", upgrade before continuing.
-
-Rapidata connects you with distributed human labelers worldwide for fast, high-quality data annotation. The SDK lets you create labeling tasks, manage annotator audiences, and retrieve results programmatically.
-
-## This guide ships with the SDK
-
-`python -m rapidata skill` prints the copy bundled with the installed `rapidata` package, so it describes exactly that version. After `pip install -U rapidata`, run it again: an upgrade can change what is documented here.
-
-The three companion guides linked at the end print the same way: `python -m rapidata skill reference`, `python -m rapidata skill examples`, `python -m rapidata skill flows-for-preference-data`.
-
-## Installation & Authentication
-
-```bash
-pip install -U rapidata
-```
-
-```python
-from rapidata import RapidataClient
-client = RapidataClient()  # Credentials resolved: env vars → ~/.config/rapidata/credentials.json → browser login
-
-# Or pass credentials directly
-client = RapidataClient(client_id="...", client_secret="...")
-# Credentials are saved to ~/.config/rapidata/credentials.json
-
-# Pin the saved credentials to one organization; switching organization in the dashboard does not move them
-client = RapidataClient(organization_id="org_...")
-
-# Environment variables (useful for headless/container deployments):
-# RAPIDATA_CLIENT_ID, RAPIDATA_CLIENT_SECRET — authenticate without a browser
-# RAPIDATA_ENVIRONMENT — override the API endpoint (default: rapidata.ai)
-# RAPIDATA_TOKEN_FILE — read a shared access token from this file (see below)
-# Empty values are treated as unset and fall through to the next resolution layer.
-```
-
-Without saved credentials, `RapidataClient()` blocks on a browser login for up to 5 minutes. As a coding agent, check auth first from the CLI:
-
-```bash
-python -m rapidata status [--environment ENV] [--organization ORG]  # exit 0: "Authenticated for {env} via {source}."; exit 1: not logged in. Never starts a login
-python -m rapidata login  [--environment ENV] [--organization ORG]  # browser login; saves credentials (no-op if already authenticated). Blocks up to 5 minutes
-```
-
-- Both check `RAPIDATA_TOKEN_FILE` → `RAPIDATA_CLIENT_ID` + `RAPIDATA_CLIENT_SECRET` → credentials saved for `https://auth.{environment}` (and `--organization`, when given). `--environment` defaults to `RAPIDATA_ENVIRONMENT`, else `rapidata.ai`.
-- Run `python -m rapidata status` before the first `RapidataClient()`. If it reports not logged in, run `python -m rapidata login` in the background (or with a tool timeout above 5 minutes) and show the user the URL it prints — the login URL is always printed to stderr, even in silent mode. After the user logs in once, every later `RapidataClient()` reuses the saved credentials.
-- For headless runs, set `RAPIDATA_CLIENT_ID` and `RAPIDATA_CLIENT_SECRET` instead.
-
-### Sharing a token across many workers (distributed training)
-
-When Rapidata is queried from a large distributed job (e.g. a ranking flow hit from hundreds or thousands of GPU workers), don't let every worker authenticate on its own — all their tokens expire at the same instant and the simultaneous re-auth looks like a coordinated burst that gets rate-limited. Instead, authenticate **once** and share the token via a file:
-
-```python
-from rapidata import RapidataClient
-
-# Coordinator (holds the client credentials): keep a shared token file fresh
-coordinator = RapidataClient(leeway=300)  # renew the token 5 min before expiry
-coordinator.maintain_token_file("/shared/rapidata_token.json").join()
-# maintain_token_file() writes the file immediately, then keeps rewriting it
-# atomically from a background thread (every 60s by default), creating the
-# directory if needed. .join() blocks forever — drop it if the coordinator
-# also does other work (e.g. rank 0 both trains and refreshes the token).
-
-# Workers (never see the client secret): point the SDK at that file
-client = RapidataClient(token_file="/shared/rapidata_token.json")
-# or set RAPIDATA_TOKEN_FILE and construct with no arguments.
-# The SDK reads the token at startup and re-reads the file whenever the
-# in-memory token is within 60s of expiry (configurable via leeway).
-```
-
-The token file contains a bearer token — write it only to storage your job alone can access. To roll your own file writer, export the current token with `coordinator.get_token()` (cheap to call at any frequency; only contacts the auth server once the token is within `leeway` of expiry), write it atomically, and keep the absolute `expires_at` field so workers know when to re-read.
-
-The file is just one transport. To move the token over any transport (key-value store, RPC, secret manager, message queue), pair `coordinator.get_token()` with `worker.set_token(fresh_token)`, which injects a fresh token into a running worker client (effective from its next request) without reconstructing it. This supports both a **push** system (the coordinator distributes a fresh token to every worker before the old one expires) and a **pull** system (each worker periodically fetches the current token from your own endpoint). Whatever the transport, pass the complete token object around and keep its absolute `expires_at` field. On older SDKs without `token_file`, pass the token dict directly with `RapidataClient(token=json.load(f))` — but the SDK never re-reads it, so each worker must call `set_token()` (or construct a new client) when the token expires.
-
-## Core Concepts
-
-- **Job Definition**: A reusable configuration template for a labeling task (task type, instruction, datapoints, answer options)
-- **Audience**: A group of annotators selected and qualified for **one specific task** — via qualification examples and/or recruitment filters chosen to match that task. The whole point is to put the *right* people on *that* task. An audience trained for one task is **not** meant to be reused on a different, unrelated task: its qualification examples define what "good" means for the original task only, so reusing it elsewhere silently loses the quality it was built for. Reusing the same audience for repeated or scheduled runs of the **same** task is exactly right; for a different task, create a new audience. Three kinds:
-  - **global** — the generic baseline pool for tasks that need no special qualification; instant, no setup. Use `client.audience.get_audience_by_id("global")`.
-  - **curated** — pre-trained on a domain (e.g. alignment via `aud_MU1GZYoESyO`).
-  - **custom** — trained with your own task-specific qualification examples (`client.audience.create_audience(...)` + `add_*_example(...)` + `start_recruiting()`). ⚠️ Recruiting is **explicit**: a custom audience recruits nobody until you add **at least `min_tasks` qualification examples** (default 10, never fewer than 3) *and then* call `audience.start_recruiting()`, which is rejected with fewer. Adding examples does **not** start recruiting on its own; assign a job before recruiting has started and it can never receive responses — `assign_job` logs a warning, and the waiting methods (`get_results()`, `display_progress_bar()`) raise instead of blocking forever. Use `"global"` when you don't need task-specific qualification.
-- **Job**: A running instance of a job definition assigned to an audience
-- **Flow**: Continuously collect human responses in small batches without full job setup. Two kinds — **ranking flows** (Elo-style comparison) and **classify flows** (sort each datapoint into one of a fixed set of categories)
-- **MRI/Benchmark**: Compare and rank AI models on leaderboards
-
-**Client entry points:**
-- `client.job.template` — **start here to compare two image or video models**: Rapidata's field-tested alignment, preference and coherence setups, run on the user's pairs in one call (see **Templates**)
-- `client.job` — create job definitions (classification, comparison, locate, draw, select words, free text, ranking)
-- `client.audience` — create and find audiences
-- `client.flow` — continuous ranking and classify flows
-- `client.mri` — model ranking insights / benchmarks
-- `client.signals` — run a labeling job on a repeating schedule
-- `client.context` — shorten over-long datapoint contexts against a specific question
-- `client.billing` — read the current billing period's cost and remaining credit, and the outstanding balance owed (organization-level)
-- `client.asset` — upload media once (`client.asset.upload(path_or_url)` → `UploadedAsset`) and reuse the reference in any job definition
-- `client.validation` — validation sets (`create_classification_set`, `create_compare_set`, …, `get_validation_set_by_id`, `find_validation_sets`); only needed for a flow's `validation_set_id` — jobs qualify labelers through audience examples instead
-
-## Templates
-
-**Comparing two image or video models? Suggest a template first.** Rapidata runs model comparisons for its own benchmarks and for customers, and templates are the setups that work for the most common cases. The user only brings the pairs, plus the prompts for alignment. Everything else is Rapidata's field-tested setup: the question, the annotators and 11 votes per pair. There is no audience or job definition to build, and none of the usual first-job mistakes (too few votes, a long question with several criteria, the wrong annotators).
-
-| The user wants to know | Call | Annotators answer |
-|---|---|---|
-| Which model follows the prompt better? | `run_alignment`, with one prompt per pair | "Which image matches the description better?" (trained Alignment audience) |
-| Which model do people like more? | `run_preference` | "Which image do you prefer?" (broad global crowd) |
-| Which model makes fewer AI mistakes? | `run_coherence` | "Which image is more likely AI-generated?" (trained Coherence audience). The winner is the side that looks **more** AI-generated, so the better model wins fewer pairs |
-
-For a full picture of two models, run all three. Build a job definition instead (see **Job Definitions + Audiences**) only when the user needs something a template doesn't do: another question, more than two options, audio or text, their own audience, or a different number of votes. To rank three or more models, use **Model Ranking Insights (MRI / Benchmarks)**.
-
-```python
-job = client.job.template.run_alignment(
-    name="my-model vs flux-2",
-    datapoints=[["mine/cat.png", "flux/cat.png"], ["mine/dog.png", "flux/dog.png"]],
-    contexts=["A cat wearing a red scarf", "A dog surfing at sunset"],
-    a_b_names=["my-model", "flux-2"],
-)
-job.get_results()["summary"]  # {'my-model_wins_total': …, 'flux-2_wins_total': …}
-```
-
-Images and videos (`.mp4`, `.gif`) both work; send them as separate calls. Signatures, errors and what to do when a call says a job may have started: `python -m rapidata skill reference`, **Templates**.
+Rapidata connects you with human labelers. Run `pip install -U rapidata` (or `uv add rapidata --upgrade`) first: outdated versions can fail against the API. Upgrade when `RapidataClient()` says a new version exists, then re-read this guide.
 
 ## Task design rules
 
-Follow these for every job definition and audience example. Design each task so a labeler can answer it in about 10 seconds, 15 at most: labelers also answer validation tasks in the same session, mostly on phones, and within that time they read the instruction and the context and play the media (see rule 5). A task they can't take in at a glance gets guessed. If a task needs longer, contact Rapidata (info@rapidata.ai) before launching it. The SDK only rejects instructions over 250 characters and contexts over 400; a task that passes those checks can still be far too long. Design to the limits below, not to the SDK's.
+Follow these for every job definition, audience example and leaderboard. The SDK only rejects instructions over 250 and contexts over 400 characters; design to the limits below.
 
-1. **Keep `responses_per_datapoint` at 10 or more.** 10 is the default for every job type except comparison; never lower it to cut cost. With 3 responses, a single labeler who misread the task can flip the result. Comparisons default to `AdaptiveStopping()`, which already stops each pair as soon as its verdict is settled — leave it on. For classification with one correct answer, `QuorumStopping(threshold, max_responses)` stops early; otherwise label fewer datapoints to spend less.
-2. **Ask one short question about one criterion, in under 80 characters.** The instruction is the question and nothing else. To judge several aspects (motion, on-screen text, sound, …), create one job definition per aspect. Definitions and edge cases ("what counts", "what does not count", which side is which) do not go into the instruction either: cover them with an answer option such as `"Can't tell"`, by marking the target in the media itself, or with qualification examples on a custom audience (see **Custom Audiences**).
+1. **Keep `responses_per_datapoint` at 10 or more.** Never lower it to cut cost; label fewer datapoints instead. Comparisons: keep the default `AdaptiveStopping()`.
+2. **Ask one short question about one criterion, in under 80 characters.** One job definition per aspect. Definitions and edge cases never go into the instruction.
+3. **Keep each context to one sentence under 150 characters**, holding only what the question checks. Never pass the full generation prompt. A benchmark prompt shown to labelers is a context too.
+4. **Use plain words that translate cleanly** in the instruction, context and answer options.
+5. **Design each task to be answered in about 10 seconds, 15 at most, including playback.** Audio clips add up, videos don't. Longer tasks: contact Rapidata (info@rapidata.ai) first.
+6. **Set `min_responses_per_matchup` to 5 or more on every leaderboard.** The SDK default of 3 is too low.
+
+**Next, print your task's guide, one guide per command** (`python -m rapidata skill <guide>`; several in one command get cut to a preview), e.g. `comparison` (A vs B), `classification`, `ranking`, `annotation`, `benchmarks`, `audiences`, `flows`. Full index below.
+
+## Which guide to read
+
+Each guide describes the installed SDK version, like this one.
+
+| Task | Guide |
+|---|---|
+| Compare two image or video models (prompt alignment, preference, AI artifacts) with a one-call template, or any A-vs-B comparison job | `comparison` |
+| Put items into categories, yes/no questions, rating scales (Likert), quorum stopping | `classification` |
+| Rank 3 or more items within a group | `ranking` |
+| Tap points (locate), color in regions (draw), select words in a sentence, free-text answers | `annotation` |
+| Rank AI models on a leaderboard (benchmark / MRI): create, leaderboards, evaluate models | `benchmarks` |
+| Benchmark participants: uploads and recovery, pricing, prompt tags and assets | `benchmark-participants` |
+| Benchmark standings, win/loss matrices, voter demographics | `benchmark-results` |
+| Custom or qualified audiences, qualification examples, recruiting, queueing jobs | `audiences` |
+| Country / language recruitment filters, filtered audiences by age, gender, device | `filters` |
+| Continuous small-batch collection (ranking and classify flows), validation sets | `flows` |
+| DPO / RLHF preference data, best-of-N with flows | `flows-for-preference-data` |
+| Run a labeling job on a schedule | `signals` |
+| Cost estimates, billing period, remaining credit | `billing` |
+| Task settings (shuffling, video, translation, markdown, …), SDK configuration, context shortening, shared token files | `settings` |
+| Shared parameters, editing job definitions, stopping rules, result fields, progress | `reference` |
+| Failed uploads, `FailedUploadException`, jobs stuck in review or out of funds | `errors` |
+
+## Task design rules in detail
+
+Labelers answer validation tasks in the same session, mostly on phones, and within the 10–15 seconds they read the instruction and the context and play the media. A task they can't take in at a glance gets guessed. A task that passes the SDK's checks can still be far too long.
+
+1. **Responses.** 10 is the default for every job type except comparison. With 3 responses, a single labeler who misread the task can flip the result. `AdaptiveStopping()` (the comparison default) already stops each pair as soon as its verdict is settled; leave it on. For classification with one correct answer, `QuorumStopping(threshold, max_responses)` stops early.
+2. **Instruction.** The instruction is the question and nothing else. To judge several aspects (motion, on-screen text, sound, …), create one job definition per aspect. Cover definitions and edge cases ("what counts", "what does not count", which side is which) with an answer option such as `"Can't tell"`, by marking the target in the media itself, or with qualification examples on a custom audience (`python -m rapidata skill audiences`). Over 250 characters raises `ValueError: instruction is <n> characters; maximum is 250`; between 80 and 250 is accepted without a warning but is still too long. Ask about one thing ("What animal is in the image?", not "Does this contain a rabbit, dog, or cat?"), frame it positively ("Which is more realistic?", not "Which is less AI-generated?") and keep answer options distinct ("Poor / Acceptable / Excellent", not "Bad / Not Good / Fine / Good / Great").
    - ✅ `"Which video matches the description better?"`
    - ✅ `"Is there a real dog in the red circle?"` with options `["Yes", "No", "Can't tell"]`
    - ❌ `"Which video is better overall? Consider the motion, timing, camera, style, on-screen text and sound."` (several criteria)
    - ❌ `"Is there a real dog in the red circle? It is small and often blurred. A dog on a poster or a toy dog does not count."` (one criterion, but definitions and edge cases make it 116 characters)
    - ❌ `"Which option best describes the image? Select one answer."` (classification and comparison already accept exactly one answer, so "Select one answer" only adds words to translate and read)
-3. **Keep each context to one sentence under 150 characters, holding only what the question checks.** Don't pass the full generation prompt: nobody reads 300 characters and judges two videos in 15 seconds. Context shortening (see **Context Management**) focuses a context on the question but rarely gets it under 150 characters, so write the short version yourself.
-4. **Write the instruction, context and answer options in plain words that translate cleanly.** All three are machine-translated into each labeler's device language by default (see **Key Gotchas** #12), so most labelers read a translation, not your English. Use common words and literal phrasing; avoid idioms, slang, wordplay, abbreviations and words with several meanings, which come out wrong or meaningless in translation.
+3. **Context.** Nobody reads 300 characters and judges two videos in 15 seconds. The backend rejects contexts over 400 characters, so longer ones are always shortened against the instruction before upload (a warning says how many). Shortening (`python -m rapidata skill settings`, **Context management**) focuses a context on the question but rarely gets it under 150 characters, so write the short version yourself. A benchmark prompt shown to labelers (`show_prompt=True` on a leaderboard, e.g. prompt alignment) counts as context: register a short display text as the benchmark's prompt and pair the media through `identifiers` (`python -m rapidata skill benchmarks`, **Prompts shown to labelers**).
+4. **Translation.** The instruction, context and answer options are machine-translated into each labeler's device language by default (Key Gotcha 9), so most labelers read a translation, not your English. Use common words and literal phrasing; avoid idioms, slang, wordplay, abbreviations and words with several meanings, which come out wrong or meaningless in translation.
    - ✅ `"Does the video match the description?"` with options `["Yes", "No"]`
    - ❌ `"Does the clip nail the vibe of the prompt?"` with options `["Spot on", "Way off"]` (idiom and slang; "nail" and "spot on" translate literally)
-5. **Keep the playback short: audio clips add up, videos don't.** The 10–15 seconds include playback. Videos play at the same time and muted, so a comparison of two 10-second videos takes 10 seconds. Audio clips play one after the other, so both sides of an audio comparison add up. Keep the audio to about 10 seconds in total per task, for example two clips of at most 5 seconds, and trim longer clips to the part the question checks before uploading. A single video that shows A and then B counts in full.
+5. **Playback.** Videos play at the same time and muted, so a comparison of two 10-second videos takes 10 seconds. Audio clips play one after the other, so both sides of an audio comparison add up: keep the audio to about 10 seconds in total per task, for example two clips of at most 5 seconds, and trim longer clips to the part the question checks before uploading. A single video that shows A and then B counts in full. After creating a job definition, the SDK checks up to 100 datapoints and logs a warning when one needs more than 15 seconds of playback (audio summed, videos by the longest): trim the clips and create the definition again before assigning it.
    - ✅ Video comparison: two 10-second videos
    - ✅ Audio comparison: two 4-second clips
    - ❌ Audio comparison: two 10-second clips (20 seconds of listening before the labeler can answer)
    - ❌ One 18-second video showing A and then B, with `PlayPercentageVideoSetting(95)` (labelers must sit through 17 seconds)
+6. **Responses per matchup.** With 3 responses, one labeler who misreads the question decides a third of a matchup. Pass `min_responses_per_matchup=5` (or more) to `create_leaderboard` or `leaderboard.update`, and pick a `level_of_detail` budget that covers it (`python -m rapidata skill benchmarks`).
 
-## Job Definitions + Audiences
+## Installation & Authentication
 
-Job definitions cover **classification**, **comparison**, **locate**, **draw**, **select words**, **free text**, and **ranking**. To compare two image or video models on prompt alignment, preference or coherence, use **Templates** instead: no job definition or audience needed. For continuous, low-latency collection without full job setup, use Flows.
+```python
+from rapidata import RapidataClient
+client = RapidataClient()  # env vars → ~/.config/rapidata/credentials.json → browser login
+client = RapidataClient(client_id="...", client_secret="...")  # saved to ~/.config/rapidata/credentials.json
+client = RapidataClient(organization_id="org_...")  # pin saved credentials to one organization
+# Env vars: RAPIDATA_CLIENT_ID + RAPIDATA_CLIENT_SECRET (no browser), RAPIDATA_ENVIRONMENT (default rapidata.ai),
+# RAPIDATA_TOKEN_FILE (shared access token, same as token_file=). Empty values count as unset.
+```
 
-### Step-by-step workflow
+With `organization_id`, the browser login opens on that organization, credentials are saved per environment and organization, and switching organization in the dashboard does not move them; without it, any saved credential for the environment is reused. Without saved credentials, `RapidataClient()` blocks on a browser login for up to 5 minutes. As a coding agent, check auth first from the CLI:
+
+```bash
+python -m rapidata status [--environment ENV] [--organization ORG]  # exit 0: "Authenticated for {env} via {source}."; exit 1: not logged in. Never starts a login
+python -m rapidata login  [--environment ENV] [--organization ORG]  # browser login; saves credentials (exit 0), or "Login did not complete..." on stderr (exit 1). No-op if already authenticated; blocks up to 5 minutes
+```
+
+- Both check `RAPIDATA_TOKEN_FILE` → `RAPIDATA_CLIENT_ID` + `RAPIDATA_CLIENT_SECRET` → credentials saved for `https://auth.{environment}` (and `--organization`, when given). `--environment` defaults to `RAPIDATA_ENVIRONMENT`, else `rapidata.ai`.
+- Run `python -m rapidata status` before the first `RapidataClient()`. If it reports not logged in, run `python -m rapidata login` in the background (or with a tool timeout above 5 minutes) and show the user the URL it prints — the login URL is always printed to stderr, even in silent mode. After the user logs in once, every later `RapidataClient()` reuses the saved credentials.
+- For headless runs, set `RAPIDATA_CLIENT_ID` and `RAPIDATA_CLIENT_SECRET` instead.
+- Many workers (e.g. distributed training hitting a flow) must not each authenticate: share one token through a file (`python -m rapidata skill settings`, **Shared token files**).
+
+## Core Concepts
+
+- **Job Definition**: a reusable configuration for a labeling task (task type, instruction, datapoints, answer options). Types: classification, comparison, ranking, locate, draw, select words, free text.
+- **Audience**: annotators selected for **one specific task**. **global** is the generic pool with no setup (`client.audience.get_audience_by_id("global")`), **curated** pools are pre-trained on a domain (alignment: `aud_MU1GZYoESyO`), **custom** audiences are trained on your own qualification examples (Key Gotcha 3; `python -m rapidata skill audiences`).
+- **Job**: a running instance of a job definition assigned to an audience.
+- **Flow**: continuously collect responses in small batches without full job setup: **ranking flows** (Elo-style comparison) and **classify flows** (sort each datapoint into one of a fixed set of categories).
+- **MRI/Benchmark**: compare and rank AI models on leaderboards.
+
+**Client entry points:** `client.job.template` (**start here to compare two image or video models**: Rapidata's field-tested alignment, preference and coherence setups, 11 votes per pair on the right audience, in one call; suggest it before building a comparison job definition) · `client.job` (job definitions) · `client.audience` · `client.flow` · `client.mri` (benchmarks; rank three or more models) · `client.signals` (scheduled jobs) · `client.context` (shorten contexts against a question) · `client.billing` (organization-level cost, credit and outstanding balance) · `client.asset` (`client.asset.upload(path_or_url)` → `UploadedAsset`, reusable in any job definition) · `client.validation` (validation sets, only for a flow's `validation_set_id`; jobs qualify labelers through audience examples instead).
+
+## Step-by-step workflow
 
 ```python
 from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# 1. Get an audience. Default: the global pool — ready to go, zero setup.
+# 1. Get an audience: the global pool needs no setup (curated or custom audiences: Core Concepts)
 audience = client.audience.get_audience_by_id("global")
-# Curated domain pool (e.g. alignment): client.audience.get_audience_by_id("aud_MU1GZYoESyO")
-# Only if you need task-specific qualification: client.audience.create_audience(name="My Evaluators")
-#   — but recruiting is explicit: you MUST add >= min_tasks qualification examples (default 10,
-#   min 3; add_*_example) AND
-#   then call audience.start_recruiting() BEFORE assign_job. Adding examples does not start
-#   recruiting; a job assigned before recruiting starts can never receive responses.
-#   See "Custom Audiences".
 
-# 2. Create a job definition
+# 2. Create a job definition (print the task's guide first)
 job_def = client.job.create_classification_job_definition(
     name="Animal Classification",
     instruction="What animal is in this image?",
@@ -174,412 +117,13 @@ job_def = client.job.create_classification_job_definition(
     responses_per_datapoint=10,
 )
 
-# 3. Assign to audience (starts labeling)
-job = audience.assign_job(job_def)
-
-# 4. Watch responses come in (opens browser on the running job)
-job.view()
-
-# 5. Monitor and get results
-progress = job.get_progress()   # Non-blocking snapshot: state, completion_percentage, recruiting
-job.display_progress_bar()      # Or block on a live progress bar
-results = job.get_results()     # dict: {"info", "results": [...], "summary"} — shape per job type below
+job = audience.assign_job(job_def)  # 3. starts labeling
+job.view()                          # 4. watch the first responses in the browser
+progress = job.get_progress()       # 5. non-blocking: state, completion_percentage, recruiting
+job.display_progress_bar()          #    or block on a live progress bar
+results = job.get_results()     # dict: {"info", "results": [...], "summary"}; shape per job type in its guide
 df = results.to_pandas()
 ```
-
-### Reading results
-
-Every job type returns `{"info": {type, name, instruction, version, createdAt}, "results": [...], "summary"?}`. What one `results` entry is, and where each labeler's answer sits in its `detailedResults`:
-
-| Job type (`info.type`) | One `results` entry | Aggregate fields | Answer in `detailedResults[]` | `summary` |
-|---|---|---|---|---|
-| `Classification` | one datapoint | `aggregatedResults` (votes per option), `summedUserScores` (+ `…Ratios`) | `selectedCategory` | votes per option |
-| `Compare` | one pair | `winner`/`winnerIndex`, `weightedWinner`, `aggregatedResults`, `summedUserScores`, `adaptiveStoppingState` | `votedFor` | `A_wins_total`/`B_wins_total` |
-| `Ranking` | **one ranking** (`group` = its index in `datapoints`) | `summary`: datapoint → Elo score; `results`: its matchups, each shaped like a Compare pair | `votedFor` (inside each matchup) | none at top level |
-| `Locate` | one datapoint | `aggregatedResults`: every tapped `{x, y}` (percent of width/height), `notApplicable` | `locations` | none |
-| `Draw` | one datapoint | `aggregatedResults`: every `{size, points}` line, `notApplicable` | `lines` | none |
-| `SelectWords` | one datapoint | `sentence`, `aggregatedResults`: `{word, wordIndex, selectedAmount}` per word | `selectedWords` | none |
-| `FreeText` | one datapoint | `aggregatedResults`: list of answers | `answerText` | none |
-
-Datapoint entries carry `identifier` (your URL, file name or text — join on it), `assetUrl`, and `context` / `privateMetadata` when set. Full examples and every field: **Results Format** in `python -m rapidata skill reference`.
-
-### Classification
-
-Labelers pick exactly one of the answer options; the task screen allows only one, so the instruction never needs to say so.
-
-```python
-from rapidata import NoShuffleSetting
-
-job_def = client.job.create_classification_job_definition(
-    name="Image Classification",
-    instruction="What animal is in this image?",
-    answer_options=["Cat", "Dog", "Bird", "Other"],
-    datapoints=["img1.jpg", "img2.jpg"],
-    data_type="media",              # "media" (default) or "text" — text assets are NOT translated unless TranslateTextAssetsSetting is added
-    responses_per_datapoint=10,     # Fixed count, or QuorumStopping(threshold=7, max_responses=10) to stop once 7 agree
-    contexts=["Optional text context per datapoint"],
-    media_contexts=[["optional_reference.jpg"]],
-    settings=[NoShuffleSetting()],         # Keep answer order
-    failure_tolerance=0.01,         # Optional: fraction of datapoints allowed to fail the upload
-    private_metadata=[{"id": "abc"}],
-)
-```
-
-`failure_tolerance` (available on every `create_*_job_definition`, defaults to `rapidata_config.upload.failureTolerance` = `0.0`, i.e. strict) is the fraction of datapoints allowed to fail uploading while the job definition is still created. Above the tolerance **no job definition is created at all** — see gotcha 8.
-
-### Comparison
-
-Compare two items and choose the better one.
-
-```python
-from rapidata import AdaptiveStopping
-
-job_def = client.job.create_compare_job_definition(
-    name="Image Comparison",
-    instruction="Which image is higher quality?",
-    datapoints=[["img_a1.jpg", "img_b1.jpg"], ["img_a2.jpg", "img_b2.jpg"]],
-    data_type="media",
-    responses_per_datapoint=AdaptiveStopping(),  # The default; see below
-    contexts=["Prompt that generated these"],
-    media_contexts=[["reference.jpg"]],
-    a_b_names=["Model A", "Model B"],
-)
-```
-
-**Adaptive stopping (compare default).** `AdaptiveStopping(max_responses=None, min_confidence=None, ambiguity_threshold=None)` — `None` uses the default (100 / 0.9 / 0.64). Each response is weighted by the labeler's user score, and a pair stops at the first settled verdict: `Decided` (a winner with ≥ 90% confidence), `Ambiguous` (too close to call: inside the 20/80–80/20 band by default), or `Undecided` at `max_responses`. Clear pairs stop after 7 responses, ~21 per pair on average, ~31 for the hardest pairs (split around 35/65); `max_responses` is only a safety cap the defaults never reach — don't tune it. Keep the defaults unless you know why; **raising** `ambiguity_threshold` (higher is stricter) resolves less decisive pairs, at the cost of more responses (`0.75` → 25/75–75/25, about a third more responses on average; `0.91` → 35/65–65/35). A winner always beats ambiguous: a 70/30 pair can still be `Decided`. Each result datapoint gains `adaptiveStoppingState` — see **Early Stopping** in reference.md. Other values: an `int` for a fixed count. Compare-only: other job types raise `ValueError`.
-
-### Ranking
-
-Ranking is available as a job definition or via **continuous ranking flows** (see below).
-
-```python
-job_def = client.job.create_ranking_job_definition(
-    name="Image Quality Ranking",
-    instruction="Which image looks better?",
-    datapoints=[["img1.jpg", "img2.jpg", "img3.jpg"]],  # outer list = independent rankings
-    comparison_budget_per_ranking=50,
-    responses_per_comparison=1,
-    random_comparisons_ratio=0.5,
-    contexts=["Optional context"],
-)
-job = audience.assign_job(job_def)
-job.display_progress_bar()
-results = job.get_results()  # one entry per ranking: results["results"][0]["summary"] = {datapoint: Elo score}
-df = results.to_pandas()     # one row per ranked datapoint: group, datapoint, score, rank
-```
-
-**Small rankings are matched exhaustively.** A ranking with **more than 10 datapoints** is matched adaptively (Elo-style) within `comparison_budget_per_ranking`, and `random_comparisons_ratio` applies as usual. A ranking with **10 or fewer datapoints** instead compares every unique pair, spreading the budget evenly across pairs (rounded down to a multiple of the pair count; every pair is compared at least once even if the budget is smaller than the pair count) — here `random_comparisons_ratio` has **no effect**.
-
-### Locate
-
-Ask labelers to tap on the points in a datapoint that match your instruction. Results are the set of tapped coordinates per datapoint. No `answer_options`, `a_b_names`, `data_type`, `confidence_threshold`, or `quorum_threshold`.
-
-```python
-from rapidata import LocateMaxPointsSetting
-
-job_def = client.job.create_locate_job_definition(
-    name="Artifact Detection",
-    instruction="Tap on any visual glitches or errors in the image.",
-    datapoints=["img1.jpg", "img2.jpg"],
-    responses_per_datapoint=35,
-    contexts=["Optional text context"],
-    media_contexts=[["optional_reference.jpg"]],
-    settings=[LocateMaxPointsSetting(5)],
-    private_metadata=[{"id": "abc"}],
-)
-```
-
-Locate qualification examples take `truths` as a `list[Box]` (image ratios 0.0–1.0) — see `add_locate_example` under Custom Audiences.
-
-### Draw
-
-Ask labelers to draw (color in) regions of an image that match your instruction. Results are the set of drawn lines per datapoint. No `answer_options`, `a_b_names`, `data_type`, `confidence_threshold`, or `quorum_threshold`.
-
-```python
-job_def = client.job.create_draw_job_definition(
-    name="Artifact Drawing",
-    instruction="Color in any visual glitches or errors in the image.",
-    datapoints=["img1.jpg", "img2.jpg"],
-    responses_per_datapoint=35,
-    contexts=["Optional text context"],
-    media_contexts=[["optional_reference.jpg"]],
-    private_metadata=[{"id": "abc"}],
-)
-```
-
-Draw qualification examples take `truths` as a `list[Box]`; labelers pass when their lines fall within a box — see `add_draw_example` under Custom Audiences.
-
-### Select Words
-
-Ask labelers to select the words from a sentence that match your instruction (e.g., words not depicted in an image). Each datapoint is paired with a `sentence` split by spaces. No `contexts`, `media_contexts`, `data_type`, `answer_options`, `a_b_names`, `confidence_threshold`, or `quorum_threshold`.
-
-```python
-job_def = client.job.create_select_words_job_definition(
-    name="Image-Text Alignment",
-    instruction="Select the words not correctly depicted in the image.",
-    datapoints=["img1.jpg", "img2.jpg"],
-    sentences=["A cat on a red couch [No_mistakes]", "A blue car in the rain [No_mistakes]"],
-    responses_per_datapoint=15,
-    private_metadata=[{"id": "abc"}],
-)
-```
-
-Select words qualification examples take `truths` as a `list[int]` of 0-based word indices — see `add_select_words_example` under Custom Audiences.
-
-### Free Text
-
-Ask labelers to answer your instruction with free-form text. No `answer_options`, `a_b_names`, `confidence_threshold`, or `quorum_threshold`. Note: free text answers cannot be graded against a ground truth, so audiences cannot be trained with free text qualification examples.
-
-```python
-job_def = client.job.create_free_text_job_definition(
-    name="Prompt Collection",
-    instruction="What would you like to ask an AI? Please spell out the question.",
-    datapoints=["image.jpg"],
-    responses_per_datapoint=15,
-    contexts=["Optional text context"],
-)
-```
-
-### Upload once, reuse the reference
-
-`client.asset.upload(path_or_url)` uploads a local file or URL and returns an `UploadedAsset`. Every `create_*_job_definition` and `set_datapoints` accepts it wherever it takes a media datapoint or media context, alone or mixed with paths and URLs, and uses it as-is: it is never uploaded again.
-
-```python
-from rapidata import UploadedAsset
-
-baseline = client.asset.upload("baseline.png")  # UploadedAsset(name='<uuid>.png')
-job_def = client.job.create_compare_job_definition(
-    name="Baseline vs candidates",
-    instruction="Which image looks better?",
-    datapoints=[[baseline, "candidate_1.png"], [baseline, "https://example.com/candidate_2.png"]],
-)
-
-saved_name = baseline.name               # keep the name to reuse this upload later,
-baseline = UploadedAsset(saved_name)     # e.g. in another session
-```
-
-An `UploadedAsset` is media, so it cannot be a `data_type="text"` datapoint. Audience examples, validation sets, flows and benchmarks still take paths and URLs only.
-
-### Custom Audiences
-
-Create an audience trained on your specific task.
-
-⚠️ **Recruiting is explicit — you must start it yourself.** A custom audience recruits nobody until you (1) add **at least `min_tasks` qualification examples** (default 10, never fewer than 3) with `add_*_example(...)` and (2) call `audience.start_recruiting()`. With fewer examples than `min_tasks`, `start_recruiting()` raises `RapidataError` ("The graduation rule needs 10 validation tasks, but the audience only has 8") — add examples, or pass a lower `min_tasks` to `create_audience`. Adding examples does **not** start recruiting; until `start_recruiting()` is called the audience stays in its `Created` state. A job assigned to such an audience is still created (with a warning), but it can never receive responses — `display_progress_bar()` / `get_results()` raise an error explaining that nobody graduated and nobody is being recruited. Call `start_recruiting()` **once**, after all examples are added and reviewed, before `assign_job`. If you don't need task-specific qualification, skip all of this and use the ready-to-go global pool with no setup: `client.audience.get_audience_by_id("global")`.
-
-**Important:** Every qualification example and its associated truth must be manually and thoroughly reviewed by a human before use. If an example has a wrong or ambiguous truth value, the qualification process will filter out good labelers who answer correctly while letting through bad labelers who happen to match the incorrect answer — completely inverting quality control. Always verify that each example has a clear, unambiguous correct answer.
-
-```python
-from rapidata import Box, NoShuffleSetting, AllowNeitherBothSetting
-
-audience = client.audience.create_audience(
-    name="Expert Evaluators",
-    # target_accuracy=0.8,   # Optional: fraction of qualification tasks (0-1) a labeler must get right (server default 0.75)
-    # min_tasks=12,          # Optional: qualification tasks before the accuracy verdict is trusted (server default 10)
-    # max_tasks=30,          # Optional: cap on admission-trial tasks before a verdict is forced (default: no cap)
-)
-
-# Add classification examples
-audience.add_classification_example(
-    instruction="Rate image quality",
-    answer_options=["Poor", "Good", "Excellent"],
-    datapoint="example.jpg",
-    truth=["Excellent"],
-    context="Optional context",
-    data_type="media",
-    explanation="This image is excellent due to its high resolution and sharp focus.",  # Shown to labelers who answer incorrectly
-    settings=[NoShuffleSetting()],  # Optional: match job settings so labelers qualify on the same UI
-)
-
-# Add comparison examples
-audience.add_compare_example(
-    instruction="Which image follows the prompt better?",
-    datapoint=["good.jpg", "bad.jpg"],
-    truth="good.jpg",
-    context="A cat on a chair",
-    data_type="media",
-    explanation="The first image clearly shows a cat sitting on a chair as described.",  # Shown to labelers who answer incorrectly
-    settings=[AllowNeitherBothSetting()],  # Optional: match job settings so labelers qualify on the same UI
-)
-
-# Add locate examples — Box coordinates are image ratios (0.0–1.0)
-audience.add_locate_example(
-    instruction="Tap on any visual glitches or errors in the image.",
-    datapoint="example_with_artifact.jpg",
-    truths=[Box(x_min=0.44, y_min=0.42, x_max=0.58, y_max=0.63)],
-    context="Optional context",
-    explanation="The artifact is in the highlighted region.",  # Shown to labelers who answer incorrectly
-    settings=[...],  # Optional: match job settings so labelers qualify on the same UI
-)
-
-# Add draw examples — graded on whether the drawn lines fall within a box
-audience.add_draw_example(
-    instruction="Color in any visual glitches or errors in the image.",
-    datapoint="example_with_artifact.jpg",
-    truths=[Box(x_min=0.44, y_min=0.42, x_max=0.58, y_max=0.63)],
-    explanation="The artifact is within the highlighted region.",  # Shown to labelers who answer incorrectly
-    settings=[...],  # Optional: match job settings so labelers qualify on the same UI
-)
-
-# Add select words examples
-audience.add_select_words_example(
-    instruction="Select the words not correctly depicted in the image.",
-    datapoint="image.jpg",
-    sentence="a white cat on a sunny beach [No_mistakes]",
-    truths=[1],  # 0-based word indices to select; index 1 = "white" if the cat is black
-    # required_precision=1, required_completeness=1,  # defaults: no wrong words, all correct words
-    explanation="The cat in the image is black, not white.",  # Shown to labelers who answer incorrectly
-    settings=[...],  # Optional: match job settings so labelers qualify on the same UI
-)
-
-# Inspect the examples currently on the audience
-examples_df = audience.get_examples(amount=10, page=1)
-
-# Remove one with a wrong or ambiguous truth; ids are in the "id" column
-audience.delete_example(examples_df["id"].iloc[0])
-
-# Once >= min_tasks examples (default 10) are added and reviewed, start recruiting. This is required and explicit:
-# adding examples does not start it, and a job assigned before this can never get responses.
-audience.start_recruiting()
-
-# Watch the funnel fill up (graduated / distilling / dropped / inactive)
-metrics = audience.get_recruiting_metrics()
-print(metrics.graduated, metrics.distilling)
-
-# Now the audience recruits against the examples; assign a job as usual.
-job = audience.assign_job(job_def)
-```
-
-**Managing audiences (`client.audience`):**
-- `client.audience.create_audience(name, filters=None, target_accuracy=None, min_tasks=None, max_tasks=None)` — create a custom audience. The last three set the admission bar for qualification: `target_accuracy` (0–1, server default `0.75`), `min_tasks` (server default `10`), `max_tasks` (no cap by default). Supplying only some of them is fine — the SDK fills in the defaults. Raises `ValueError` for an accuracy outside 0–1, `min_tasks < 1`, or `max_tasks < min_tasks`.
-- `client.audience.get_audience_by_id(audience_id)` — fetch by id; pass `"global"` for the ready-to-go global audience
-- `client.audience.find_audiences(name="", amount=10, page=1)` — list your audiences (newest first), optionally filtered by name
-
-**Audience methods:**
-- `audience.start_recruiting()` — begin recruiting/onboarding annotators against the audience's qualification examples. **Required and explicit for custom audiences**: call it once, after adding at least `min_tasks` examples (default 10, min 3) and before `assign_job` — adding examples never starts recruiting on its own, and a job assigned before recruiting has started can never receive responses. Calling it again on the same audience object is a no-op; a backend failure raises `RapidataError` rather than being swallowed. Returns the audience, so it chains. Not needed for the global/curated pools.
-- `audience.get_recruiting_metrics()` — snapshot of the audience's recruiting funnel as a `RecruitingMetrics` (`graduated` = eligible to work now, `distilling` = still qualifying, `dropped`, `inactive`; one bucket per annotator). All zeros before `start_recruiting()` has pulled anyone in, and for curated audiences.
-- `audience.assign_job(job_definition, run_after=None)` — start a job. Never blocks on funds: the job is always created, but if its estimated cost exceeds your account balance a cost warning is logged (with the estimate, your balance, and the shortfall) and the job may pause partway until you top up. A warning is also logged if the audience has no graduated annotators yet. Pass `run_after` (a `RapidataJob`, a job id string, or `None`) to queue this job behind an earlier one: the new job is created immediately in the `Queued` state and only starts once the preceding job **completes or fails**, so a single audience never splits its annotators across two jobs at once. Default `None` starts the job right away. Chain further by pointing each new job at its predecessor.
-
-```python
-first = audience.assign_job(job_def)
-second = audience.assign_job(other_job_def, run_after=first)   # or run_after="job_id"
-```
-- `audience.find_jobs(name="filter", amount=10, page=1)` — find assigned jobs
-- `audience.update_filters([...])` — replace the recruitment filters on this audience (audience-supported filters only — see below)
-- `audience.filter([filters])` — derive a filtered slice of this audience's graduated labelers without re-onboarding; multiple filters are ANDed. Returns a `RapidataFilteredAudience` (id prefixed `fau_`) that exposes only `assign_job` and `find_jobs` (plus `id`, `name`, `filters`) — no examples, `update_filters`, `delete`, or nested `.filter()`. Its id (or the object) can be passed as a leaderboard's `audience_id`
-- `audience.update_name("New Name")` — rename
-- `audience.get_examples(amount=10, page=1)` — list qualification examples (DataFrame with columns `id`, `asset`, `truth`, `context`, `contextAsset`)
-- `audience.delete_example(example_id)` — delete one qualification example by its `id` from `get_examples`, e.g. one whose truth turned out wrong or ambiguous. Returns the audience, so it chains.
-- `audience.delete()` — delete the audience
-
-**Audience-supported filters:** `CountryFilter`, `LanguageFilter`, `AgeFilter` (`AgeGroup`), `GenderFilter` (`Gender`), and `DeviceFilter` (`DeviceType`), plus the `AndFilter`/`OrFilter`/`NotFilter` combinators (also via `&` / `|` / `~`). `UserScoreFilter`, `CampaignFilter`, and `CustomFilter` are **not supported on audiences** and raise `NotImplementedError`.
-
-**Looking up existing jobs (`client.job`):** `get_job_definition_by_id(id, revision=None)` (latest revision by default), `find_job_definitions(name="", amount=10, page=1)`, `get_job_by_id(id)`, `find_jobs(name="", amount=10, page=1)`.
-
-**Job / Job Definition methods:**
-- `job_def.preview()` — open browser preview of what labelers see
-- **Editing a job definition** — a `RapidataJobDefinition` holds one revision (`job_def.revision`; `create_*_job_definition` returns revision 1). Assigning `job_def.instruction`, `.answer_options` (classification only; one list for every datapoint), `.responses_per_datapoint` (an `int`, `AdaptiveStopping` (compare only) or `QuorumStopping`; reading returns the same kinds), `.settings` (replaces every setting) or `.validation_set_id` (None clears it) only stages the change. `job_def.save()` sends the whole revision in one request and returns the new revision number; the object moves to it. See **Editing a Job Definition** in examples.md
-- `job_def.set_datapoints(datapoints=..., data_type=..., contexts=..., media_contexts=..., sentences=..., private_metadata=..., answer_options=...)` — upload a new dataset now and stage it for `save()`; raises `FailedUploadException` (nothing staged) if any datapoint fails. Pass `answer_options` for classification definitions whose options are set per datapoint. `update_dataset(...)` still works but is deprecated: it is `set_datapoints(...)` + `save()`
-- `job_def.has_unsaved_changes`, `job_def.discard_changes()`, `job_def.reload(revision=None)` (raises while changes are unsaved), `job_def.revisions()` (list of `RevisionInfo`: `revision`, `base_revision`, `state`, `created_at`), `job_def.state` (`Pending` until the new revision's preview is built, then `Completed` / `Failed`), `job_def.wait_until_ready(timeout=300)`
-- `job_def.estimated_cost` / `job.estimated_cost` — a `CostEstimate` (`estimated_cost`, `datapoint_count`, `required_responses`) for running to completion; available on a job definition *before* assigning it. The estimate is priced shortly after creation, so the first read blocks briefly until it's ready (raises `TimeoutError` if still unavailable after a few minutes), then caches. It's an estimate, not the final bill — early stopping can lower the actual cost. For adaptive compare jobs, for now there is no forecast for the expected response count, so the estimate uses the `max_responses` setting per pair, which is well above the expected cost.
-- `job_def.delete()` — delete a job definition and all its revisions
-- `job.display_progress_bar(refresh_rate=5)` — blocking progress bar
-- `job.get_status()` — current status string
-- `job.get_progress()` — non-blocking snapshot: a `JobProgress` with `state` (same value as `get_status()`), `completion_percentage` (0–100) and `recruiting` (a `RecruitingMetrics`, or `None` for curated audiences)
-- `job.get_results(preliminary_results=False)` — with `preliminary_results=True` on an unfinished job, returns a snapshot of the responses collected so far without waiting (not final, may miss datapoints); on a completed job it returns the final results. Otherwise blocks until Completed/Failed (auto-regenerates if `StaleResults`), returns `RapidataResults`. If the job needs manual review (`ManualApproval`), runs out of funds mid-run (`SpendLimited`), is paused (`Paused`) or is blocked by a flagged rapid (`Blocked`) — none of these completes on its own — it raises an informative error naming the state instead of blocking; top up, wait for a reviewer, `resume()` or unflag the rapid on `job.job_details_page`, then call it again. It also raises up front when the job's audience **can never produce responses** (nobody graduated *and* nobody is being recruited); an audience that is merely still distilling does not raise.
-- `job.pause()` / `job.resume()` — stop collecting responses / continue; both return the job. While `Paused`, `get_results()` and `display_progress_bar()` raise instead of blocking
-- `job.view()` — open the job's details page in the browser
-- `job.delete()` — delete a running job
-
-## Context Management
-
-Write contexts as one sentence under 150 characters (see **Task design rules**); the shortening below is a fallback, not a substitute. Datapoint contexts have a **400-character maximum**; the backend rejects longer ones. An over-long context is therefore **always** shortened against the task instruction before upload — this cannot be turned off — and a warning reports how many contexts were shortened:
-
-```python
-job_def = client.job.create_classification_job_definition(
-    name="Outfit check",
-    instruction="Does the main character wear the right clothing?",
-    answer_options=["Yes", "No"],
-    datapoints=["scene.jpg"],
-    contexts=["<a very long, detailed scene description ...>"],
-)
-```
-
-A context tuned to the question focuses the labeler even when it already fits the limit. Set `rapidata_config.upload.contextShortening = True` to have **every** context shortened, not just the over-long ones:
-
-```python
-from rapidata import rapidata_config
-
-rapidata_config.upload.contextShortening = True
-```
-
-Shorten contexts directly without creating a job via `client.context`:
-
-```python
-# Single context
-short = client.context.shorten_context(
-    context="<a very long description ...>",
-    question="Does the main character wear the right clothing?",
-)
-
-# Batch: (context, question) pairs, order preserved; sent as concurrent batches of 10
-shortened = client.context.shorten_contexts([
-    (context_a, question_a),
-    (context_b, question_b),
-])
-```
-
-`ContextManager` is also importable directly: `from rapidata import ContextManager`.
-
-## Migration from the removed Order API
-
-The order-based API (`client.order`, `RapidataOrder`, `RapidataOrderManager`, `create_*_order()`) no longer exists — never generate code that uses it. Replace each `create_*_order()` with the matching `create_*_job_definition()` on `client.job`, validation sets with audience qualification examples, and `order.run()` with `audience.assign_job(job_def)`.
-
-## Settings
-
-Settings control how a task is rendered and behaves for labelers. All settings are importable from the top-level `rapidata` package.
-
-Most settings only apply to specific task types. If you add a setting that the job's task type does not support, the SDK logs a non-fatal warning and still sends the flag — it is never dropped and no error is raised. Ranking jobs are treated as Compare for this check.
-
-Apart from `CustomSetting` and the settings that take a number (`AllowNeitherBothSetting`, `PlayPercentageVideoSetting`, `FreeText*CharactersSetting`, `Locate*PointsSetting`), settings are on/off and take no argument: add the setting to turn the behavior on, leave it out to keep it off. Passing a value, e.g. `MuteVideoSetting(False)`, raises `TypeError`.
-
-```python
-from rapidata import (
-    NoShuffleSetting, AllowNeitherBothSetting, MarkdownSetting,
-    MuteVideoSetting, FreeTextMinimumCharactersSetting, FreeTextMaxCharactersSetting,
-    SwapContextInstructionSetting, PlayPercentageVideoSetting,
-    OriginalLanguageOnlySetting, NoMistakeOptionSetting, DisableAutoloopSetting,
-    NoInstructionDisplaySetting, KeyboardNumericSetting,
-    LocateMaxPointsSetting, LocateMinPointsSetting,
-    ComparePanoramaSetting, CompareEquirectangularSetting,
-    ClassifyEquirectangularSetting, TranslateTextAssetsSetting,
-    PinContextMediaSetting, ReferenceOverlaySetting, CustomSetting,
-)
-
-settings=[NoShuffleSetting()]                             # Keep answer options in order (use for Likert scales)
-settings=[AllowNeitherBothSetting()]                      # Comparison: "Unsure" (neither/both) button, shown after delay_ms (default 5000)
-settings=[MarkdownSetting()]                              # Render markdown in text
-settings=[MuteVideoSetting()]                             # Start videos muted
-settings=[FreeTextMinimumCharactersSetting(50)]           # Min text length for free-text tasks (use with caution — see note below)
-settings=[FreeTextMaxCharactersSetting(500)]              # Max text length for free-text tasks (default 1024) (use with caution — see note below)
-settings=[SwapContextInstructionSetting()]                # Swap the positions of context and instruction
-settings=[PlayPercentageVideoSetting(percentage=95)]      # Require labelers to watch N% of video before answering (0-95)
-settings=[OriginalLanguageOnlySetting()]                  # Do not translate the task — instruction, context, answer options are translated by default (overrides TranslateTextAssetsSetting)
-settings=[NoMistakeOptionSetting()]                       # Add a "No mistakes" button so labelers can confirm the media has no errors
-settings=[DisableAutoloopSetting()]                       # Disable automatic looping of videos
-settings=[NoInstructionDisplaySetting()]                  # Hide instruction on the task screen (hides the context instead if combined with SwapContextInstructionSetting)
-settings=[KeyboardNumericSetting()]                       # Free text: open numeric keyboard on mobile
-settings=[LocateMaxPointsSetting(5)]                      # Locate task: max number of points (default 3)
-settings=[LocateMinPointsSetting(1)]                      # Locate task: min number of points (default 1)
-settings=[ComparePanoramaSetting()]                       # Render comparison media in a panoramic viewer
-settings=[CompareEquirectangularSetting()]                # Render comparison media as equirectangular 360° view
-settings=[ClassifyEquirectangularSetting()]               # Render classification media as equirectangular 360° view
-settings=[TranslateTextAssetsSetting()]                   # Translate text assets (text datapoints + text context assets) into the labeler's language; source assumed English
-settings=[PinContextMediaSetting()]                       # Show the media context next to the task instead of in the collapsible drawer — only if there is enough space for it; inspect job_def.preview() carefully. Multi-asset contexts show only the first asset
-settings=[ReferenceOverlaySetting()]                      # Compare of two image edits: the media context ("Original") covers both options, then the edits are revealed; labelers can toggle back. Needs exactly one image in media_contexts
-settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (target="rapids", default); target="campaign" for campaign-level
-```
-
-**Note on `FreeTextMinimumCharactersSetting` / `FreeTextMaxCharactersSetting`:** use these with caution. Free-text responses already pass through a reasonableness check by default, so tightening the bounds is usually unnecessary and will reject otherwise valid answers. Only set them when the question genuinely demands a specific length (e.g. a single word, or a full paragraph).
 
 ## Key Gotchas
 
@@ -587,452 +131,18 @@ settings=[CustomSetting(key="my_flag", value="on")]       # Rapid-level flag (ta
 2. **Use `NoShuffleSetting()` for Likert scales** — ordered answer options get shuffled by default
 3. **Custom audiences need ≥ `min_tasks` examples AND an explicit `start_recruiting()`** — recruiting never begins on its own. Add **at least `min_tasks` qualification examples** (default 10, min 3; otherwise `start_recruiting()` raises), then call `audience.start_recruiting()` **once**, before `assign_job`. Skip either step and the audience recruits nobody: the job is still created (with a warning), but it can never receive responses, so `get_results()` / `display_progress_bar()` raise an error saying the audience can never produce responses. Use `client.audience.get_audience_by_id("global")` when you don't need task-specific qualification.
    - **One audience = one task.** A custom audience is qualified for the specific task its examples describe. Reusing it for a different, unrelated task is a misuse — the qualification no longer applies and the quality guarantee is lost. Reuse it only for repeated/scheduled runs of the *same* task; spin up a new audience for a new task.
-4. **10–15 seconds per task including playback, instructions under 80 characters** — design tasks to be answered in about 10 seconds, 15 at most (contact Rapidata if one needs longer), including playback (videos play at the same time, but audio clips play one after the other, so both sides of an audio comparison add up); keep instructions to one criterion and under 80 characters (see **Task design rules**). The SDK itself only rejects instructions over 250 characters (`ValueError: instruction is <n> characters; maximum is 250`), so an instruction between 80 and 250 characters is accepted without a warning but is still too long
-5. **Responses may exceed `responses_per_datapoint`** — concurrent labelers can cause slight overflow
-6. **Stopping rules go in `responses_per_datapoint`** — `AdaptiveStopping()` (compare only, the compare default; raises on other job types), `QuorumStopping(threshold, max_responses)` (classification and compare), or an `int` for a fixed count. `quorum_threshold` and `confidence_threshold` are deprecated (`DeprecationWarning`); they cannot be set together, and raise `ValueError` combined with either class. With the compare default left in place they use a cap of 15
-7. **Compare jobs no longer collect a fixed 10 by default** — a pair uses ~21 responses on average, ~31 for the hardest pairs; pass `responses_per_datapoint=10` for the old behavior. Read `adaptiveStoppingState.verdict` (`Decided` / `Ambiguous` / `Undecided` / `Open`) rather than `winner` on adaptive results: `Ambiguous` means the pair is genuinely close, not that too few responses came in
-8. **Failed uploads abort job-definition creation** — job definitions are created atomically: if more than `failure_tolerance` of the datapoints fail to upload, **no job definition is created** (`e.job_definition` is `None`) and at least one datapoint must always succeed. Fix the failing datapoints and call `e.retry()`, which re-uploads only the failed ones into the *same* dataset and finishes creating the definition; it raises `FailedUploadException` again if failures remain, so it can be looped. Within tolerance, the definition is created and a warning reports how many failed. Inspect failures via `e.failures_by_reason`, `e.failures_by_stage` (grouped by remote-URL ingestion stage — only `internal` is a Rapidata-side fault), and each `FailedUpload`'s `stage` / `http_status`
-9. **Preview link printed on job creation** — creating a job definition prints a dashboard preview link; suppress prints with `rapidata_config.logging.silent_mode = True`
-10. **Context length limit is 400 characters** — a cap, not a target: write one sentence under 150 characters (see **Task design rules**). The backend rejects contexts longer than 400 characters, so an over-long context is **always** shortened against the task instruction before upload (not optional; a warning reports how many were shortened). Set `rapidata_config.upload.contextShortening = True` to shorten *every* context, or use `client.context.shorten_context()` / `client.context.shorten_contexts()` to shorten manually.
-11. **Jobs can pause for manual review or funds** — `assign_job` always creates the job, but if its estimated cost exceeds your account balance it logs a cost warning and the job may pause until you top up. A job can also enter manual review (`ManualApproval`), become spend-limited (`SpendLimited`), or be `Blocked` because a rapid was flagged; since none of these completes on its own, `get_results()` raises an informative error naming the state instead of blocking — top up, wait for a reviewer, or unflag the rapid on `job.job_details_page` in the app, then retry.
-12. **Don't restrict evaluations to English speakers for comprehension** — the instruction, the `context` string and answer options are translated into each labeler's device language automatically, so the global pool understands an English task. Turn this off with `OriginalLanguageOnlySetting()`. Two exceptions:
+4. **Responses may exceed `responses_per_datapoint`** — concurrent labelers can cause slight overflow
+5. **Stopping rules go in `responses_per_datapoint`** — `AdaptiveStopping()` (compare only, the compare default; raises on other job types), `QuorumStopping(threshold, max_responses)` (classification and compare), or an `int` for a fixed count. A compare pair uses ~21 responses on average with the default, ~31 for the hardest pairs. `quorum_threshold` and `confidence_threshold` are deprecated (`DeprecationWarning`); they cannot be set together, and raise `ValueError` combined with either class. With the compare default left in place they use a cap of 15
+6. **Failed uploads abort job-definition creation** — if more than `failure_tolerance` (default `0.0`) of the datapoints fail to upload, **no job definition is created**. Fix the failing datapoints and call `e.retry()` on the `FailedUploadException`, which re-uploads only the failed ones and finishes the definition (`python -m rapidata skill errors`)
+7. **Preview link printed on job creation** — creating a job definition prints a dashboard preview link; suppress prints with `rapidata_config.logging.silent_mode = True`
+8. **Jobs can pause for manual review or funds** — `assign_job` always creates the job, but if its estimated cost exceeds your account balance it logs a cost warning and the job may pause until you top up. A job can also enter manual review (`ManualApproval`), become spend-limited (`SpendLimited`), or be `Blocked` because a rapid was flagged; since none of these completes on its own, `get_results()` raises an informative error naming the state instead of blocking — top up, wait for a reviewer, or unflag the rapid on `job.job_details_page` in the app, then retry.
+9. **Don't restrict evaluations to English speakers for comprehension** — the instruction, the `context` string and answer options are translated into each labeler's device language automatically, so the global pool understands an English task. Turn this off with `OriginalLanguageOnlySetting()`. Two exceptions:
    - **Text assets are NOT translated by default** — datapoints uploaded with `data_type="text"` (and text `context_assets`) are shown exactly as supplied unless you add `TranslateTextAssetsSetting()`, which translates them into each labeler's language. That setting **always treats the source text as English** — for non-English text, leave it off and target speakers of the text's language with `LanguageFilter`. Results keep referencing the original text. `OriginalLanguageOnlySetting` wins over it. A job with text assets needs `TranslateTextAssetsSetting()` or a `LanguageFilter` (same rules as below), else `assign_job` and `update_filters` raise.
    - **Text inside images and videos is never translated.** To measure it (e.g. rendered text in a generated image), run it as its own job or leaderboard that asks only about that dimension, on an audience filtered with `LanguageFilter` for the text's language — not `CountryFilter`, since a country's labelers don't all read its language. Keep the other dimensions on the unfiltered audience.
    - **`OriginalLanguageOnlySetting` needs a `LanguageFilter`** on the audience or its `audience.filter([...])` (unlisted audiences are exempt): `assign_job` raises `ValueError` otherwise. Change them together: `update_filters` also raises when new filters drop language while an active job needs it. Override both checks only on the user's explicit request: `rapidata_config.skipLanguageFilterCheck = True`.
-13. **Don't retry a template run blindly** — a `RapidataError` from `client.job.template.run_*()` saying "… so a job may have started" means exactly that: call `client.job.find_jobs(name)` first, and only call the method again if no job named exactly `name` was created after the call began. `find_jobs` also returns older jobs and longer names that contain the text, so never take its first result blindly.
-14. **`assign_job` runs the object's revision, not the latest** — it sends `job_def.revision` and raises `RuntimeError` while the object has unsaved changes; `save()` first. Two objects loaded at the same revision never see each other's changes: each `save()` creates its own revision from what it loaded, and the last save becomes the latest. Use `save(require_latest=True)` to refuse instead: it raises `RevisionConflictError` (`e.latest_revision`) when someone saved since you loaded, creating nothing; then `discard_changes()`, `reload()`, reapply and save
-15. **A media playback warning means the tasks are too long** — after creating a job definition, the SDK checks up to 100 datapoints and logs a warning when one needs more than 15 seconds of playback: audio clips add up, videos count by the longest. Trim the clips and create the definition again before assigning it (see **Task design rules**)
+10. **Don't retry a template run blindly** — a `RapidataError` from `client.job.template.run_*()` saying "… so a job may have started" means exactly that: call `client.job.find_jobs(name)` first, and only call the method again if no job named exactly `name` was created after the call began. `find_jobs` also returns older jobs and longer names that contain the text, so never take its first result blindly.
+11. **`assign_job` runs the object's revision, not the latest** — it sends `job_def.revision` and raises `RuntimeError` while the object has unsaved changes; `save()` first. Two objects loaded at the same revision never see each other's changes: each `save()` creates its own revision from what it loaded, and the last save becomes the latest. Use `save(require_latest=True)` to refuse instead: it raises `RevisionConflictError` (`e.latest_revision`) when someone saved since you loaded, creating nothing; then `discard_changes()`, `reload()`, reapply and save
 
-## Flows (Continuous Response Collection)
+## Migration from the removed Order API
 
-Flows continuously collect human responses in small batches without full job/audience setup. There are two kinds: **ranking flows** (Elo-style comparison, below) and **classify flows** (sort each datapoint into a category, further below).
-
-The flow classes are importable from the top level: `from rapidata import RapidataFlow, RapidataRankingFlow, RapidataClassifyFlow`. `RapidataFlow` is a shared base class (only `get_flow_items` and `delete`); the concrete `RapidataRankingFlow` and `RapidataClassifyFlow` subclasses carry the kind-specific `create_new_flow_batch` and `update_config`. Every flow carries a `flow_type` (`"ranking"` or `"simple"` — classify flows are backed by "simple" flows). `create_ranking_flow` returns a `RapidataRankingFlow` and `create_classify_flow` returns a `RapidataClassifyFlow`, but `get_flow_by_id` and `find_flows` return the union `RapidataRankingFlow | RapidataClassifyFlow` — narrow with `isinstance(flow, RapidataClassifyFlow)` before calling kind-specific batch methods.
-
-### Ranking Flows
-
-Lightweight continuous ranking:
-
-```python
-# Create flow
-flow = client.flow.create_ranking_flow(
-    name="Image Quality Ranking",
-    instruction="Which image looks better?",
-    max_response_threshold=100,       # Target responses per flow item (default 100)
-    min_response_threshold=50,        # Minimum acceptable responses (defaults to max_response_threshold); item is Incomplete if TTL expires below this
-    # validation_set_id="...",        # Optional: run a validation set alongside the flow
-    # settings=[NoShuffleSetting()],  # Optional: flow-wide settings
-    # drain_duration=..., serve_timeout=...,  # Optional: seconds (drainDurationSeconds / serveTimeoutSeconds)
-)
-
-# Preheat for low-latency responses (call ~5 minutes before time-sensitive batches)
-client.flow.preheat()
-
-# Add items to rank
-flow_item = flow.create_new_flow_batch(
-    datapoints=["img1.jpg", "img2.jpg", "img3.jpg"],
-    context="Generated by Model X",     # A single batch-level context shared across all comparisons
-    # context_assets=["reference.jpg"],  # 1–10 image/video/audio paths/URLs shown alongside instruction (flat list)
-    time_to_live=300,  # Seconds until expiry (10–3600, min 60 with default flow settings; defaults to 4 minutes when omitted)
-    # data_type="media", private_metadata=[...], accept_failed_uploads=False,  # also accepted
-)
-# Ranking batches take a batch-level context / context_assets only — no per-datapoint
-# contexts (those are a classify-batch feature).
-
-# Get results (flow items have their own result shape, not RapidataResults)
-results = flow_item.get_results()         # Blocks until complete; ranking items return FlowItemResult(datapoints={asset key: elo}, total_votes)
-status = flow_item.get_status()           # Non-blocking check (Pending, Running, Completed, Failed, Stopping, Stopped, or Incomplete)
-matrix = flow_item.get_win_loss_matrix()  # Pandas DataFrame (blocks until complete); ranking flow items only — raises ValueError otherwise
-count = flow_item.get_response_count()
-
-# Tune a ranking flow after creation (only the parameters you pass are changed)
-flow.update_config(
-    instruction="New instruction",
-    starting_elo=1000,
-    min_responses=40,
-    max_responses=120,
-    # drain_duration=..., serve_timeout=...,  # seconds
-)
-
-# Manage flows
-all_flows = client.flow.find_flows(name="", amount=10, page=1)
-flow = client.flow.get_flow_by_id("flow_id")
-items = flow.get_flow_items(amount=10, page=1)  # newest first, 10 per page by default
-flow.delete()
-```
-
-Note: `RapidataFlowItem` does **not** have `display_progress_bar()` — poll with `get_status()` or just call `get_results()` to block.
-
-Using flows as the preference signal for DPO/RLHF or best-of-N? Read the flows guide first (`python -m rapidata skill flows-for-preference-data`): TTL, not the max threshold, usually sets a flow item's turnaround.
-
-### Classify Flows
-
-Continuously sort each datapoint in a batch into one of the flow's categories:
-
-```python
-# Create flow
-flow = client.flow.create_classify_flow(
-    name="Text Detection",
-    instruction="Does this image contain text?",   # question shown with every datapoint
-    categories=[("Yes, clearly readable", "yes"), ("No", "no")],  # 2–8 options; a plain
-    #   string is shown and returned as-is, a (label, value) tuple shows label but returns value
-    max_responses_per_datapoint=15,   # default 15; accepted responses that close an image
-    #   (collection for that image stops once reached)
-    min_responses_per_datapoint=10,   # default 10, must be >= 1; average responses per image an
-    #   item needs (once it ends by its time to live) to be Completed rather than Incomplete.
-    #   Requires max_responses_per_datapoint >= min_responses_per_datapoint.
-    # validation_set_id="...",        # Optional
-    # settings=[...],                 # Optional: flow-wide settings
-    # drain_duration=..., serve_timeout=...,  # Optional: seconds (drainDurationSeconds / serveTimeoutSeconds)
-)
-# Time-to-live is set per batch only (create_new_flow_batch below), not on the flow.
-
-# After creation only the drain duration can be changed (instruction, categories and
-# response thresholds are fixed); omitting it keeps the current value
-flow.update_config(drain_duration=20)  # seconds
-
-# Add a batch of datapoints to classify
-flow_item = flow.create_new_flow_batch(
-    datapoints=["img1.jpg", "img2.jpg"],
-    contexts=["Text context for img1", "Text context for img2"],  # per-datapoint; exactly one per datapoint
-    # context_assets=[["ref1.jpg"], ["ref2a.jpg", "ref2b.jpg"]],  # Optional: one list of asset paths/URLs per
-    #   datapoint (list[list[str]] — each entry is a list even for a single asset); length must match datapoints
-    # time_to_live=300,  # Optional: seconds this batch may run (10–3600, min 60 with default flow settings); set per batch
-    # data_type="media", private_metadata=[...], accept_failed_uploads=False,  # also accepted
-)
-# Classify batches take per-datapoint contexts / context_assets only — no batch-level context.
-
-# Get results — classify flow items return ClassifyFlowItemResult
-result = flow_item.get_results()      # Blocks until complete
-result.total_responses                # int
-for key, dp in result.datapoints.items():   # key = source URL, else original filename
-    dp.majority_value      # category value chosen most often (None on a tie)
-    dp.distribution        # {category value: number of responses} for EVERY category defined in the
-    #   flow, in the flow's category order, with 0 for categories nobody chose (any unexpected
-    #   backend values are appended after the blueprint categories). Filling in the zeros costs one
-    #   extra API call to fetch the flow's categories when results are computed.
-    dp.response_count      # responses collected for this datapoint
-
-count = flow_item.get_response_count()  # total responses (blocks until complete)
-```
-
-Result classes (frozen dataclasses, importable from `rapidata`): `ClassifyFlowItemResult` (`datapoints`, `total_responses`) and `ClassifyDatapointResult` (`majority_value`, `distribution`, `response_count`), alongside the existing `FlowItemResult`.
-
-## Model Ranking Insights (MRI / Benchmarks)
-
-Compare and rank AI models on leaderboards. Supports images, videos, audio, and text.
-
-```python
-# Create benchmark
-benchmark = client.mri.create_new_benchmark(
-    name="AI Art Competition",
-    prompts=["A serene mountain landscape", "A futuristic city"],
-    # identifiers=[...],        # Optional: stable ids for each prompt
-    # prompt_assets=[["ref1.jpg"], ["ref2.jpg"]],  # Optional: one list of reference-media
-    #                           #   URLs/paths per prompt (list[list[str]]; several entries in a
-    #                           #   list register as one multi-asset, or None for no asset)
-    # tags=[...],               # Optional: per-prompt tags — str, Tag(value, category=...), or a mix
-    # origins=[...],            # Optional: per-prompt Origin(source) or plain source string
-)
-
-# Add prompts later if needed (one or many, matched up by index)
-benchmark.add_prompts(
-    prompts=["A quiet lake at dawn"],
-    # identifiers=["dawn_lake"],   # Optional: stable id per prompt
-    # prompt_assets=[["ref.jpg"]], # Optional: one list of reference-media URLs/paths per prompt
-    #                              #   (list[list[str]]; passing a bare str per prompt still works
-    #                              #   but is deprecated). Same shape as benchmark.prompt_assets reads back.
-    # tags=[["landscape"]],        # Optional: list of tag lists, one per prompt (str and/or Tag)
-    # origins=["coco"],            # Optional: where each prompt came from (Origin or str)
-)
-
-# Tags carry an optional category; bare strings become Tag(value, category=None)
-from rapidata import Tag, Origin
-
-benchmark.add_prompts(
-    identifiers=["garage_car"],
-    prompts=["A car in a garage"],
-    tags=[[Tag("vehicle", category="object"), "indoor"]],
-    origins=[Origin("coco")],
-)
-
-# Re-tag / set the origin of an already-registered prompt (a field left None stays unchanged)
-benchmark.update_prompt("garage_car", tags=["abstract", "surreal"], origin="wikiart")
-
-print(benchmark.tags)             # Values only, aligned by index with prompts (categories dropped)
-print(benchmark.structured_tags)  # list[list[Tag]] — preferred, keeps categories
-print(benchmark.origins)          # list[Origin | None]
-print(benchmark.get_tag_counts()) # DataFrame of every tag: value, category, prompt_count — one request, no prompt paging
-
-# Create leaderboard
-leaderboard = benchmark.create_leaderboard(
-    name="Realism",
-    instruction="Which image is more realistic?",
-    show_prompt=False,
-    show_prompt_asset=False,
-    inverse_ranking=False,
-    # level_of_detail="high",            # "debug" (20) | "low" (2000) | "medium" (4000) | "high" (8000)
-    #                                    #   | "very high" (16000), or a positive int response budget
-    # min_responses_per_matchup=5,
-    # audience_id="...",                 # Optional: id string, RapidataAudience, or RapidataFilteredAudience
-    # settings=[...],
-    # included_tags=["outdoor"],         # Optional: only collect matchups for prompts carrying one of these tags
-    # excluded_tags=["nsfw"],            # Optional: skip prompts carrying one of these tags (always wins)
-    # vote_aggregation=VoteAggregation.MAJORITY_VOTE,  # default; or VoteAggregation.ALL_VOTES — how a matchup's
-    #                                    #   individual responses are aggregated (import VoteAggregation from rapidata)
-)
-
-# Evaluate a model (creates participant, uploads media, and submits in one step)
-benchmark.evaluate_model(
-    name="MyModel_v2",
-    media=["mountain.png", "city.png"],
-    prompts=["A serene mountain landscape", "A futuristic city"],
-    data_type="media",   # "media" (default) or "text"
-)
-
-# Or add a model without submitting (for more control)
-participant = benchmark.add_model(
-    name="MyModel_v3",
-    media=["mountain_v3.png", "city_v3.png"],
-    prompts=["A serene mountain landscape", "A futuristic city"],
-    data_type="media",
-    is_public=True,      # False: only the benchmark's org and staff see it; paired like any other model
-    is_candidate=False,  # True: plays the whole field now; later models don't play it until promote()
-)
-
-# Upload additional media to the same participant
-uploaded, failed = participant.upload_media(
-    assets=["mountain_v3_extra.png"],
-    identifiers=["A serene mountain landscape"],
-    data_type="media",
-)
-# Returns (identifiers uploaded, list[FailedUpload[SampleUpload]]). Each FailedUpload
-# carries the media/identifier pair (.item, a SampleUpload), the reason, and a trace id,
-# so a failed pair can be re-submitted directly. Raises ValueError if assets and
-# identifiers differ in length.
-
-# Recover a partial upload (server truth — works for any participant, incl. ones from
-# benchmark.participants). add_model already runs this sweep automatically on failure.
-missing = participant.missing_counts(identifiers)   # Counter[identifier -> samples still short]; empty == done
-uploaded, still_failed = participant.retry_missing(  # re-sends assets for short identifiers
-    assets=["mountain_v3_extra.png"],
-    identifiers=["A serene mountain landscape"],
-    data_type="media",
-)
-# Safe to call repeatedly (the backend rejects samples already held, so no duplication).
-
-# Submit individually or all at once
-participant.run()       # Submit one participant
-benchmark.run()         # Submit all unsubmitted participants (status CREATED or
-                        # SUBMITTABLE) in a single batch request. This evaluates them
-                        # symmetrically as one run — each model is compared against every
-                        # other and against the benchmark's already-submitted field —
-                        # rather than as separate per-participant runs. Chunked to <=100
-                        # participants per request.
-# Both run() methods are advisory about under-filled prompts: if the benchmark has a
-# minimum-samples-per-prompt gate set (see below) and a submitted participant filled a
-# prompt with fewer than the required samples, they log a warning listing each shortfall
-# as 'identifier' (asset_count/required), e.g. model-0: 'cat' (2/4). Submission still
-# completes and participants are marked SUBMITTED regardless of the warning.
-
-participant.deprecate()           # No new matchups; row and votes leave the default standings (reversible)
-participant.restore()             # Undo deprecate(). disable()/enable() are deprecated aliases
-participant.promote()             # Candidate joins the field: models submitted later play it (no run starts)
-participant.get_elo()             # Aggregated Elo across all leaderboards (None if not yet computed or deprecated)
-participant.delete()              # Delete participant and its uploaded media (cannot be undone)
-
-# Update participant metadata — adding a model and pricing it are separate calls
-participant.rename("New Name")    # Rename the participant
-participant.set_price(0.04, unit="image")  # Set the model's list price in USD per unit ("image" |
-                                           #   "video_second" | "million_tokens"); both args required.
-                                           #   ValueError on a non-positive or non-finite price, or an unknown unit
-participant.clear_price()         # Remove the price (model drops off the cost chart)
-participant.price                 # float | None — USD per price_unit
-participant.price_unit            # str | None — "image" | "video_second" | "million_tokens"
-# Pricing models — a priced participant is plotted on the benchmark's "Score vs. cost" chart.
-# After adding a model, set its price if the vendor publishes a list price, and state the unit
-# (per image, per second of video, per million tokens). If you don't know the price with
-# confidence, leave it unset and tell the user instead of guessing. Unpriced models are hidden
-# from the cost chart, and only models quoted in the benchmark's majority unit are plotted.
-
-# List participants and their status
-for p in benchmark.participants:
-    print(p.name, p.status, p.price, p.price_unit)
-
-# Prompts — original language and English translation (aligned by index)
-print(benchmark.prompts)          # As originally provided
-print(benchmark.english_prompts)  # Server-side English translations, aligned by index
-print(benchmark.identifiers, benchmark.prompt_assets)
-
-# Get results
-standings = leaderboard.get_standings()                    # Pandas DataFrame for one leaderboard
-overall = benchmark.get_overall_standings(tags=None, leaderboard_ids=None)  # Aggregated ELO across all leaderboards
-matrix_lb = leaderboard.get_win_loss_matrix()              # Pairwise wins/losses for one leaderboard
-matrix_bm = benchmark.get_win_loss_matrix(                 # Pairwise wins/losses across leaderboards
-    tags=None, participant_ids=None, leaderboard_ids=None, use_weighted_scoring=None,
-)
-# Deprecated models and their votes are left out of all four by default;
-# include_deprecated=True brings them back and refits every score.
-overall_all = benchmark.get_overall_standings(include_deprecated=True)
-
-# Filter any of the read methods above by voter demographics. All four benchmark reads
-# (get_overall_standings, get_win_loss_matrix, get_demographics, get_standings_breakdown)
-# and both leaderboard reads (get_standings, get_win_loss_matrix) accept the same optional
-# keyword filters, restricting results to votes from matching voters:
-from rapidata import Gender, AgeGroup
-
-overall_filtered = benchmark.get_overall_standings(
-    country=["US", "GB"],       # ISO-2 codes (observed)
-    language=["en"],            # (observed)
-    gender=[Gender.FEMALE],     # list[Gender] (estimated/inferred)
-    age_bucket=[AgeGroup.BETWEEN_18_29],  # list[AgeGroup] (estimated/inferred)
-    occupation=["Engineer"],    # plain strings (estimated/inferred)
-    run_id="run_...",           # restrict to a single evaluation run
-)
-
-# Demographic composition of the benchmark's voters: one row per (dimension, bucket),
-# columns dimension / value / votes / share (shares within a dimension sum to 1; each
-# dimension includes an "unknown" bucket). dimension holds BenchmarkDemographicDimension values.
-demographics = benchmark.get_demographics(tags=None, leaderboard_ids=None)
-
-# Standings split by a demographic dimension of the voters (dimension is required, first arg):
-# one row per (segment, model), columns segment / segment_votes / name / wins /
-# total_matches / score. Segments include an "unknown" bucket.
-from rapidata import BenchmarkDemographicDimension
-
-breakdown = benchmark.get_standings_breakdown(
-    dimension=BenchmarkDemographicDimension.COUNTRY,   # AGEBUCKET | GENDER | OCCUPATION | COUNTRY | LANGUAGE
-)
-
-# Access the jobs that ran for a leaderboard (one per run, most recent first)
-for job in leaderboard.jobs:
-    job_results = job.get_results()
-
-# Update leaderboard config live — all mutation goes through update() (properties are
-# read-only). Only the arguments you pass are changed; omitted ones keep their stored value.
-leaderboard.update(
-    name="Realism (Updated)",                     # non-empty string
-    level_of_detail="very high",                  # named level or a positive int budget (e.g. 5000)
-    min_responses_per_matchup=7,                  # int >= 3 (bool rejected); takes effect for future evaluations
-    vote_aggregation=VoteAggregation.MAJORITY_VOTE,  # re-counts already-collected responses (no re-evaluation)
-)
-# Changing level_of_detail / min_responses_per_matchup only affects future evaluations;
-# already-computed standings are not recomputed.
-
-# Reading back the config (all read-only properties)
-print(leaderboard.level_of_detail)   # A named level only on an exact budget match, otherwise "custom"
-print(leaderboard.response_budget)   # The exact budget behind it, e.g. 5000
-print(leaderboard.vote_aggregation)  # A VoteAggregation member (lazily fetched for leaderboards read from a listing)
-print(leaderboard.included_tags, leaderboard.excluded_tags)  # Fixed at creation — create a new leaderboard to re-scope
-
-# Open in browser
-benchmark.view()
-leaderboard.view()
-
-# Find existing benchmarks
-benchmarks = client.mri.find_benchmarks(name="AI Art", amount=10, page=1)
-benchmark = client.mri.get_benchmark_by_id("benchmark_id")
-
-# Patch the benchmark's configuration — only the arguments you pass are changed;
-# omitted ones keep their stored value.
-benchmark.update(
-    min_assets_per_prompt=4,   # Minimum samples (assets) each participant should fill per
-                               # prompt. int >= 2 (bool rejected; a smaller value or non-int
-                               # raises ValueError). This is an advisory gate: participant.run()
-                               # and benchmark.run() warn (but do not reject) when a submitted
-                               # participant filled a prompt below this count.
-)
-```
-
-## Signals (Scheduled Labeling)
-
-A signal runs the same labeling job on a repeating schedule: bind a job definition to an audience and an interval, and Rapidata creates a new job on every tick.
-
-```python
-from rapidata import RapidataClient
-
-client = RapidataClient()
-
-audience = client.audience.get_audience_by_id("aud_MU1GZYoESyO")
-
-job_def = client.job.create_compare_job_definition(
-    name="Prompt Alignment Job",
-    instruction="Which image follows the prompt more accurately?",
-    datapoints=[["flux_book.jpg", "mj_book.jpg"]],
-    contexts=["A small blue book sitting on a large red book."],
-)
-
-signal = client.signals.create_signal(
-    name="Daily prompt alignment",
-    audience=audience,           # also accepts id string
-    job_definition=job_def,      # also accepts id string
-    interval_hours=24,           # float
-    # description="...",         # Optional
-    # revision_number=...,       # Optional: pin a specific job-definition revision
-    # is_public=True,            # Optional: let others in your org read the signal
-)
-
-# Inspect jobs created by the signal
-for job in signal.get_jobs(page_size=10):
-    print(job, job.get_status())
-
-# Fire one job immediately instead of waiting for the schedule
-signal.trigger()
-job = signal.wait_for_next_job(timeout=600)  # blocks until the job is created
-print(job.get_results())
-
-# Manage the signal
-signal.pause()
-signal.resume()
-signal.update(name="Hourly prompt alignment", interval_hours=1)  # also description=
-signal.delete()
-
-# Look signals up later
-signal = client.signals.get_signal_by_id("signal_id")
-signals = client.signals.find_signals(name="alignment", amount=10, page=1)
-```
-
-**Signal properties:** `id`, `name`, `description`, `audience_id`, `job_definition_id`, `revision_number`, `interval_hours`, `next_run_at`, `last_run_at`, `is_paused`, `is_public`, `created_at`.
-
-Note: `signal.pause()` only affects the scheduler — manual `trigger()` calls still fire on a paused signal.
-
-## Billing
-
-`client.billing` reads how much the current billing period has cost so far and how much credit is left. Billing is settled per **organization**, so the figures cover everything the organization spent — not only the jobs this client created.
-
-```python
-from rapidata import RapidataClient, BillingPeriod, RapidataBillingManager
-
-client = RapidataClient()
-
-# The billing period currently accruing cost. Raises RapidataError (status 404)
-# if the organization has no active period (one only opens once there is something to bill).
-period = client.billing.get_current_billing_period()   # -> BillingPeriod
-```
-
-`BillingPeriod` is a frozen dataclass; all amounts are US dollars rounded to the cent, and each read is a snapshot (fetch again for an up-to-date figure):
-
-| Field | Description |
-|---|---|
-| `id` | The billing period's id. |
-| `start_date` / `end_date` | When the period starts and ends (`datetime`). |
-| `status` | `"Open"` while still accruing cost; otherwise one of `"Invoiced"`, `"Void"`, `"Reconciling"`, `"PendingReview"`, `"Closed"`. |
-| `outstanding_cost` | Net cost accrued so far (`gross_cost` minus `discount`) — what the period would be invoiced for today. |
-| `gross_cost` | Cost accrued so far, before discounts. |
-| `discount` | Discounts applied to the period so far. |
-| `response_count` | Number of billable responses collected in the period (`int`). |
-| `credits` | Prepaid credit still available, or `None` when the organization is billed for usage rather than from a prepaid balance. An organization-level balance that carries across periods. |
-| `effective_limit` | The most the organization may spend this period, or `None` when it spends without a cap. On a prepaid plan this is the total credit granted, and `credits` is what remains of it. |
-
-```python
-# Total the organization currently owes, in US dollars rounded to the cent (0.0 when nothing is owed).
-# Covers finalized-but-unpaid invoices plus the settled cost of ended periods not yet invoiced;
-# excludes the current, still-accruing period. Already net of vouchers and discounts.
-owed = client.billing.get_outstanding_balance()   # -> float
-```
-
-## Additional Resources
-
-- For complete API reference, all parameters, filters, results format, error handling, flows, and MRI: run `python -m rapidata skill reference`
-- For full end-to-end code examples and common patterns: run `python -m rapidata skill examples`
-- For using flows to collect DPO/RLHF preference pairs or run best-of-N, and designing comparisons that train well: run `python -m rapidata skill flows-for-preference-data`
+The order-based API (`client.order`, `RapidataOrder`, `RapidataOrderManager`, `create_*_order()`) no longer exists — never generate code that uses it. Replace each `create_*_order()` with the matching `create_*_job_definition()` on `client.job`, validation sets with audience qualification examples, and `order.run()` with `audience.assign_job(job_def)`.
