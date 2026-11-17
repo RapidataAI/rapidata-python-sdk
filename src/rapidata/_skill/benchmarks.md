@@ -8,6 +8,8 @@ Compare and rank AI models on leaderboards. Supports images, videos, audio, and 
 
 ## Create a benchmark, leaderboards and models
 
+> **The leaderboard question:** one criterion, under 80 characters (task design rule 2). Definitions and edge cases go into answer options, markings in the media or qualification examples, never into the instruction.
+
 ```python
 # Create benchmark
 benchmark = client.mri.create_new_benchmark(

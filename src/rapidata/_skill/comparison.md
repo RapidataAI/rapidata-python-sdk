@@ -52,6 +52,8 @@ Template runs ignore three upload settings: `contextShortening` (only prompts ov
 
 ## Create a comparison job definition
 
+> **The question:** one criterion, under 80 characters (task design rule 2). Definitions and edge cases go into answer options, markings in the media or qualification examples, never into the instruction.
+
 Compare two items and choose the better one.
 
 ```python
@@ -84,7 +86,8 @@ Check these while writing the job definition; add one only when the case fits. E
 | Labelers may honestly see no difference | `AllowNeitherBothSetting()` (an "Unsure" button after `delay_ms`, default 5000) |
 | Videos the labeler must actually watch | `PlayPercentageVideoSetting(percentage)`; keep the clips short (task design rule 5). `DisableAutoloopSetting()` stops looping |
 | 360° or panorama media | `CompareEquirectangularSetting()` / `ComparePanoramaSetting()` |
-| Text options (`data_type="text"`) | `TranslateTextAssetsSetting()` for English text, else a `LanguageFilter` on the audience (Key Gotcha 9) |
+| English text options (`data_type="text"`) | `TranslateTextAssetsSetting()`, so labelers read them in their own language |
+| Text in a language other than English (datapoints, context or a question written in that language) | A `LanguageFilter` for that language on the audience, e.g. `client.audience.get_audience_by_id("global").filter([LanguageFilter(["de"])])`. `OriginalLanguageOnlySetting()` needs that filter, else `assign_job` raises `ValueError` (Key Gotcha 9) |
 | A reference image the labeler must see while judging | `PinContextMediaSetting()`, only if the preview shows enough space |
 
 ## Adaptive stopping (the compare default)

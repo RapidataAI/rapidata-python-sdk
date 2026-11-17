@@ -18,6 +18,8 @@ Check these while writing the job definition; add one only when the case fits. E
 
 ## Locate
 
+> **The question:** one criterion, under 80 characters (task design rule 2). Definitions and edge cases go into answer options, markings in the media or qualification examples, never into the instruction.
+
 Ask labelers to tap on the points in a datapoint that match your instruction. Results are the set of tapped coordinates per datapoint. No `answer_options`, `a_b_names`, `data_type`, `confidence_threshold`, or `quorum_threshold`.
 
 ```python
@@ -40,6 +42,8 @@ Locate has no job-specific parameters — only the core parameters apply. `data_
 For locate audience examples, use `audience.add_locate_example(instruction, datapoint, truths, context=None, media_context=None, explanation=None, settings=None)` where `truths` is a `list[Box]` (import `Box` from `rapidata`); coordinates are image ratios (0.0–1.0).
 
 ## Draw
+
+> **The question:** one criterion, under 80 characters (task design rule 2). Definitions and edge cases go into answer options, markings in the media or qualification examples, never into the instruction.
 
 Ask labelers to draw (color in) regions of an image that match your instruction. Results are the set of drawn lines per datapoint. No `answer_options`, `a_b_names`, `data_type`, `confidence_threshold`, or `quorum_threshold`.
 
@@ -80,6 +84,8 @@ For draw audience examples, use `audience.add_draw_example(instruction, datapoin
 Draw (`"type": "Draw"`) has the same shape with lines instead of points: `aggregatedResults` is a list of `{ "size": 12, "points": [ { "x": 83.85, "y": 79.45 }, ... ] }` (`size` = brush size), and the per-labeler key is `detailedResults[].lines`.
 
 ## Select Words
+
+> **The question:** one criterion, under 80 characters (task design rule 2). Definitions and edge cases go into answer options, markings in the media or qualification examples, never into the instruction.
 
 Ask labelers to select the words from a sentence that match your instruction (e.g., words not depicted in an image). Each datapoint is paired with a `sentence` split by spaces. No `contexts`, `media_contexts`, `data_type`, `answer_options`, `a_b_names`, `confidence_threshold`, or `quorum_threshold`.
 
@@ -124,6 +130,8 @@ For select words audience examples, use `audience.add_select_words_example(instr
 `aggregatedResults` has one entry per word of the sentence, in order, including unselected words. Match on `wordIndex` (position after splitting by spaces), not `word`, when a word repeats.
 
 ## Free Text
+
+> **The question:** one criterion, under 80 characters (task design rule 2). Definitions and edge cases go into answer options, markings in the media or qualification examples, never into the instruction.
 
 Ask labelers to answer your instruction with free-form text. No `answer_options`, `a_b_names`, `confidence_threshold`, or `quorum_threshold`. Note: free text answers cannot be graded against a ground truth, so audiences cannot be trained with free text qualification examples.
 
