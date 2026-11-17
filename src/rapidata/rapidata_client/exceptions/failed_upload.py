@@ -1,10 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import TypeVar, Generic, TYPE_CHECKING, Optional
-
-if TYPE_CHECKING:
-    pass
+from typing import TypeVar, Generic, Optional
 
 T = TypeVar("T")
 

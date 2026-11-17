@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal, TYPE_CHECKING
+from typing import Literal
 from rapidata.rapidata_client.validation.rapidata_validation_set import (
     RapidataValidationSet,
 )
@@ -26,9 +26,6 @@ from rapidata.rapidata_client.config import (
 )
 from tqdm.auto import tqdm
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
-
-if TYPE_CHECKING:
-    pass
 
 
 class ValidationSetManager:
