@@ -19,6 +19,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
+from rapidata.api_client.models.audience_job_action import AudienceJobAction
 from rapidata.api_client.models.audience_job_state import AudienceJobState
 from rapidata.api_client.models.review_reason import ReviewReason
 from pydantic import ValidationError
@@ -39,6 +40,7 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
     campaign_id: Optional[StrictStr] = Field(default=None, description="The job's campaign id. Null when the pipeline did not yield exactly one campaign.", alias="campaignId")
     audience_name: Optional[StrictStr] = Field(default=None, description="The audience name, or null when the job's audience has since been deleted (jobs  outlive their audience).", alias="audienceName")
     state: AudienceJobState = Field(description="The job state.")
+    allowed_actions: List[AudienceJobAction] = Field(alias="allowedActions")
     is_public: StrictBool = Field(description="Whether the job (and its results) is shared publicly.", alias="isPublic")
     audience_deleted: StrictBool = Field(description="Whether the audience backing this job was deleted, meaning the job can never run.", alias="audienceDeleted")
     completed_at: Optional[datetime] = Field(default=None, description="The timestamp when the job was completed.", alias="completedAt")
@@ -51,7 +53,7 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
     owner_id: UUID = Field(description="The owner id.", alias="ownerId")
     owner_mail: StrictStr = Field(description="The owner email.", alias="ownerMail")
     organization_id: StrictStr = Field(description="The id of the organization that owns the entity.", alias="organizationId")
-    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "campaignId", "audienceName", "state", "isPublic", "audienceDeleted", "completedAt", "resultFileName", "failedAt", "failureMessage", "reviewReason", "experimentId", "createdAt", "ownerId", "ownerMail", "organizationId"]
+    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "campaignId", "audienceName", "state", "allowedActions", "isPublic", "audienceDeleted", "completedAt", "resultFileName", "failedAt", "failureMessage", "reviewReason", "experimentId", "createdAt", "ownerId", "ownerMail", "organizationId"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -149,6 +151,7 @@ class GetJobByIdEndpointOutput(LazyValidatedModel):
             "campaignId": obj.get("campaignId"),
             "audienceName": obj.get("audienceName"),
             "state": obj.get("state"),
+            "allowedActions": obj.get("allowedActions"),
             "isPublic": obj.get("isPublic"),
             "audienceDeleted": obj.get("audienceDeleted"),
             "completedAt": obj.get("completedAt"),

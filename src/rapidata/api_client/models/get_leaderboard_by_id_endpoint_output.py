@@ -19,7 +19,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.rapid_context_projection import RapidContextProjection
+from rapidata.api_client.models.i_board_rapid_spec import IBoardRapidSpec
 from rapidata.api_client.models.vote_aggregation import VoteAggregation
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -34,9 +34,7 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
     name: StrictStr = Field(description="The name of the leaderboard.")
     instruction: StrictStr = Field(description="The instruction used when collecting responses.")
     display_instruction: Optional[StrictStr] = Field(default=None, description="Text to display instead of instruction; null means display instruction itself.", alias="displayInstruction")
-    show_prompt: StrictBool = Field(description="Whether the prompt is shown on the rapids.", alias="showPrompt")
-    show_prompt_asset: StrictBool = Field(description="Whether the prompt asset is shown on the rapids.", alias="showPromptAsset")
-    rapid_context_projection: RapidContextProjection = Field(description="Which prompt segments this leaderboard's rapids show. Always populated: a leaderboard  still on the legacy flags reports the projection those flags stand for.", alias="rapidContextProjection")
+    rapid_spec: IBoardRapidSpec = Field(description="The rapid the leaderboard runs its matchups on.", alias="rapidSpec")
     is_inversed: StrictBool = Field(description="Whether the leaderboard results are inversed.", alias="isInversed")
     response_budget: StrictInt = Field(description="Responses collected per onboarded participant, not per run: a run onboarding N participants collects N times this (N − 1 on the first run).", alias="responseBudget")
     min_responses: StrictInt = Field(description="The minimum responses collected per comparison.", alias="minResponses")
@@ -53,7 +51,7 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
     included_tags: List[StrictStr] = Field(alias="includedTags")
     excluded_tags: List[StrictStr] = Field(alias="excludedTags")
     last_updated_at: Optional[datetime] = Field(description="When votes were last recorded for the leaderboard; null when none ever were.", alias="lastUpdatedAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "displayInstruction", "showPrompt", "showPromptAsset", "rapidContextProjection", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "priority", "featureFlags", "weight", "scoreShift", "scoreScale", "isHidden", "isExcludedFromOverall", "voteAggregation", "includedTags", "excludedTags", "lastUpdatedAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "displayInstruction", "rapidSpec", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "priority", "featureFlags", "weight", "scoreShift", "scoreScale", "isHidden", "isExcludedFromOverall", "voteAggregation", "includedTags", "excludedTags", "lastUpdatedAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -90,9 +88,9 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of rapid_context_projection
-        if self.rapid_context_projection:
-            _dict['rapidContextProjection'] = self.rapid_context_projection.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of rapid_spec
+        if self.rapid_spec:
+            _dict['rapidSpec'] = self.rapid_spec.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -136,9 +134,7 @@ class GetLeaderboardByIdEndpointOutput(LazyValidatedModel):
             "name": obj.get("name"),
             "instruction": obj.get("instruction"),
             "displayInstruction": obj.get("displayInstruction"),
-            "showPrompt": obj.get("showPrompt"),
-            "showPromptAsset": obj.get("showPromptAsset"),
-            "rapidContextProjection": RapidContextProjection.from_dict(obj["rapidContextProjection"]) if obj.get("rapidContextProjection") is not None else None,
+            "rapidSpec": IBoardRapidSpec.from_dict(obj["rapidSpec"]) if obj.get("rapidSpec") is not None else None,
             "isInversed": obj.get("isInversed"),
             "responseBudget": obj.get("responseBudget"),
             "minResponses": obj.get("minResponses"),

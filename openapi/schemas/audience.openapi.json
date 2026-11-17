@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.11.16.1246-f7eb589"
+    "version": "2026.11.17.1513-c26dcde"
   },
   "servers": [
     {
@@ -3353,6 +3353,11 @@
             ],
             "description": "How users graduate into this audience — either a score-threshold rule or a\n task-accuracy rule (\"solve N tasks at X accuracy\"). When omitted, new audiences\n default to a task-accuracy rule (0.75 accuracy over 10 tasks)."
           },
+          "accelerateGraduation": {
+            "type": "boolean",
+            "description": "Whether to invite annotators who already qualified on the same examples or the same kind\n of task into a shorter admission trial when recruiting starts. Defaults to false.",
+            "nullable": true
+          },
           "minimumSizeForActivation": {
             "type": "integer",
             "description": "The minimum number of users required for an audience to be activated.",
@@ -3664,6 +3669,7 @@
           "isDistilling",
           "distillingCampaignId",
           "graduationRule",
+          "accelerateGraduation",
           "distillingRetrievalMode",
           "boostLevel"
         ],
@@ -3772,6 +3778,10 @@
               }
             ],
             "description": "The rule this audience uses to graduate users — a score-threshold rule or a\n task-accuracy rule."
+          },
+          "accelerateGraduation": {
+            "type": "boolean",
+            "description": "Whether annotators who already qualified on the same examples or the same kind of task\n are invited into a shorter admission trial when recruiting starts."
           },
           "maxDistillingResponses": {
             "type": "integer",
@@ -6320,6 +6330,11 @@
               }
             ],
             "description": "Replaces how users graduate into this audience — either a score-threshold rule or a\n task-accuracy rule."
+          },
+          "accelerateGraduation": {
+            "type": "boolean",
+            "description": "Whether to invite annotators who already qualified on the same examples or the same kind\n of task into a shorter admission trial when recruiting starts. Null leaves it unchanged.",
+            "nullable": true
           },
           "maxDistillingResponses": {
             "type": "integer",

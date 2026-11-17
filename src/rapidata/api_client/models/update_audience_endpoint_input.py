@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
@@ -37,6 +37,7 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  When graduated count is below this, external distilling audience ID is added to campaign boosting.", alias="minGraduatedForDistillingBoost")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.  When distilling count is below this, GlobalBoostLevel is set above zero.", alias="minDistillingForGlobalBoost")
     graduation_rule: Optional[IGraduationRule] = Field(default=None, description="Replaces how users graduate into this audience — either a score-threshold rule or a  task-accuracy rule.", alias="graduationRule")
+    accelerate_graduation: Optional[StrictBool] = Field(default=None, description="Whether to invite annotators who already qualified on the same examples or the same kind  of task into a shorter admission trial when recruiting starts. Null leaves it unchanged.", alias="accelerateGraduation")
     max_distilling_responses: Optional[StrictInt] = Field(default=None, description="Maximum responses before user exits the distilling campaign.  Set to null to disable this exit condition.", alias="maxDistillingResponses")
     drop_min_responses: Optional[StrictInt] = Field(default=None, description="Minimum responses before the drop score check applies.  Users need at least this many responses before they can be kicked out for low score.  Set to null to apply drop score check from the first response.", alias="dropMinResponses")
     drop_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Score floor - users below this score exit the distilling campaign  (only after completing DropMinResponses).  Set to null to disable this exit condition.", alias="dropScore")
@@ -46,7 +47,7 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
     min_sessions_for_submission_rate: Optional[StrictInt] = Field(default=None, description="Minimum number of sessions before the submission rate check applies.  Set to null to apply from the first session.", alias="minSessionsForSubmissionRate")
     min_submission_rate_graduated: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum submission rate for graduated users. If null, MinSubmissionRate applies to graduated users.  Set a lower value to be more lenient with graduated users.", alias="minSubmissionRateGraduated")
     distilling_retrieval_mode: Optional[RetrievalMode] = Field(default=None, description="The retrieval mode used by the distilling campaign to select rapids for users.", alias="distillingRetrievalMode")
-    __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "graduationRule", "maxDistillingResponses", "dropMinResponses", "dropScore", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode"]
+    __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "graduationRule", "accelerateGraduation", "maxDistillingResponses", "dropMinResponses", "dropScore", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -116,6 +117,11 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
         if self.min_distilling_for_global_boost is None and "min_distilling_for_global_boost" in self.model_fields_set:
             _dict['minDistillingForGlobalBoost'] = None
 
+        # set to None if accelerate_graduation (nullable) is None
+        # and model_fields_set contains the field
+        if self.accelerate_graduation is None and "accelerate_graduation" in self.model_fields_set:
+            _dict['accelerateGraduation'] = None
+
         # set to None if max_distilling_responses (nullable) is None
         # and model_fields_set contains the field
         if self.max_distilling_responses is None and "max_distilling_responses" in self.model_fields_set:
@@ -175,6 +181,7 @@ class UpdateAudienceEndpointInput(LazyValidatedModel):
             "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost"),
             "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost"),
             "graduationRule": IGraduationRule.from_dict(obj["graduationRule"]) if obj.get("graduationRule") is not None else None,
+            "accelerateGraduation": obj.get("accelerateGraduation"),
             "maxDistillingResponses": obj.get("maxDistillingResponses"),
             "dropMinResponses": obj.get("dropMinResponses"),
             "dropScore": obj.get("dropScore"),

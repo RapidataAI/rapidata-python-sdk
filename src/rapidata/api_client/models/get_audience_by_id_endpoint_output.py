@@ -52,6 +52,7 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.", alias="minGraduatedForDistillingBoost")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.", alias="minDistillingForGlobalBoost")
     graduation_rule: IGraduationRule = Field(description="The rule this audience uses to graduate users — a score-threshold rule or a  task-accuracy rule.", alias="graduationRule")
+    accelerate_graduation: StrictBool = Field(description="Whether annotators who already qualified on the same examples or the same kind of task  are invited into a shorter admission trial when recruiting starts.", alias="accelerateGraduation")
     max_distilling_responses: Optional[StrictInt] = Field(default=None, description="Maximum responses before user exits the distilling campaign.", alias="maxDistillingResponses")
     drop_min_responses: Optional[StrictInt] = Field(default=None, description="Minimum responses before the drop score check applies.", alias="dropMinResponses")
     drop_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Score floor - users below this score exit the distilling campaign.", alias="dropScore")
@@ -67,7 +68,7 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
     judged_share: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The share of finished users that received an accuracy verdict from their own answers,  rather than leaving through a session limit, low submission rate or a global drop.  Null when no user has finished.", alias="judgedShare")
     graduated: Optional[StrictInt] = Field(default=None, description="The number of graduated users.")
     dropped: Optional[StrictInt] = Field(default=None, description="The number of dropped users.")
-    __properties: ClassVar[List[str]] = ["id", "baseAudienceId", "filter", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerId", "ownerMail", "organizationId", "isPublic", "isDistilling", "distillingCampaignId", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "graduationRule", "maxDistillingResponses", "dropMinResponses", "dropScore", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode", "boostLevel", "randomAdmissionProbability", "health", "judgedShare", "graduated", "dropped"]
+    __properties: ClassVar[List[str]] = ["id", "baseAudienceId", "filter", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerId", "ownerMail", "organizationId", "isPublic", "isDistilling", "distillingCampaignId", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "graduationRule", "accelerateGraduation", "maxDistillingResponses", "dropMinResponses", "dropScore", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode", "boostLevel", "randomAdmissionProbability", "health", "judgedShare", "graduated", "dropped"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -223,6 +224,7 @@ class GetAudienceByIdEndpointOutput(LazyValidatedModel):
             "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost"),
             "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost"),
             "graduationRule": IGraduationRule.from_dict(obj["graduationRule"]) if obj.get("graduationRule") is not None else None,
+            "accelerateGraduation": obj.get("accelerateGraduation"),
             "maxDistillingResponses": obj.get("maxDistillingResponses"),
             "dropMinResponses": obj.get("dropMinResponses"),
             "dropScore": obj.get("dropScore"),

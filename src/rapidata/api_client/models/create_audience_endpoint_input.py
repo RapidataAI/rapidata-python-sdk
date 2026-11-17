@@ -34,6 +34,7 @@ class CreateAudienceEndpointInput(LazyValidatedModel):
     description: Optional[StrictStr] = Field(default=None, description="An optional markdown-supported description of the audience's purpose.")
     filters: Optional[List[IAudienceFilter]] = None
     graduation_rule: Optional[IGraduationRule] = Field(default=None, description="How users graduate into this audience — either a score-threshold rule or a  task-accuracy rule (\"solve N tasks at X accuracy\"). When omitted, new audiences  default to a task-accuracy rule (0.75 accuracy over 10 tasks).", alias="graduationRule")
+    accelerate_graduation: Optional[StrictBool] = Field(default=None, description="Whether to invite annotators who already qualified on the same examples or the same kind  of task into a shorter admission trial when recruiting starts. Defaults to false.", alias="accelerateGraduation")
     minimum_size_for_activation: Optional[StrictInt] = Field(default=None, description="The minimum number of users required for an audience to be activated.", alias="minimumSizeForActivation")
     logo: Optional[ExistingAssetInput] = Field(default=None, description="An optional logo image for the audience. Must be an existing image asset.")
     max_distilling_responses: Optional[StrictInt] = Field(default=None, description="Maximum responses before user exits the distilling campaign.  Defaults to 10. Set to null to disable this exit condition.", alias="maxDistillingResponses")
@@ -48,7 +49,7 @@ class CreateAudienceEndpointInput(LazyValidatedModel):
     distilling_retrieval_mode: Optional[RetrievalMode] = Field(default=None, description="The retrieval mode used by the distilling campaign to select rapids for users.  Defaults to Shuffled.", alias="distillingRetrievalMode")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.  Defaults to 200. Admin-only override.", alias="minDistillingForGlobalBoost")
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  Defaults to 100. Admin-only override.", alias="minGraduatedForDistillingBoost")
-    __properties: ClassVar[List[str]] = ["name", "description", "filters", "graduationRule", "minimumSizeForActivation", "logo", "maxDistillingResponses", "dropMinResponses", "dropScore", "isDistillingCampaignSticky", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
+    __properties: ClassVar[List[str]] = ["name", "description", "filters", "graduationRule", "accelerateGraduation", "minimumSizeForActivation", "logo", "maxDistillingResponses", "dropMinResponses", "dropScore", "isDistillingCampaignSticky", "maxDistillingSessions", "inactivityDropDays", "minSubmissionRate", "minSessionsForSubmissionRate", "minSubmissionRateGraduated", "distillingRetrievalMode", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -107,6 +108,11 @@ class CreateAudienceEndpointInput(LazyValidatedModel):
         # and model_fields_set contains the field
         if self.filters is None and "filters" in self.model_fields_set:
             _dict['filters'] = None
+
+        # set to None if accelerate_graduation (nullable) is None
+        # and model_fields_set contains the field
+        if self.accelerate_graduation is None and "accelerate_graduation" in self.model_fields_set:
+            _dict['accelerateGraduation'] = None
 
         # set to None if minimum_size_for_activation (nullable) is None
         # and model_fields_set contains the field
@@ -179,6 +185,7 @@ class CreateAudienceEndpointInput(LazyValidatedModel):
             "description": obj.get("description"),
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "graduationRule": IGraduationRule.from_dict(obj["graduationRule"]) if obj.get("graduationRule") is not None else None,
+            "accelerateGraduation": obj.get("accelerateGraduation"),
             "minimumSizeForActivation": obj.get("minimumSizeForActivation"),
             "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None,
             "maxDistillingResponses": obj.get("maxDistillingResponses"),

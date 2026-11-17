@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.16.1246-f7eb589"
+    "version": "2026.11.17.1513-c26dcde"
   },
   "servers": [
     {
@@ -23478,7 +23478,7 @@
           "Leaderboard"
         ],
         "summary": "Creates a new leaderboard.",
-        "description": "displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back\n to instruction when null. It never affects run creation, vote recording or ranking, and supplying it requires platform-admin.",
+        "description": "Send rapidSpec or the legacy rapidContextProjection / showPrompt / showPromptAsset, never both.\n An Open rapid spec needs the organization's open-rapids capability.\n displayInstruction is presentation-only: consumers render it instead of instruction when set, falling back\n to instruction when null. It never affects run creation, vote recording or ranking, and supplying it requires platform-admin.",
         "requestBody": {
           "description": "The payload describing the leaderboard to create.",
           "content": {
@@ -23641,7 +23641,7 @@
           "Leaderboard"
         ],
         "summary": "Updates a leaderboard using patch semantics.",
-        "description": "displayInstruction is presentation-only and never affects run creation, vote recording or ranking; setting or clearing it requires platform-admin. A supplied\n featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.",
+        "description": "Send rapidSpec or the legacy rapidContextProjection, never both.\n displayInstruction is presentation-only and never affects run creation, vote recording or ranking; setting or clearing it requires platform-admin. A supplied\n featureFlags list replaces the stored set and applies to future runs only; votes already recorded are untouched.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -43744,6 +43744,11 @@
             ],
             "description": "How users graduate into this audience — either a score-threshold rule or a\n task-accuracy rule (\"solve N tasks at X accuracy\"). When omitted, new audiences\n default to a task-accuracy rule (0.75 accuracy over 10 tasks)."
           },
+          "accelerateGraduation": {
+            "type": "boolean",
+            "description": "Whether to invite annotators who already qualified on the same examples or the same kind\n of task into a shorter admission trial when recruiting starts. Defaults to false.",
+            "nullable": true
+          },
           "minimumSizeForActivation": {
             "type": "integer",
             "description": "The minimum number of users required for an audience to be activated.",
@@ -44055,6 +44060,7 @@
           "isDistilling",
           "distillingCampaignId",
           "graduationRule",
+          "accelerateGraduation",
           "distillingRetrievalMode",
           "boostLevel"
         ],
@@ -44163,6 +44169,10 @@
               }
             ],
             "description": "The rule this audience uses to graduate users — a score-threshold rule or a\n task-accuracy rule."
+          },
+          "accelerateGraduation": {
+            "type": "boolean",
+            "description": "Whether annotators who already qualified on the same examples or the same kind of task\n are invited into a shorter admission trial when recruiting starts."
           },
           "maxDistillingResponses": {
             "type": "integer",
@@ -46698,6 +46708,11 @@
               }
             ],
             "description": "Replaces how users graduate into this audience — either a score-threshold rule or a\n task-accuracy rule."
+          },
+          "accelerateGraduation": {
+            "type": "boolean",
+            "description": "Whether to invite annotators who already qualified on the same examples or the same kind\n of task into a shorter admission trial when recruiting starts. Null leaves it unchanged.",
+            "nullable": true
           },
           "maxDistillingResponses": {
             "type": "integer",
@@ -54032,6 +54047,94 @@
           "Failed"
         ]
       },
+      "BoardChoice": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "BoardOutcomeRule": {
+        "required": [
+          "path",
+          "a",
+          "b"
+        ],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "a": {
+            "type": "string"
+          },
+          "b": {
+            "type": "string"
+          }
+        }
+      },
+      "BoardSegmentBinding": {
+        "required": [
+          "source",
+          "segment"
+        ],
+        "type": "object",
+        "properties": {
+          "source": {
+            "$ref": "#/components/schemas/BoardSegmentSource"
+          },
+          "segment": {
+            "type": "string"
+          }
+        }
+      },
+      "BoardSegmentSource": {
+        "enum": [
+          "Prompt",
+          "Sample",
+          "SampleA",
+          "SampleB"
+        ]
+      },
+      "BoardTextBinding": {
+        "type": "object",
+        "properties": {
+          "literal": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BoardSegmentSource"
+              }
+            ],
+            "nullable": true
+          },
+          "segment": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PromptTextLanguage"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
       "ConfidenceInterval": {
         "required": [
           "lowerOffset",
@@ -54380,21 +54483,13 @@
             "description": "Optional text to display instead of instruction. Presentation-only; it never changes what annotators are\n asked or how results are scored. Leave unset to display instruction itself.",
             "nullable": true
           },
-          "showPrompt": {
-            "type": "boolean",
-            "description": "Whether the prompt is shown on the rapids. Defaults to false."
-          },
-          "showPromptAsset": {
-            "type": "boolean",
-            "description": "Whether the prompt asset should be shown on the rapids."
-          },
-          "rapidContextProjection": {
+          "rapidSpec": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/RapidContextProjection"
+                "$ref": "#/components/schemas/IBoardRapidSpec"
               }
             ],
-            "description": "Which prompt segments the leaderboard's rapids show. Send this or the legacy showPrompt /\n showPromptAsset flags, not both."
+            "description": "The rapid the leaderboard runs its matchups on. Defaults to comparing the sample part without context."
           },
           "responseBudget": {
             "type": "integer",
@@ -54497,8 +54592,7 @@
         "required": [
           "id",
           "benchmarkId",
-          "showPrompt",
-          "showPromptAsset",
+          "rapidSpec",
           "responseBudget",
           "minResponses",
           "isInversed",
@@ -54514,13 +54608,13 @@
             "type": "string",
             "description": "The id of the benchmark the leaderboard belongs to."
           },
-          "showPrompt": {
-            "type": "boolean",
-            "description": "Whether the prompt is shown on the rapids."
-          },
-          "showPromptAsset": {
-            "type": "boolean",
-            "description": "Whether the prompt asset is shown on the rapids."
+          "rapidSpec": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IBoardRapidSpec"
+              }
+            ],
+            "description": "The rapid the leaderboard runs its matchups on."
           },
           "responseBudget": {
             "type": "integer",
@@ -55796,9 +55890,7 @@
           "id",
           "name",
           "instruction",
-          "showPrompt",
-          "showPromptAsset",
-          "rapidContextProjection",
+          "rapidSpec",
           "isInversed",
           "responseBudget",
           "minResponses",
@@ -55833,21 +55925,13 @@
             "description": "Text to display instead of instruction; null means display instruction itself.",
             "nullable": true
           },
-          "showPrompt": {
-            "type": "boolean",
-            "description": "Whether the prompt is shown on the rapids."
-          },
-          "showPromptAsset": {
-            "type": "boolean",
-            "description": "Whether the prompt asset is shown on the rapids."
-          },
-          "rapidContextProjection": {
+          "rapidSpec": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/RapidContextProjection"
+                "$ref": "#/components/schemas/IBoardRapidSpec"
               }
             ],
-            "description": "Which prompt segments this leaderboard's rapids show. Always populated: a leaderboard\n still on the legacy flags reports the projection those flags stand for."
+            "description": "The rapid the leaderboard runs its matchups on."
           },
           "isInversed": {
             "type": "boolean",
@@ -57309,6 +57393,203 @@
           "Failed"
         ]
       },
+      "IBoardOpenInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IBoardOpenInputBoardOpenAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IBoardOpenInputBoardOpenOptionsInput"
+          },
+          {
+            "$ref": "#/components/schemas/IBoardOpenInputBoardOpenTextInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "Asset": "#/components/schemas/IBoardOpenInputBoardOpenAssetInput",
+            "Options": "#/components/schemas/IBoardOpenInputBoardOpenOptionsInput",
+            "Text": "#/components/schemas/IBoardOpenInputBoardOpenTextInput"
+          }
+        }
+      },
+      "IBoardOpenInputBoardOpenAssetInput": {
+        "required": [
+          "source",
+          "segment",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Asset"
+            ],
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/BoardSegmentSource"
+          },
+          "segment": {
+            "type": "string"
+          }
+        }
+      },
+      "IBoardOpenInputBoardOpenOptionsInput": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Options"
+            ],
+            "type": "string"
+          },
+          "literal": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoardChoice"
+            },
+            "nullable": true
+          },
+          "segment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IBoardOpenInputBoardOpenTextInput": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Text"
+            ],
+            "type": "string"
+          },
+          "literal": {
+            "type": "string",
+            "nullable": true
+          },
+          "segment": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PromptTextLanguage"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "IBoardRapidSpec": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IBoardRapidSpecCompareBoardRapidSpec"
+          },
+          {
+            "$ref": "#/components/schemas/IBoardRapidSpecOpenBoardRapidSpec"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "Compare": "#/components/schemas/IBoardRapidSpecCompareBoardRapidSpec",
+            "Open": "#/components/schemas/IBoardRapidSpecOpenBoardRapidSpec"
+          }
+        }
+      },
+      "IBoardRapidSpecCompareBoardRapidSpec": {
+        "required": [
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Compare"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/BoardSegmentBinding"
+          },
+          "criteria": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BoardTextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "context": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BoardTextBinding"
+              }
+            ],
+            "nullable": true
+          },
+          "contextAsset": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BoardSegmentBinding"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "IBoardRapidSpecOpenBoardRapidSpec": {
+        "required": [
+          "bundleFileName",
+          "asset",
+          "inputs",
+          "outcome",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Open"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/BoardSegmentBinding"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IBoardOpenInput"
+            }
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/BoardOutcomeRule"
+          }
+        }
+      },
       "IFaucetInput": {
         "required": [
           "_t"
@@ -57807,7 +58088,8 @@
         "enum": [
           "English",
           "Original"
-        ]
+        ],
+        "description": "Which language variant of a text segment a leaderboard shows."
       },
       "QueryBenchmarksEndpoint_Output": {
         "required": [
@@ -58346,8 +58628,7 @@
           "id",
           "name",
           "instruction",
-          "showPrompt",
-          "showPromptAsset",
+          "rapidSpec",
           "isInversed",
           "responseBudget",
           "minResponses",
@@ -58381,13 +58662,13 @@
             "description": "Text to display instead of instruction; null means display instruction itself.",
             "nullable": true
           },
-          "showPrompt": {
-            "type": "boolean",
-            "description": "Whether the prompt text is shown."
-          },
-          "showPromptAsset": {
-            "type": "boolean",
-            "description": "Whether the prompt asset is shown."
+          "rapidSpec": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IBoardRapidSpec"
+              }
+            ],
+            "description": "The rapid the leaderboard runs its matchups on."
           },
           "isInversed": {
             "type": "boolean",
@@ -58514,8 +58795,7 @@
           "id",
           "name",
           "instruction",
-          "showPrompt",
-          "showPromptAsset",
+          "rapidSpec",
           "isInversed",
           "responseBudget",
           "minResponses",
@@ -58550,13 +58830,13 @@
             "description": "Text to display instead of instruction; null means display instruction itself.",
             "nullable": true
           },
-          "showPrompt": {
-            "type": "boolean",
-            "description": "Whether the prompt is shown on the rapids."
-          },
-          "showPromptAsset": {
-            "type": "boolean",
-            "description": "Whether the prompt asset is shown on the rapids."
+          "rapidSpec": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IBoardRapidSpec"
+              }
+            ],
+            "description": "The rapid the leaderboard runs its matchups on."
           },
           "isInversed": {
             "type": "boolean",
@@ -60774,13 +61054,13 @@
             ],
             "description": "Prompt tag values the leaderboard never creates matchups for; takes precedence over includedTags, even when\n another tag is included."
           },
-          "rapidContextProjection": {
+          "rapidSpec": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/RapidContextProjection"
+                "$ref": "#/components/schemas/IBoardRapidSpec"
               }
             ],
-            "description": "Which prompt segments this leaderboard's rapids show. Setting it takes the leaderboard off\n the legacy showPrompt / showPromptAsset flags, which are then kept in sync with it."
+            "description": "The rapid future runs use; it replaces the stored one whole."
           },
           "featureFlags": {
             "allOf": [
@@ -61021,6 +61301,14 @@
             "type": "string"
           }
         }
+      },
+      "AudienceJobAction": {
+        "enum": [
+          "Pause",
+          "Resume",
+          "Retry",
+          "Restart"
+        ]
       },
       "BoundingBoxResult_Box": {
         "type": "object",
@@ -61822,6 +62110,7 @@
           "revisionNumber",
           "pipelineId",
           "state",
+          "allowedActions",
           "isPublic",
           "audienceDeleted",
           "createdAt",
@@ -61873,6 +62162,17 @@
               }
             ],
             "description": "The job state."
+          },
+          "allowedActions": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AudienceJobAction"
+                }
+              }
+            ],
+            "description": "The actions the job accepts in its current state."
           },
           "isPublic": {
             "type": "boolean",
@@ -66569,6 +66869,7 @@
           "revisionNumber",
           "pipelineId",
           "state",
+          "allowedActions",
           "ownerMail",
           "organizationId",
           "createdAt",
@@ -66613,6 +66914,17 @@
               }
             ],
             "description": "The current state of the job."
+          },
+          "allowedActions": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AudienceJobAction"
+                }
+              }
+            ],
+            "description": "The actions the job accepts in its current state."
           },
           "ownerMail": {
             "type": "string",

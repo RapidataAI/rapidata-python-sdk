@@ -18,7 +18,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.rapid_context_projection import RapidContextProjection
+from rapidata.api_client.models.i_board_rapid_spec import IBoardRapidSpec
 from rapidata.api_client.models.vote_aggregation import VoteAggregation
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -42,9 +42,9 @@ class UpdateLeaderboardEndpointInput(LazyValidatedModel):
     vote_aggregation: Optional[VoteAggregation] = Field(default=None, description="How votes on a matchup aggregate into the stored result: AllVotes counts every vote as a matchup,  MajorityVote collapses each to a single majority win (ties split 0.5/0.5). Only affects future runs.", alias="voteAggregation")
     included_tags: Optional[List[StrictStr]] = Field(default=None, alias="includedTags")
     excluded_tags: Optional[List[StrictStr]] = Field(default=None, alias="excludedTags")
-    rapid_context_projection: Optional[RapidContextProjection] = Field(default=None, description="Which prompt segments this leaderboard's rapids show. Setting it takes the leaderboard off  the legacy showPrompt / showPromptAsset flags, which are then kept in sync with it.", alias="rapidContextProjection")
+    rapid_spec: Optional[IBoardRapidSpec] = Field(default=None, description="The rapid future runs use; it replaces the stored one whole.", alias="rapidSpec")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["name", "displayInstruction", "responseBudget", "minResponses", "priority", "weight", "scoreShift", "scoreScale", "isHidden", "isExcludedFromOverall", "voteAggregation", "includedTags", "excludedTags", "rapidContextProjection", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["name", "displayInstruction", "responseBudget", "minResponses", "priority", "weight", "scoreShift", "scoreScale", "isHidden", "isExcludedFromOverall", "voteAggregation", "includedTags", "excludedTags", "rapidSpec", "featureFlags"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -81,9 +81,9 @@ class UpdateLeaderboardEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of rapid_context_projection
-        if self.rapid_context_projection:
-            _dict['rapidContextProjection'] = self.rapid_context_projection.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of rapid_spec
+        if self.rapid_spec:
+            _dict['rapidSpec'] = self.rapid_spec.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -126,7 +126,7 @@ class UpdateLeaderboardEndpointInput(LazyValidatedModel):
             "voteAggregation": obj.get("voteAggregation"),
             "includedTags": obj.get("includedTags"),
             "excludedTags": obj.get("excludedTags"),
-            "rapidContextProjection": RapidContextProjection.from_dict(obj["rapidContextProjection"]) if obj.get("rapidContextProjection") is not None else None,
+            "rapidSpec": IBoardRapidSpec.from_dict(obj["rapidSpec"]) if obj.get("rapidSpec") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         }
         try:
