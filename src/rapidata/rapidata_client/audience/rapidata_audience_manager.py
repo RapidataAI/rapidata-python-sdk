@@ -88,6 +88,7 @@ class RapidataAudienceManager:
         target_accuracy: float | None = None,
         min_tasks: int | None = None,
         max_tasks: int | None = None,
+        accelerate_graduation: bool = False,
     ) -> RapidataAudience:
         """Create a new audience.
 
@@ -108,6 +109,10 @@ class RapidataAudienceManager:
                 in which case the server default of 10 applies.
             max_tasks (int, optional): Upper bound on admission-trial tasks before a
                 verdict is forced. Defaults to None (no cap).
+            accelerate_graduation (bool, optional): Invite annotators who already
+                qualified on the same examples or the same kind of task into a
+                5-task admission trial instead of the full one. Defaults to False,
+                in which case everyone takes the full trial.
 
         Returns:
             RapidataAudience: The created audience instance.
@@ -134,6 +139,7 @@ class RapidataAudienceManager:
                     name=name,
                     filters=[filter._to_audience_model() for filter in filters],
                     graduationRule=graduation_rule,
+                    accelerateGraduation=accelerate_graduation,
                 ),
             )
             audience = RapidataAudience(
