@@ -24,6 +24,8 @@ Flow settings are flow-wide: `settings=[...]` on `create_ranking_flow` / `create
 
 ## Ranking flows
 
+> **The question:** one criterion, under 80 characters (task design rule 2). Definitions and edge cases go into answer options, markings in the media or qualification examples, never into the instruction.
+
 Lightweight continuous ranking:
 
 ```python
@@ -97,6 +99,8 @@ flow.delete()
 `RapidataFlowItem` does **not** have `display_progress_bar()`: poll with `get_status()` or call `get_results()` to block.
 
 ## Classify flows
+
+> **The question:** one criterion, under 80 characters (task design rule 2). Definitions and edge cases go into answer options, markings in the media or qualification examples, never into the instruction.
 
 Continuously sort each datapoint of every flow item into one of the flow's categories:
 

@@ -4,6 +4,8 @@
 
 ## Create a classification job definition
 
+> **The question:** one criterion, under 80 characters (task design rule 2). Definitions and edge cases go into answer options, markings in the media or qualification examples, never into the instruction.
+
 Labelers pick exactly one of the answer options; the task screen allows only one, so the instruction never needs to say so.
 
 ```python
@@ -31,7 +33,8 @@ Check these while writing the job definition; add one only when the case fits. E
 | The case | Add |
 |---|---|
 | Ordered options: ratings, Likert scales, "how much" | `NoShuffleSetting()`, since options are shuffled otherwise |
-| Text datapoints (`data_type="text"`) | `TranslateTextAssetsSetting()` for English text, else a `LanguageFilter` on the audience (Key Gotcha 9) |
+| English text datapoints (`data_type="text"`) | `TranslateTextAssetsSetting()`, so labelers read them in their own language |
+| Text in a language other than English (datapoints, context or a question written in that language) | A `LanguageFilter` for that language on the audience, e.g. `client.audience.get_audience_by_id("global").filter([LanguageFilter(["de"])])`. `OriginalLanguageOnlySetting()` needs that filter, else `assign_job` raises `ValueError` (Key Gotcha 9) |
 | Videos the labeler must actually watch | `PlayPercentageVideoSetting(percentage)`; keep the clips short (task design rule 5). `DisableAutoloopSetting()` stops looping |
 | 360° media | `ClassifyEquirectangularSetting()` |
 | Text with markdown formatting | `MarkdownSetting()` |

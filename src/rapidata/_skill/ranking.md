@@ -4,6 +4,8 @@
 
 ## Create a ranking job definition
 
+> **The question:** one criterion, under 80 characters (task design rule 2). Definitions and edge cases go into answer options, markings in the media or qualification examples, never into the instruction.
+
 Ranking is available as a job definition or via **continuous ranking flows** (`python -m rapidata skill flows`).
 
 ```python
