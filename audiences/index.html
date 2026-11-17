@@ -967,7 +967,7 @@
   <span class="md-ellipsis">
     
   
-    Early Stopping
+    Adaptive Stopping
   
 
     
@@ -2333,7 +2333,7 @@ list are combined with logical AND.</p>
 </span></code></pre></div>
 <p>The returned object is a <code>RapidataFilteredAudience</code> — a slim variant that
 exposes only the operations that make sense for a filtered view
-(<code>assign_job</code>, <code>find_jobs</code>, <code>delete</code>, and use as <code>audience_id</code> on
+(<code>assign_job</code>, <code>find_jobs</code>, and use as <code>audience_id</code> on
 <a href="../mri/">leaderboard creation</a>). It deliberately does <strong>not</strong> offer
 <code>add_classification_example</code>, <code>update_filters</code>, or further nested
 <code>.filter(...)</code> calls: those would either mutate the base audience's
@@ -2404,7 +2404,7 @@ Pass the object directly — no need to read <code>.id</code> yourself:</p>
 <ul>
 <li>Learn about <a href="../examples/classify_job/">Classification Jobs</a> for categorizing data</li>
 <li>Understand the <a href="../understanding_the_results/">Results Format</a></li>
-<li>Configure <a href="../confidence_stopping/">Early Stopping</a> based on confidence thresholds</li>
+<li>Configure <a href="../confidence_stopping/">Adaptive Stopping</a> to stop collecting responses on each compare pair once its result is settled</li>
 </ul>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>

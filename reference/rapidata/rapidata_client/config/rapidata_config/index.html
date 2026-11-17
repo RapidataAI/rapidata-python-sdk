@@ -693,7 +693,7 @@
   <span class="md-ellipsis">
     
   
-    Early Stopping
+    Adaptive Stopping
   
 
     
@@ -1628,6 +1628,20 @@
             <td>
               <div class="doc-md-description">
                 <p>Whether to enable beta features. Defaults to False.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.config.rapidata_config.RapidataConfig.skipLanguageFilterCheck">skipLanguageFilterCheck</span></code></td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Skip the SDK check that jobs showing untranslated
+text (<code>OriginalLanguageOnlySetting</code>, or text assets without
+<code>TranslateTextAssetsSetting</code>) only run on audiences with a <code>LanguageFilter</code>
+(in <code>assign_job</code> and <code>update_filters</code>). Defaults to False.</p>
               </div>
             </td>
           </tr>

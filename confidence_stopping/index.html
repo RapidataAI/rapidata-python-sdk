@@ -22,7 +22,7 @@
     
     
       
-        <title>Early Stopping - Rapidata Python SDK</title>
+        <title>Adaptive Stopping - Rapidata Python SDK</title>
       
     
     
@@ -113,7 +113,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#early-stopping" class="md-skip">
+        <a href="#adaptive-stopping" class="md-skip">
           Skip to content
         </a>
       
@@ -148,7 +148,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Early Stopping
+              Adaptive Stopping
             
           </span>
         </div>
@@ -713,7 +713,7 @@
   <span class="md-ellipsis">
     
   
-    Early Stopping
+    Adaptive Stopping
   
 
     
@@ -731,7 +731,7 @@
   <span class="md-ellipsis">
     
   
-    Early Stopping
+    Adaptive Stopping
   
 
     
@@ -757,13 +757,119 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-use-early-stopping" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Use Early Stopping?
+        How it Works
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-adaptive-stopping-in-your-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Adaptive Stopping in Your Job
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analyzing-adaptive-stopping-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analyzing Adaptive Stopping Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Analyzing Adaptive Stopping Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-lower-and-upper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading lower and upper
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quorum-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quorum Stopping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quorum Stopping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-quorum-stopping-in-your-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Quorum Stopping in Your Job
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Quorum Stopping in Your Job">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-classification-job-with-quorum-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Classification Job with Quorum Stopping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-quorum-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Quorum Stopping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -780,7 +886,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#how-it-works_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         How it Works
@@ -862,73 +968,6 @@
     <span class="md-ellipsis">
       
         Analyzing Confidence Stopping Results
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quorum-stopping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quorum Stopping
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quorum Stopping">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#how-it-works_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How it Works
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-quorum-stopping-in-your-job" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using Quorum Stopping in Your Job
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Using Quorum Stopping in Your Job">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example-classification-job-with-quorum-stopping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example: Classification Job with Quorum Stopping
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#when-to-use-quorum-stopping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to Use Quorum Stopping
       
     </span>
   </a>
@@ -1764,13 +1803,119 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-use-early-stopping" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Use Early Stopping?
+        How it Works
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-adaptive-stopping-in-your-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Adaptive Stopping in Your Job
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analyzing-adaptive-stopping-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analyzing Adaptive Stopping Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Analyzing Adaptive Stopping Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-lower-and-upper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading lower and upper
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quorum-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quorum Stopping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quorum Stopping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-quorum-stopping-in-your-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Quorum Stopping in Your Job
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Quorum Stopping in Your Job">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-classification-job-with-quorum-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Classification Job with Quorum Stopping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-quorum-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Quorum Stopping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1787,7 +1932,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#how-it-works_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         How it Works
@@ -1880,73 +2025,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#quorum-stopping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quorum Stopping
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quorum Stopping">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#how-it-works_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How it Works
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-quorum-stopping-in-your-job" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using Quorum Stopping in Your Job
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Using Quorum Stopping in Your Job">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example-classification-job-with-quorum-stopping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example: Classification Job with Quorum Stopping
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#when-to-use-quorum-stopping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to Use Quorum Stopping
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1967,24 +2045,216 @@
   
 
 
-<h1 id="early-stopping">Early Stopping<a class="headerlink" href="#early-stopping" title="Permanent link">#</a></h1>
-<p>To improve the efficiency and cost-effectiveness of your data labeling tasks, Rapidata offers Early Stopping features that automatically stop collecting responses for a datapoint once a stopping condition is met, saving time and resources without compromising quality.</p>
-<p>There are two early stopping strategies:</p>
+<h1 id="adaptive-stopping">Adaptive Stopping<a class="headerlink" href="#adaptive-stopping" title="Permanent link">#</a></h1>
+<p>Adaptive stopping ends response collection for a datapoint once a stopping condition is met, so you pay for the responses that change the outcome and not for the ones after it.</p>
+<p>You choose the stopping rule with <code>responses_per_datapoint</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Rule</th>
+<th>Job types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AdaptiveStopping()</code></td>
+<td>Stops each pair once its verdict is statistically settled. <strong>Default for compare jobs.</strong></td>
+<td>Compare</td>
+</tr>
+<tr>
+<td><code>QuorumStopping(threshold, max_responses)</code></td>
+<td>Stops once <code>threshold</code> responses agree.</td>
+<td>Classification, Compare</td>
+</tr>
+<tr>
+<td>an <code>int</code></td>
+<td>Collects exactly that many responses. Default (<code>10</code>) for every other job type.</td>
+<td>All</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-it-works">How it Works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h2>
+<p>Each response on a compare pair is weighted by the labeler's <a href="../understanding_the_results/#understanding-the-user-scores">user score</a>. After every response, the pair is checked for a verdict:</p>
 <ul>
-<li><strong>Confidence Stopping</strong>: Stops when a statistical confidence threshold is reached, using labeler trust scores.</li>
-<li><strong>Quorum Stopping</strong>: Stops when a fixed number of responses agree on the same answer.</li>
+<li><strong><code>Decided</code></strong>: one option is preferred, with at least <code>min_confidence</code> certainty.</li>
+<li><strong><code>Ambiguous</code></strong>: the pair is a toss-up. Labelers are split too evenly for either option to win clearly. By default, that means neither option would get more than about 80% of the responses, so more responses would not produce a winner.</li>
+<li><strong><code>Undecided</code></strong>: neither happened before <code>max_responses</code> responses. <code>max_responses</code> is a hard cap that the defaults never reach: every pair reaches a verdict in under 80 responses.</li>
+<li><strong><code>Open</code></strong>: no verdict yet. The pair is still collecting, or the job was paused or stopped before it finished.</li>
 </ul>
-<p>You can use one or the other, but not both at the same time.</p>
-<h2 id="why-use-early-stopping">Why Use Early Stopping?<a class="headerlink" href="#why-use-early-stopping" title="Permanent link">#</a></h2>
-<p>In traditional data labeling workflows, you might request a fixed number of responses per datapoint to ensure accuracy. However, once a consensus is reached, continuing to collect more responses becomes redundant and incurs unnecessary costs.</p>
-<p>Early Stopping addresses this by:</p>
+<p>The pair stops at the first verdict. A clear pair stops after as few as 7 responses and a 50/50 pair after about 16. A pair needs about 21 responses on average; the hardest pairs, split around 35/65, need about 31.</p>
+<h2 id="using-adaptive-stopping-in-your-job">Using Adaptive Stopping in Your Job<a class="headerlink" href="#using-adaptive-stopping-in-your-job" title="Permanent link">#</a></h2>
+<p>Compare jobs use adaptive stopping unless you pass something else:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span><span class="p">,</span> <span class="n">AdaptiveStopping</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Prompt alignment"</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image matches the description better?"</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[[</span><span class="s2">"https://assets.rapidata.ai/a.jpg"</span><span class="p">,</span> <span class="s2">"https://assets.rapidata.ai/b.jpg"</span><span class="p">]],</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A small blue book sitting on a large red book."</span><span class="p">],</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="n">AdaptiveStopping</span><span class="p">(),</span> <span class="c1"># (1)!</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
+</span></code></pre></div>
+<ol>
+<li>The same as leaving the argument out. Pass <code>responses_per_datapoint=15</code> to collect exactly 15 responses per pair instead.</li>
+</ol>
+<p><code>ambiguity_threshold</code> sets how even the split must be before a pair is called a toss-up. With the default 0.64, a pair is a toss-up when neither option would get more than about 80% of the responses.</p>
+<p><strong>Raise <code>ambiguity_threshold</code> to resolve less decisive pairs, at the cost of more responses.</strong> For example, <code>AdaptiveStopping(ambiguity_threshold=0.75)</code> resolves pairs down to a 75%/25% split: a pair is a toss-up only when neither option would get more than about 75% of the responses. That takes about a third more responses per pair on average, and about 49 for the hardest pairs. With <code>0.91</code>, the limit is about 65%.</p>
+<p>The threshold only decides which pairs may stop as a toss-up. A clear winner always takes priority, so a pair where one option gets 70% of the responses can still end <code>Decided</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>min_confidence</code></td>
+<td>0.9</td>
+<td>How certain the result must be before a winner is called, between 0 and 1.</td>
+</tr>
+<tr>
+<td><code>ambiguity_threshold</code></td>
+<td>0.64</td>
+<td>How even the split must be before a pair is called a toss-up, between 0 and 1. Higher calls fewer pairs a toss-up and costs more responses.</td>
+</tr>
+<tr>
+<td><code>max_responses</code></td>
+<td>100</td>
+<td>The hard cap on responses per pair. With the default <code>min_confidence</code> and <code>ambiguity_threshold</code>, no pair can reach it: every pair reaches a verdict in under 80 responses.</td>
+</tr>
+</tbody>
+</table>
+<p>A parameter left as <code>None</code> uses the default above, and a saved job definition shows the resolved values (see the <a href="../reference/rapidata/rapidata_client/job/adaptive_stopping/"><code>AdaptiveStopping</code> reference</a>). Adaptive stopping is compare-only: passing it to any other job type raises a <code>ValueError</code> before anything is sent.</p>
+<p>For now, there is no forecast for the expected response count, so the <a href="../cost_estimates/">cost estimate</a> and <a href="../job_progress/">job progress</a> use the <code>max_responses</code> setting per pair, which is well above the expected cost.</p>
+<h2 id="analyzing-adaptive-stopping-results">Analyzing Adaptive Stopping Results<a class="headerlink" href="#analyzing-adaptive-stopping-results" title="Permanent link">#</a></h2>
+<p>Each compare datapoint in the <a href="../understanding_the_results/">results</a> gains an <code>adaptiveStoppingState</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">"adaptiveStoppingState"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Decided"</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">"winners"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"1"</span><span class="p">],</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">"outcomes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">        </span><span class="nt">"0"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"weight"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.485</span><span class="p">,</span><span class="w"> </span><span class="nt">"lower"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004</span><span class="p">,</span><span class="w"> </span><span class="nt">"upper"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.496</span><span class="p">},</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="nt">"1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"weight"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.515</span><span class="p">,</span><span class="w"> </span><span class="nt">"lower"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.504</span><span class="p">,</span><span class="w"> </span><span class="nt">"upper"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.996</span><span class="p">}</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">"responseCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">"minConfidence"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9</span><span class="p">,</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">"ambiguityThreshold"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.64</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
+</span></code></pre></div>
 <ul>
-<li><strong>Reducing Costs</strong>: Stop collecting responses when sufficient agreement is achieved.</li>
-<li><strong>Improving Efficiency</strong>: Accelerate the labeling process by focusing resources where they are most needed.</li>
-<li><strong>Maintaining Quality</strong>: Ensure that each datapoint meets your specified stopping condition before stopping.</li>
+<li><code>outcomes</code> is keyed by option: <code>"0"</code> is the first asset of the pair, <code>"1"</code> the second. <code>winners</code> names the winning key and is only filled for <code>Decided</code>.</li>
+<li><code>verdict</code> is final once it is not <code>Open</code>, together with the <code>outcomes</code> and <code>responseCount</code> at that moment.</li>
+<li><code>weight</code> is the option's user-score-weighted responses, scaled so all weights add up to <code>responseCount</code>.</li>
+<li><code>lower</code> and <code>upper</code> are the range the option's share of the responses lies in. See below.</li>
+<li>With <code>Undecided</code>, <code>outcomes</code> can be empty when every response was a skip.</li>
+<li>The key is absent on a datapoint without a state. New verdict values or fields may appear later, so handle values you don't recognize.</li>
 </ul>
+<h3 id="reading-lower-and-upper">Reading <code>lower</code> and <code>upper</code><a class="headerlink" href="#reading-lower-and-upper" title="Permanent link">#</a></h3>
+<p>A pair never gets every possible response, so its true split is unknown. <code>lower</code> and <code>upper</code> give the range that an option's share of the responses would fall in if you kept asking labelers, with <code>min_confidence</code> certainty (90% by default). The range starts wide and narrows with every response.</p>
+<p>In the example, option <code>"1"</code> holds 10.5 of the 12 weighted responses, and its range is 50.4% to 99.6%. The whole range lies above 50%, so <code>"1"</code> is the winner even though only 12 responses were collected. Option <code>"0"</code> mirrors it: 0.4% to 49.6%.</p>
+<p>The verdict follows from where the range sits:</p>
+<table>
+<thead>
+<tr>
+<th>Range of the leading option</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>entirely above 50%</td>
+<td><code>Decided</code></td>
+</tr>
+<tr>
+<td>entirely inside the toss-up zone, about 20% to 80% by default</td>
+<td><code>Ambiguous</code></td>
+</tr>
+<tr>
+<td>neither yet</td>
+<td><code>Open</code>, or <code>Undecided</code> once <code>max_responses</code> is reached</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">for</span> <span class="n">datapoint</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s2">"results"</span><span class="p">]:</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">state</span> <span class="o">=</span> <span class="n">datapoint</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"adaptiveStoppingState"</span><span class="p">)</span>  <span class="c1"># absent until the pair has a state</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="nb">print</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">"verdict"</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="s2">"winners"</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="s2">"responseCount"</span><span class="p">])</span>
+</span></code></pre></div>
+<p><code>results.to_pandas()</code> flattens the state into columns such as <code>adaptiveStoppingState_verdict</code>. The SDK passes the values through unchanged.</p>
+<hr>
+<h2 id="quorum-stopping">Quorum Stopping<a class="headerlink" href="#quorum-stopping" title="Permanent link">#</a></h2>
+<h3 id="how-it-works_1">How it Works<a class="headerlink" href="#how-it-works_1" title="Permanent link">#</a></h3>
+<p>Quorum Stopping uses a simple response-counting approach. A task is completed when:</p>
+<ol>
+<li><code>threshold</code> responses agree on the same answer, <strong>OR</strong></li>
+<li>Quorum becomes mathematically impossible to reach, <strong>OR</strong></li>
+<li><code>max_responses</code> responses are reached.</li>
+</ol>
+<p>For example, with <code>QuorumStopping(threshold=7, max_responses=10)</code>:</p>
+<ul>
+<li>The task completes when 7 responses agree (quorum reached).</li>
+<li>The task completes when both options have 4+ responses (quorum is impossible since neither can reach 7 out of 10).</li>
+<li>The task completes after 10 total responses if neither condition is met.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Quorum Stopping is supported for the Classification and Comparison workflows. See the <a href="../reference/rapidata/rapidata_client/job/quorum_stopping/"><code>QuorumStopping</code> reference</a>.</p>
+</div>
+<h3 id="using-quorum-stopping-in-your-job">Using Quorum Stopping in Your Job<a class="headerlink" href="#using-quorum-stopping-in-your-job" title="Permanent link">#</a></h3>
+<h4 id="example-classification-job-with-quorum-stopping">Example: Classification Job with Quorum Stopping<a class="headerlink" href="#example-classification-job-with-quorum-stopping" title="Permanent link">#</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span><span class="p">,</span> <span class="n">QuorumStopping</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Animal Classification Audience"</span><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">audience</span><span class="o">.</span><span class="n">add_classification_example</span><span class="p">(</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What do you see in the image?"</span><span class="p">,</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">datapoint</span><span class="o">=</span><span class="s2">"https://assets.rapidata.ai/cat.jpeg"</span><span class="p">,</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">truth</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">]</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">)</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="n">audience</span><span class="o">.</span><span class="n">start_recruiting</span><span class="p">()</span> <span class="c1"># (1)!</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Test Classification with Quorum Stopping"</span><span class="p">,</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What do you see in the image?"</span><span class="p">,</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://assets.rapidata.ai/dog.jpeg"</span><span class="p">],</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="n">QuorumStopping</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">max_responses</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span> <span class="c1"># (2)!</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="p">)</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</span></code></pre></div>
+<ol>
+<li>Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.</li>
+<li>Stops collecting once 7 responses agree on the same answer, and after 10 responses at most.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Deprecated: <code>quorum_threshold</code></p>
+<p>The <code>quorum_threshold</code> parameter still works but emits a <code>DeprecationWarning</code>. Replace <code>quorum_threshold=7, responses_per_datapoint=10</code> with <code>responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)</code>.</p>
+</div>
+<h3 id="when-to-use-quorum-stopping">When to Use Quorum Stopping<a class="headerlink" href="#when-to-use-quorum-stopping" title="Permanent link">#</a></h3>
+<p>Quorum Stopping is a good choice when:</p>
+<ul>
+<li><strong>Simplicity</strong>: You want a straightforward stopping rule based on raw response counts rather than statistical confidence.</li>
+</ul>
+<hr>
 <h2 id="confidence-stopping">Confidence Stopping<a class="headerlink" href="#confidence-stopping" title="Permanent link">#</a></h2>
-<h3 id="how-it-works">How it Works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Deprecated</p>
+<p><code>confidence_threshold</code> is deprecated and emits a <code>DeprecationWarning</code>. For compare jobs use adaptive stopping, the default. For classification use <code>QuorumStopping</code> or a fixed <code>responses_per_datapoint</code>.</p>
+</div>
+<h3 id="how-it-works_2">How it Works<a class="headerlink" href="#how-it-works_2" title="Permanent link">#</a></h3>
 <p>The Early Stopping feature leverages the trustworthiness, quantified through their <code>userScores</code>, to calculate the confidence level of each category for any given datapoint.</p>
 <h3 id="confidence-calculation">Confidence Calculation<a class="headerlink" href="#confidence-calculation" title="Permanent link">#</a></h3>
 <ul>
@@ -2008,39 +2278,39 @@
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The Early Stopping feature is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.</p>
+<p>Confidence Stopping is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.</p>
 </div>
 <h3 id="using-confidence-stopping-in-your-job">Using Confidence Stopping in Your Job<a class="headerlink" href="#using-confidence-stopping-in-your-job" title="Permanent link">#</a></h3>
 <p>You simply add the <code>confidence_threshold</code> parameter when creating the job definition.</p>
 <h4 id="example-classification-job-with-confidence-stopping">Example: Classification Job with Confidence Stopping<a class="headerlink" href="#example-classification-job-with-confidence-stopping" title="Permanent link">#</a></h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Animal Classification Audience"</span><span class="p">)</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">audience</span><span class="o">.</span><span class="n">add_classification_example</span><span class="p">(</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What do you see in the image?"</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">datapoint</span><span class="o">=</span><span class="s2">"https://assets.rapidata.ai/cat.jpeg"</span><span class="p">,</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">truth</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">]</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">audience</span><span class="o">.</span><span class="n">start_recruiting</span><span class="p">()</span> <span class="c1"># (1)!</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Test Classification with Early Stopping"</span><span class="p">,</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What do you see in the image?"</span><span class="p">,</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://assets.rapidata.ai/dog.jpeg"</span><span class="p">],</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="c1"># (2)!</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">confidence_threshold</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="c1"># (3)!</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="p">)</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Animal Classification Audience"</span><span class="p">)</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">audience</span><span class="o">.</span><span class="n">add_classification_example</span><span class="p">(</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What do you see in the image?"</span><span class="p">,</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">datapoint</span><span class="o">=</span><span class="s2">"https://assets.rapidata.ai/cat.jpeg"</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">truth</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">]</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p">)</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">audience</span><span class="o">.</span><span class="n">start_recruiting</span><span class="p">()</span> <span class="c1"># (1)!</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Test Classification with Early Stopping"</span><span class="p">,</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What do you see in the image?"</span><span class="p">,</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://assets.rapidata.ai/dog.jpeg"</span><span class="p">],</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="c1"># (2)!</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="n">confidence_threshold</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="c1"># (3)!</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="p">)</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </span></code></pre></div>
 <ol>
 <li>Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.</li>
@@ -2056,143 +2326,80 @@
 <h3 id="analyzing-confidence-stopping-results">Analyzing Confidence Stopping Results<a class="headerlink" href="#analyzing-confidence-stopping-results" title="Permanent link">#</a></h3>
 <p>When using Confidence Stopping, the <a href="../understanding_the_results/">results</a> will additionally include a <code>confidencePerCategory</code> field for each datapoint. This field shows the confidence level for each of the categories in the task.</p>
 <p>Example:
-</p><div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">        </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2099-12-30T00:00:00.000000+00:00"</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3.0.0"</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Classify"</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="p">{</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">            </span><span class="nt">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dog.jpeg"</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">            </span><span class="nt">"originalFileName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dog.jpeg"</span><span class="p">,</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">            </span><span class="nt">"assetUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://assets.rapidata.ai/&lt;random-uuid&gt;.jpeg"</span><span class="p">,</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">            </span><span class="nt">"aggregatedResults"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">                </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">                </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">            </span><span class="p">},</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">            </span><span class="nt">"aggregatedResultsRatios"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">                </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">                </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">            </span><span class="p">},</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">            </span><span class="nt">"summedUserScores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">                </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.0865</span><span class="p">,</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">                </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">            </span><span class="p">},</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">            </span><span class="nt">"summedUserScoresRatios"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">                </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">                </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">            </span><span class="p">},</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="kc">t</span><span class="err">his</span><span class="w"> </span><span class="err">o</span><span class="kc">nl</span><span class="err">y</span><span class="w"> </span><span class="err">appears</span><span class="w"> </span><span class="err">whe</span><span class="kc">n</span><span class="w"> </span><span class="err">usi</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="err">early</span><span class="w"> </span><span class="err">s</span><span class="kc">t</span><span class="err">oppi</span><span class="kc">n</span><span class="err">g</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">            </span><span class="nt">"confidencePerCategory"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">                </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9943</span><span class="p">,</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">                </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0057</span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">            </span><span class="p">},</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">            </span><span class="nt">"detailedResults"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">                </span><span class="p">{</span>
-</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">                    </span><span class="nt">"selectedCategory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dog"</span><span class="p">,</span>
-</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">                    </span><span class="nt">"userDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">                        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT"</span><span class="p">,</span>
-</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">                        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pt"</span><span class="p">,</span>
-</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">                        </span><span class="nt">"userScores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"global"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">                    </span><span class="p">}</span>
-</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">                </span><span class="p">},</span>
-</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">                </span><span class="p">{</span>
-</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="w">                    </span><span class="nt">"selectedCategory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dog"</span><span class="p">,</span>
-</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="w">                    </span><span class="nt">"userDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="w">                        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RS"</span><span class="p">,</span>
-</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="w">                        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sr"</span><span class="p">,</span>
-</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="w">                        </span><span class="nt">"userScores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"global"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8486</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="w">                    </span><span class="p">}</span>
-</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="w">                </span><span class="p">},</span>
-</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="w">                </span><span class="p">{</span>
-</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">                    </span><span class="nt">"selectedCategory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dog"</span><span class="p">,</span>
-</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="w">                    </span><span class="nt">"userDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">                        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SG"</span><span class="p">,</span>
-</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="w">                        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span>
-</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="w">                        </span><span class="nt">"userScores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"global"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.4469</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="w">                    </span><span class="p">}</span>
-</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="w">                </span><span class="p">},</span>
-</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="w">                </span><span class="p">{</span>
-</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="w">                    </span><span class="nt">"selectedCategory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dog"</span><span class="p">,</span>
-</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="w">                    </span><span class="nt">"userDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="w">                        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IN"</span><span class="p">,</span>
-</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="w">                        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span>
-</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="w">                        </span><span class="nt">"userScores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"global"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.4911</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a><span class="w">                    </span><span class="p">}</span>
-</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="w">                </span><span class="p">}</span>
-</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="w">            </span><span class="p">]</span>
-</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a><span class="w">    </span><span class="p">],</span>
-</span><span id="__span-1-69"><a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-70"><a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a><span class="w">        </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
-</span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a><span class="w">        </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
-</span><span id="__span-1-72"><a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-1-73"><a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a><span class="p">}</span>
+</p><div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="nt">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2099-12-30T00:00:00.000000+00:00"</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3.0.0"</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Classify"</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">            </span><span class="nt">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dog.jpeg"</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">            </span><span class="nt">"originalFileName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dog.jpeg"</span><span class="p">,</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">            </span><span class="nt">"assetUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://assets.rapidata.ai/&lt;random-uuid&gt;.jpeg"</span><span class="p">,</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">            </span><span class="nt">"aggregatedResults"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">                </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">                </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">            </span><span class="p">},</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">            </span><span class="nt">"aggregatedResultsRatios"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">                </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">                </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">            </span><span class="p">},</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">            </span><span class="nt">"summedUserScores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">                </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.0865</span><span class="p">,</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">                </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">            </span><span class="p">},</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">            </span><span class="nt">"summedUserScoresRatios"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">                </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">                </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">            </span><span class="p">},</span>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="kc">t</span><span class="err">his</span><span class="w"> </span><span class="err">o</span><span class="kc">nl</span><span class="err">y</span><span class="w"> </span><span class="err">appears</span><span class="w"> </span><span class="err">whe</span><span class="kc">n</span><span class="w"> </span><span class="err">usi</span><span class="kc">n</span><span class="err">g</span><span class="w"> </span><span class="err">early</span><span class="w"> </span><span class="err">s</span><span class="kc">t</span><span class="err">oppi</span><span class="kc">n</span><span class="err">g</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">            </span><span class="nt">"confidencePerCategory"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">                </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9943</span><span class="p">,</span>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">                </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0057</span>
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">            </span><span class="p">},</span>
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">            </span><span class="nt">"detailedResults"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-5-34"><a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">                </span><span class="p">{</span>
+</span><span id="__span-5-35"><a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">                    </span><span class="nt">"selectedCategory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dog"</span><span class="p">,</span>
+</span><span id="__span-5-36"><a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">                    </span><span class="nt">"userDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-37"><a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">                        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT"</span><span class="p">,</span>
+</span><span id="__span-5-38"><a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">                        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pt"</span><span class="p">,</span>
+</span><span id="__span-5-39"><a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="w">                        </span><span class="nt">"userScores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"global"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-5-40"><a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="w">                    </span><span class="p">}</span>
+</span><span id="__span-5-41"><a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="w">                </span><span class="p">},</span>
+</span><span id="__span-5-42"><a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="w">                </span><span class="p">{</span>
+</span><span id="__span-5-43"><a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="w">                    </span><span class="nt">"selectedCategory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dog"</span><span class="p">,</span>
+</span><span id="__span-5-44"><a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="w">                    </span><span class="nt">"userDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-45"><a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="w">                        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RS"</span><span class="p">,</span>
+</span><span id="__span-5-46"><a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="w">                        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sr"</span><span class="p">,</span>
+</span><span id="__span-5-47"><a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a><span class="w">                        </span><span class="nt">"userScores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"global"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8486</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-5-48"><a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="w">                    </span><span class="p">}</span>
+</span><span id="__span-5-49"><a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="w">                </span><span class="p">},</span>
+</span><span id="__span-5-50"><a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a><span class="w">                </span><span class="p">{</span>
+</span><span id="__span-5-51"><a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a><span class="w">                    </span><span class="nt">"selectedCategory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dog"</span><span class="p">,</span>
+</span><span id="__span-5-52"><a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a><span class="w">                    </span><span class="nt">"userDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-53"><a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a><span class="w">                        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SG"</span><span class="p">,</span>
+</span><span id="__span-5-54"><a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a><span class="w">                        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span>
+</span><span id="__span-5-55"><a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a><span class="w">                        </span><span class="nt">"userScores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"global"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.4469</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-5-56"><a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a><span class="w">                    </span><span class="p">}</span>
+</span><span id="__span-5-57"><a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a><span class="w">                </span><span class="p">},</span>
+</span><span id="__span-5-58"><a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a><span class="w">                </span><span class="p">{</span>
+</span><span id="__span-5-59"><a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a><span class="w">                    </span><span class="nt">"selectedCategory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dog"</span><span class="p">,</span>
+</span><span id="__span-5-60"><a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a><span class="w">                    </span><span class="nt">"userDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-61"><a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a><span class="w">                        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IN"</span><span class="p">,</span>
+</span><span id="__span-5-62"><a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a><span class="w">                        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span>
+</span><span id="__span-5-63"><a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a><span class="w">                        </span><span class="nt">"userScores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"global"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.4911</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-5-64"><a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a><span class="w">                    </span><span class="p">}</span>
+</span><span id="__span-5-65"><a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a><span class="w">                </span><span class="p">}</span>
+</span><span id="__span-5-66"><a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a><span class="w">            </span><span class="p">]</span>
+</span><span id="__span-5-67"><a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-5-68"><a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a><span class="w">    </span><span class="p">],</span>
+</span><span id="__span-5-69"><a id="__codelineno-5-69" name="__codelineno-5-69" href="#__codelineno-5-69"></a><span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-70"><a id="__codelineno-5-70" name="__codelineno-5-70" href="#__codelineno-5-70"></a><span class="w">        </span><span class="nt">"Dog"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+</span><span id="__span-5-71"><a id="__codelineno-5-71" name="__codelineno-5-71" href="#__codelineno-5-71"></a><span class="w">        </span><span class="nt">"Cat"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+</span><span id="__span-5-72"><a id="__codelineno-5-72" name="__codelineno-5-72" href="#__codelineno-5-72"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-5-73"><a id="__codelineno-5-73" name="__codelineno-5-73" href="#__codelineno-5-73"></a><span class="p">}</span>
 </span></code></pre></div><p></p>
-<hr>
-<h2 id="quorum-stopping">Quorum Stopping<a class="headerlink" href="#quorum-stopping" title="Permanent link">#</a></h2>
-<h3 id="how-it-works_1">How it Works<a class="headerlink" href="#how-it-works_1" title="Permanent link">#</a></h3>
-<p>Quorum Stopping uses a simple vote-counting approach. A task is completed when:</p>
-<ol>
-<li>A minimum number of responses (<code>quorum_threshold</code>) agree on the same answer, <strong>OR</strong></li>
-<li>Quorum becomes mathematically impossible to reach, <strong>OR</strong></li>
-<li>The maximum number of votes (<code>responses_per_datapoint</code>) is reached.</li>
-</ol>
-<p>For example, with <code>quorum_threshold=7</code> and <code>responses_per_datapoint=10</code>:</p>
-<ul>
-<li>The task completes when 7 responses agree (quorum reached).</li>
-<li>The task completes when both options have 4+ responses (quorum is impossible since neither can reach 7 out of 10).</li>
-<li>The task completes after 10 total votes if neither condition is met.</li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Quorum Stopping is supported for the Classification and Comparison workflows, just like Confidence Stopping.</p>
-</div>
-<h3 id="using-quorum-stopping-in-your-job">Using Quorum Stopping in Your Job<a class="headerlink" href="#using-quorum-stopping-in-your-job" title="Permanent link">#</a></h3>
-<p>You add the <code>quorum_threshold</code> parameter when creating the job definition.</p>
-<h4 id="example-classification-job-with-quorum-stopping">Example: Classification Job with Quorum Stopping<a class="headerlink" href="#example-classification-job-with-quorum-stopping" title="Permanent link">#</a></h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Animal Classification Audience"</span><span class="p">)</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">audience</span><span class="o">.</span><span class="n">add_classification_example</span><span class="p">(</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What do you see in the image?"</span><span class="p">,</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">datapoint</span><span class="o">=</span><span class="s2">"https://assets.rapidata.ai/cat.jpeg"</span><span class="p">,</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">truth</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">]</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">)</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">audience</span><span class="o">.</span><span class="n">start_recruiting</span><span class="p">()</span> <span class="c1"># (1)!</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Test Classification with Quorum Stopping"</span><span class="p">,</span>
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What do you see in the image?"</span><span class="p">,</span>
-</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
-</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://assets.rapidata.ai/dog.jpeg"</span><span class="p">],</span>
-</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="c1"># (2)!</span>
-</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="n">quorum_threshold</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="c1"># (3)!</span>
-</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="p">)</span>
-</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
-</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
-</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
-</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
-</span></code></pre></div>
-<ol>
-<li>Starts recruiting once all qualification examples are added and reviewed. Adding examples does not start recruiting on its own.</li>
-<li>Sets the <strong>maximum</strong> number of responses per datapoint.</li>
-<li>Stops collecting once 7 responses agree on the same answer.</li>
-</ol>
-<h3 id="when-to-use-quorum-stopping">When to Use Quorum Stopping<a class="headerlink" href="#when-to-use-quorum-stopping" title="Permanent link">#</a></h3>
-<p>Quorum Stopping is a good choice when:</p>
-<ul>
-<li><strong>Simplicity</strong>: You want a straightforward stopping rule based on raw vote counts rather than statistical confidence.</li>
-<li><strong>Predictable Costs</strong>: You want to set an upper bound on responses while still allowing early termination.</li>
-<li><strong>Clear Correct Answer</strong>: The task has a clear correct answer, and you expect most labelers to agree.</li>
-</ul>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>
         </div>

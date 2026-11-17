@@ -704,7 +704,7 @@
   <span class="md-ellipsis">
     
   
-    Early Stopping
+    Adaptive Stopping
   
 
     
@@ -1695,9 +1695,10 @@
 </tr>
 </tbody>
 </table>
+<p>Compare jobs use <a href="../confidence_stopping/">adaptive stopping</a> by default. For now, there is no forecast for the expected response count, so <code>estimated_cost</code> and <code>required_responses</code> use the <code>max_responses</code> setting per pair, which is well above the expected cost.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This is an <strong>estimate, not the final bill</strong>. It is based on a sample of the job's tasks scaled to the number of responses requested, so the amount you are actually charged can differ. Features like <a href="../confidence_stopping/">Early Stopping</a> can also lower the final cost by collecting fewer responses than the maximum.</p>
+<p>This is an <strong>estimate, not the final bill</strong>. It is based on a sample of the job's tasks scaled to the number of responses requested, so the amount you are actually charged can differ. Features like <a href="../confidence_stopping/">Adaptive Stopping</a> can also lower the final cost by collecting fewer responses than the maximum.</p>
 </div>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">Copy for AI</button>

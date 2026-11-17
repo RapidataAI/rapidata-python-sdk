@@ -37,7 +37,7 @@ In this example, we rate images on a Likert scale to assess how well generated i
     job.view()
     job.display_progress_bar()
     results = job.get_results()
-    print(results)
+    print(results)  # every field explained: https://docs.rapidata.ai/understanding_the_results/#classification
     ```
 
     1. Looks up the curated **Coherence** audience by id, which already has trained labelers. A freshly created audience has no qualified labelers yet, so a job assigned to it would never collect responses — see the Advanced tab for how to build and train your own. You can browse the curated audiences and copy their ids from the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
@@ -106,7 +106,7 @@ In this example, we rate images on a Likert scale to assess how well generated i
     job.view()
     job.display_progress_bar()
     results = job.get_results()
-    print(results)
+    print(results)  # every field explained: https://docs.rapidata.ai/understanding_the_results/#classification
     ```
 
     1. Creates a new, empty audience. The `add_classification_example` calls below define who qualifies to join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.

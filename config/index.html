@@ -704,7 +704,7 @@
   <span class="md-ellipsis">
     
   
-    Early Stopping
+    Adaptive Stopping
   
 
     
@@ -941,6 +941,17 @@
     <span class="md-ellipsis">
       
         Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-level-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-level Options
       
     </span>
   </a>
@@ -1742,6 +1753,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#top-level-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-level Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#logging-configuration-options" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1900,6 +1922,25 @@
 <p class="admonition-title">Note</p>
 <p>The logging system is now fully managed through <code>rapidata_config.logging</code>. Changes to the configuration are automatically applied to the logger in real-time.</p>
 </div>
+<h3 id="top-level-options">Top-level Options<a class="headerlink" href="#top-level-options" title="Permanent link">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>skipLanguageFilterCheck</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>Skip the SDK check that jobs showing untranslated text (<code>OriginalLanguageOnlySetting</code>, or text assets without <code>TranslateTextAssetsSetting</code>) only run on audiences with a <code>LanguageFilter</code>. By default <code>assign_job</code> and <code>update_filters</code> raise <code>ValueError</code> when untranslated tasks would reach labelers without a language filter.</td>
+</tr>
+</tbody>
+</table>
 <h3 id="logging-configuration-options">Logging Configuration Options<a class="headerlink" href="#logging-configuration-options" title="Permanent link">#</a></h3>
 <table>
 <thead>

@@ -693,7 +693,7 @@
   <span class="md-ellipsis">
     
   
-    Early Stopping
+    Adaptive Stopping
   
 
     
@@ -1515,6 +1515,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#compare-jobs-stop-adaptively" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compare jobs stop adaptively
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1541,6 +1560,36 @@ The current documentation uses audiences, job definitions, and jobs.</p>
 <li>Use <a href="../audiences/">Custom Audiences</a> to select and qualify labelers.</li>
 <li>Check the <a href="../job_definition_parameters/">Parameter Reference</a> for supported configuration and <a href="../understanding_the_results/">Understanding Results</a> for result fields.</li>
 </ol>
+<h2 id="compare-jobs-stop-adaptively">Compare jobs stop adaptively<a class="headerlink" href="#compare-jobs-stop-adaptively" title="Permanent link">#</a></h2>
+<p><code>create_compare_job_definition</code> now defaults to <code>responses_per_datapoint=AdaptiveStopping()</code>. Each pair stops once its verdict is settled instead of collecting exactly 10 responses: about 21 per pair on average, about 31 for the hardest pairs.</p>
+<table>
+<thead>
+<tr>
+<th>Before</th>
+<th>Now</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>no <code>responses_per_datapoint</code> on a compare job: 10 responses</td>
+<td>adaptive stopping, about 21 responses per pair on average</td>
+</tr>
+<tr>
+<td><code>confidence_threshold=0.99</code> on a compare job</td>
+<td><code>responses_per_datapoint=AdaptiveStopping()</code></td>
+</tr>
+<tr>
+<td><code>quorum_threshold=7, responses_per_datapoint=10</code></td>
+<td><code>responses_per_datapoint=QuorumStopping(threshold=7, max_responses=10)</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>To keep exactly 10 responses per pair, pass <code>responses_per_datapoint=10</code>.</li>
+<li><code>confidence_threshold</code> and <code>quorum_threshold</code> still work with an <code>int</code> <code>responses_per_datapoint</code> but emit a <code>DeprecationWarning</code>. On compare jobs without <code>responses_per_datapoint</code>, they now cap at 15 responses instead of 10.</li>
+<li><code>job_definition.responses_per_datapoint</code> returns an <code>AdaptiveStopping</code> or <code>QuorumStopping</code> for definitions that use them. Assigning an <code>int</code> sets a fixed number of responses, also on a quorum definition (it used to change the quorum's cap).</li>
+<li>Compare results gain an <code>adaptiveStoppingState</code> per datapoint — see <a href="../confidence_stopping/#analyzing-adaptive-stopping-results">Adaptive Stopping</a>.</li>
+</ul>
 
 
 

@@ -326,7 +326,7 @@ job = us_english_speakers.assign_job(new_job_definition)
 
 The returned object is a `RapidataFilteredAudience` — a slim variant that
 exposes only the operations that make sense for a filtered view
-(`assign_job`, `find_jobs`, `delete`, and use as `audience_id` on
+(`assign_job`, `find_jobs`, and use as `audience_id` on
 [leaderboard creation](mri.md)). It deliberately does **not** offer
 `add_classification_example`, `update_filters`, or further nested
 `.filter(...)` calls: those would either mutate the base audience's
@@ -384,4 +384,4 @@ leaderboard = benchmark.create_leaderboard(
 
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
 - Understand the [Results Format](understanding_the_results.md)
-- Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
+- Configure [Adaptive Stopping](confidence_stopping.md) to stop collecting responses on each compare pair once its result is settled

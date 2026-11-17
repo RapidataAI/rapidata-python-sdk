@@ -40,7 +40,7 @@ job = audience.assign_job(job_definition)
 job.view()
 job.display_progress_bar()
 results = job.get_results()
-print(results)
+print(results)  # every field explained: https://docs.rapidata.ai/understanding_the_results/#ranking
 ```
 
 1. The global audience (id `global`) already has labelers ready to work, so the job starts collecting responses immediately. You can assign a ranking job to any audience — browse them in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).

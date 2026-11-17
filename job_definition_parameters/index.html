@@ -880,10 +880,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#quorum_threshold" class="md-nav__link">
+  <a href="#quorum_threshold-deprecated" class="md-nav__link">
     <span class="md-ellipsis">
       
-        quorum_threshold
+        quorum_threshold (deprecated)
       
     </span>
   </a>
@@ -1151,7 +1151,7 @@
   <span class="md-ellipsis">
     
   
-    Early Stopping
+    Adaptive Stopping
   
 
     
@@ -2159,10 +2159,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#quorum_threshold" class="md-nav__link">
+  <a href="#quorum_threshold-deprecated" class="md-nav__link">
     <span class="md-ellipsis">
       
-        quorum_threshold
+        quorum_threshold (deprecated)
       
     </span>
   </a>
@@ -2407,7 +2407,7 @@
 <li><strong>What data</strong> is shown to labelers (datapoints, contexts)</li>
 <li><strong>How many responses</strong> you need (responses_per_datapoint)</li>
 <li><strong>How tasks are displayed</strong> (settings)</li>
-<li><strong>Quality assurance</strong> (confidence_threshold, quorum_threshold)</li>
+<li><strong>When to stop collecting</strong> (<code>responses_per_datapoint</code>: an <code>int</code>, <code>AdaptiveStopping</code> or <code>QuorumStopping</code>)</li>
 </ul>
 <hr>
 <h2 id="core-parameters">Core Parameters<a class="headerlink" href="#core-parameters" title="Permanent link">#</a></h2>
@@ -2563,7 +2563,7 @@
 <tbody>
 <tr>
 <td><strong>Type</strong></td>
-<td><code>int</code></td>
+<td><code>int</code>, <code>AdaptiveStopping</code> (compare only) or <code>QuorumStopping</code> (classification and compare)</td>
 </tr>
 <tr>
 <td><strong>Required</strong></td>
@@ -2571,17 +2571,22 @@
 </tr>
 <tr>
 <td><strong>Default</strong></td>
-<td><code>10</code></td>
+<td><code>AdaptiveStopping()</code> for compare jobs, <code>10</code> otherwise</td>
 </tr>
 </tbody>
 </table>
-<p>The minimum number of responses to collect for each datapoint. The actual number may slightly exceed this due to concurrent labelers.</p>
-<p><strong>Best Practices:</strong></p>
+<p>How many responses to collect for each datapoint.</p>
 <ul>
-<li>Use 15-25 for ambiguous or subjective tasks</li>
-<li>Use 5-10 for clear-cut decisions</li>
+<li>An <code>int</code> collects exactly that many. The actual number may slightly exceed it due to concurrent labelers.</li>
+<li><code>AdaptiveStopping()</code> stops each compare pair once its verdict is settled, after about 21 responses per pair on average.</li>
+<li><code>QuorumStopping(threshold, max_responses)</code> stops once <code>threshold</code> responses agree.</li>
 </ul>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">15</span>
+<p><strong>Related:</strong> <a href="../confidence_stopping/">Adaptive Stopping</a></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">AdaptiveStopping</span><span class="p">,</span> <span class="n">QuorumStopping</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">15</span>                                               <span class="c1"># fixed</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">responses_per_datapoint</span><span class="o">=</span><span class="n">AdaptiveStopping</span><span class="p">(</span><span class="n">ambiguity_threshold</span><span class="o">=</span><span class="mf">0.75</span><span class="p">)</span>  <span class="c1"># compare only: fewer pairs called a toss-up, more responses</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">responses_per_datapoint</span><span class="o">=</span><span class="n">QuorumStopping</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">max_responses</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </span></code></pre></div>
 <hr>
 <h2 id="data-type">Data Type<a class="headerlink" href="#data-type" title="Permanent link">#</a></h2>
@@ -2763,9 +2768,10 @@
 </tr>
 </tbody>
 </table>
+<p>Deprecated: emits a <code>DeprecationWarning</code>. Use adaptive stopping (the default) on compare jobs, and <code>QuorumStopping</code> or a fixed <code>responses_per_datapoint</code> on classification. Takes an <code>int</code> <code>responses_per_datapoint</code> as the cap (when omitted: 15 on compare jobs, 10 otherwise).</p>
 <p>Enables early stopping when a specified confidence level is reached. The system stops collecting responses once consensus is achieved, reducing costs while maintaining quality.</p>
 <p><strong>How It Works:</strong> Uses labeler trust scores (<code>userScore</code>) to calculate statistical confidence for each category.</p>
-<p><strong>Related:</strong> <a href="../confidence_stopping/">Confidence Stopping</a></p>
+<p><strong>Related:</strong> <a href="../confidence_stopping/#confidence-stopping">Confidence Stopping</a></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Cat or Dog with Early Stopping"</span><span class="p">,</span>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in this image?"</span><span class="p">,</span>
@@ -2776,7 +2782,7 @@
 </span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">)</span>
 </span></code></pre></div>
 <hr>
-<h3 id="quorum_threshold"><code>quorum_threshold</code><a class="headerlink" href="#quorum_threshold" title="Permanent link">#</a></h3>
+<h3 id="quorum_threshold-deprecated"><code>quorum_threshold</code> (deprecated)<a class="headerlink" href="#quorum_threshold-deprecated" title="Permanent link">#</a></h3>
 <table>
 <thead>
 <tr>
@@ -2799,17 +2805,17 @@
 </tr>
 </tbody>
 </table>
-<p>Enables early stopping when a specified number of responses agree on the same answer. The system stops collecting responses once quorum is reached, or when quorum becomes mathematically impossible, or after <code>responses_per_datapoint</code> votes.</p>
-<p>Cannot be used together with <code>confidence_threshold</code>.</p>
-<p><strong>Related:</strong> <a href="../confidence_stopping/#quorum-stopping">Early Stopping</a></p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Cat or Dog with Quorum Stopping"</span><span class="p">,</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in this image?"</span><span class="p">,</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"pet1.jpg"</span><span class="p">,</span> <span class="s2">"pet2.jpg"</span><span class="p">],</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c1"># Maximum responses</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="n">quorum_threshold</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>          <span class="c1"># Stop when 7 agree</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="p">)</span>
+<p>Deprecated: emits a <code>DeprecationWarning</code>. Pass <code>responses_per_datapoint=QuorumStopping(threshold, max_responses)</code> instead. It still takes an <code>int</code> <code>responses_per_datapoint</code> as the cap (when omitted: 15 on compare jobs, 10 otherwise) and cannot be used together with <code>confidence_threshold</code>.</p>
+<p><strong>Related:</strong> <a href="../confidence_stopping/#quorum-stopping">Quorum Stopping</a></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">QuorumStopping</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_classification_job_definition</span><span class="p">(</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Cat or Dog with Quorum Stopping"</span><span class="p">,</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"What animal is in this image?"</span><span class="p">,</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">answer_options</span><span class="o">=</span><span class="p">[</span><span class="s2">"Cat"</span><span class="p">,</span> <span class="s2">"Dog"</span><span class="p">],</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"pet1.jpg"</span><span class="p">,</span> <span class="s2">"pet2.jpg"</span><span class="p">],</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="n">responses_per_datapoint</span><span class="o">=</span><span class="n">QuorumStopping</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">max_responses</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="p">)</span>
 </span></code></pre></div>
 <hr>
 <h2 id="settings">Settings<a class="headerlink" href="#settings" title="Permanent link">#</a></h2>
@@ -3132,7 +3138,17 @@
 <td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:"></td>
 </tr>
 <tr>
-<td><code>confidence_threshold</code></td>
+<td><code>AdaptiveStopping</code></td>
+<td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
+<td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:"></td>
+<td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
+<td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
+<td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
+<td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
+<td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
+</tr>
+<tr>
+<td><code>confidence_threshold</code> (deprecated)</td>
 <td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:"></td>
 <td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:"></td>
 <td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
@@ -3142,7 +3158,17 @@
 <td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
 </tr>
 <tr>
-<td><code>quorum_threshold</code></td>
+<td><code>QuorumStopping</code></td>
+<td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:"></td>
+<td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:"></td>
+<td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
+<td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
+<td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
+<td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
+<td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>
+</tr>
+<tr>
+<td><code>quorum_threshold</code> (deprecated)</td>
 <td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:"></td>
 <td style="text-align: center;"><img alt="✅" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/2705.svg" title=":white_check_mark:"></td>
 <td style="text-align: center;"><img alt="❌" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/274c.svg" title=":x:"></td>

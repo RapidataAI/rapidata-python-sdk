@@ -912,7 +912,7 @@
   <span class="md-ellipsis">
     
   
-    Early Stopping
+    Adaptive Stopping
   
 
     
@@ -2008,6 +2008,7 @@
 <li>For compare jobs, each datapoint is a pair of items. Supports URLs, local paths, or text.</li>
 <li>Optional text context shown alongside each datapoint (must match the length of <code>datapoints</code>).</li>
 </ol>
+<p>Compare jobs stop collecting responses on each pair once its winner — or that it is too close to call — is settled, after about 21 responses per pair on average. Pass <code>responses_per_datapoint</code> to change that; see <a href="../confidence_stopping/">Adaptive Stopping</a>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>If some datapoints fail to upload, a <code>FailedUploadException</code> will be raised. Learn how to handle this in the <a href="../error_handling/">Error Handling Guide</a>.</p>
@@ -2097,7 +2098,7 @@
 <li>Create <a href="../audiences/">Custom Audiences</a> for higher quality results</li>
 <li>Learn about <a href="../examples/classify_job/">Classification Jobs</a> for categorizing data</li>
 <li>Understand the <a href="../understanding_the_results/">Results Format</a></li>
-<li>Configure <a href="../confidence_stopping/">Early Stopping</a> based on confidence thresholds</li>
+<li>Configure <a href="../confidence_stopping/">Adaptive Stopping</a> to stop collecting responses on each compare pair once its result is settled</li>
 <li>Let your <a href="../ai_agents/">AI agent</a> write the integration code for you — one-line install for Claude Code, Cursor, Copilot, and many more</li>
 </ul>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">

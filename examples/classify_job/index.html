@@ -699,7 +699,7 @@
   <span class="md-ellipsis">
     
   
-    Early Stopping
+    Adaptive Stopping
   
 
     
@@ -1656,7 +1656,7 @@
 </span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
 </span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
 </span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>  <span class="c1"># every field explained: https://docs.rapidata.ai/understanding_the_results/#classification</span>
 </span></code></pre></div>
 <ol>
 <li>Looks up the curated <strong>Coherence</strong> audience by id, which already has trained labelers. A freshly created audience has no qualified labelers yet, so a job assigned to it would never collect responses — see the Advanced tab for how to build and train your own. You can browse the curated audiences and copy their ids from the <a href="https://app.rapidata.ai/audiences">Rapidata Dashboard</a>.</li>
@@ -1724,7 +1724,7 @@
 </span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="n">job</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
 </span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
 </span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
-</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>  <span class="c1"># every field explained: https://docs.rapidata.ai/understanding_the_results/#classification</span>
 </span></code></pre></div>
 <ol>
 <li>Creates a new, empty audience. The <code>add_classification_example</code> calls below define who qualifies to join it. <code>min_tasks</code> is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or <code>start_recruiting()</code> is rejected. It defaults to 10.</li>

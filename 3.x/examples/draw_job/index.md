@@ -35,7 +35,7 @@ Like any other job, a draw job can be assigned to any audience — a ready-to-go
     job.view()
     job.display_progress_bar()
     results = job.get_results()
-    print(results)
+    print(results)  # every field explained: https://docs.rapidata.ai/understanding_the_results/#draw
     ```
 
     1. The global audience (id `global`) already has labelers ready to work, so the job starts collecting responses immediately. You can assign a draw job to any audience — browse them in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
@@ -103,7 +103,7 @@ Like any other job, a draw job can be assigned to any audience — a ready-to-go
     job.view()
     job.display_progress_bar()
     results = job.get_results()
-    print(results)
+    print(results)  # every field explained: https://docs.rapidata.ai/understanding_the_results/#draw
     ```
 
     1. Creates a new, empty audience. The `add_draw_example` calls train and filter the labelers who join it. `min_tasks` is how many qualification tasks a labeler answers before being admitted; it can't exceed the number of examples you add, or `start_recruiting()` is rejected. It defaults to 10.
