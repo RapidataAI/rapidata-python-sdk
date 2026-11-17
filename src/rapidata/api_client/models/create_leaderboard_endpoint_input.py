@@ -18,7 +18,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.rapid_context_projection import RapidContextProjection
+from rapidata.api_client.models.i_board_rapid_spec import IBoardRapidSpec
 from rapidata.api_client.models.vote_aggregation import VoteAggregation
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -35,9 +35,7 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
     name: StrictStr = Field(description="The name of the leaderboard.")
     instruction: StrictStr = Field(description="The instruction datapoints will be matched up against.")
     display_instruction: Optional[StrictStr] = Field(default=None, description="Optional text to display instead of instruction. Presentation-only; it never changes what annotators are  asked or how results are scored. Leave unset to display instruction itself.", alias="displayInstruction")
-    show_prompt: Optional[StrictBool] = Field(default=None, description="Whether the prompt is shown on the rapids. Defaults to false.", alias="showPrompt")
-    show_prompt_asset: Optional[StrictBool] = Field(default=None, description="Whether the prompt asset should be shown on the rapids.", alias="showPromptAsset")
-    rapid_context_projection: Optional[RapidContextProjection] = Field(default=None, description="Which prompt segments the leaderboard's rapids show. Send this or the legacy showPrompt /  showPromptAsset flags, not both.", alias="rapidContextProjection")
+    rapid_spec: Optional[IBoardRapidSpec] = Field(default=None, description="The rapid the leaderboard runs its matchups on. Defaults to comparing the sample part without context.", alias="rapidSpec")
     response_budget: Optional[StrictInt] = Field(default=None, description="Responses collected per onboarded participant, not per run: a run onboarding N participants collects N times this (N − 1 on the first run), spread over its comparisons with at least minResponses each.", alias="responseBudget")
     min_responses: Optional[StrictInt] = Field(default=None, description="The minimum amount of responses that need to be collected per comparison.", alias="minResponses")
     is_inversed: Optional[StrictBool] = Field(default=None, description="Whether the results should be inversed, selecting the worse model.", alias="isInversed")
@@ -53,7 +51,7 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
     excluded_tags: Optional[List[StrictStr]] = Field(default=None, alias="excludedTags")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     skip_initial_run: Optional[StrictBool] = Field(default=None, description="Set to true to skip the initial standings run. New participants are still compared against the whole existing  field and boost runs still work; there is just no run collecting the first responses. Defaults to false.", alias="skipInitialRun")
-    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "benchmarkDescription", "name", "instruction", "displayInstruction", "showPrompt", "showPromptAsset", "rapidContextProjection", "responseBudget", "minResponses", "isInversed", "audienceId", "priority", "weight", "scoreShift", "scoreScale", "isHidden", "isExcludedFromOverall", "voteAggregation", "includedTags", "excludedTags", "featureFlags", "skipInitialRun"]
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "benchmarkDescription", "name", "instruction", "displayInstruction", "rapidSpec", "responseBudget", "minResponses", "isInversed", "audienceId", "priority", "weight", "scoreShift", "scoreScale", "isHidden", "isExcludedFromOverall", "voteAggregation", "includedTags", "excludedTags", "featureFlags", "skipInitialRun"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -90,9 +88,9 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of rapid_context_projection
-        if self.rapid_context_projection:
-            _dict['rapidContextProjection'] = self.rapid_context_projection.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of rapid_spec
+        if self.rapid_spec:
+            _dict['rapidSpec'] = self.rapid_spec.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -158,9 +156,7 @@ class CreateLeaderboardEndpointInput(LazyValidatedModel):
             "name": obj.get("name"),
             "instruction": obj.get("instruction"),
             "displayInstruction": obj.get("displayInstruction"),
-            "showPrompt": obj.get("showPrompt"),
-            "showPromptAsset": obj.get("showPromptAsset"),
-            "rapidContextProjection": RapidContextProjection.from_dict(obj["rapidContextProjection"]) if obj.get("rapidContextProjection") is not None else None,
+            "rapidSpec": IBoardRapidSpec.from_dict(obj["rapidSpec"]) if obj.get("rapidSpec") is not None else None,
             "responseBudget": obj.get("responseBudget"),
             "minResponses": obj.get("minResponses"),
             "isInversed": obj.get("isInversed"),

@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.11.16.1246-f7eb589"
+    "version": "2026.11.17.1513-c26dcde"
   },
   "servers": [
     {
@@ -6437,6 +6437,14 @@
           }
         }
       },
+      "AudienceJobAction": {
+        "enum": [
+          "Pause",
+          "Resume",
+          "Retry",
+          "Restart"
+        ]
+      },
       "AudienceJobState": {
         "enum": [
           "Submitted",
@@ -7684,6 +7692,7 @@
           "revisionNumber",
           "pipelineId",
           "state",
+          "allowedActions",
           "isPublic",
           "audienceDeleted",
           "createdAt",
@@ -7744,6 +7753,17 @@
               }
             ],
             "description": "The job state."
+          },
+          "allowedActions": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AudienceJobAction"
+                }
+              }
+            ],
+            "description": "The actions the job accepts in its current state."
           },
           "isPublic": {
             "type": "boolean",
@@ -13264,6 +13284,7 @@
           "revisionNumber",
           "pipelineId",
           "state",
+          "allowedActions",
           "ownerMail",
           "organizationId",
           "createdAt",
@@ -13323,6 +13344,17 @@
               }
             ],
             "description": "The current state of the job."
+          },
+          "allowedActions": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AudienceJobAction"
+                }
+              }
+            ],
+            "description": "The actions the job accepts in its current state."
           },
           "ownerMail": {
             "type": "string",

@@ -18,6 +18,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.audience_job_action import AudienceJobAction
 from rapidata.api_client.models.audience_job_state import AudienceJobState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -36,12 +37,13 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
     pipeline_id: StrictStr = Field(description="The id of the pipeline executing the job.", alias="pipelineId")
     campaign_id: Optional[StrictStr] = Field(default=None, description="The job's campaign id. Null when the pipeline did not yield exactly one campaign.  Filterable via ?campaign_id[eq]= to resolve a campaign back to its job.", alias="campaignId")
     state: AudienceJobState = Field(description="The current state of the job.")
+    allowed_actions: List[AudienceJobAction] = Field(alias="allowedActions")
     owner_mail: StrictStr = Field(description="The email of the job's owner.", alias="ownerMail")
     organization_id: StrictStr = Field(description="The id of the organization that owns the entity.", alias="organizationId")
     created_at: datetime = Field(description="The timestamp when the job was created.", alias="createdAt")
     progress: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Labeling completion as a ratio in the range 0–1, or null when no progress has  been reported yet (completion sets it to 1). Sortable via ?sort=progress.")
     is_shared: StrictBool = Field(description="Whether this job is shared with the caller rather than owned by their organization.", alias="isShared")
-    __properties: ClassVar[List[str]] = ["jobId", "name", "jobDefinitionId", "audienceId", "revisionNumber", "pipelineId", "campaignId", "state", "ownerMail", "organizationId", "createdAt", "progress", "isShared"]
+    __properties: ClassVar[List[str]] = ["jobId", "name", "jobDefinitionId", "audienceId", "revisionNumber", "pipelineId", "campaignId", "state", "allowedActions", "ownerMail", "organizationId", "createdAt", "progress", "isShared"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -108,6 +110,7 @@ class QueryJobsEndpointOutput(LazyValidatedModel):
             "pipelineId": obj.get("pipelineId"),
             "campaignId": obj.get("campaignId"),
             "state": obj.get("state"),
+            "allowedActions": obj.get("allowedActions"),
             "ownerMail": obj.get("ownerMail"),
             "organizationId": obj.get("organizationId"),
             "createdAt": obj.get("createdAt"),

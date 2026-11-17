@@ -18,7 +18,7 @@ from typing_extensions import Self
 
 class PromptTextLanguage(str, Enum):
     """
-    PromptTextLanguage
+    Which language variant of a text segment a leaderboard shows.
     """
 
     """

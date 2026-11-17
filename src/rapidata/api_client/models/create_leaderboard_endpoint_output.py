@@ -17,6 +17,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.i_board_rapid_spec import IBoardRapidSpec
 from rapidata.api_client.models.vote_aggregation import VoteAggregation
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -29,13 +30,12 @@ class CreateLeaderboardEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     id: StrictStr = Field(description="The id of the created leaderboard.")
     benchmark_id: StrictStr = Field(description="The id of the benchmark the leaderboard belongs to.", alias="benchmarkId")
-    show_prompt: StrictBool = Field(description="Whether the prompt is shown on the rapids.", alias="showPrompt")
-    show_prompt_asset: StrictBool = Field(description="Whether the prompt asset is shown on the rapids.", alias="showPromptAsset")
+    rapid_spec: IBoardRapidSpec = Field(description="The rapid the leaderboard runs its matchups on.", alias="rapidSpec")
     response_budget: StrictInt = Field(description="Responses collected per onboarded participant, not per run: a run onboarding N participants collects N times this (N − 1 on the first run).", alias="responseBudget")
     min_responses: StrictInt = Field(description="The minimum responses per comparison.", alias="minResponses")
     is_inversed: StrictBool = Field(description="Whether the leaderboard results are inversed.", alias="isInversed")
     vote_aggregation: VoteAggregation = Field(description="How individual votes on a matchup are aggregated into the stored result.", alias="voteAggregation")
-    __properties: ClassVar[List[str]] = ["id", "benchmarkId", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "voteAggregation"]
+    __properties: ClassVar[List[str]] = ["id", "benchmarkId", "rapidSpec", "responseBudget", "minResponses", "isInversed", "voteAggregation"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -72,6 +72,9 @@ class CreateLeaderboardEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of rapid_spec
+        if self.rapid_spec:
+            _dict['rapidSpec'] = self.rapid_spec.to_dict()
         return _dict
 
     @classmethod
@@ -86,8 +89,7 @@ class CreateLeaderboardEndpointOutput(LazyValidatedModel):
         _data = {
             "id": obj.get("id"),
             "benchmarkId": obj.get("benchmarkId"),
-            "showPrompt": obj.get("showPrompt"),
-            "showPromptAsset": obj.get("showPromptAsset"),
+            "rapidSpec": IBoardRapidSpec.from_dict(obj["rapidSpec"]) if obj.get("rapidSpec") is not None else None,
             "responseBudget": obj.get("responseBudget"),
             "minResponses": obj.get("minResponses"),
             "isInversed": obj.get("isInversed"),

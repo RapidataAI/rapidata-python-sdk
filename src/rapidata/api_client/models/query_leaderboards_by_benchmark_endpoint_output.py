@@ -19,6 +19,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
+from rapidata.api_client.models.i_board_rapid_spec import IBoardRapidSpec
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -32,8 +33,7 @@ class QueryLeaderboardsByBenchmarkEndpointOutput(LazyValidatedModel):
     name: StrictStr = Field(description="The name of the leaderboard.")
     instruction: StrictStr = Field(description="The instruction shown on the leaderboard.")
     display_instruction: Optional[StrictStr] = Field(default=None, description="Text to display instead of instruction; null means display instruction itself.", alias="displayInstruction")
-    show_prompt: StrictBool = Field(description="Whether the prompt text is shown.", alias="showPrompt")
-    show_prompt_asset: StrictBool = Field(description="Whether the prompt asset is shown.", alias="showPromptAsset")
+    rapid_spec: IBoardRapidSpec = Field(description="The rapid the leaderboard runs its matchups on.", alias="rapidSpec")
     is_inversed: StrictBool = Field(description="Whether the leaderboard's scoring is inversed.", alias="isInversed")
     response_budget: StrictInt = Field(description="Responses collected per onboarded participant, not per run: a run onboarding N participants collects N times this (N − 1 on the first run).", alias="responseBudget")
     min_responses: StrictInt = Field(description="The minimum number of responses for the leaderboard.", alias="minResponses")
@@ -48,7 +48,7 @@ class QueryLeaderboardsByBenchmarkEndpointOutput(LazyValidatedModel):
     included_tags: List[StrictStr] = Field(alias="includedTags")
     excluded_tags: List[StrictStr] = Field(alias="excludedTags")
     last_updated_at: Optional[datetime] = Field(description="When votes were last recorded for the leaderboard; null when none ever were.", alias="lastUpdatedAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "displayInstruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "featureFlags", "weight", "scoreShift", "scoreScale", "isHidden", "isExcludedFromOverall", "includedTags", "excludedTags", "lastUpdatedAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "displayInstruction", "rapidSpec", "isInversed", "responseBudget", "minResponses", "audienceId", "jobDefinitionId", "featureFlags", "weight", "scoreShift", "scoreScale", "isHidden", "isExcludedFromOverall", "includedTags", "excludedTags", "lastUpdatedAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -85,6 +85,9 @@ class QueryLeaderboardsByBenchmarkEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of rapid_spec
+        if self.rapid_spec:
+            _dict['rapidSpec'] = self.rapid_spec.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -123,8 +126,7 @@ class QueryLeaderboardsByBenchmarkEndpointOutput(LazyValidatedModel):
             "name": obj.get("name"),
             "instruction": obj.get("instruction"),
             "displayInstruction": obj.get("displayInstruction"),
-            "showPrompt": obj.get("showPrompt"),
-            "showPromptAsset": obj.get("showPromptAsset"),
+            "rapidSpec": IBoardRapidSpec.from_dict(obj["rapidSpec"]) if obj.get("rapidSpec") is not None else None,
             "isInversed": obj.get("isInversed"),
             "responseBudget": obj.get("responseBudget"),
             "minResponses": obj.get("minResponses"),
