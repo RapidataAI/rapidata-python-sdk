@@ -34,7 +34,6 @@ audience = client.audience.create_audience(
     # target_accuracy=0.8,   # Optional: fraction of qualification tasks (0-1) a labeler must get right (server default 0.75)
     # min_tasks=12,          # Optional: qualification tasks before the accuracy verdict is trusted (server default 10)
     # max_tasks=30,          # Optional: cap on admission-trial tasks before a verdict is forced (default: no cap)
-    # accelerate_graduation=True,  # Optional: labelers who already qualified on the same examples or kind of task take a 5-task trial instead of the full one (default False)
 )
 
 # Add classification examples

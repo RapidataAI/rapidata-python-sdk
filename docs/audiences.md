@@ -59,23 +59,6 @@ bar yields fewer but more reliable labelers. Add at least `min_tasks`
 qualification examples before you start recruiting, or `start_recruiting()` is
 rejected because nobody could ever graduate.
 
-#### Shorter trials for proven labelers
-
-Labelers who already qualified on the same examples or the same kind of task can
-skip most of the trial:
-
-```py
-audience = client.audience.create_audience(
-    name="Custom Prompt Alignment Audience",
-    target_accuracy=0.8,
-    min_tasks=10,
-    accelerate_graduation=True,
-)
-```
-
-When recruiting starts, those labelers are invited into a 5-task admission trial
-instead of the full one. Everyone else takes the full trial. Defaults to `False`.
-
 ### Step 2: Add Qualification Examples
 
 Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience.
