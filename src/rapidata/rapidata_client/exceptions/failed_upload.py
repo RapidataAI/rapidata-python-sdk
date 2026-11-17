@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import TypeVar, Generic, TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from rapidata.rapidata_client.exceptions.rapidata_error import RapidataError
+    pass
 
 T = TypeVar("T")
 

@@ -1,0 +1,19 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [main, 2.x]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: ".python-version"
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --frozen
+      - run: uvx ruff@0.17.5 check src/rapidata
+      - run: uv run --frozen black --check src/rapidata/rapidata_client

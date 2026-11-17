@@ -7,7 +7,7 @@ from typing import Any, Literal, Sequence
 
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.config import logger, rapidata_config, tracer
+from rapidata.rapidata_client.config import logger, rapidata_config
 from rapidata.rapidata_client.config.upload_config import CompressionConfig
 from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache

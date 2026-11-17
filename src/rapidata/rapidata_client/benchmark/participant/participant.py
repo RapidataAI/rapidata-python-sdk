@@ -19,7 +19,6 @@ from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.benchmark.participant.sample_upload import SampleUpload
 from rapidata.rapidata_client.benchmark.participant._pricing import (
     PriceUnit,
-    to_price_unit,
     validate_price,
 )
 from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload

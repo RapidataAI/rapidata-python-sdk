@@ -183,5 +183,7 @@ class FailedUploadException(Exception):
         if self.job_definition:
             failed_upload_message += f"\n\nTo run the job definition without the failed datapoints, call: \n\taudience.assign_job(rapidata_client.job.get_job_definition_by_id('{self.job_definition.id}'))"
 
-        failed_upload_message += f"\n\nFor recovery strategies, see: https://docs.rapidata.ai/error_handling/"
+        failed_upload_message += (
+            "\n\nFor recovery strategies, see: https://docs.rapidata.ai/error_handling/"
+        )
         return failed_upload_message

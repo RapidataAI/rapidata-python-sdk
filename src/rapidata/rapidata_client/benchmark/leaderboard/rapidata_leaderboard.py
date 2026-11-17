@@ -18,9 +18,6 @@ from rapidata.rapidata_client.benchmark._vote_filters import (
 from rapidata.rapidata_client.benchmark.leaderboard.vote_aggregation import (
     VoteAggregation,
 )
-from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
-    AudienceAudienceIdJobsGetJobIdParameter,
-)
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.update_leaderboard_endpoint_input import (
     UpdateLeaderboardEndpointInput,

@@ -11,7 +11,6 @@ from opentelemetry import context as otel_context
 from rapidata.rapidata_client.config import logger, rapidata_config
 from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
-from rapidata.api_client.models.batch_upload_status import BatchUploadStatus
 from rapidata.api_client.models.batch_upload_url_status import BatchUploadUrlStatus
 from rapidata.api_client.models.create_batch_upload_endpoint_input import (
     CreateBatchUploadEndpointInput,

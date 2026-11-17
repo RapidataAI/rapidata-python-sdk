@@ -33,9 +33,6 @@ from rapidata.rapidata_client.benchmark.prompt_metadata import (
     coerce_tags,
     is_tag_list,
 )
-from rapidata.api_client.models.audience_audience_id_jobs_get_job_id_parameter import (
-    AudienceAudienceIdJobsGetJobIdParameter,
-)
 
 if TYPE_CHECKING:
     import pandas as pd

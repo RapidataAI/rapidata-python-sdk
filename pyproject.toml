@@ -71,3 +71,12 @@ include = ["src/rapidata"]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.ruff]
+extend-exclude = ["src/rapidata/api_client"]
+
+[tool.ruff.lint]
+select = ["F", "B006", "B008", "B023"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
