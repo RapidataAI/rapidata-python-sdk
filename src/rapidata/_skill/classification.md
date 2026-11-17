@@ -24,6 +24,18 @@ job_def = client.job.create_classification_job_definition(
 )
 ```
 
+## Settings to consider here
+
+Check these while writing the job definition; add one only when the case fits. Every setting with its arguments: `python -m rapidata skill settings`.
+
+| The case | Add |
+|---|---|
+| Ordered options: ratings, Likert scales, "how much" | `NoShuffleSetting()`, since options are shuffled otherwise |
+| Text datapoints (`data_type="text"`) | `TranslateTextAssetsSetting()` for English text, else a `LanguageFilter` on the audience (Key Gotcha 9) |
+| Videos the labeler must actually watch | `PlayPercentageVideoSetting(percentage)`; keep the clips short (task design rule 5). `DisableAutoloopSetting()` stops looping |
+| 360° media | `ClassifyEquirectangularSetting()` |
+| Text with markdown formatting | `MarkdownSetting()` |
+
 ## Classification-specific parameters
 
 | Parameter | Type | Description |

@@ -16,6 +16,12 @@ Each flow and `RapidataFlowItem` carries a `flow_type` (`"ranking"` or `"simple"
 
 Using flows as the preference signal for DPO / RLHF or best-of-N: `python -m rapidata skill flows-for-preference-data`.
 
+## Settings to consider here
+
+Check these while writing the job definition; add one only when the case fits. Every setting with its arguments: `python -m rapidata skill settings`.
+
+Flow settings are flow-wide: `settings=[...]` on `create_ranking_flow` / `create_classify_flow`. Ordered classify categories (ratings): `NoShuffleSetting()`. Text datapoints: `TranslateTextAssetsSetting()` for English text. Videos: `PlayPercentageVideoSetting(percentage)`.
+
 ## Ranking flows
 
 Lightweight continuous ranking:

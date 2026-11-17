@@ -74,6 +74,19 @@ job_def = client.job.create_compare_job_definition(
 | `datapoints` | list[list[str \| UploadedAsset]] | Pairs: `[["a1.jpg","b1.jpg"], ...]` |
 | `a_b_names` | list[str] \| None | Custom labels for results, e.g. `["Model A","Model B"]` |
 
+## Settings to consider here
+
+Check these while writing the job definition; add one only when the case fits. Every setting with its arguments: `python -m rapidata skill settings`.
+
+| The case | Add |
+|---|---|
+| Both options are edits of one original image | `ReferenceOverlaySetting()`, with exactly that original as the only image in `media_contexts` |
+| Labelers may honestly see no difference | `AllowNeitherBothSetting()` (an "Unsure" button after `delay_ms`, default 5000) |
+| Videos the labeler must actually watch | `PlayPercentageVideoSetting(percentage)`; keep the clips short (task design rule 5). `DisableAutoloopSetting()` stops looping |
+| 360° or panorama media | `CompareEquirectangularSetting()` / `ComparePanoramaSetting()` |
+| Text options (`data_type="text"`) | `TranslateTextAssetsSetting()` for English text, else a `LanguageFilter` on the audience (Key Gotcha 9) |
+| A reference image the labeler must see while judging | `PinContextMediaSetting()`, only if the preview shows enough space |
+
 ## Adaptive stopping (the compare default)
 
 Compare jobs do not collect a fixed 10 responses by default: `AdaptiveStopping()` stops each pair at its first settled verdict. Pass an `int` (e.g. `responses_per_datapoint=10`) for a fixed count, or `QuorumStopping(threshold, max_responses)` (see `python -m rapidata skill classification`). Read `adaptiveStoppingState.verdict` (`Decided` / `Ambiguous` / `Undecided` / `Open`) rather than `winner` on adaptive results: `Ambiguous` means the pair is genuinely close, not that too few responses came in.

@@ -4,6 +4,18 @@
 
 Locate: labelers tap points. Draw: labelers color in regions. Select words: labelers pick words of a sentence. Free text: labelers type an answer. Audience qualification examples for each are in `python -m rapidata skill audiences`.
 
+## Settings to consider here
+
+Check these while writing the job definition; add one only when the case fits. Every setting with its arguments: `python -m rapidata skill settings`.
+
+| The case | Add |
+|---|---|
+| Locate: how many points a labeler may tap | `LocateMaxPointsSetting(n)` (default 3) / `LocateMinPointsSetting(n)` (default 1) |
+| Locate or draw on media that may have no error at all | `NoMistakeOptionSetting()`, a "No mistakes" button |
+| Free text: the answer is a number | `KeyboardNumericSetting()` |
+| Free text: the question demands a length | `FreeTextMinimumCharactersSetting(n)` / `FreeTextMaxCharactersSetting(n)`, with caution (see Free Text) |
+| Videos the labeler must actually watch | `PlayPercentageVideoSetting(percentage)`; keep the clips short (task design rule 5) |
+
 ## Locate
 
 Ask labelers to tap on the points in a datapoint that match your instruction. Results are the set of tapped coordinates per datapoint. No `answer_options`, `a_b_names`, `data_type`, `confidence_threshold`, or `quorum_threshold`.

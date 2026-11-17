@@ -4,7 +4,7 @@
 
 To compare **two** image or video models once, a template is quicker: `python -m rapidata skill comparison`.
 
-Compare and rank AI models on leaderboards. Supports images, videos, audio, and text. Participants, uploads, prompt metadata and prompt-tag scoping: `python -m rapidata skill benchmark-participants`. Standings, win/loss matrices and voter demographics: `python -m rapidata skill benchmark-results`.
+Compare and rank AI models on leaderboards. Supports images, videos, audio, and text. Participants, uploads, prompt metadata and prompt-tag scoping: `python -m rapidata skill benchmark-participants`. Standings, win/loss matrices, voter demographics and vote aggregation: `python -m rapidata skill benchmark-results`.
 
 ## Create a benchmark, leaderboards and models
 
@@ -129,6 +129,12 @@ benchmarks = client.mri.find_benchmarks(name="AI Art", amount=10)
 benchmark = client.mri.get_benchmark_by_id("benchmark_id")
 ```
 
+## Settings to consider here
+
+Check these while writing the job definition; add one only when the case fits. Every setting with its arguments: `python -m rapidata skill settings`.
+
+Pass leaderboard settings as `create_leaderboard(..., settings=[...])`. Video models: `PlayPercentageVideoSetting(percentage)` (keep the clips short, task design rule 5). Text models: `TranslateTextAssetsSetting()` for English text, else a filtered audience with `LanguageFilter` as `audience_id` (Key Gotcha 9). Rendered text in images is never translated: give it its own leaderboard on a `LanguageFilter` audience.
+
 ## Responses per matchup (`min_responses_per_matchup`)
 
 Set `min_responses_per_matchup` to **5 or more** on every leaderboard (task design rule 6 in the main guide). The SDK default of 3 is too low: one labeler who misreads the question decides a third of a matchup. The SDK only rejects values below 3. Pick `level_of_detail` so the budget covers it: one leaderboard needs at least models × (models − 1) / 2 × prompts × `min_responses_per_matchup` responses for one round of every pair on every prompt (3 models, 6 prompts, 5 per matchup = 90).
@@ -202,35 +208,6 @@ leaderboard.update(
     min_responses_per_matchup=5,
     vote_aggregation=VoteAggregation.MAJORITY_VOTE,
 )
-```
-
-## Vote aggregation (`VoteAggregation`)
-
-`VoteAggregation` controls how the individual annotator responses on a single matchup (one comparison of two models on one prompt) are aggregated into that matchup's result. Importable from the top-level `rapidata` package (and from `rapidata.types`).
-
-```python
-from rapidata import VoteAggregation
-```
-
-| Member | Meaning |
-|--------|---------|
-| `VoteAggregation.MAJORITY_VOTE` | Collapses each matchup to a single win for the side the majority of responses picked, splitting ties 0.5/0.5. Every matchup weighs the same regardless of how many responses it collected. **Default.** |
-| `VoteAggregation.ALL_VOTES` | Counts every individual response as its own matchup, so heavily-answered matchups dominate the standings |
-
-- Set at creation via `benchmark.create_leaderboard(..., vote_aggregation=...)` (defaults to `VoteAggregation.MAJORITY_VOTE`).
-- Read back via the read-only `leaderboard.vote_aggregation` property (returns a `VoteAggregation`). For a leaderboard read from the benchmark's listing the value is lazily fetched on first access and cached.
-- Change afterwards via `leaderboard.update(vote_aggregation=...)`.
-
-```python
-from rapidata import VoteAggregation
-
-leaderboard = benchmark.create_leaderboard(
-    name="Realism",
-    instruction="Which image is more realistic?",
-    min_responses_per_matchup=5,
-    vote_aggregation=VoteAggregation.ALL_VOTES,
-)
-print(leaderboard.vote_aggregation)   # VoteAggregation.ALL_VOTES
 ```
 
 ## Examples

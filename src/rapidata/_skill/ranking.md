@@ -22,6 +22,12 @@ results = job.get_results()  # one entry per ranking: results["results"][0]["sum
 df = results.to_pandas()     # one row per ranked datapoint: group, datapoint, score, rank
 ```
 
+## Settings to consider here
+
+Check these while writing the job definition; add one only when the case fits. Every setting with its arguments: `python -m rapidata skill settings`.
+
+Ranking is checked as a comparison for settings, so the video, 360° and text-translation rows of the comparison guide's settings table apply (`python -m rapidata skill comparison`).
+
 ## Ranking parameters
 
 | Parameter | Type | Description |

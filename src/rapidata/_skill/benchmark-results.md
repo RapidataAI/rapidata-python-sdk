@@ -28,6 +28,35 @@ for job in leaderboard.jobs:
     job_results = job.get_results()
 ```
 
+## Vote aggregation (`VoteAggregation`)
+
+`VoteAggregation` controls how the individual annotator responses on a single matchup (one comparison of two models on one prompt) are aggregated into that matchup's result. Importable from the top-level `rapidata` package (and from `rapidata.types`).
+
+```python
+from rapidata import VoteAggregation
+```
+
+| Member | Meaning |
+|--------|---------|
+| `VoteAggregation.MAJORITY_VOTE` | Collapses each matchup to a single win for the side the majority of responses picked, splitting ties 0.5/0.5. Every matchup weighs the same regardless of how many responses it collected. **Default.** |
+| `VoteAggregation.ALL_VOTES` | Counts every individual response as its own matchup, so heavily-answered matchups dominate the standings |
+
+- Set at creation via `benchmark.create_leaderboard(..., vote_aggregation=...)` (defaults to `VoteAggregation.MAJORITY_VOTE`).
+- Read back via the read-only `leaderboard.vote_aggregation` property (returns a `VoteAggregation`). For a leaderboard read from the benchmark's listing the value is lazily fetched on first access and cached.
+- Change afterwards via `leaderboard.update(vote_aggregation=...)`.
+
+```python
+from rapidata import VoteAggregation
+
+leaderboard = benchmark.create_leaderboard(
+    name="Realism",
+    instruction="Which image is more realistic?",
+    min_responses_per_matchup=5,
+    vote_aggregation=VoteAggregation.ALL_VOTES,
+)
+print(leaderboard.vote_aggregation)   # VoteAggregation.ALL_VOTES
+```
+
 ## Win/loss matrix
 
 `leaderboard.get_win_loss_matrix(tags=None, use_weighted_scoring=None)` and `benchmark.get_win_loss_matrix(tags=None, participant_ids=None, leaderboard_ids=None, use_weighted_scoring=None)` return a square pandas DataFrame indexed by participant name on both axes. Cell `[i, j]` is how often row model `i` beat column model `j`; the diagonal is always 0.
