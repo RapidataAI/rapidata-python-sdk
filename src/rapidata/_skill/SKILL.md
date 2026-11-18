@@ -30,7 +30,7 @@ Each guide describes the installed SDK version, like this one.
 | Put items into categories, yes/no questions, rating scales (Likert), quorum stopping | `classification` |
 | Rank 3 or more items within a group | `ranking` |
 | Tap points (locate), color in regions (draw), select words in a sentence, free-text answers | `annotation` |
-| Rank AI models on a leaderboard (benchmark / MRI): create, leaderboards, evaluate models | `benchmarks` |
+| Rank AI models on a leaderboard (benchmark / MRI): create, leaderboards, evaluate models, test variants against one baseline | `benchmarks` |
 | Benchmark participants: uploads and recovery, pricing, prompt tags and assets | `benchmark-participants` |
 | Benchmark standings, win/loss matrices, voter demographics | `benchmark-results` |
 | Custom or qualified audiences, qualification examples, recruiting, queueing jobs | `audiences` |
