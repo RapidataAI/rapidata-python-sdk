@@ -1,6 +1,6 @@
 # Rapidata Python Client
 
-Python client to interface with the Rapidata API.
+The official Python SDK for the Rapidata API: human feedback from real people for preference data and RLHF, model evaluation and data labeling.
 
 Docs: https://docs.rapidata.ai/
 
