@@ -28,7 +28,7 @@ When writing documentation, make sure to keep focused, easy to understand, and n
 
 
 ## General rules
-at the end of your edits make sure to run 'pyright src/rapidata/rapidata_client' and make sure there are no errors.
+at the end of your edits make sure to run 'pyright src/rapidata/rapidata_client' and 'uvx ruff check src/rapidata' and make sure there are no errors; the Lint check runs ruff and black in CI.
 when updating any interfaces make sure you update the docs and examples.
 before every commit make sure to format everything under src/rapidata/rapidata_client with black ('uv run black src/rapidata/rapidata_client').
 

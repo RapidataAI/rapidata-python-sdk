@@ -4,7 +4,6 @@ import json
 
 if TYPE_CHECKING:
     import pandas as pd
-    from pandas.core.indexes.base import Index
 
 
 class RapidataResults(dict):

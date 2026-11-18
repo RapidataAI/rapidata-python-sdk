@@ -1,10 +1,6 @@
 from __future__ import annotations
 
-import time
-import urllib.parse
-import webbrowser
-from colorama import Fore
-from typing import Literal, TYPE_CHECKING
+from typing import Literal
 from rapidata.rapidata_client.validation.rapidata_validation_set import (
     RapidataValidationSet,
 )
@@ -30,12 +26,6 @@ from rapidata.rapidata_client.config import (
 )
 from tqdm.auto import tqdm
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
-
-if TYPE_CHECKING:
-    from rapidata.rapidata_client.workflow import Workflow
-    from rapidata.rapidata_client.datapoints._datapoint import Datapoint
-    from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
-    from typing import Sequence
 
 
 class ValidationSetManager:
@@ -70,7 +60,7 @@ class ValidationSetManager:
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         explanations: list[str | None] | None = None,
-        dimensions: list[str] = [],
+        dimensions: list[str] | None = None,
     ) -> RapidataValidationSet:
         """Create a classification validation set.
 
@@ -93,7 +83,7 @@ class ValidationSetManager:
                 Will be matched up with the datapoints using the list index.
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to None, which is the default dimension.
 
         Example:
             ```python
@@ -147,7 +137,7 @@ class ValidationSetManager:
                 )
 
             logger.debug("Submitting classification rapids")
-            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions or [])
 
     def create_compare_set(
         self,
@@ -159,7 +149,7 @@ class ValidationSetManager:
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         explanation: list[str | None] | None = None,
-        dimensions: list[str] = [],
+        dimensions: list[str] | None = None,
     ) -> RapidataValidationSet:
         """Create a comparison validation set.
 
@@ -182,7 +172,7 @@ class ValidationSetManager:
                 Will be matched up with the datapoints using the list index.
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to None, which is the default dimension.
 
         Example:
             ```python
@@ -233,7 +223,7 @@ class ValidationSetManager:
                 )
 
             logger.debug("Submitting comparison rapids")
-            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions or [])
 
     def create_select_words_set(
         self,
@@ -245,7 +235,7 @@ class ValidationSetManager:
         required_precision: float = 1.0,
         required_completeness: float = 1.0,
         explanation: list[str | None] | None = None,
-        dimensions: list[str] = [],
+        dimensions: list[str] | None = None,
     ) -> RapidataValidationSet:
         """Create a select words validation set.
 
@@ -263,7 +253,7 @@ class ValidationSetManager:
             required_precision (float, optional): The required precision for the labeler to get the rapid correct (minimum ratio of the words selected that need to be correct). Defaults to 1.0 (no wrong word can be selected).
             required_completeness (float, optional): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected). Defaults to 1.0 (all correct words need to be selected).
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to None, which is the default dimension.
 
         Example:
             ```python
@@ -308,7 +298,7 @@ class ValidationSetManager:
                 )
 
             logger.debug("Submitting select words rapids")
-            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions or [])
 
     def create_locate_set(
         self,
@@ -319,7 +309,7 @@ class ValidationSetManager:
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         explanation: list[str | None] | None = None,
-        dimensions: list[str] = [],
+        dimensions: list[str] | None = None,
     ) -> RapidataValidationSet:
         """Create a locate validation set.
 
@@ -337,7 +327,7 @@ class ValidationSetManager:
                 Will be matched up with the datapoints using the list index.
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to None, which is the default dimension.
 
         Example:
             ```python
@@ -386,7 +376,7 @@ class ValidationSetManager:
                 )
 
             logger.debug("Submitting locate rapids")
-            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions or [])
 
     def create_draw_set(
         self,
@@ -397,7 +387,7 @@ class ValidationSetManager:
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         explanation: list[str | None] | None = None,
-        dimensions: list[str] = [],
+        dimensions: list[str] | None = None,
     ) -> RapidataValidationSet:
         """Create a draw validation set.
 
@@ -415,7 +405,7 @@ class ValidationSetManager:
                 Will be matched up with the datapoints using the list index.
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to None, which is the default dimension.
 
         Example:
             ```python
@@ -464,7 +454,7 @@ class ValidationSetManager:
                 )
 
             logger.debug("Submitting draw rapids")
-            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions or [])
 
     def create_timestamp_set(
         self,
@@ -475,7 +465,7 @@ class ValidationSetManager:
         contexts: list[str] | None = None,
         media_contexts: list[list[str]] | None = None,
         explanation: list[str | None] | None = None,
-        dimensions: list[str] = [],
+        dimensions: list[str] | None = None,
     ) -> RapidataValidationSet:
         """Create a timestamp validation set.
 
@@ -494,7 +484,7 @@ class ValidationSetManager:
                 Will be matched up with the datapoints using the list index.
                 Use a single-element inner list for one image per datapoint, or multiple entries to display several images.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to None, which is the default dimension.
 
         Example:
             ```python
@@ -543,26 +533,26 @@ class ValidationSetManager:
                 )
 
             logger.debug("Submitting timestamp rapids")
-            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions or [])
 
     def create_mixed_set(
         self,
         name: str,
         rapids: list[Rapid],
-        dimensions: list[str] = [],
+        dimensions: list[str] | None = None,
     ) -> RapidataValidationSet:
         """Create a validation set with a list of rapids.
 
         Args:
             name (str): The name of the validation set. (will not be shown to the labeler)
             rapids (list[Rapid]): The list of rapids to add to the validation set.
-            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to None, which is the default dimension.
         """
         with tracer.start_as_current_span("ValidationSetManager.create_mixed_set"):
             if not rapids:
                 raise ValueError("Rapids cannot be empty")
 
-            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions or [])
 
     def _submit(
         self, name: str, rapids: list[Rapid], dimensions: list[str]

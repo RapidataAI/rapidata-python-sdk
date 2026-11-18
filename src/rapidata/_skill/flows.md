@@ -194,7 +194,7 @@ vs = client.validation.create_classification_set(
     answer_options=["Cat", "Dog"],
     datapoints=["cat.jpg", "dog.jpg"],
     truths=[["Cat"], ["Dog"]],           # list of correct answers per datapoint
-    # data_type="media", contexts=None, media_contexts=None, explanations=None, dimensions=[],
+    # data_type="media", contexts=None, media_contexts=None, explanations=None, dimensions=None,
 )
 flow = client.flow.create_classify_flow(..., validation_set_id=vs.id)
 ```

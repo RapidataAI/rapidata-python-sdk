@@ -1,10 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import TypeVar, Generic, TYPE_CHECKING, Optional
-
-if TYPE_CHECKING:
-    from rapidata.rapidata_client.exceptions.rapidata_error import RapidataError
+from typing import TypeVar, Generic, Optional
 
 T = TypeVar("T")
 

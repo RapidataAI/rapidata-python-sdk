@@ -7,7 +7,6 @@ from rapidata.rapidata_client.config import logger, managed_print, tracer
 from rapidata.api_client.models.update_validation_set_endpoint_input import (
     UpdateValidationSetEndpointInput,
 )
-from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
 from rapidata.rapidata_client.validation.rapids._validation_rapid_uploader import (
     ValidationRapidUploader,
 )
