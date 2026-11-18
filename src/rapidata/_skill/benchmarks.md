@@ -90,7 +90,7 @@ participant.run()       # Submit one participant (via the batch endpoint as a ba
 benchmark.run()         # Submit all unsubmitted (CREATED or SUBMITTABLE) participants in a single batch request
                         # (chunked at 100 ids). Batching evaluates them symmetrically as one run —
                         # each model compared against every other and against the already-submitted
-                        # field — rather than as separate per-participant runs.
+                        # field (two candidates never) — rather than as separate per-participant runs.
                         # Emits a single aggregated logger.warning listing any participant that filled a
                         # prompt below the benchmark's minimum-samples-per-prompt gate (advisory; submission still completes).
 
@@ -99,6 +99,19 @@ benchmark.update(
     min_assets_per_prompt=4,      # int >= 2 (bool rejected); ValueError otherwise
 )
 ```
+
+## Testing variants against one baseline
+
+Testing several variants of a model against the same baseline? Use **one benchmark** with the baseline in its field and add each variant with `is_candidate=True`: a candidate plays the field only, never another candidate. A new benchmark per variant uploads the baseline again and pays for its votes again. Look for an existing benchmark with `client.mri.find_benchmarks(name=...)` first.
+
+```python
+benchmark = client.mri.get_benchmark_by_id("benchmark_id")  # baseline already submitted
+variant = benchmark.add_model(name="MyModel 4-step", media=[...], identifiers=[...], is_candidate=True)
+variant.run()
+# variant.promote()  # only for a variant later models should play
+```
+
+Compare each variant with the baseline in `leaderboard.get_win_loss_matrix()`. A different resolution or prompt set is a different baseline: give it its own benchmark.
 
 ## Leaderboard configuration
 
