@@ -29,7 +29,7 @@ class GetJobCostEstimateEndpointOutput(LazyValidatedModel):
     estimated_cost: Union[StrictFloat, StrictInt] = Field(description="The estimated total cost of running the job to completion.", alias="estimatedCost")
     cost_per_response: Union[StrictFloat, StrictInt] = Field(description="The representative per-response cost the estimate is based on.", alias="costPerResponse")
     datapoint_count: StrictInt = Field(description="The number of datapoints in the job's dataset.", alias="datapointCount")
-    required_responses: StrictInt = Field(description="The total number of responses the job's referee requires to complete.", alias="requiredResponses")
+    required_responses: StrictInt = Field(description="The total number of responses the job's referee requires to complete; with adaptive  stopping, the number it is expected to collect rather than its cap.", alias="requiredResponses")
     __properties: ClassVar[List[str]] = ["estimatedCost", "costPerResponse", "datapointCount", "requiredResponses"]
 
     # model_config is inherited from LazyValidatedModel
