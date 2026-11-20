@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.retrieval_mode import RetrievalMode
 from pydantic import ValidationError
@@ -30,7 +30,8 @@ class IProgramActionServeRapidAction(LazyValidatedModel):
     t: StrictStr = Field(alias="_t")
     routing_id: StrictStr = Field(alias="routingId")
     retrieval_mode: Optional[RetrievalMode] = Field(default=None, alias="retrievalMode")
-    __properties: ClassVar[List[str]] = ["_t", "routingId", "retrievalMode"]
+    advance_on_view: Optional[StrictBool] = Field(default=None, alias="advanceOnView")
+    __properties: ClassVar[List[str]] = ["_t", "routingId", "retrievalMode", "advanceOnView"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -88,7 +89,8 @@ class IProgramActionServeRapidAction(LazyValidatedModel):
         _data = {
             "_t": obj.get("_t"),
             "routingId": obj.get("routingId"),
-            "retrievalMode": obj.get("retrievalMode")
+            "retrievalMode": obj.get("retrievalMode"),
+            "advanceOnView": obj.get("advanceOnView")
         }
         try:
             _obj = cls.model_validate(_data)

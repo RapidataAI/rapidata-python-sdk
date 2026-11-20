@@ -21,6 +21,7 @@ from rapidata.api_client.models.cost_unit import CostUnit
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_faucet_input import IFaucetInput
 from rapidata.api_client.models.model_license_type import ModelLicenseType
+from rapidata.api_client.models.participant_setting import ParticipantSetting
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Optional, Set
@@ -37,10 +38,11 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
     license_type: Optional[ModelLicenseType] = Field(default=None, description="The license classification of the underlying model. Pass null to clear.", alias="licenseType")
     cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The model's price in USD per costUnit. Pass null to clear. Set and cleared together with costUnit.")
     cost_unit: Optional[CostUnit] = Field(default=None, description="The unit cost is quoted in. Pass null to clear.", alias="costUnit")
+    settings: Optional[List[ParticipantSetting]] = None
     logo: Optional[ExistingAssetInput] = Field(default=None, description="An image asset for the model's logo. Pass null to clear.")
     faucet: Optional[IFaucetInput] = Field(default=None, description="The faucet to set or replace on the participant.")
     is_public: Optional[StrictBool] = Field(default=None, description="Whether everyone who can open the benchmark sees the participant. It affects only visibility:  the participant is paired the same way either way, and changing it starts no matchups.", alias="isPublic")
-    __properties: ClassVar[List[str]] = ["name", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "faucet", "isPublic"]
+    __properties: ClassVar[List[str]] = ["name", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "settings", "logo", "faucet", "isPublic"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -77,6 +79,13 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in settings (list)
+        _items = []
+        if self.settings:
+            for _item_settings in self.settings:
+                if _item_settings:
+                    _items.append(_item_settings.to_dict())
+            _dict['settings'] = _items
         # override the default output from pydantic by calling `to_dict()` of logo
         if self.logo:
             _dict['logo'] = self.logo.to_dict()
@@ -113,6 +122,11 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
         if self.cost_unit is None and "cost_unit" in self.model_fields_set:
             _dict['costUnit'] = None
 
+        # set to None if settings (nullable) is None
+        # and model_fields_set contains the field
+        if self.settings is None and "settings" in self.model_fields_set:
+            _dict['settings'] = None
+
         # set to None if logo (nullable) is None
         # and model_fields_set contains the field
         if self.logo is None and "logo" in self.model_fields_set:
@@ -137,6 +151,7 @@ class UpdateParticipantEndpointInput(LazyValidatedModel):
             "licenseType": obj.get("licenseType"),
             "cost": obj.get("cost"),
             "costUnit": obj.get("costUnit"),
+            "settings": [ParticipantSetting.from_dict(_item) for _item in obj["settings"]] if obj.get("settings") is not None else None,
             "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None,
             "faucet": IFaucetInput.from_dict(obj["faucet"]) if obj.get("faucet") is not None else None,
             "isPublic": obj.get("isPublic")

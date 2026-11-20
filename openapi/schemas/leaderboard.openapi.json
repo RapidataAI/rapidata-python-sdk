@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Leaderboard API",
     "description": "The API for the Rapidata Leaderboard service",
-    "version": "2026.11.19.1442-1352d28"
+    "version": "2026.11.20.1632-12ec46b"
   },
   "servers": [
     {
@@ -17249,6 +17249,18 @@
             "description": "The unit cost is quoted in. Required when cost is supplied.",
             "nullable": true
           },
+          "settings": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ParticipantSetting"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "How the model was run, as ordered label/value rows. At most 8; an empty list sets none."
+          },
           "logo": {
             "allOf": [
               {
@@ -19142,6 +19154,18 @@
             "description": "Average measured cost of one sample in USD, or null if no sample has a cost. Standings show\n it in place of cost while cost is null.",
             "format": "double",
             "nullable": true
+          },
+          "settings": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ParticipantSetting"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "How the model was run, as ordered label/value rows, or null if none are set."
           },
           "logo": {
             "type": "string",
@@ -21510,6 +21534,21 @@
           }
         }
       },
+      "ParticipantSetting": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
       "ParticipantStatus": {
         "enum": [
           "Created",
@@ -23155,6 +23194,18 @@
             ],
             "description": "The unit cost is quoted in, or null if the price is unknown.",
             "nullable": true
+          },
+          "settings": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ParticipantSetting"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "How the model was run, as ordered label/value rows, or null if none are set."
           },
           "logo": {
             "type": "string",
@@ -24877,6 +24928,18 @@
             ],
             "description": "The unit cost is quoted in. Pass null to clear.",
             "nullable": true
+          },
+          "settings": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ParticipantSetting"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "Replaces the model's settings rows, at most 8. Omit or pass null to keep them; pass an empty list to clear."
           },
           "logo": {
             "type": "object",
