@@ -7,8 +7,10 @@ from rapidata.api_client.models.i_order_workflow_input import (
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
+from rapidata.rapidata_client.config import logger
 
 MAX_INSTRUCTION_LENGTH: int = 250
+RECOMMENDED_INSTRUCTION_LENGTH: int = 80
 
 
 def validate_instruction_length(
@@ -24,6 +26,22 @@ def validate_instruction_length(
         raise ValueError(
             f"instruction is {len(instruction)} characters; maximum is {max_length}"
         )
+    warn_long_instruction(instruction)
+
+
+def warn_long_instruction(instruction: str) -> None:
+    """Warn when ``instruction`` is longer than labelers can take in at a glance."""
+    if len(instruction) <= RECOMMENDED_INSTRUCTION_LENGTH:
+        return
+    logger.warning(
+        "The instruction is %d characters; keep it under %d. Labelers read it on a phone "
+        "and answer in about 10 seconds. Ask one short question about one criterion, "
+        "with one job definition per aspect, and leave definitions and edge cases out; "
+        "see 'Task design rules' in `python -m rapidata skill`. Instruction: %r",
+        len(instruction),
+        RECOMMENDED_INSTRUCTION_LENGTH,
+        instruction,
+    )
 
 
 class Workflow(ABC):

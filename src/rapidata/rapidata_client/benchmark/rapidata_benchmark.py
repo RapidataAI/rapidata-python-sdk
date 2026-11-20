@@ -695,6 +695,32 @@ class RapidataBenchmark:
                 if resolved_origin is not None:
                     self.__origins[index] = resolved_origin
 
+    def _warn_long_shown_prompts(self) -> None:
+        from rapidata.rapidata_client.context.context_manager import (
+            RECOMMENDED_CONTEXT_LENGTH,
+        )
+
+        try:
+            prompts = [p for p in self.prompts if p]
+        except Exception as e:
+            logger.debug("Skipped the shown-prompt length check: %s", e)
+            return
+        too_long = [p for p in prompts if len(p) > RECOMMENDED_CONTEXT_LENGTH]
+        if not too_long:
+            return
+        logger.warning(
+            "%d of %d benchmark prompt(s) are longer than %d characters (longest: %d), "
+            "and show_prompt=True shows them to labelers as context. Prompts are not "
+            "shortened automatically: register a one-sentence display text under %d "
+            "characters as each prompt and pair the media through `identifiers`; see "
+            "'Prompts shown to labelers' in `python -m rapidata skill benchmarks`.",
+            len(too_long),
+            len(prompts),
+            RECOMMENDED_CONTEXT_LENGTH,
+            max(len(p) for p in too_long),
+            RECOMMENDED_CONTEXT_LENGTH,
+        )
+
     def create_leaderboard(
         self,
         name: str,
@@ -751,6 +777,9 @@ class RapidataBenchmark:
         from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
             RapidataLeaderboard,
         )
+        from rapidata.rapidata_client.workflow._base_workflow import (
+            warn_long_instruction,
+        )
 
         with tracer.start_as_current_span("RapidataBenchmark.create_leaderboard"):
             response_budget = (
@@ -772,6 +801,10 @@ class RapidataBenchmark:
                 if isinstance(audience_id, RapidataAudienceBase)
                 else audience_id
             )
+
+            warn_long_instruction(instruction)
+            if show_prompt:
+                self._warn_long_shown_prompts()
 
             logger.info(
                 "Creating leaderboard %s with instruction %s, show_prompt %s, show_prompt_asset %s, inverse_ranking %s, level_of_detail %s, min_responses_per_matchup %s, audience_id %s, settings %s, included_tags %s, excluded_tags %s, vote_aggregation %s, skip_initial_run %s",

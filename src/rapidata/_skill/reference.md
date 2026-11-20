@@ -21,7 +21,7 @@ Parameters, methods and result fields shared by every job type. Task-specific pa
 | `failure_tolerance` | float \| None | Fraction of datapoints (0.0–1.0) allowed to fail upload while the definition is still created; `None` falls back to `rapidata_config.upload.failureTolerance` (default `0.0` = strict). See `python -m rapidata skill errors` |
 | `private_metadata` | `list[dict[str, str]] \| None` | Hidden metadata per datapoint |
 
-`instruction` is capped at 250 characters (`Workflow.MAX_INSTRUCTION_LENGTH`) for every job definition type and for every audience qualification example. Over-long values raise `ValueError: instruction is <n> characters; maximum is 250` at construction time. This is a hard cap, not a target: write instructions under 80 characters (see **Task design rules** in the main guide).
+`instruction` is capped at 250 characters (`Workflow.MAX_INSTRUCTION_LENGTH`) for every job definition type and for every audience qualification example. Over-long values raise `ValueError: instruction is <n> characters; maximum is 250` at construction time. This is a hard cap, not a target: anything over 80 characters logs a warning, so write instructions under 80 characters (see **Task design rules** in the main guide).
 
 ## Upload once, reuse the reference
 
