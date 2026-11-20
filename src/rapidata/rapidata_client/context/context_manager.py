@@ -191,14 +191,14 @@ def warn_long_contexts(contexts: Sequence[str], shortening_enabled: bool) -> Non
         return
     if shortening_enabled:
         shortening = (
-            "rapidata_config.upload.contextShortening is on, so every context is "
-            "shortened for the instruction before upload"
+            "rapidata_config.upload.contextShortening is on, so every context is cut "
+            "down to the part the question asks about before upload"
         )
     else:
         shortening = (
             f"Only contexts over {MAX_CONTEXT_LENGTH} characters are shortened "
-            "automatically; set rapidata_config.upload.contextShortening = True to "
-            "shorten every context for the instruction before upload"
+            "automatically; set rapidata_config.upload.contextShortening = True to cut "
+            "every context down to the part the question asks about before upload"
         )
     logger.warning(
         "%d of %d context(s) are longer than %d characters (longest: %d). Keep each to one "
