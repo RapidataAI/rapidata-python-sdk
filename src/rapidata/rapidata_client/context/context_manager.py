@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 # (datasets-service CreateDatapointCommandValidator: `RuleFor(x => x.Context).MaximumLength(400)`).
 # Keep in sync if the backend limit changes.
 MAX_CONTEXT_LENGTH = 400
+RECOMMENDED_CONTEXT_LENGTH = 150
 
 # The endpoint shortens the pairs of one request concurrently, but the request
 # only returns once its slowest pair is done. Splitting a large call into several
@@ -134,6 +135,10 @@ class ContextManager:
         focuses the annotator even when it already fits.
         """
         shorten_all = rapidata_config.upload.contextShortening
+        warn_long_contexts(
+            [dp.context for dp in datapoints if dp.context is not None],
+            shortening_enabled=shorten_all,
+        )
 
         candidates = [
             (index, datapoint, datapoint.context)
@@ -173,3 +178,32 @@ class ContextManager:
                 len(new_context),
             )
             datapoint.context = new_context
+
+
+def warn_long_contexts(contexts: Sequence[str], shortening_enabled: bool) -> None:
+    """Warn when contexts are longer than labelers can read alongside the media."""
+    too_long = [c for c in contexts if len(c) > RECOMMENDED_CONTEXT_LENGTH]
+    if not too_long:
+        return
+    if shortening_enabled:
+        automatic = (
+            "rapidata_config.upload.contextShortening is on, so they are shortened "
+            "automatically before upload."
+        )
+    else:
+        automatic = (
+            "You can also shorten them automatically before upload with "
+            "rapidata_config.upload.contextShortening = True."
+        )
+    logger.warning(
+        "%d of %d context(s) are longer than %d characters (longest: %d). We recommend "
+        "shortening each yourself to one sentence under %d characters with only what the "
+        "question checks: labelers read it and judge the media in about 10 seconds. %s "
+        "See 'Task design rules' in `python -m rapidata skill`.",
+        len(too_long),
+        len(contexts),
+        RECOMMENDED_CONTEXT_LENGTH,
+        max(len(c) for c in too_long),
+        RECOMMENDED_CONTEXT_LENGTH,
+        automatic,
+    )

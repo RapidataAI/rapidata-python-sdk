@@ -15,6 +15,7 @@ import pytest
 from rapidata.rapidata_client.config import rapidata_config
 from rapidata.rapidata_client.context.context_manager import (
     MAX_CONTEXT_LENGTH,
+    RECOMMENDED_CONTEXT_LENGTH,
     SHORTEN_BATCH_SIZE,
     ContextManager,
 )
@@ -112,7 +113,7 @@ def test_enabled_shortens_every_context(caplog):
     ]
     # Only the over-long context is a rewrite the caller did not ask for, so it
     # alone is warned about; the per-datapoint detail stays at info.
-    assert _warnings(caplog) == [
+    assert [m for m in _warnings(caplog) if "exceed the maximum" in m] == [
         f"1 context(s) exceed the maximum of {MAX_CONTEXT_LENGTH} characters and are "
         "being shortened for the instruction so the backend accepts them."
     ]
@@ -157,3 +158,41 @@ def test_large_batch_is_split_across_concurrent_requests():
         len(call.kwargs["shorten_context_endpoint_input"].items)
         for call in endpoint.call_args_list
     ) == [3, SHORTEN_BATCH_SIZE, SHORTEN_BATCH_SIZE]
+
+
+def test_context_over_recommended_length_warns_and_names_opt_in(caplog):
+    context = "a" * (RECOMMENDED_CONTEXT_LENGTH + 30)
+    datapoints = [_datapoint(context), _datapoint(SHORT_CONTEXT)]
+    manager = _manager(shortened=[])
+
+    with caplog.at_level(logging.WARNING):
+        manager._apply_context_shortening(datapoints, question=QUESTION)
+
+    manager.shorten_contexts.assert_not_called()  # type: ignore[attr-defined]
+    [message] = _warnings(caplog)
+    assert f"1 of 2 context(s) are longer than {RECOMMENDED_CONTEXT_LENGTH}" in message
+    assert f"longest: {RECOMMENDED_CONTEXT_LENGTH + 30}" in message
+    assert "rapidata_config.upload.contextShortening = True" in message
+
+
+def test_context_warning_says_shortening_is_on_when_enabled(caplog):
+    context = "a" * (RECOMMENDED_CONTEXT_LENGTH + 1)
+    rapidata_config.upload.contextShortening = True
+    manager = _manager(shortened=["short"])
+
+    with caplog.at_level(logging.WARNING):
+        manager._apply_context_shortening([_datapoint(context)], question=QUESTION)
+
+    [message] = _warnings(caplog)
+    assert "contextShortening is on" in message
+    assert "= True" not in message
+
+
+def test_context_at_recommended_length_does_not_warn(caplog):
+    context = "a" * RECOMMENDED_CONTEXT_LENGTH
+    manager = _manager(shortened=[])
+
+    with caplog.at_level(logging.WARNING):
+        manager._apply_context_shortening([_datapoint(context)], question=QUESTION)
+
+    assert _warnings(caplog) == []
