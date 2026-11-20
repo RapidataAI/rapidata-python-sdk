@@ -65,6 +65,7 @@ def test_long_prompts_warn_only_when_shown(caplog):
         in message
     )
     assert "not shortened automatically" in message
+    assert "pass the same identifiers" in message
 
 
 def test_prompt_check_failure_does_not_block_creation(caplog):

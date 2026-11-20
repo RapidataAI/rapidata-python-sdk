@@ -710,10 +710,12 @@ class RapidataBenchmark:
             return
         logger.warning(
             "%d of %d benchmark prompt(s) are longer than %d characters (longest: %d), "
-            "and show_prompt=True shows them to labelers as context. Prompts are not "
-            "shortened automatically: register a one-sentence display text under %d "
-            "characters as each prompt and pair the media through `identifiers`; see "
-            "'Prompts shown to labelers' in `python -m rapidata skill benchmarks`.",
+            "and show_prompt=True shows each one to labelers next to the media. Prompts "
+            "are not shortened automatically. Create the benchmark with a one-sentence "
+            "summary under %d characters as each prompt, give every prompt an identifier, "
+            "and pass the same identifiers with each model's media so it matches the "
+            "summary instead of the full prompt; see 'Prompts shown to labelers' in "
+            "`python -m rapidata skill benchmarks`.",
             len(too_long),
             len(prompts),
             RECOMMENDED_CONTEXT_LENGTH,
