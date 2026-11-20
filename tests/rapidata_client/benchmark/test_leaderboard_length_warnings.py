@@ -64,8 +64,7 @@ def test_long_prompts_warn_only_when_shown(caplog):
         "1 of 2 benchmark prompt(s) are longer than 150 characters (longest: 325)"
         in message
     )
-    assert "not shortened automatically" in message
-    assert "pass the same identifiers" in message
+    assert "shorter prompts (under 150 characters) give better results" in message
 
 
 def test_prompt_check_failure_does_not_block_creation(caplog):
