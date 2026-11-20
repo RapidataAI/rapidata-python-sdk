@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.18.1858-bb7cc3c"
+    "version": "2026.11.19.1442-1352d28"
   },
   "servers": [
     {
@@ -65108,7 +65108,7 @@
           },
           "requiredResponses": {
             "type": "integer",
-            "description": "The total number of responses the job's referee requires to complete.",
+            "description": "The total number of responses the job's referee requires to complete; with adaptive\n stopping, the number it is expected to collect rather than its cap.",
             "format": "int64"
           }
         },
@@ -65292,7 +65292,7 @@
           },
           "requiredResponses": {
             "type": "integer",
-            "description": "The total number of responses the definition's referee requires to complete.",
+            "description": "The total number of responses the definition's referee requires to complete; with adaptive\n stopping, the number it is expected to collect rather than its cap.",
             "format": "int64"
           }
         },
