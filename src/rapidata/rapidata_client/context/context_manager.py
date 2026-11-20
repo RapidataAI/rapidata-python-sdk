@@ -181,36 +181,29 @@ class ContextManager:
 
 
 def warn_long_contexts(contexts: Sequence[str], shortening_enabled: bool) -> None:
-    """Warn when contexts are longer than labelers can read alongside the media.
-
-    Points at automatic shortening, which only touches contexts over
-    :data:`MAX_CONTEXT_LENGTH` unless ``contextShortening`` is on.
-    """
+    """Warn when contexts are longer than labelers can read alongside the media."""
     too_long = [c for c in contexts if len(c) > RECOMMENDED_CONTEXT_LENGTH]
     if not too_long:
         return
     if shortening_enabled:
-        shortening = (
-            "rapidata_config.upload.contextShortening is on, so every context is cut "
-            "down to the part the question asks about before upload"
+        automatic = (
+            "rapidata_config.upload.contextShortening is on, so they are shortened "
+            "automatically before upload."
         )
     else:
-        shortening = (
-            f"Only contexts over {MAX_CONTEXT_LENGTH} characters are shortened "
-            "automatically; set rapidata_config.upload.contextShortening = True to cut "
-            "every context down to the part the question asks about before upload"
+        automatic = (
+            "You can also shorten them automatically before upload with "
+            "rapidata_config.upload.contextShortening = True."
         )
     logger.warning(
-        "%d of %d context(s) are longer than %d characters (longest: %d). Keep each to one "
-        "sentence under %d characters holding only what the question checks: labelers "
-        "read it and judge the media in about 10 seconds. %s, but shortening rarely gets "
-        "a context under %d, so write the short version yourself; see 'Task design "
-        "rules' in `python -m rapidata skill`.",
+        "%d of %d context(s) are longer than %d characters (longest: %d). We recommend "
+        "shortening each yourself to one sentence under %d characters with only what the "
+        "question checks: labelers read it and judge the media in about 10 seconds. %s "
+        "See 'Task design rules' in `python -m rapidata skill`.",
         len(too_long),
         len(contexts),
         RECOMMENDED_CONTEXT_LENGTH,
         max(len(c) for c in too_long),
         RECOMMENDED_CONTEXT_LENGTH,
-        shortening,
-        RECOMMENDED_CONTEXT_LENGTH,
+        automatic,
     )
