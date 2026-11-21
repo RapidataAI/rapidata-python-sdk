@@ -20,6 +20,7 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.cost_unit import CostUnit
 from rapidata.api_client.models.i_faucet_output import IFaucetOutput
 from rapidata.api_client.models.model_license_type import ModelLicenseType
+from rapidata.api_client.models.participant_setting import ParticipantSetting
 from rapidata.api_client.models.participant_status import ParticipantStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -44,9 +45,10 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
     cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The manually set price of one costUnit in USD, or null if none is set.")
     cost_unit: Optional[CostUnit] = Field(default=None, description="The unit cost is quoted in, or null if the price is unknown.", alias="costUnit")
     calculated_cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Average measured cost of one sample in USD, or null if no sample has a cost. Standings show  it in place of cost while cost is null.", alias="calculatedCost")
+    settings: Optional[List[ParticipantSetting]] = None
     logo: Optional[StrictStr] = Field(default=None, description="The logo of the model, or null if unset.")
     faucet: Optional[IFaucetOutput] = Field(default=None, description="The faucet configured to auto-generate samples, or null if none is set.")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "status", "isDeprecated", "isPublic", "isCandidate", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "calculatedCost", "logo", "faucet"]
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "status", "isDeprecated", "isPublic", "isCandidate", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "calculatedCost", "settings", "logo", "faucet"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -83,6 +85,13 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in settings (list)
+        _items = []
+        if self.settings:
+            for _item_settings in self.settings:
+                if _item_settings:
+                    _items.append(_item_settings.to_dict())
+            _dict['settings'] = _items
         # override the default output from pydantic by calling `to_dict()` of faucet
         if self.faucet:
             _dict['faucet'] = self.faucet.to_dict()
@@ -121,6 +130,11 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
         if self.calculated_cost is None and "calculated_cost" in self.model_fields_set:
             _dict['calculatedCost'] = None
 
+        # set to None if settings (nullable) is None
+        # and model_fields_set contains the field
+        if self.settings is None and "settings" in self.model_fields_set:
+            _dict['settings'] = None
+
         # set to None if logo (nullable) is None
         # and model_fields_set contains the field
         if self.logo is None and "logo" in self.model_fields_set:
@@ -152,6 +166,7 @@ class GetParticipantByIdEndpointOutput(LazyValidatedModel):
             "cost": obj.get("cost"),
             "costUnit": obj.get("costUnit"),
             "calculatedCost": obj.get("calculatedCost"),
+            "settings": [ParticipantSetting.from_dict(_item) for _item in obj["settings"]] if obj.get("settings") is not None else None,
             "logo": obj.get("logo"),
             "faucet": IFaucetOutput.from_dict(obj["faucet"]) if obj.get("faucet") is not None else None
         }

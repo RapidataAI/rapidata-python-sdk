@@ -20,6 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.cost_unit import CostUnit
 from rapidata.api_client.models.model_license_type import ModelLicenseType
+from rapidata.api_client.models.participant_setting import ParticipantSetting
 from rapidata.api_client.models.participant_status import ParticipantStatus
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -39,6 +40,7 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
     license_type: Optional[ModelLicenseType] = Field(default=None, description="The license classification of the underlying model, or null if not classified yet.", alias="licenseType")
     cost: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The price of one costUnit of the model in USD, or null if the price is unknown.")
     cost_unit: Optional[CostUnit] = Field(default=None, description="The unit cost is quoted in, or null if the price is unknown.", alias="costUnit")
+    settings: Optional[List[ParticipantSetting]] = None
     logo: Optional[StrictStr] = Field(default=None, description="The logo of the model, or null if unset.")
     status: ParticipantStatus = Field(description="The status of the participant.")
     is_deprecated: StrictBool = Field(description="Whether the participant is deprecated.", alias="isDeprecated")
@@ -47,7 +49,7 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
     covered_prompt_count: StrictInt = Field(description="How many of the benchmark's prompts the participant has at least one sample for.", alias="coveredPromptCount")
     is_evaluating: StrictBool = Field(description="True while the participant belongs to a run that is queued, running or paused.", alias="isEvaluating")
     created_at: datetime = Field(description="When the participant was added to the benchmark.", alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "logo", "status", "isDeprecated", "isPublic", "isCandidate", "coveredPromptCount", "isEvaluating", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "family", "lab", "proprietaryName", "licenseType", "cost", "costUnit", "settings", "logo", "status", "isDeprecated", "isPublic", "isCandidate", "coveredPromptCount", "isEvaluating", "createdAt"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -84,6 +86,13 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in settings (list)
+        _items = []
+        if self.settings:
+            for _item_settings in self.settings:
+                if _item_settings:
+                    _items.append(_item_settings.to_dict())
+            _dict['settings'] = _items
         # set to None if family (nullable) is None
         # and model_fields_set contains the field
         if self.family is None and "family" in self.model_fields_set:
@@ -114,6 +123,11 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
         if self.cost_unit is None and "cost_unit" in self.model_fields_set:
             _dict['costUnit'] = None
 
+        # set to None if settings (nullable) is None
+        # and model_fields_set contains the field
+        if self.settings is None and "settings" in self.model_fields_set:
+            _dict['settings'] = None
+
         # set to None if logo (nullable) is None
         # and model_fields_set contains the field
         if self.logo is None and "logo" in self.model_fields_set:
@@ -140,6 +154,7 @@ class QueryParticipantsByBenchmarkEndpointOutput(LazyValidatedModel):
             "licenseType": obj.get("licenseType"),
             "cost": obj.get("cost"),
             "costUnit": obj.get("costUnit"),
+            "settings": [ParticipantSetting.from_dict(_item) for _item in obj["settings"]] if obj.get("settings") is not None else None,
             "logo": obj.get("logo"),
             "status": obj.get("status"),
             "isDeprecated": obj.get("isDeprecated"),

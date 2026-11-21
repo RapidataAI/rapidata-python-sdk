@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.11.19.1442-1352d28"
+    "version": "2026.11.20.1632-12ec46b"
   },
   "servers": [
     {
@@ -1552,6 +1552,148 @@
           {
             "OpenIdConnect": [
               "platform:admin"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/iam/policies/{type}/{id}": {
+      "get": {
+        "tags": [
+          "Iam"
+        ],
+        "summary": "Returns the role bindings granted directly on a resource, with the etag a policy update must send back.",
+        "description": "A type without roles and an object that does not exist both answer 403, like one the caller may not read.",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetIamPolicyEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Iam"
+        ],
+        "summary": "Replaces the role bindings granted directly on a resource with the ones sent, and returns the new policy.",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The resource as {type}/{id} of its object, e.g. organization/org_xyz.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetIamPolicyEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetIamPolicyEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
             ]
           },
           {
@@ -4225,6 +4367,48 @@
           }
         }
       },
+      "GetIamPolicyEndpoint_Output": {
+        "required": [
+          "bindings",
+          "etag"
+        ],
+        "type": "object",
+        "properties": {
+          "bindings": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetIamPolicyEndpoint_Output_Binding"
+                }
+              }
+            ],
+            "description": "One binding per role, listing its members such as customer:{id}."
+          },
+          "etag": {
+            "type": "string",
+            "description": "Send it back unchanged when updating the policy."
+          }
+        }
+      },
+      "GetIamPolicyEndpoint_Output_Binding": {
+        "required": [
+          "role",
+          "members"
+        ],
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "GetOrganizationCapabilitiesEndpoint_Output": {
         "required": [
           "capabilities"
@@ -5319,6 +5503,90 @@
           },
           "ceiling": {
             "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseAgentCeiling"
+          }
+        }
+      },
+      "SetIamPolicyEndpoint_Input": {
+        "required": [
+          "bindings",
+          "etag"
+        ],
+        "type": "object",
+        "properties": {
+          "bindings": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SetIamPolicyEndpoint_Input_Binding"
+                }
+              }
+            ],
+            "description": "Every binding the resource should hold directly afterwards."
+          },
+          "etag": {
+            "type": "string",
+            "description": "The etag of the policy this update starts from."
+          }
+        }
+      },
+      "SetIamPolicyEndpoint_Input_Binding": {
+        "required": [
+          "role",
+          "members"
+        ],
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SetIamPolicyEndpoint_Output": {
+        "required": [
+          "bindings",
+          "etag"
+        ],
+        "type": "object",
+        "properties": {
+          "bindings": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SetIamPolicyEndpoint_Output_Binding"
+                }
+              }
+            ],
+            "description": "One binding per role, listing its members such as customer:{id}."
+          },
+          "etag": {
+            "type": "string",
+            "description": "The etag of the policy now in place."
+          }
+        }
+      },
+      "SetIamPolicyEndpoint_Output_Binding": {
+        "required": [
+          "role",
+          "members"
+        ],
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },

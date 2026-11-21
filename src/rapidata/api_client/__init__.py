@@ -55,6 +55,7 @@ _API_IMPORTS = {
     "FlowItemApi": "rapidata.api_client.api.flow_item_api",
     "GlobalTextApi": "rapidata.api_client.api.global_text_api",
     "HuggingFaceSyncApi": "rapidata.api_client.api.hugging_face_sync_api",
+    "IamApi": "rapidata.api_client.api.iam_api",
     "IdentityApi": "rapidata.api_client.api.identity_api",
     "InvoiceApi": "rapidata.api_client.api.invoice_api",
     "InvoiceRecipientApi": "rapidata.api_client.api.invoice_recipient_api",
