@@ -33,7 +33,7 @@ client = RapidataClient()
 job_definition = client.job.create_compare_job_definition(
     name="Prompt alignment",
     instruction="Which image matches the description better?",
-    datapoints=[["https://assets.rapidata.ai/a.jpg", "https://assets.rapidata.ai/b.jpg"]],
+    datapoints=[["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"]],
     contexts=["A small blue book sitting on a large red book."],
     responses_per_datapoint=AdaptiveStopping(), # (1)!
 )
@@ -140,8 +140,8 @@ audience = client.audience.create_audience(name="Animal Classification Audience"
 audience.add_classification_example(
     instruction="What do you see in the image?",
     answer_options=["Cat", "Dog"],
-    datapoint="https://assets.rapidata.ai/cat.jpeg",
-    truth=["Cat"]
+    datapoint="https://assets.rapidata.ai/dog.jpeg",
+    truth=["Dog"]
 )
 
 audience.start_recruiting() # (1)!
@@ -229,8 +229,8 @@ audience = client.audience.create_audience(name="Animal Classification Audience"
 audience.add_classification_example(
     instruction="What do you see in the image?",
     answer_options=["Cat", "Dog"],
-    datapoint="https://assets.rapidata.ai/cat.jpeg",
-    truth=["Cat"]
+    datapoint="https://assets.rapidata.ai/dog.jpeg",
+    truth=["Dog"]
 )
 
 audience.start_recruiting() # (1)!

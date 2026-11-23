@@ -123,7 +123,7 @@ If you have already created a benchmark and want to add new prompts and assets a
 benchmark.add_prompts(
     identifiers=["new_style"],
     prompts=["Generate artwork in this new style"],
-    prompt_assets=[["https://assets.rapidata.ai/new_style_ref.jpg"]],
+    prompt_assets=[["https://assets.rapidata.ai/wizard_portrait.png"]],
     tags=[["abstract", "modern"]],
 )
 ```
