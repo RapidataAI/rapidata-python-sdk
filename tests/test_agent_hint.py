@@ -263,6 +263,33 @@ def test_trace_reports_whether_this_session_read_the_skill(
     assert agent_trace_attributes()["agent.skill.read"] is False
 
 
+def test_trace_lists_the_guides_this_session_read_in_order(
+    monkeypatch: pytest.MonkeyPatch, hint_not_shown: None
+):
+    _agent(monkeypatch, "s1")
+    assert "agent.skill.guides" not in agent_trace_attributes()
+    mark_skill_read("comparison")
+    _after(monkeypatch, 1)
+    mark_skill_read()
+    _after(monkeypatch, 2)
+    mark_skill_read("comparison")
+    attrs = agent_trace_attributes()
+    assert attrs["agent.skill.guides"] == "comparison,main"
+    assert attrs["agent.skill.read"] is True
+    _agent(monkeypatch, "s2")
+    assert "agent.skill.guides" not in agent_trace_attributes()
+
+
+def test_guides_read_without_a_session_id_expire(
+    monkeypatch: pytest.MonkeyPatch, hint_not_shown: None
+):
+    _agent(monkeypatch, None)
+    mark_skill_read("settings")
+    assert agent_trace_attributes()["agent.skill.guides"] == "settings"
+    _after(monkeypatch, _agent_hint.ANON_READ_TTL + 1)
+    assert "agent.skill.guides" not in agent_trace_attributes()
+
+
 def test_trace_session_id_is_shared_within_an_agent_session(
     monkeypatch: pytest.MonkeyPatch,
 ):
