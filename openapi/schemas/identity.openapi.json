@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.11.20.1632-12ec46b"
+    "version": "2026.11.23.1941-1fe073fb"
   },
   "servers": [
     {
@@ -2080,7 +2080,7 @@
           "Organization"
         ],
         "summary": "Sets the given member's org-scoped role.",
-        "description": "Responds with 404 when the customer is not a member and 409 when changing the role of the\n organization's last owner.",
+        "description": "Responds with 404 when the customer is not a member and 409 when the change makes or unmakes an\n owner, which only the owner endpoints do.",
         "parameters": [
           {
             "name": "organizationId",
@@ -2807,6 +2807,128 @@
         ]
       }
     },
+    "/organizations/{organizationId}/owners/{customerId}": {
+      "put": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Makes the given active member an owner (404 otherwise); only an owner may call it.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the member who becomes an owner.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Makes the given owner an admin; 404 when they are not an owner, 409 when they are the last one.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the owner to remove.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/organizations/all": {
       "get": {
         "tags": [
@@ -3256,6 +3378,69 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SetOrganizationSupportSlackChannelEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/organizations/{organizationId}/owners/transfer": {
+      "post": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Makes the given active member an owner and the calling owner an admin, in one step.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The member who becomes the owner.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferOrgOwnershipEndpoint_Input"
               }
             }
           },
@@ -5019,7 +5204,6 @@
           "email",
           "role",
           "status",
-          "isActiveOrganizationForMember",
           "isBanned"
         ],
         "type": "object",
@@ -5037,9 +5221,6 @@
           },
           "status": {
             "$ref": "#/components/schemas/MembershipStatus"
-          },
-          "isActiveOrganizationForMember": {
-            "type": "boolean"
           },
           "isBanned": {
             "type": "boolean"
@@ -5696,6 +5877,19 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "TransferOrgOwnershipEndpoint_Input": {
+        "required": [
+          "customerId"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The member who becomes the owner.",
+            "format": "uuid"
           }
         }
       },

@@ -44,7 +44,9 @@ class GetBenchmarkHuggingFaceSyncEndpointOutput(LazyValidatedModel):
     sample_media_mode: HuggingFaceSampleMediaMode = Field(description="The stored sample media mode; Auto when nothing has been configured yet.", alias="sampleMediaMode")
     segment_exports: List[HuggingFaceSegmentExport] = Field(alias="segmentExports")
     available_segments: List[HuggingFaceAvailableSegment] = Field(alias="availableSegments")
-    __properties: ClassVar[List[str]] = ["status", "isUpToDate", "pendingRunCount", "outcome", "repoId", "repoUrl", "prUrl", "lastSyncedAt", "lastError", "sampleMediaMode", "segmentExports", "availableSegments"]
+    sample_segment_exports: List[HuggingFaceSegmentExport] = Field(alias="sampleSegmentExports")
+    available_sample_segments: List[HuggingFaceAvailableSegment] = Field(alias="availableSampleSegments")
+    __properties: ClassVar[List[str]] = ["status", "isUpToDate", "pendingRunCount", "outcome", "repoId", "repoUrl", "prUrl", "lastSyncedAt", "lastError", "sampleMediaMode", "segmentExports", "availableSegments", "sampleSegmentExports", "availableSampleSegments"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -95,6 +97,20 @@ class GetBenchmarkHuggingFaceSyncEndpointOutput(LazyValidatedModel):
                 if _item_available_segments:
                     _items.append(_item_available_segments.to_dict())
             _dict['availableSegments'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in sample_segment_exports (list)
+        _items = []
+        if self.sample_segment_exports:
+            for _item_sample_segment_exports in self.sample_segment_exports:
+                if _item_sample_segment_exports:
+                    _items.append(_item_sample_segment_exports.to_dict())
+            _dict['sampleSegmentExports'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in available_sample_segments (list)
+        _items = []
+        if self.available_sample_segments:
+            for _item_available_sample_segments in self.available_sample_segments:
+                if _item_available_sample_segments:
+                    _items.append(_item_available_sample_segments.to_dict())
+            _dict['availableSampleSegments'] = _items
         # set to None if outcome (nullable) is None
         # and model_fields_set contains the field
         if self.outcome is None and "outcome" in self.model_fields_set:
@@ -148,7 +164,9 @@ class GetBenchmarkHuggingFaceSyncEndpointOutput(LazyValidatedModel):
             "lastError": obj.get("lastError"),
             "sampleMediaMode": obj.get("sampleMediaMode"),
             "segmentExports": [HuggingFaceSegmentExport.from_dict(_item) for _item in obj["segmentExports"]] if obj.get("segmentExports") is not None else None,
-            "availableSegments": [HuggingFaceAvailableSegment.from_dict(_item) for _item in obj["availableSegments"]] if obj.get("availableSegments") is not None else None
+            "availableSegments": [HuggingFaceAvailableSegment.from_dict(_item) for _item in obj["availableSegments"]] if obj.get("availableSegments") is not None else None,
+            "sampleSegmentExports": [HuggingFaceSegmentExport.from_dict(_item) for _item in obj["sampleSegmentExports"]] if obj.get("sampleSegmentExports") is not None else None,
+            "availableSampleSegments": [HuggingFaceAvailableSegment.from_dict(_item) for _item in obj["availableSampleSegments"]] if obj.get("availableSampleSegments") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)
