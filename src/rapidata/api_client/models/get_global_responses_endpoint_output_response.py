@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.country import Country
 from pydantic import ValidationError
@@ -28,12 +28,11 @@ class GetGlobalResponsesEndpointOutputResponse(LazyValidatedModel):
     GetGlobalResponsesEndpointOutputResponse
     """ # noqa: E501
     id: StrictStr
-    user_id: StrictStr = Field(alias="userId")
     country: Optional[Country]
     age: Optional[StrictStr] = None
     occupation: Optional[StrictStr] = None
     gender: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["id", "userId", "country", "age", "occupation", "gender"]
+    __properties: ClassVar[List[str]] = ["id", "country", "age", "occupation", "gender"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -103,7 +102,6 @@ class GetGlobalResponsesEndpointOutputResponse(LazyValidatedModel):
 
         _data = {
             "id": obj.get("id"),
-            "userId": obj.get("userId"),
             "country": obj.get("country"),
             "age": obj.get("age"),
             "occupation": obj.get("occupation"),

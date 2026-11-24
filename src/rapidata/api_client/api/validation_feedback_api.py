@@ -46,7 +46,6 @@ class ValidationFeedbackApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        user_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by user_id.")] = None,
         feedback: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by feedback.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -74,8 +73,6 @@ class ValidationFeedbackApi:
         :type page_size: int
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
-        :param user_id: Filter by user_id.
-        :type user_id: AudienceAudienceIdJobsGetJobIdParameter
         :param feedback: Filter by feedback.
         :type feedback: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -109,7 +106,6 @@ class ValidationFeedbackApi:
             page=page,
             page_size=page_size,
             sort=sort,
-            user_id=user_id,
             feedback=feedback,
             created_at=created_at,
             logic=logic,
@@ -143,7 +139,6 @@ class ValidationFeedbackApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        user_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by user_id.")] = None,
         feedback: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by feedback.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -171,8 +166,6 @@ class ValidationFeedbackApi:
         :type page_size: int
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
-        :param user_id: Filter by user_id.
-        :type user_id: AudienceAudienceIdJobsGetJobIdParameter
         :param feedback: Filter by feedback.
         :type feedback: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -206,7 +199,6 @@ class ValidationFeedbackApi:
             page=page,
             page_size=page_size,
             sort=sort,
-            user_id=user_id,
             feedback=feedback,
             created_at=created_at,
             logic=logic,
@@ -240,7 +232,6 @@ class ValidationFeedbackApi:
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
-        user_id: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by user_id.")] = None,
         feedback: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by feedback.")] = None,
         created_at: Annotated[Optional[AudienceAudienceIdJobsGetJobIdParameter], Field(description="Filter by created_at.")] = None,
         logic: Annotated[Optional[StrictStr], Field(description="How to combine the field filters: \"and\" (default) requires every filter to match, \"or\" requires any of them to match.")] = None,
@@ -268,8 +259,6 @@ class ValidationFeedbackApi:
         :type page_size: int
         :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
         :type sort: List[str]
-        :param user_id: Filter by user_id.
-        :type user_id: AudienceAudienceIdJobsGetJobIdParameter
         :param feedback: Filter by feedback.
         :type feedback: AudienceAudienceIdJobsGetJobIdParameter
         :param created_at: Filter by created_at.
@@ -303,7 +292,6 @@ class ValidationFeedbackApi:
             page=page,
             page_size=page_size,
             sort=sort,
-            user_id=user_id,
             feedback=feedback,
             created_at=created_at,
             logic=logic,
@@ -332,7 +320,6 @@ class ValidationFeedbackApi:
         page,
         page_size,
         sort,
-        user_id,
         feedback,
         created_at,
         logic,
@@ -373,21 +360,6 @@ class ValidationFeedbackApi:
             
             _query_params.append(('sort', sort))
             
-        if user_id is not None:
-            _param_val = user_id
-            if hasattr(_param_val, 'to_dict'):
-                _param_val = _param_val.to_dict()
-            if isinstance(_param_val, dict):
-                for _k, _v in _param_val.items():
-                    if _v is None:
-                        continue
-                    if isinstance(_v, list):
-                        # Explode list operator values (e.g. `in`) into repeated
-                        # params: field[in]=a&field[in]=b.
-                        for _item in _v:
-                            _query_params.append(('user_id[' + _k + ']', _item))
-                    else:
-                        _query_params.append(('user_id[' + _k + ']', _v))
         if feedback is not None:
             _param_val = feedback
             if hasattr(_param_val, 'to_dict'):
