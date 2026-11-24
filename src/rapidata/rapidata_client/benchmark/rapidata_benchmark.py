@@ -456,9 +456,9 @@ class RapidataBenchmark:
                 identifiers=["id1", "id2"],
                 prompts=["prompt 1", "prompt 2"],
                 prompt_assets=[
-                    ["https://assets.rapidata.ai/prompt_1.jpg"],
+                    ["https://assets.rapidata.ai/mountain_sunset1.png"],
                     # Several assets for one prompt, e.g. a reference clip plus a still.
-                    ["https://assets.rapidata.ai/prompt_2.gif", "https://assets.rapidata.ai/prompt_2.jpg"],
+                    ["https://assets.rapidata.ai/0074_sora_1.mp4", "https://assets.rapidata.ai/futuristic_city.png"],
                 ],
                 tags=[["landscape", "outdoor"], ["portrait"]],
                 origins=["coco", "coco"],

@@ -51,7 +51,7 @@ class RapidataBenchmarkManager:
             name = "Example Benchmark"
             identifiers = ["id1", "id2", "id3"]
             prompts = ["prompt 1", "prompt 2", "prompt 3"]
-            prompt_assets = [["https://assets.rapidata.ai/prompt_1.jpg"], ["https://assets.rapidata.ai/prompt_2.jpg"], ["https://assets.rapidata.ai/prompt_3.jpg"]]
+            prompt_assets = [["https://assets.rapidata.ai/mountain_sunset1.png"], ["https://assets.rapidata.ai/mountain_sunset2.png"], ["https://assets.rapidata.ai/futuristic_city.png"]]
             tags = [["tag1", "tag2"], ["tag2"], ["tag2", "tag3"]]
 
             benchmark = create_new_benchmark(name=name, identifiers=identifiers, prompts=prompts, prompt_assets=prompt_assets, tags=tags)
