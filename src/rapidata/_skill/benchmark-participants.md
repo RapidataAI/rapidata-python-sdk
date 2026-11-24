@@ -161,9 +161,9 @@ On `create_new_benchmark` and `add_prompts`, `prompt_assets` is a **list with on
 
 ```python
 prompt_assets = [
-    ["https://example.com/prompt_1.jpg"],                               # single asset
-    ["https://example.com/pan_left.gif", "https://example.com/street.jpg"],  # one multi-asset
-    None,                                                               # no asset (e.g. text prompt)
+    ["https://assets.rapidata.ai/mountain_sunset1.png"],  # single asset
+    ["https://assets.rapidata.ai/0074_sora_1.mp4", "https://assets.rapidata.ai/futuristic_city.png"],  # one multi-asset
+    None,  # no asset (e.g. text prompt)
 ]
 ```
 
