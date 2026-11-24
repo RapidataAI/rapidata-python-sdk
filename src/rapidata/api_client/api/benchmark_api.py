@@ -2070,7 +2070,7 @@ class BenchmarkApi:
     ) -> GetBenchmarkHuggingFaceSyncEndpointOutput:
         """Returns the HuggingFace sync status of the benchmark.
 
-        The repo and outcome fields are null when the benchmark has never been synced;  isUpToDate and pendingRunCount are always set. The stored export configuration  (sampleMediaMode, segmentExports) is returned alongside the benchmark's  availableSegments, so a configuration can be composed from what the prompt structure  offers.
+        The repo and outcome fields are null when the benchmark has never been synced;  isUpToDate and pendingRunCount are always set. The stored export configuration  (sampleMediaMode, segmentExports, sampleSegmentExports) is returned with  the benchmark's availableSegments and availableSampleSegments to compose from.
 
         :param benchmark_id: The id of the benchmark whose sync status to return. (required)
         :type benchmark_id: str
@@ -2140,7 +2140,7 @@ class BenchmarkApi:
     ) -> ApiResponse[GetBenchmarkHuggingFaceSyncEndpointOutput]:
         """Returns the HuggingFace sync status of the benchmark.
 
-        The repo and outcome fields are null when the benchmark has never been synced;  isUpToDate and pendingRunCount are always set. The stored export configuration  (sampleMediaMode, segmentExports) is returned alongside the benchmark's  availableSegments, so a configuration can be composed from what the prompt structure  offers.
+        The repo and outcome fields are null when the benchmark has never been synced;  isUpToDate and pendingRunCount are always set. The stored export configuration  (sampleMediaMode, segmentExports, sampleSegmentExports) is returned with  the benchmark's availableSegments and availableSampleSegments to compose from.
 
         :param benchmark_id: The id of the benchmark whose sync status to return. (required)
         :type benchmark_id: str
@@ -2210,7 +2210,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Returns the HuggingFace sync status of the benchmark.
 
-        The repo and outcome fields are null when the benchmark has never been synced;  isUpToDate and pendingRunCount are always set. The stored export configuration  (sampleMediaMode, segmentExports) is returned alongside the benchmark's  availableSegments, so a configuration can be composed from what the prompt structure  offers.
+        The repo and outcome fields are null when the benchmark has never been synced;  isUpToDate and pendingRunCount are always set. The stored export configuration  (sampleMediaMode, segmentExports, sampleSegmentExports) is returned with  the benchmark's availableSegments and availableSampleSegments to compose from.
 
         :param benchmark_id: The id of the benchmark whose sync status to return. (required)
         :type benchmark_id: str
@@ -2342,7 +2342,7 @@ class BenchmarkApi:
     ) -> StartBenchmarkHuggingFaceSyncEndpointOutput:
         """Starts a HuggingFace sync of the benchmark and returns its current sync status.
 
-        The export configuration (sampleMediaMode, segmentExports) is persisted on the  benchmark; a field left null keeps the stored value, and an empty segmentExports list  resets to the legacy shape. Every sync rebuilds the whole dataset; an existing README is kept.  An asset segment carried into the dataset holds exactly one file per prompt: matchups whose  prompt carries no value, or a multi-asset, under a configured asset segment are left out of  the export (several files belong in several segments). Responds 400 when a segment export names a key the benchmark's prompt structure does not  define, when a column does not match ^[a-z][a-z0-9_]{0,63}$, is used twice or  collides with a reserved dataset column (model1, model2, image1,  image2, video1, video2, file1, file2, or any name starting  with weighted_results_ or detailed_results_), when a key is exported twice, or  when a mode contradicts the segment's kind (Text only for text segments, Embed  / Url only for asset segments). Responds 409 Conflict when a sync is already in  progress for the benchmark, or when a repo name is supplied that differs from the one an  earlier successful sync established. The repo name is only honored while the benchmark has  never completed a sync.
+        The export configuration (sampleMediaMode, segmentExports,  sampleSegmentExports) is persisted on the benchmark; a field left null keeps the stored  value, and an empty list resets it. Every sync rebuilds the whole dataset; an existing README is kept.  An asset segment carried into the dataset holds exactly one file per prompt: matchups whose  prompt carries no value, or a multi-asset, under a configured asset segment are left out of  the export (several files belong in several segments). Responds 400 when a segment export names a key the benchmark's prompt structure does not  define, when a column does not match ^[a-z][a-z0-9_]{0,63}$, is used twice or  collides with a reserved dataset column (model1, model2, image1,  image2, video1, video2, file1, file2, or any name starting  with weighted_results_ or detailed_results_), when a key is exported twice, or  when a mode contradicts the segment's kind (Text only for text segments, Embed  / Url only for asset segments). The same rules apply to sampleSegmentExports  against the sample structure, whose generated _1 / _2 columns must also not  collide with each other, the reserved columns or the segment export columns. Responds 409 Conflict when a sync is already in  progress for the benchmark, or when a repo name is supplied that differs from the one an  earlier successful sync established. The repo name is only honored while the benchmark has  never completed a sync.
 
         :param benchmark_id: The id of the benchmark to sync. (required)
         :type benchmark_id: str
@@ -2416,7 +2416,7 @@ class BenchmarkApi:
     ) -> ApiResponse[StartBenchmarkHuggingFaceSyncEndpointOutput]:
         """Starts a HuggingFace sync of the benchmark and returns its current sync status.
 
-        The export configuration (sampleMediaMode, segmentExports) is persisted on the  benchmark; a field left null keeps the stored value, and an empty segmentExports list  resets to the legacy shape. Every sync rebuilds the whole dataset; an existing README is kept.  An asset segment carried into the dataset holds exactly one file per prompt: matchups whose  prompt carries no value, or a multi-asset, under a configured asset segment are left out of  the export (several files belong in several segments). Responds 400 when a segment export names a key the benchmark's prompt structure does not  define, when a column does not match ^[a-z][a-z0-9_]{0,63}$, is used twice or  collides with a reserved dataset column (model1, model2, image1,  image2, video1, video2, file1, file2, or any name starting  with weighted_results_ or detailed_results_), when a key is exported twice, or  when a mode contradicts the segment's kind (Text only for text segments, Embed  / Url only for asset segments). Responds 409 Conflict when a sync is already in  progress for the benchmark, or when a repo name is supplied that differs from the one an  earlier successful sync established. The repo name is only honored while the benchmark has  never completed a sync.
+        The export configuration (sampleMediaMode, segmentExports,  sampleSegmentExports) is persisted on the benchmark; a field left null keeps the stored  value, and an empty list resets it. Every sync rebuilds the whole dataset; an existing README is kept.  An asset segment carried into the dataset holds exactly one file per prompt: matchups whose  prompt carries no value, or a multi-asset, under a configured asset segment are left out of  the export (several files belong in several segments). Responds 400 when a segment export names a key the benchmark's prompt structure does not  define, when a column does not match ^[a-z][a-z0-9_]{0,63}$, is used twice or  collides with a reserved dataset column (model1, model2, image1,  image2, video1, video2, file1, file2, or any name starting  with weighted_results_ or detailed_results_), when a key is exported twice, or  when a mode contradicts the segment's kind (Text only for text segments, Embed  / Url only for asset segments). The same rules apply to sampleSegmentExports  against the sample structure, whose generated _1 / _2 columns must also not  collide with each other, the reserved columns or the segment export columns. Responds 409 Conflict when a sync is already in  progress for the benchmark, or when a repo name is supplied that differs from the one an  earlier successful sync established. The repo name is only honored while the benchmark has  never completed a sync.
 
         :param benchmark_id: The id of the benchmark to sync. (required)
         :type benchmark_id: str
@@ -2490,7 +2490,7 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Starts a HuggingFace sync of the benchmark and returns its current sync status.
 
-        The export configuration (sampleMediaMode, segmentExports) is persisted on the  benchmark; a field left null keeps the stored value, and an empty segmentExports list  resets to the legacy shape. Every sync rebuilds the whole dataset; an existing README is kept.  An asset segment carried into the dataset holds exactly one file per prompt: matchups whose  prompt carries no value, or a multi-asset, under a configured asset segment are left out of  the export (several files belong in several segments). Responds 400 when a segment export names a key the benchmark's prompt structure does not  define, when a column does not match ^[a-z][a-z0-9_]{0,63}$, is used twice or  collides with a reserved dataset column (model1, model2, image1,  image2, video1, video2, file1, file2, or any name starting  with weighted_results_ or detailed_results_), when a key is exported twice, or  when a mode contradicts the segment's kind (Text only for text segments, Embed  / Url only for asset segments). Responds 409 Conflict when a sync is already in  progress for the benchmark, or when a repo name is supplied that differs from the one an  earlier successful sync established. The repo name is only honored while the benchmark has  never completed a sync.
+        The export configuration (sampleMediaMode, segmentExports,  sampleSegmentExports) is persisted on the benchmark; a field left null keeps the stored  value, and an empty list resets it. Every sync rebuilds the whole dataset; an existing README is kept.  An asset segment carried into the dataset holds exactly one file per prompt: matchups whose  prompt carries no value, or a multi-asset, under a configured asset segment are left out of  the export (several files belong in several segments). Responds 400 when a segment export names a key the benchmark's prompt structure does not  define, when a column does not match ^[a-z][a-z0-9_]{0,63}$, is used twice or  collides with a reserved dataset column (model1, model2, image1,  image2, video1, video2, file1, file2, or any name starting  with weighted_results_ or detailed_results_), when a key is exported twice, or  when a mode contradicts the segment's kind (Text only for text segments, Embed  / Url only for asset segments). The same rules apply to sampleSegmentExports  against the sample structure, whose generated _1 / _2 columns must also not  collide with each other, the reserved columns or the segment export columns. Responds 409 Conflict when a sync is already in  progress for the benchmark, or when a repo name is supplied that differs from the one an  earlier successful sync established. The repo name is only honored while the benchmark has  never completed a sync.
 
         :param benchmark_id: The id of the benchmark to sync. (required)
         :type benchmark_id: str
@@ -11049,7 +11049,7 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApplySampleStructureEndpointOutput:
-        """Replaces a benchmark's sample structure; 409 if a board compares a removed part or a change is still applying.
+        """Replaces a benchmark's sample structure; 409 if a board compares, or the HuggingFace export carries, a removed  or retyped part, or a change is still applying.
 
 
         :param benchmark_id: The id of the benchmark to change. (required)
@@ -11122,7 +11122,7 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ApplySampleStructureEndpointOutput]:
-        """Replaces a benchmark's sample structure; 409 if a board compares a removed part or a change is still applying.
+        """Replaces a benchmark's sample structure; 409 if a board compares, or the HuggingFace export carries, a removed  or retyped part, or a change is still applying.
 
 
         :param benchmark_id: The id of the benchmark to change. (required)
@@ -11195,7 +11195,7 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Replaces a benchmark's sample structure; 409 if a board compares a removed part or a change is still applying.
+        """Replaces a benchmark's sample structure; 409 if a board compares, or the HuggingFace export carries, a removed  or retyped part, or a change is still applying.
 
 
         :param benchmark_id: The id of the benchmark to change. (required)

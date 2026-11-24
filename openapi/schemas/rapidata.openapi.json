@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.20.1632-12ec46b"
+    "version": "2026.11.23.1941-1fe073fb"
   },
   "servers": [
     {
@@ -10758,7 +10758,7 @@
           "Organization"
         ],
         "summary": "Sets the given member's org-scoped role.",
-        "description": "Responds with 404 when the customer is not a member and 409 when changing the role of the\n organization's last owner.",
+        "description": "Responds with 404 when the customer is not a member and 409 when the change makes or unmakes an\n owner, which only the owner endpoints do.",
         "parameters": [
           {
             "name": "organizationId",
@@ -11485,6 +11485,128 @@
         ]
       }
     },
+    "/organizations/{organizationId}/owners/{customerId}": {
+      "put": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Makes the given active member an owner (404 otherwise); only an owner may call it.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the member who becomes an owner.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Makes the given owner an admin; 404 when they are not an owner, 409 when they are the last one.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "The id of the owner to remove.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/organizations/all": {
       "get": {
         "tags": [
@@ -11934,6 +12056,69 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SetOrganizationSupportSlackChannelEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "organization:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
+    "/organizations/{organizationId}/owners/transfer": {
+      "post": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Makes the given active member an owner and the calling owner an admin, in one step.",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "in": "path",
+            "description": "The id of the organization.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The member who becomes the owner.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferOrgOwnershipEndpoint_Input"
               }
             }
           },
@@ -12534,7 +12719,7 @@
         "tags": [
           "Benchmark"
         ],
-        "summary": "Replaces a benchmark's sample structure; 409 if a board compares a removed part or a change is still applying.",
+        "summary": "Replaces a benchmark's sample structure; 409 if a board compares, or the HuggingFace export carries, a removed\n or retyped part, or a change is still applying.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -16659,7 +16844,7 @@
           "HuggingFaceSync"
         ],
         "summary": "Returns the HuggingFace sync status of the benchmark.",
-        "description": "The repo and outcome fields are null when the benchmark has never been synced;\n isUpToDate and pendingRunCount are always set. The stored export configuration\n (sampleMediaMode, segmentExports) is returned alongside the benchmark's\n availableSegments, so a configuration can be composed from what the prompt structure\n offers.",
+        "description": "The repo and outcome fields are null when the benchmark has never been synced;\n isUpToDate and pendingRunCount are always set. The stored export configuration\n (sampleMediaMode, segmentExports, sampleSegmentExports) is returned with\n the benchmark's availableSegments and availableSampleSegments to compose from.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -16718,7 +16903,7 @@
           "HuggingFaceSync"
         ],
         "summary": "Starts a HuggingFace sync of the benchmark and returns its current sync status.",
-        "description": "The export configuration (sampleMediaMode, segmentExports) is persisted on the\n benchmark; a field left null keeps the stored value, and an empty segmentExports list\n resets to the legacy shape. Every sync rebuilds the whole dataset; an existing README is kept.\n An asset segment carried into the dataset holds exactly one file per prompt: matchups whose\n prompt carries no value, or a multi-asset, under a configured asset segment are left out of\n the export (several files belong in several segments). Responds 400 when a segment export names a key the benchmark's prompt structure does not\n define, when a column does not match ^[a-z][a-z0-9_]{0,63}$, is used twice or\n collides with a reserved dataset column (model1, model2, image1,\n image2, video1, video2, file1, file2, or any name starting\n with weighted_results_ or detailed_results_), when a key is exported twice, or\n when a mode contradicts the segment's kind (Text only for text segments, Embed\n / Url only for asset segments). Responds 409 Conflict when a sync is already in\n progress for the benchmark, or when a repo name is supplied that differs from the one an\n earlier successful sync established. The repo name is only honored while the benchmark has\n never completed a sync.",
+        "description": "The export configuration (sampleMediaMode, segmentExports,\n sampleSegmentExports) is persisted on the benchmark; a field left null keeps the stored\n value, and an empty list resets it. Every sync rebuilds the whole dataset; an existing README is kept.\n An asset segment carried into the dataset holds exactly one file per prompt: matchups whose\n prompt carries no value, or a multi-asset, under a configured asset segment are left out of\n the export (several files belong in several segments). Responds 400 when a segment export names a key the benchmark's prompt structure does not\n define, when a column does not match ^[a-z][a-z0-9_]{0,63}$, is used twice or\n collides with a reserved dataset column (model1, model2, image1,\n image2, video1, video2, file1, file2, or any name starting\n with weighted_results_ or detailed_results_), when a key is exported twice, or\n when a mode contradicts the segment's kind (Text only for text segments, Embed\n / Url only for asset segments). The same rules apply to sampleSegmentExports\n against the sample structure, whose generated _1 / _2 columns must also not\n collide with each other, the reserved columns or the segment export columns. Responds 409 Conflict when a sync is already in\n progress for the benchmark, or when a repo name is supplied that differs from the one an\n earlier successful sync established. The repo name is only honored while the benchmark has\n never completed a sync.",
         "parameters": [
           {
             "name": "benchmarkId",
@@ -56045,7 +56230,6 @@
           "email",
           "role",
           "status",
-          "isActiveOrganizationForMember",
           "isBanned"
         ],
         "type": "object",
@@ -56063,9 +56247,6 @@
           },
           "status": {
             "$ref": "#/components/schemas/MembershipStatus"
-          },
-          "isActiveOrganizationForMember": {
-            "type": "boolean"
           },
           "isBanned": {
             "type": "boolean"
@@ -56722,6 +56903,19 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "TransferOrgOwnershipEndpoint_Input": {
+        "required": [
+          "customerId"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "The member who becomes the owner.",
+            "format": "uuid"
           }
         }
       },
@@ -58078,7 +58272,9 @@
           "pendingRunCount",
           "sampleMediaMode",
           "segmentExports",
-          "availableSegments"
+          "availableSegments",
+          "sampleSegmentExports",
+          "availableSampleSegments"
         ],
         "type": "object",
         "properties": {
@@ -58164,6 +58360,28 @@
               }
             ],
             "description": "The benchmark's prompt structure in order — the segments a configuration can pick from."
+          },
+          "sampleSegmentExports": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/HuggingFaceSegmentExport"
+                }
+              }
+            ],
+            "description": "The stored sample part exports in column order; empty when none are configured."
+          },
+          "availableSampleSegments": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/HuggingFaceAvailableSegment"
+                }
+              }
+            ],
+            "description": "The benchmark's sample structure in order — the parts a sample export can pick from."
           }
         }
       },
@@ -63725,6 +63943,18 @@
               }
             ],
             "description": "The prompt segments to carry into the dataset, in column order. Null keeps the stored\n configuration; an empty list resets to the legacy shape (a lone prompt column)."
+          },
+          "sampleSegmentExports": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/HuggingFaceSegmentExport"
+                },
+                "nullable": true
+              }
+            ],
+            "description": "The sample parts to carry into every row as <column>_1 (sample A) and\n <column>_2 (sample B), in column order. Null keeps the stored list; empty clears it."
           }
         }
       },

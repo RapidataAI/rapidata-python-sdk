@@ -31,7 +31,8 @@ class StartBenchmarkHuggingFaceSyncEndpointInput(LazyValidatedModel):
     repo_name: Optional[StrictStr] = Field(default=None, description="Optional target repo name. Only honored while the benchmark has never completed a sync;  defaults to a name derived from the benchmark name.", alias="repoName")
     sample_media_mode: Optional[HuggingFaceSampleMediaMode] = Field(default=None, description="How the two compared sample columns are represented. Null keeps the stored value;  defaults to Auto on the first sync.", alias="sampleMediaMode")
     segment_exports: Optional[List[HuggingFaceSegmentExport]] = Field(default=None, alias="segmentExports")
-    __properties: ClassVar[List[str]] = ["repoName", "sampleMediaMode", "segmentExports"]
+    sample_segment_exports: Optional[List[HuggingFaceSegmentExport]] = Field(default=None, alias="sampleSegmentExports")
+    __properties: ClassVar[List[str]] = ["repoName", "sampleMediaMode", "segmentExports", "sampleSegmentExports"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -75,6 +76,13 @@ class StartBenchmarkHuggingFaceSyncEndpointInput(LazyValidatedModel):
                 if _item_segment_exports:
                     _items.append(_item_segment_exports.to_dict())
             _dict['segmentExports'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in sample_segment_exports (list)
+        _items = []
+        if self.sample_segment_exports:
+            for _item_sample_segment_exports in self.sample_segment_exports:
+                if _item_sample_segment_exports:
+                    _items.append(_item_sample_segment_exports.to_dict())
+            _dict['sampleSegmentExports'] = _items
         # set to None if repo_name (nullable) is None
         # and model_fields_set contains the field
         if self.repo_name is None and "repo_name" in self.model_fields_set:
@@ -90,6 +98,11 @@ class StartBenchmarkHuggingFaceSyncEndpointInput(LazyValidatedModel):
         if self.segment_exports is None and "segment_exports" in self.model_fields_set:
             _dict['segmentExports'] = None
 
+        # set to None if sample_segment_exports (nullable) is None
+        # and model_fields_set contains the field
+        if self.sample_segment_exports is None and "sample_segment_exports" in self.model_fields_set:
+            _dict['sampleSegmentExports'] = None
+
         return _dict
 
     @classmethod
@@ -104,7 +117,8 @@ class StartBenchmarkHuggingFaceSyncEndpointInput(LazyValidatedModel):
         _data = {
             "repoName": obj.get("repoName"),
             "sampleMediaMode": obj.get("sampleMediaMode"),
-            "segmentExports": [HuggingFaceSegmentExport.from_dict(_item) for _item in obj["segmentExports"]] if obj.get("segmentExports") is not None else None
+            "segmentExports": [HuggingFaceSegmentExport.from_dict(_item) for _item in obj["segmentExports"]] if obj.get("segmentExports") is not None else None,
+            "sampleSegmentExports": [HuggingFaceSegmentExport.from_dict(_item) for _item in obj["sampleSegmentExports"]] if obj.get("sampleSegmentExports") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)
