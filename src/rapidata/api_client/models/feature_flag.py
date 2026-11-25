@@ -15,7 +15,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class FeatureFlag(LazyValidatedModel):
     """
-    FeatureFlag
+    A key-value flag that switches a frontend or service behaviour.
     """ # noqa: E501
-    key: StrictStr
-    value: StrictStr
+    key: StrictStr = Field(description="The flag's name.")
+    value: StrictStr = Field(description="The flag's value.")
     __properties: ClassVar[List[str]] = ["key", "value"]
 
     # model_config is inherited from LazyValidatedModel

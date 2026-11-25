@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Payment API",
     "description": "The API for the Rapidata Payment service",
-    "version": "2026.11.24.1527-9b243d18"
+    "version": "2026.11.25.2032-f5719a92"
   },
   "servers": [
     {
@@ -11,6 +11,151 @@
     }
   ],
   "paths": {
+    "/payment/auto-topup": {
+      "put": {
+        "tags": [
+          "AutoTopUp"
+        ],
+        "summary": "Sets the balance threshold and amount of automatic top-ups for the caller's organization.",
+        "description": "With no card saved yet, returns a checkout url; top-ups start once the card is saved there.",
+        "requestBody": {
+          "description": "The threshold and amount to top up with.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigureAutoTopUpEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigureAutoTopUpEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "AutoTopUp"
+        ],
+        "summary": "Switches automatic top-ups off for the caller's organization and removes the saved card.",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "AutoTopUp"
+        ],
+        "summary": "Gets the automatic top-up settings of the caller's organization.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAutoTopUpEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/billing-periods/close-bulk": {
       "post": {
         "tags": [
@@ -4262,6 +4407,35 @@
           }
         }
       },
+      "ConfigureAutoTopUpEndpoint_Input": {
+        "required": [
+          "threshold",
+          "amount"
+        ],
+        "type": "object",
+        "properties": {
+          "threshold": {
+            "type": "number",
+            "description": "The balance in dollars below which the saved card is charged.",
+            "format": "double"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The amount in dollars each automatic top-up adds to the balance.",
+            "format": "double"
+          }
+        }
+      },
+      "ConfigureAutoTopUpEndpoint_Output": {
+        "type": "object",
+        "properties": {
+          "checkoutUrl": {
+            "type": "string",
+            "description": "The hosted checkout url that saves a card. null when a card is already saved and\n the new values apply immediately.",
+            "nullable": true
+          }
+        }
+      },
       "CreateBillingItemBillingSettingEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -4800,6 +4974,46 @@
               }
             ],
             "description": "The line items (running cost, platform fees, refunds, volume discounts)."
+          }
+        }
+      },
+      "GetAutoTopUpEndpoint_Output": {
+        "required": [
+          "enabled"
+        ],
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether a saved card is charged automatically when the balance runs low."
+          },
+          "threshold": {
+            "type": "number",
+            "description": "The balance in dollars below which the saved card is charged.",
+            "format": "double",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "description": "The amount in dollars each automatic top-up adds to the balance.",
+            "format": "double",
+            "nullable": true
+          },
+          "cardBrand": {
+            "type": "string",
+            "description": "The brand of the saved card, such as visa.",
+            "nullable": true
+          },
+          "cardLast4": {
+            "type": "string",
+            "description": "The last four digits of the saved card.",
+            "nullable": true
+          },
+          "failedAt": {
+            "type": "string",
+            "description": "When a declined charge paused automatic top-ups. The card stays saved; setting them again resumes.",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -7270,7 +7484,8 @@
           "Signup",
           "ManualGrant",
           "TopUp",
-          "WriteOff"
+          "WriteOff",
+          "AutoTopUp"
         ]
       },
       "VoucherStatus": {

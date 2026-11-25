@@ -31,7 +31,7 @@ class SkipRapidEndpointOutput(LazyValidatedModel):
     """ # noqa: E501
     is_accepted: StrictBool = Field(description="Whether the skip was accepted.", alias="isAccepted")
     validation_truth: Optional[IValidationTruth] = Field(default=None, description="The validation truth applied, if any.", alias="validationTruth")
-    explanation: Optional[TranslatedString] = Field(default=None, description="An optional translated explanation for the user.")
+    explanation: Optional[TranslatedString] = None
     user_score: Union[StrictFloat, StrictInt] = Field(description="The user's score after the skip.", alias="userScore")
     next_rapid: Optional[IRapid] = Field(default=None, description="The next rapid to solve when the session streams its rapids and continues.  Null when there is nothing further to solve.", alias="nextRapid")
     __properties: ClassVar[List[str]] = ["isAccepted", "validationTruth", "explanation", "userScore", "nextRapid"]
@@ -80,6 +80,11 @@ class SkipRapidEndpointOutput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of next_rapid
         if self.next_rapid:
             _dict['nextRapid'] = self.next_rapid.to_dict()
+        # set to None if explanation (nullable) is None
+        # and model_fields_set contains the field
+        if self.explanation is None and "explanation" in self.model_fields_set:
+            _dict['explanation'] = None
+
         return _dict
 
     @classmethod

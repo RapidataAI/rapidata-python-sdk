@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Audience API",
     "description": "The API for the Rapidata Audience service",
-    "version": "2026.11.24.1527-9b243d18"
+    "version": "2026.11.25.2032-f5719a92"
   },
   "servers": [
     {
@@ -3638,12 +3638,15 @@
         "type": "object",
         "properties": {
           "key": {
-            "type": "string"
+            "type": "string",
+            "description": "The flag's name."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "The flag's value."
           }
-        }
+        },
+        "description": "A key-value flag that switches a frontend or service behaviour."
       },
       "FileType": {
         "enum": [
@@ -4782,6 +4785,9 @@
             "$ref": "#/components/schemas/IExamplePayloadLocateExamplePayload"
           },
           {
+            "$ref": "#/components/schemas/IExamplePayloadOpenExamplePayload"
+          },
+          {
             "$ref": "#/components/schemas/IExamplePayloadScrubExamplePayload"
           },
           {
@@ -4795,6 +4801,7 @@
             "CompareExamplePayload": "#/components/schemas/IExamplePayloadCompareExamplePayload",
             "LineExamplePayload": "#/components/schemas/IExamplePayloadLineExamplePayload",
             "LocateExamplePayload": "#/components/schemas/IExamplePayloadLocateExamplePayload",
+            "OpenExamplePayload": "#/components/schemas/IExamplePayloadOpenExamplePayload",
             "ScrubExamplePayload": "#/components/schemas/IExamplePayloadScrubExamplePayload",
             "TranscriptionExamplePayload": "#/components/schemas/IExamplePayloadTranscriptionExamplePayload"
           }
@@ -4875,6 +4882,29 @@
           }
         }
       },
+      "IExamplePayloadOpenExamplePayload": {
+        "required": [
+          "bundleFileName",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenExamplePayload"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IOpenExampleInput"
+            }
+          }
+        }
+      },
       "IExamplePayloadScrubExamplePayload": {
         "required": [
           "target",
@@ -4935,6 +4965,9 @@
             "$ref": "#/components/schemas/IExampleTruthLocateExampleTruth"
           },
           {
+            "$ref": "#/components/schemas/IExampleTruthOpenExampleTruth"
+          },
+          {
             "$ref": "#/components/schemas/IExampleTruthScrubExampleTruth"
           },
           {
@@ -4948,6 +4981,7 @@
             "CompareExampleTruth": "#/components/schemas/IExampleTruthCompareExampleTruth",
             "LineExampleTruth": "#/components/schemas/IExampleTruthLineExampleTruth",
             "LocateExampleTruth": "#/components/schemas/IExampleTruthLocateExampleTruth",
+            "OpenExampleTruth": "#/components/schemas/IExampleTruthOpenExampleTruth",
             "ScrubExampleTruth": "#/components/schemas/IExampleTruthScrubExampleTruth",
             "TranscriptionExampleTruth": "#/components/schemas/IExampleTruthTranscriptionExampleTruth"
           }
@@ -5047,6 +5081,23 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          }
+        }
+      },
+      "IExampleTruthOpenExampleTruth": {
+        "required": [
+          "schema",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenExampleTruth"
+            ],
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
           }
         }
       },
@@ -5496,6 +5547,85 @@
           },
           "duration": {
             "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
+          }
+        }
+      },
+      "IOpenExampleInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOpenExampleInputOpenExampleAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenExampleInputOpenExampleOptionsInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenExampleInputOpenExampleTextInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "Asset": "#/components/schemas/IOpenExampleInputOpenExampleAssetInput",
+            "Options": "#/components/schemas/IOpenExampleInputOpenExampleOptionsInput",
+            "Text": "#/components/schemas/IOpenExampleInputOpenExampleTextInput"
+          }
+        }
+      },
+      "IOpenExampleInputOpenExampleAssetInput": {
+        "required": [
+          "file",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Asset"
+            ],
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          }
+        }
+      },
+      "IOpenExampleInputOpenExampleOptionsInput": {
+        "required": [
+          "files",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Options"
+            ],
+            "type": "string"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IOpenExampleInputOpenExampleTextInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Text"
+            ],
+            "type": "string"
+          },
+          "text": {
             "type": "string"
           }
         }
@@ -6265,18 +6395,23 @@
         "type": "object",
         "properties": {
           "wasTranslated": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether `text` differs from `englishText` because it was translated."
           },
           "englishText": {
-            "type": "string"
+            "type": "string",
+            "description": "The original English text."
           },
           "text": {
-            "type": "string"
+            "type": "string",
+            "description": "The text to show, in `targetLanguage`."
           },
           "targetLanguage": {
-            "type": "string"
+            "type": "string",
+            "description": "ISO 639-1 code of the language `text` is in."
           }
-        }
+        },
+        "description": "A text in the language it is shown in, with its English original."
       },
       "UpdateAudienceEndpoint_Input": {
         "type": "object",
