@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.23.1941-1fe073fb"
+    "version": "2026.11.24.1527-9b243d18"
   },
   "servers": [
     {
@@ -40271,55 +40271,6 @@
             "x-parameter-group": "sort"
           },
           {
-            "name": "user_id",
-            "in": "query",
-            "description": "Filter by user_id.",
-            "style": "deepObject",
-            "explode": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eq": {
-                  "type": "string"
-                },
-                "neq": {
-                  "type": "string"
-                },
-                "gt": {
-                  "type": "string"
-                },
-                "gte": {
-                  "type": "string"
-                },
-                "lt": {
-                  "type": "string"
-                },
-                "lte": {
-                  "type": "string"
-                },
-                "contains": {
-                  "type": "string"
-                },
-                "starts_with": {
-                  "type": "string"
-                },
-                "ends_with": {
-                  "type": "string"
-                },
-                "in": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "not_contains": {
-                  "type": "string"
-                }
-              }
-            },
-            "x-parameter-group": "filters"
-          },
-          {
             "name": "feedback",
             "in": "query",
             "description": "Filter by feedback.",
@@ -72738,15 +72689,11 @@
       "GetGlobalResponsesEndpoint_Output_Response": {
         "required": [
           "id",
-          "userId",
           "country"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
-          },
-          "userId": {
             "type": "string"
           },
           "country": {
