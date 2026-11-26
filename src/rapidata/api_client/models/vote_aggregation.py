@@ -26,6 +26,7 @@ class VoteAggregation(str, Enum):
     """
     ALLVOTES = 'AllVotes'
     MAJORITYVOTE = 'MajorityVote'
+    EXPECTEDMAJORITY = 'ExpectedMajority'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

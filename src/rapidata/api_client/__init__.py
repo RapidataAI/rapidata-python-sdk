@@ -76,7 +76,6 @@ _API_IMPORTS = {
     "RapidApi": "rapidata.api_client.api.rapid_api",
     "RapidataIdentityAPIApi": "rapidata.api_client.api.rapidata_identity_api_api",
     "ReconciliationApi": "rapidata.api_client.api.reconciliation_api",
-    "RelationsApi": "rapidata.api_client.api.relations_api",
     "ReplicateApi": "rapidata.api_client.api.replicate_api",
     "SampleApi": "rapidata.api_client.api.sample_api",
     "SampleGenerationApi": "rapidata.api_client.api.sample_generation_api",

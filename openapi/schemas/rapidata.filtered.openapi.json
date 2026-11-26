@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.25.2032-f5719a92"
+    "version": "2026.11.26.1400-79c56d4d"
   },
   "servers": [
     {
@@ -142,10 +142,6 @@
     {
       "name": "Platform",
       "x-displayName": "Platform"
-    },
-    {
-      "name": "Relations",
-      "x-displayName": "Relations"
     },
     {
       "name": "Survey",
@@ -12171,201 +12167,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RevokePlatformRelationEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      }
-    },
-    "/authorization/relations": {
-      "get": {
-        "tags": [
-          "Relations"
-        ],
-        "summary": "Lists the customers holding relations on a resource, one cursor page at a time.",
-        "description": "Returns every relation unless relation narrows it. Follow nextCursor to page.",
-        "parameters": [
-          {
-            "name": "resourceType",
-            "in": "query",
-            "description": "The resource type, e.g. bidder.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "resourceId",
-            "in": "query",
-            "description": "The resource id within its type, e.g. amsterdam.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "relation",
-            "in": "query",
-            "description": "Optional relation to filter by.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "description": "The opaque cursor from the previous page; omit for the first page.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "description": "The number of items per page.",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetRelationMembersEndpoint_CursorPagedResultOfOutput"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:viewer"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "Relations"
-        ],
-        "summary": "Grants a customer a relation on a resource registered on the platform.",
-        "description": "Idempotent: re-granting an existing relation is a no-op. Fails validation when the resource's owning service has not registered it.",
-        "requestBody": {
-          "description": "The resource, the relation and the customer to grant.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GrantRelationEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Relations"
-        ],
-        "summary": "Revokes a customer's relation on a resource.",
-        "description": "Idempotent: revoking a relation that was never granted is a no-op.",
-        "requestBody": {
-          "description": "The resource, the relation and the customer to revoke.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RevokeRelationEndpoint_Input"
               }
             }
           },
@@ -53344,74 +53145,6 @@
           }
         }
       },
-      "GetRelationMembersEndpoint_CursorPagedResultOfOutput": {
-        "required": [
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetRelationMembersEndpoint_Output"
-            }
-          },
-          "nextCursor": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "description": "A page of results identified by an opaque cursor rather than an offset. Used where the\nunderlying store pages by continuation token and a total count is unavailable or expensive.\nstring? CursorPagedResult&lt;T&gt;.NextCursor is null on the last page."
-      },
-      "GetRelationMembersEndpoint_Output": {
-        "required": [
-          "customer",
-          "email",
-          "organizationName",
-          "organizationId",
-          "resourceType",
-          "resourceId",
-          "relation",
-          "grantedAt"
-        ],
-        "type": "object",
-        "properties": {
-          "customer": {
-            "type": "string",
-            "description": "The customer holding the relation.",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string",
-            "description": "The email address of the customer."
-          },
-          "organizationName": {
-            "type": "string",
-            "description": "The name of the customer's active organization."
-          },
-          "organizationId": {
-            "type": "string",
-            "description": "The identifier of the customer's active organization."
-          },
-          "resourceType": {
-            "type": "string",
-            "description": "The type of the resource the relation is on."
-          },
-          "resourceId": {
-            "type": "string",
-            "description": "The id of the resource the relation is on."
-          },
-          "relation": {
-            "type": "string",
-            "description": "The granted relation."
-          },
-          "grantedAt": {
-            "type": "string",
-            "description": "When the grant was written.",
-            "format": "date-time"
-          }
-        }
-      },
       "GoogleOneTapLoginEndpoint_Input": {
         "required": [
           "idToken"
@@ -53508,34 +53241,6 @@
           },
           "relation": {
             "$ref": "#/components/schemas/AuthorizationRelations_Platform"
-          }
-        }
-      },
-      "GrantRelationEndpoint_Input": {
-        "required": [
-          "resourceType",
-          "resourceId",
-          "relation",
-          "customer"
-        ],
-        "type": "object",
-        "properties": {
-          "resourceType": {
-            "type": "string",
-            "description": "The resource type, e.g. bidder."
-          },
-          "resourceId": {
-            "type": "string",
-            "description": "The resource id within its type, e.g. amsterdam."
-          },
-          "relation": {
-            "type": "string",
-            "description": "The relation, e.g. admin, editor or viewer."
-          },
-          "customer": {
-            "type": "string",
-            "description": "The customer.",
-            "format": "uuid"
           }
         }
       },
@@ -54252,34 +53957,6 @@
           },
           "relation": {
             "$ref": "#/components/schemas/AuthorizationRelations_Platform"
-          }
-        }
-      },
-      "RevokeRelationEndpoint_Input": {
-        "required": [
-          "resourceType",
-          "resourceId",
-          "relation",
-          "customer"
-        ],
-        "type": "object",
-        "properties": {
-          "resourceType": {
-            "type": "string",
-            "description": "The resource type, e.g. bidder."
-          },
-          "resourceId": {
-            "type": "string",
-            "description": "The resource id within its type, e.g. amsterdam."
-          },
-          "relation": {
-            "type": "string",
-            "description": "The relation, e.g. admin, editor or viewer."
-          },
-          "customer": {
-            "type": "string",
-            "description": "The customer.",
-            "format": "uuid"
           }
         }
       },
@@ -61887,7 +61564,8 @@
       "VoteAggregation": {
         "enum": [
           "AllVotes",
-          "MajorityVote"
+          "MajorityVote",
+          "ExpectedMajority"
         ]
       },
       "AdaptiveStoppingOutcome": {
@@ -76539,7 +76217,6 @@
         "Organization",
         "Permissions",
         "Platform",
-        "Relations",
         "Survey"
       ]
     },
