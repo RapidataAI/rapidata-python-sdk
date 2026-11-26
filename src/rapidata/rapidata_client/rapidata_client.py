@@ -141,7 +141,7 @@ class RapidataClient:
                 datapoint contexts against a question.
             billing (RapidataBillingManager): The RapidataBillingManager instance for
                 reading the current billing period, its outstanding cost and the
-                remaining credits.
+                remaining credits, and for managing automatic top-ups.
             asset (RapidataAssetManager): The RapidataAssetManager instance for
                 uploading media once and reusing the reference in job definitions.
         """

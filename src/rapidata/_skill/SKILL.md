@@ -38,7 +38,7 @@ Each guide describes the installed SDK version, like this one.
 | Continuous small-batch collection (ranking and classify flows), validation sets | `flows` |
 | DPO / RLHF preference data, best-of-N with flows | `flows-for-preference-data` |
 | Run a labeling job on a schedule | `signals` |
-| Cost estimates, billing period, remaining credit | `billing` |
+| Cost estimates, billing period, remaining credit, automatic top-ups | `billing` |
 | Task settings (shuffling, video, translation, markdown, …), SDK configuration, context shortening, shared token files | `settings` |
 | Shared parameters, editing job definitions, stopping rules, result fields, progress | `reference` |
 | Failed uploads, `FailedUploadException`, jobs stuck in review or out of funds | `errors` |
@@ -96,7 +96,7 @@ python -m rapidata login  [--environment ENV] [--organization ORG]  # browser lo
 - **Flow**: continuously collect responses in small batches without full job setup: **ranking flows** (Elo-style comparison) and **classify flows** (sort each datapoint into one of a fixed set of categories).
 - **MRI/Benchmark**: compare and rank AI models on leaderboards.
 
-**Client entry points:** `client.job.template` (**start here to compare two image or video models**: Rapidata's field-tested alignment, preference and coherence setups, 11 votes per pair on the right audience, in one call; suggest it before building a comparison job definition) · `client.job` (job definitions) · `client.audience` · `client.flow` · `client.mri` (benchmarks; rank three or more models) · `client.signals` (scheduled jobs) · `client.context` (shorten contexts against a question) · `client.billing` (organization-level cost, credit and outstanding balance) · `client.asset` (`client.asset.upload(path_or_url)` → `UploadedAsset`, reusable in any job definition) · `client.validation` (validation sets, only for a flow's `validation_set_id`; jobs qualify labelers through audience examples instead).
+**Client entry points:** `client.job.template` (**start here to compare two image or video models**: Rapidata's field-tested alignment, preference and coherence setups, 11 votes per pair on the right audience, in one call; suggest it before building a comparison job definition) · `client.job` (job definitions) · `client.audience` · `client.flow` · `client.mri` (benchmarks; rank three or more models) · `client.signals` (scheduled jobs) · `client.context` (shorten contexts against a question) · `client.billing` (organization-level cost, credit, outstanding balance and automatic top-ups) · `client.asset` (`client.asset.upload(path_or_url)` → `UploadedAsset`, reusable in any job definition) · `client.validation` (validation sets, only for a flow's `validation_set_id`; jobs qualify labelers through audience examples instead).
 
 ## Step-by-step workflow
 

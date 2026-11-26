@@ -56,12 +56,28 @@ owed = client.billing.get_outstanding_balance()   # e.g. 42.50
 print(f"${owed} outstanding")
 ```
 
-### `BillingPeriod` fields
+### Automatic top-ups
 
-A frozen dataclass. All amounts are in **US dollars**, rounded to the cent. Values are a snapshot — fetch again for an up-to-date figure. `BillingPeriod` (and `RapidataBillingManager`) are importable from the top-level `rapidata` package (and re-exported from `rapidata.rapidata_client`).
+Prepaid organizations only, and only their owners and admins; anyone else gets a `RapidataError`. While enabled, the saved card is charged `amount` whenever the balance falls below `threshold` (US dollars).
+
+- `client.billing.get_auto_top_up() → AutoTopUp`: frozen dataclass with `enabled` (bool), `threshold`, `amount` (`float | None`), `card_brand`, `card_last4` (`str | None`) and `failed_at` (`datetime | None`).
+- `client.billing.configure_auto_top_up(threshold, amount) → str | None`: `amount` must be at least 20, greater than `threshold`, with at most two decimals. Returns `None` when a card is already saved and the settings apply at once. Otherwise returns the url of a hosted checkout page: nothing is enabled until a **person** opens it and saves a card, so hand the url to the user instead of treating the call as done.
+- `client.billing.disable_auto_top_up() → None`: switches them off **and removes the saved card**.
+
+A declined charge pauses them (`enabled` is `False`, `failed_at` is set, the card stays saved); `configure_auto_top_up()` resumes. Configuring spends the organization's money later, so only call it when the user asked for it.
 
 ```python
-from rapidata import BillingPeriod, RapidataBillingManager
+checkout_url = client.billing.configure_auto_top_up(threshold=50, amount=200)
+if checkout_url is not None:
+    print(f"Open this page and save a card to start automatic top-ups: {checkout_url}")
+```
+
+### `BillingPeriod` fields
+
+A frozen dataclass. All amounts are in **US dollars**, rounded to the cent. Values are a snapshot — fetch again for an up-to-date figure. `BillingPeriod`, `AutoTopUp` (and `RapidataBillingManager`) are importable from the top-level `rapidata` package (and re-exported from `rapidata.rapidata_client`).
+
+```python
+from rapidata import AutoTopUp, BillingPeriod, RapidataBillingManager
 ```
 
 | Field | Type | Description |
