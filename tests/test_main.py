@@ -134,6 +134,15 @@ def test_reading_a_companion_guide_does_not_mark_the_session(
     assert _agent_hint.agent_hint() is not None
 
 
+def test_reading_guides_records_them_for_traces(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("CLAUDECODE", "1")
+    monkeypatch.setenv("CLAUDE_CODE_SESSION_ID", "s1")
+    for guide in ("main", "examples", "settings"):
+        assert cli.main(["skill", guide]) == 0
+    guides = _agent_hint.agent_trace_attributes()["agent.skill.guides"]
+    assert guides == "main,reference,settings"
+
+
 @pytest.fixture
 def no_auth_env(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     for var in (

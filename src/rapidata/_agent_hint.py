@@ -5,7 +5,8 @@ Agents explore a freshly installed SDK with ``import rapidata`` / ``dir()`` /
 docstrings, so the pointer is printed at import time:
 
 - Once per agent session until that session reads the guide with
-  ``python -m rapidata skill``. Sessions are told apart by the id the runtime
+  ``python -m rapidata skill``. Each guide a session prints is recorded too and
+  reported in traces as ``agent.skill.guides``. Sessions are told apart by the id the runtime
   exports (:data:`_SESSION_ENV_VARS`); runtimes without one get a read that
   expires after :data:`ANON_READ_TTL`.
 - Never while a copy written by ``python -m rapidata skill --install``
@@ -135,7 +136,7 @@ def installed_version(text: str) -> str | None:
 
 
 def _load_state() -> dict:
-    state: dict = {"reads": {}}
+    state: dict = {"reads": {}, "guides": {}}
     for path in (FALLBACK_STATE_FILE, STATE_FILE):
         try:
             loaded = json.loads(path.read_text(encoding="utf-8"))
@@ -143,8 +144,10 @@ def _load_state() -> dict:
             continue
         if isinstance(loaded, dict):
             reads = {**state["reads"], **loaded.get("reads", {})}
+            guides = {**state["guides"], **loaded.get("guides", {})}
             state.update(loaded)
             state["reads"] = reads
+            state["guides"] = guides
     return state
 
 
@@ -152,6 +155,11 @@ def _save_state(state: dict) -> None:
     now = time.time()
     state["reads"] = {
         k: t for k, t in state.get("reads", {}).items() if now - t < _PRUNE_AFTER
+    }
+    state["guides"] = {
+        k: g
+        for k, g in state.get("guides", {}).items()
+        if g and now - max(g.values()) < _PRUNE_AFTER
     }
     payload = json.dumps(state)
     for path in (STATE_FILE, FALLBACK_STATE_FILE):
@@ -183,9 +191,23 @@ def _read_this_session(state: dict) -> bool:
     return read_at is not None and time.time() - read_at < ANON_READ_TTL
 
 
-def mark_skill_read() -> None:
+def _guides_read(state: dict) -> list[str]:
+    """Guides this session printed, in the order it first read them."""
+    key = _session_key()
+    guides = state.get("guides", {}).get(key or "anonymous", {})
+    cutoff = 0 if key else time.time() - ANON_READ_TTL
+    return [g for g, t in sorted(guides.items(), key=lambda kv: kv[1]) if t >= cutoff]
+
+
+def mark_skill_read(guide: str = "main") -> None:
+    """Record that this session printed ``guide``; only ``main`` silences the import hint."""
     state = _load_state()
-    state["reads"][_session_key() or "anonymous"] = time.time()
+    key = _session_key() or "anonymous"
+    now = time.time()
+    if guide == "main":
+        state["reads"][key] = now
+    if guide not in _guides_read(state):
+        state["guides"].setdefault(key, {})[guide] = now
     _save_state(state)
 
 
@@ -265,6 +287,9 @@ def agent_trace_attributes() -> dict[str, str | bool]:
             "agent.hint.shown": _hint_shown,
             "agent.skill.read": _read_this_session(_load_state()),
         }
+        guides = _guides_read(_load_state())
+        if guides:
+            attrs["agent.skill.guides"] = ",".join(guides)
         key = _session_key()
         if key:
             attrs["agent.session.id"] = hashlib.sha256(key.encode()).hexdigest()[:16]

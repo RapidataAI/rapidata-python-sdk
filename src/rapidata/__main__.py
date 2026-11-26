@@ -196,8 +196,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     content = bundled_skill(args.guide)
-    if args.guide == "main":
-        mark_skill_read()
+    mark_skill_read(
+        "main" if args.guide == "main" else Path(SKILL_GUIDES[args.guide]).stem
+    )
     try:
         print(content)
         sys.stdout.flush()
