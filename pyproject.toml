@@ -1,6 +1,6 @@
 [project]
 name = "rapidata"
-version = "3.31.6"
+version = "3.31.7"
 description = "Official Python SDK for Rapidata: human feedback, preference data for RLHF, model evaluation and data labeling from real people."
 authors = [{ name = "Rapidata AG", email = "info@rapidata.ai" }]
 requires-python = ">=3.10,<4"
