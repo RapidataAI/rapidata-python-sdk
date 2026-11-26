@@ -19,6 +19,7 @@ from rapidata.api_client.models.i_example_payload_classify_example_payload impor
 from rapidata.api_client.models.i_example_payload_compare_example_payload import IExamplePayloadCompareExamplePayload
 from rapidata.api_client.models.i_example_payload_line_example_payload import IExamplePayloadLineExamplePayload
 from rapidata.api_client.models.i_example_payload_locate_example_payload import IExamplePayloadLocateExamplePayload
+from rapidata.api_client.models.i_example_payload_open_example_payload import IExamplePayloadOpenExamplePayload
 from rapidata.api_client.models.i_example_payload_scrub_example_payload import IExamplePayloadScrubExamplePayload
 from rapidata.api_client.models.i_example_payload_transcription_example_payload import IExamplePayloadTranscriptionExamplePayload
 from pydantic import StrictStr, Field
@@ -26,7 +27,7 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IEXAMPLEPAYLOAD_ONE_OF_SCHEMAS = ["IExamplePayloadClassifyExamplePayload", "IExamplePayloadCompareExamplePayload", "IExamplePayloadLineExamplePayload", "IExamplePayloadLocateExamplePayload", "IExamplePayloadScrubExamplePayload", "IExamplePayloadTranscriptionExamplePayload"]
+IEXAMPLEPAYLOAD_ONE_OF_SCHEMAS = ["IExamplePayloadClassifyExamplePayload", "IExamplePayloadCompareExamplePayload", "IExamplePayloadLineExamplePayload", "IExamplePayloadLocateExamplePayload", "IExamplePayloadOpenExamplePayload", "IExamplePayloadScrubExamplePayload", "IExamplePayloadTranscriptionExamplePayload"]
 
 class IExamplePayload(LazyValidatedModel):
     """
@@ -40,12 +41,14 @@ class IExamplePayload(LazyValidatedModel):
     oneof_schema_3_validator: Optional[IExamplePayloadLineExamplePayload] = None
     # data type: IExamplePayloadLocateExamplePayload
     oneof_schema_4_validator: Optional[IExamplePayloadLocateExamplePayload] = None
+    # data type: IExamplePayloadOpenExamplePayload
+    oneof_schema_5_validator: Optional[IExamplePayloadOpenExamplePayload] = None
     # data type: IExamplePayloadScrubExamplePayload
-    oneof_schema_5_validator: Optional[IExamplePayloadScrubExamplePayload] = None
+    oneof_schema_6_validator: Optional[IExamplePayloadScrubExamplePayload] = None
     # data type: IExamplePayloadTranscriptionExamplePayload
-    oneof_schema_6_validator: Optional[IExamplePayloadTranscriptionExamplePayload] = None
-    actual_instance: Optional[Union[IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload]] = None
-    one_of_schemas: Set[str] = { "IExamplePayloadClassifyExamplePayload", "IExamplePayloadCompareExamplePayload", "IExamplePayloadLineExamplePayload", "IExamplePayloadLocateExamplePayload", "IExamplePayloadScrubExamplePayload", "IExamplePayloadTranscriptionExamplePayload" }
+    oneof_schema_7_validator: Optional[IExamplePayloadTranscriptionExamplePayload] = None
+    actual_instance: Optional[Union[IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadOpenExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload]] = None
+    one_of_schemas: Set[str] = { "IExamplePayloadClassifyExamplePayload", "IExamplePayloadCompareExamplePayload", "IExamplePayloadLineExamplePayload", "IExamplePayloadLocateExamplePayload", "IExamplePayloadOpenExamplePayload", "IExamplePayloadScrubExamplePayload", "IExamplePayloadTranscriptionExamplePayload" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -88,6 +91,11 @@ class IExamplePayload(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IExamplePayloadLocateExamplePayload`")
         else:
             match += 1
+        # validate data type: IExamplePayloadOpenExamplePayload
+        if not isinstance(v, IExamplePayloadOpenExamplePayload):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IExamplePayloadOpenExamplePayload`")
+        else:
+            match += 1
         # validate data type: IExamplePayloadScrubExamplePayload
         if not isinstance(v, IExamplePayloadScrubExamplePayload):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IExamplePayloadScrubExamplePayload`")
@@ -100,10 +108,10 @@ class IExamplePayload(LazyValidatedModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IExamplePayload with oneOf schemas: IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IExamplePayload with oneOf schemas: IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadOpenExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IExamplePayload with oneOf schemas: IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IExamplePayload with oneOf schemas: IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadOpenExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -142,6 +150,12 @@ class IExamplePayload(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IExamplePayloadOpenExamplePayload
+        try:
+            instance.actual_instance = IExamplePayloadOpenExamplePayload.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IExamplePayloadScrubExamplePayload
         try:
             instance.actual_instance = IExamplePayloadScrubExamplePayload.from_json(json_str)
@@ -157,10 +171,10 @@ class IExamplePayload(LazyValidatedModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IExamplePayload with oneOf schemas: IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IExamplePayload with oneOf schemas: IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadOpenExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IExamplePayload with oneOf schemas: IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IExamplePayload with oneOf schemas: IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadOpenExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -174,7 +188,7 @@ class IExamplePayload(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IExamplePayloadClassifyExamplePayload, IExamplePayloadCompareExamplePayload, IExamplePayloadLineExamplePayload, IExamplePayloadLocateExamplePayload, IExamplePayloadOpenExamplePayload, IExamplePayloadScrubExamplePayload, IExamplePayloadTranscriptionExamplePayload]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

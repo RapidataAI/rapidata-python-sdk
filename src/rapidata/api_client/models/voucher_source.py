@@ -28,6 +28,7 @@ class VoucherSource(str, Enum):
     MANUALGRANT = 'ManualGrant'
     TOPUP = 'TopUp'
     WRITEOFF = 'WriteOff'
+    AUTOTOPUP = 'AutoTopUp'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

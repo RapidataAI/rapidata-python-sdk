@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Identity API",
     "description": "The API for the Rapidata Identity service",
-    "version": "2026.11.24.1527-9b243d18"
+    "version": "2026.11.25.2032-f5719a92"
   },
   "servers": [
     {
@@ -2074,80 +2074,6 @@
         ]
       }
     },
-    "/organizations/{organizationId}/members/{customerId}/role": {
-      "put": {
-        "tags": [
-          "Organization"
-        ],
-        "summary": "Sets the given member's org-scoped role.",
-        "description": "Responds with 404 when the customer is not a member and 409 when the change makes or unmakes an\n owner, which only the owner endpoints do.",
-        "parameters": [
-          {
-            "name": "organizationId",
-            "in": "path",
-            "description": "The id of the organization.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "customerId",
-            "in": "path",
-            "description": "The id of the member whose role changes.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The new role.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeOrgMemberRoleEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "organization:write"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      }
-    },
     "/organizations": {
       "post": {
         "tags": [
@@ -4065,22 +3991,6 @@
           "OpenRapids"
         ],
         "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
-      },
-      "ChangeOrgMemberRoleEndpoint_Input": {
-        "required": [
-          "role"
-        ],
-        "type": "object",
-        "properties": {
-          "role": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/OrgRole"
-              }
-            ],
-            "description": "The org-scoped role to assign to the member."
-          }
-        }
       },
       "Client": {
         "required": [

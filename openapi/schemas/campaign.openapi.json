@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Campaign API",
     "description": "The API for the Rapidata Campaign service",
-    "version": "2026.11.24.1527-9b243d18"
+    "version": "2026.11.25.2032-f5719a92"
   },
   "servers": [
     {
@@ -2741,12 +2741,15 @@
         "type": "object",
         "properties": {
           "key": {
-            "type": "string"
+            "type": "string",
+            "description": "The flag's name."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "The flag's value."
           }
-        }
+        },
+        "description": "A key-value flag that switches a frontend or service behaviour."
       },
       "GetBoostInsightsEndpoint_AudienceOutput": {
         "required": [

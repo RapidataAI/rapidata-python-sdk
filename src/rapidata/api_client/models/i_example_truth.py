@@ -19,6 +19,7 @@ from rapidata.api_client.models.i_example_truth_classify_example_truth import IE
 from rapidata.api_client.models.i_example_truth_compare_example_truth import IExampleTruthCompareExampleTruth
 from rapidata.api_client.models.i_example_truth_line_example_truth import IExampleTruthLineExampleTruth
 from rapidata.api_client.models.i_example_truth_locate_example_truth import IExampleTruthLocateExampleTruth
+from rapidata.api_client.models.i_example_truth_open_example_truth import IExampleTruthOpenExampleTruth
 from rapidata.api_client.models.i_example_truth_scrub_example_truth import IExampleTruthScrubExampleTruth
 from rapidata.api_client.models.i_example_truth_transcription_example_truth import IExampleTruthTranscriptionExampleTruth
 from pydantic import StrictStr, Field
@@ -26,7 +27,7 @@ from rapidata.api_client.lazy_model import LazyValidatedModel
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IEXAMPLETRUTH_ONE_OF_SCHEMAS = ["IExampleTruthClassifyExampleTruth", "IExampleTruthCompareExampleTruth", "IExampleTruthLineExampleTruth", "IExampleTruthLocateExampleTruth", "IExampleTruthScrubExampleTruth", "IExampleTruthTranscriptionExampleTruth"]
+IEXAMPLETRUTH_ONE_OF_SCHEMAS = ["IExampleTruthClassifyExampleTruth", "IExampleTruthCompareExampleTruth", "IExampleTruthLineExampleTruth", "IExampleTruthLocateExampleTruth", "IExampleTruthOpenExampleTruth", "IExampleTruthScrubExampleTruth", "IExampleTruthTranscriptionExampleTruth"]
 
 class IExampleTruth(LazyValidatedModel):
     """
@@ -40,12 +41,14 @@ class IExampleTruth(LazyValidatedModel):
     oneof_schema_3_validator: Optional[IExampleTruthLineExampleTruth] = None
     # data type: IExampleTruthLocateExampleTruth
     oneof_schema_4_validator: Optional[IExampleTruthLocateExampleTruth] = None
+    # data type: IExampleTruthOpenExampleTruth
+    oneof_schema_5_validator: Optional[IExampleTruthOpenExampleTruth] = None
     # data type: IExampleTruthScrubExampleTruth
-    oneof_schema_5_validator: Optional[IExampleTruthScrubExampleTruth] = None
+    oneof_schema_6_validator: Optional[IExampleTruthScrubExampleTruth] = None
     # data type: IExampleTruthTranscriptionExampleTruth
-    oneof_schema_6_validator: Optional[IExampleTruthTranscriptionExampleTruth] = None
-    actual_instance: Optional[Union[IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth]] = None
-    one_of_schemas: Set[str] = { "IExampleTruthClassifyExampleTruth", "IExampleTruthCompareExampleTruth", "IExampleTruthLineExampleTruth", "IExampleTruthLocateExampleTruth", "IExampleTruthScrubExampleTruth", "IExampleTruthTranscriptionExampleTruth" }
+    oneof_schema_7_validator: Optional[IExampleTruthTranscriptionExampleTruth] = None
+    actual_instance: Optional[Union[IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthOpenExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth]] = None
+    one_of_schemas: Set[str] = { "IExampleTruthClassifyExampleTruth", "IExampleTruthCompareExampleTruth", "IExampleTruthLineExampleTruth", "IExampleTruthLocateExampleTruth", "IExampleTruthOpenExampleTruth", "IExampleTruthScrubExampleTruth", "IExampleTruthTranscriptionExampleTruth" }
 
     # model_config is inherited from LazyValidatedModel
 
@@ -88,6 +91,11 @@ class IExampleTruth(LazyValidatedModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IExampleTruthLocateExampleTruth`")
         else:
             match += 1
+        # validate data type: IExampleTruthOpenExampleTruth
+        if not isinstance(v, IExampleTruthOpenExampleTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IExampleTruthOpenExampleTruth`")
+        else:
+            match += 1
         # validate data type: IExampleTruthScrubExampleTruth
         if not isinstance(v, IExampleTruthScrubExampleTruth):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IExampleTruthScrubExampleTruth`")
@@ -100,10 +108,10 @@ class IExampleTruth(LazyValidatedModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IExampleTruth with oneOf schemas: IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IExampleTruth with oneOf schemas: IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthOpenExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IExampleTruth with oneOf schemas: IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IExampleTruth with oneOf schemas: IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthOpenExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -142,6 +150,12 @@ class IExampleTruth(LazyValidatedModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IExampleTruthOpenExampleTruth
+        try:
+            instance.actual_instance = IExampleTruthOpenExampleTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IExampleTruthScrubExampleTruth
         try:
             instance.actual_instance = IExampleTruthScrubExampleTruth.from_json(json_str)
@@ -157,10 +171,10 @@ class IExampleTruth(LazyValidatedModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IExampleTruth with oneOf schemas: IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IExampleTruth with oneOf schemas: IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthOpenExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IExampleTruth with oneOf schemas: IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IExampleTruth with oneOf schemas: IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthOpenExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -174,7 +188,7 @@ class IExampleTruth(LazyValidatedModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IExampleTruthClassifyExampleTruth, IExampleTruthCompareExampleTruth, IExampleTruthLineExampleTruth, IExampleTruthLocateExampleTruth, IExampleTruthOpenExampleTruth, IExampleTruthScrubExampleTruth, IExampleTruthTranscriptionExampleTruth]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

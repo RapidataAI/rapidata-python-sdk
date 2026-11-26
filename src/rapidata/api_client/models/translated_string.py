@@ -24,12 +24,12 @@ from typing_extensions import Self
 
 class TranslatedString(LazyValidatedModel):
     """
-    TranslatedString
+    A text in the language it is shown in, with its English original.
     """ # noqa: E501
-    was_translated: Optional[StrictBool] = Field(default=None, alias="wasTranslated")
-    english_text: StrictStr = Field(alias="englishText")
-    text: StrictStr
-    target_language: StrictStr = Field(alias="targetLanguage")
+    was_translated: Optional[StrictBool] = Field(default=None, description="Whether `text` differs from `englishText` because it was translated.", alias="wasTranslated")
+    english_text: StrictStr = Field(description="The original English text.", alias="englishText")
+    text: StrictStr = Field(description="The text to show, in `targetLanguage`.")
+    target_language: StrictStr = Field(description="ISO 639-1 code of the language `text` is in.", alias="targetLanguage")
     __properties: ClassVar[List[str]] = ["wasTranslated", "englishText", "text", "targetLanguage"]
 
     # model_config is inherited from LazyValidatedModel

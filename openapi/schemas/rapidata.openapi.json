@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.24.1527-9b243d18"
+    "version": "2026.11.25.2032-f5719a92"
   },
   "servers": [
     {
@@ -202,6 +202,10 @@
     {
       "name": "Order",
       "x-displayName": "Order"
+    },
+    {
+      "name": "AutoTopUp",
+      "x-displayName": "AutoTopUp"
     },
     {
       "name": "Billing",
@@ -10720,80 +10724,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "organization:write"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      }
-    },
-    "/organizations/{organizationId}/members/{customerId}/role": {
-      "put": {
-        "tags": [
-          "Organization"
-        ],
-        "summary": "Sets the given member's org-scoped role.",
-        "description": "Responds with 404 when the customer is not a member and 409 when the change makes or unmakes an\n owner, which only the owner endpoints do.",
-        "parameters": [
-          {
-            "name": "organizationId",
-            "in": "path",
-            "description": "The id of the organization.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "customerId",
-            "in": "path",
-            "description": "The id of the member whose role changes.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The new role.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeOrgMemberRoleEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -35939,6 +35869,151 @@
         ]
       }
     },
+    "/payment/auto-topup": {
+      "put": {
+        "tags": [
+          "AutoTopUp"
+        ],
+        "summary": "Sets the balance threshold and amount of automatic top-ups for the caller's organization.",
+        "description": "With no card saved yet, returns a checkout url; top-ups start once the card is saved there.",
+        "requestBody": {
+          "description": "The threshold and amount to top up with.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigureAutoTopUpEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigureAutoTopUpEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "AutoTopUp"
+        ],
+        "summary": "Switches automatic top-ups off for the caller's organization and removes the saved card.",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "billing:write"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "AutoTopUp"
+        ],
+        "summary": "Gets the automatic top-up settings of the caller's organization.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAutoTopUpEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OpenIdConnect": [
+              "billing:read"
+            ]
+          },
+          {
+            "OpenIdConnect": [
+              "api"
+            ]
+          }
+        ]
+      }
+    },
     "/billing-periods/close-bulk": {
       "post": {
         "tags": [
@@ -46618,12 +46693,15 @@
         "type": "object",
         "properties": {
           "key": {
-            "type": "string"
+            "type": "string",
+            "description": "The flag's name."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "The flag's value."
           }
-        }
+        },
+        "description": "A key-value flag that switches a frontend or service behaviour."
       },
       "FileType": {
         "enum": [
@@ -47762,6 +47840,9 @@
             "$ref": "#/components/schemas/IExamplePayloadLocateExamplePayload"
           },
           {
+            "$ref": "#/components/schemas/IExamplePayloadOpenExamplePayload"
+          },
+          {
             "$ref": "#/components/schemas/IExamplePayloadScrubExamplePayload"
           },
           {
@@ -47775,6 +47856,7 @@
             "CompareExamplePayload": "#/components/schemas/IExamplePayloadCompareExamplePayload",
             "LineExamplePayload": "#/components/schemas/IExamplePayloadLineExamplePayload",
             "LocateExamplePayload": "#/components/schemas/IExamplePayloadLocateExamplePayload",
+            "OpenExamplePayload": "#/components/schemas/IExamplePayloadOpenExamplePayload",
             "ScrubExamplePayload": "#/components/schemas/IExamplePayloadScrubExamplePayload",
             "TranscriptionExamplePayload": "#/components/schemas/IExamplePayloadTranscriptionExamplePayload"
           }
@@ -47855,6 +47937,29 @@
           }
         }
       },
+      "IExamplePayloadOpenExamplePayload": {
+        "required": [
+          "bundleFileName",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenExamplePayload"
+            ],
+            "type": "string"
+          },
+          "bundleFileName": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IOpenExampleInput"
+            }
+          }
+        }
+      },
       "IExamplePayloadScrubExamplePayload": {
         "required": [
           "target",
@@ -47915,6 +48020,9 @@
             "$ref": "#/components/schemas/IExampleTruthLocateExampleTruth"
           },
           {
+            "$ref": "#/components/schemas/IExampleTruthOpenExampleTruth"
+          },
+          {
             "$ref": "#/components/schemas/IExampleTruthScrubExampleTruth"
           },
           {
@@ -47928,6 +48036,7 @@
             "CompareExampleTruth": "#/components/schemas/IExampleTruthCompareExampleTruth",
             "LineExampleTruth": "#/components/schemas/IExampleTruthLineExampleTruth",
             "LocateExampleTruth": "#/components/schemas/IExampleTruthLocateExampleTruth",
+            "OpenExampleTruth": "#/components/schemas/IExampleTruthOpenExampleTruth",
             "ScrubExampleTruth": "#/components/schemas/IExampleTruthScrubExampleTruth",
             "TranscriptionExampleTruth": "#/components/schemas/IExampleTruthTranscriptionExampleTruth"
           }
@@ -48027,6 +48136,23 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          }
+        }
+      },
+      "IExampleTruthOpenExampleTruth": {
+        "required": [
+          "schema",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OpenExampleTruth"
+            ],
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
           }
         }
       },
@@ -48472,6 +48598,85 @@
           },
           "duration": {
             "pattern": "^-?(\\d+\\.)?\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,7})?$",
+            "type": "string"
+          }
+        }
+      },
+      "IOpenExampleInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOpenExampleInputOpenExampleAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenExampleInputOpenExampleOptionsInput"
+          },
+          {
+            "$ref": "#/components/schemas/IOpenExampleInputOpenExampleTextInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "Asset": "#/components/schemas/IOpenExampleInputOpenExampleAssetInput",
+            "Options": "#/components/schemas/IOpenExampleInputOpenExampleOptionsInput",
+            "Text": "#/components/schemas/IOpenExampleInputOpenExampleTextInput"
+          }
+        }
+      },
+      "IOpenExampleInputOpenExampleAssetInput": {
+        "required": [
+          "file",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Asset"
+            ],
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          }
+        }
+      },
+      "IOpenExampleInputOpenExampleOptionsInput": {
+        "required": [
+          "files",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Options"
+            ],
+            "type": "string"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IOpenExampleInputOpenExampleTextInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "Text"
+            ],
+            "type": "string"
+          },
+          "text": {
             "type": "string"
           }
         }
@@ -49241,18 +49446,23 @@
         "type": "object",
         "properties": {
           "wasTranslated": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether `text` differs from `englishText` because it was translated."
           },
           "englishText": {
-            "type": "string"
+            "type": "string",
+            "description": "The original English text."
           },
           "text": {
-            "type": "string"
+            "type": "string",
+            "description": "The text to show, in `targetLanguage`."
           },
           "targetLanguage": {
-            "type": "string"
+            "type": "string",
+            "description": "ISO 639-1 code of the language `text` is in."
           }
-        }
+        },
+        "description": "A text in the language it is shown in, with its English original."
       },
       "UpdateAudienceEndpoint_Input": {
         "type": "object",
@@ -55042,22 +55252,6 @@
           "OpenRapids"
         ],
         "description": "The named platform-wide capability entitlements a customer can be granted. Each maps to a\n`capability` object in the authorization graph; convert to its object id with\nstring CapabilityExtensions.ToObjectId(Capability capability). Kept as a typed enum so\ncapability grants read explicitly at call sites (and, later, on endpoint contracts) instead of\npassing raw id strings around."
-      },
-      "ChangeOrgMemberRoleEndpoint_Input": {
-        "required": [
-          "role"
-        ],
-        "type": "object",
-        "properties": {
-          "role": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/OrgRole"
-              }
-            ],
-            "description": "The org-scoped role to assign to the member."
-          }
-        }
       },
       "Client": {
         "required": [
@@ -71284,6 +71478,35 @@
           }
         }
       },
+      "ConfigureAutoTopUpEndpoint_Input": {
+        "required": [
+          "threshold",
+          "amount"
+        ],
+        "type": "object",
+        "properties": {
+          "threshold": {
+            "type": "number",
+            "description": "The balance in dollars below which the saved card is charged.",
+            "format": "double"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The amount in dollars each automatic top-up adds to the balance.",
+            "format": "double"
+          }
+        }
+      },
+      "ConfigureAutoTopUpEndpoint_Output": {
+        "type": "object",
+        "properties": {
+          "checkoutUrl": {
+            "type": "string",
+            "description": "The hosted checkout url that saves a card. null when a card is already saved and\n the new values apply immediately.",
+            "nullable": true
+          }
+        }
+      },
       "CreateBillingItemBillingSettingEndpoint_Input": {
         "type": "object",
         "properties": {
@@ -71822,6 +72045,46 @@
               }
             ],
             "description": "The line items (running cost, platform fees, refunds, volume discounts)."
+          }
+        }
+      },
+      "GetAutoTopUpEndpoint_Output": {
+        "required": [
+          "enabled"
+        ],
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether a saved card is charged automatically when the balance runs low."
+          },
+          "threshold": {
+            "type": "number",
+            "description": "The balance in dollars below which the saved card is charged.",
+            "format": "double",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "description": "The amount in dollars each automatic top-up adds to the balance.",
+            "format": "double",
+            "nullable": true
+          },
+          "cardBrand": {
+            "type": "string",
+            "description": "The brand of the saved card, such as visa.",
+            "nullable": true
+          },
+          "cardLast4": {
+            "type": "string",
+            "description": "The last four digits of the saved card.",
+            "nullable": true
+          },
+          "failedAt": {
+            "type": "string",
+            "description": "When a declined charge paused automatic top-ups. The card stays saved; setting them again resumes.",
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -74257,7 +74520,8 @@
           "Signup",
           "ManualGrant",
           "TopUp",
-          "WriteOff"
+          "WriteOff",
+          "AutoTopUp"
         ]
       },
       "VoucherStatus": {
@@ -75454,12 +75718,13 @@
             "description": "The validation truth applied to the response, if any."
           },
           "explanation": {
-            "allOf": [
+            "type": "object",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
             ],
-            "description": "An optional translated explanation for the user."
+            "nullable": true
           },
           "userScore": {
             "type": "number",
@@ -77836,12 +78101,13 @@
             "description": "The validation truth applied, if any."
           },
           "explanation": {
-            "allOf": [
+            "type": "object",
+            "oneOf": [
               {
                 "$ref": "#/components/schemas/TranslatedString"
               }
             ],
-            "description": "An optional translated explanation for the user."
+            "nullable": true
           },
           "userScore": {
             "type": "number",
@@ -79306,6 +79572,7 @@
     {
       "name": "Rapidata Payment API",
       "tags": [
+        "AutoTopUp",
         "Billing",
         "ExternalServicePrices",
         "Reconciliation",
