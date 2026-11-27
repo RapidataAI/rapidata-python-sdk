@@ -35,6 +35,7 @@ from .rapidata_client import (
     FlowItemResult,
     ClassifyFlowItemResult,
     ClassifyDatapointResult,
+    AutoTopUp,
     BillingPeriod,
     RapidataBillingManager,
     RapidataAssetManager,

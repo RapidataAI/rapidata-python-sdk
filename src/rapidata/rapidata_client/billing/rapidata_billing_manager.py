@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from rapidata.rapidata_client.billing.auto_top_up import AutoTopUp
 from rapidata.rapidata_client.billing.billing_period import BillingPeriod
 from rapidata.rapidata_client.config import logger, tracer
 
@@ -10,7 +11,8 @@ if TYPE_CHECKING:
 
 
 class RapidataBillingManager:
-    """Read what the current billing period has cost and what credit is left.
+    """Read what the current billing period has cost and what credit is left,
+    and manage automatic top-ups of a prepaid balance.
 
     Billing is settled per organization, so the figures cover everything the
     organization spent, not only the jobs this client created.
@@ -62,3 +64,63 @@ class RapidataBillingManager:
             billing_api = self._openapi_service.payment.billing_api
             outstanding = billing_api.billing_outstanding_get()
             return round(outstanding.total_outstanding, 2)
+
+    def get_auto_top_up(self) -> AutoTopUp:
+        """Get the organization's automatic top-up settings.
+
+        Returns:
+            AutoTopUp: Whether automatic top-ups are enabled, their threshold
+                and amount, and the saved card.
+
+        Raises:
+            RapidataError: If the organization is not on a prepaid plan, or
+                the caller is not one of its owners or admins.
+        """
+        with tracer.start_as_current_span("RapidataBillingManager.get_auto_top_up"):
+            auto_top_up_api = self._openapi_service.payment.auto_top_up_api
+            return AutoTopUp._from_model(auto_top_up_api.payment_auto_topup_get())
+
+    def configure_auto_top_up(self, threshold: float, amount: float) -> str | None:
+        """Charge the saved card ``amount`` whenever the prepaid balance falls below ``threshold``.
+
+        Also resumes automatic top-ups that a declined charge paused.
+
+        Args:
+            threshold: The balance in US dollars below which the saved card is
+                charged. Must be lower than ``amount``.
+            amount: What each automatic top-up adds to the balance, in US
+                dollars. At least 20, with at most two decimals.
+
+        Returns:
+            str | None: ``None`` when a card is already saved and the settings
+                apply at once. Otherwise the url of a hosted checkout page:
+                automatic top-ups only start once someone saves a card there.
+
+        Raises:
+            RapidataError: If the values break the rules above, the
+                organization is not on a prepaid plan, or the caller is not
+                one of its owners or admins.
+        """
+        from rapidata.api_client.models.configure_auto_top_up_endpoint_input import (
+            ConfigureAutoTopUpEndpointInput,
+        )
+
+        with tracer.start_as_current_span(
+            "RapidataBillingManager.configure_auto_top_up"
+        ):
+            auto_top_up_api = self._openapi_service.payment.auto_top_up_api
+            output = auto_top_up_api.payment_auto_topup_put(
+                ConfigureAutoTopUpEndpointInput(threshold=threshold, amount=amount)
+            )
+            return output.checkout_url
+
+    def disable_auto_top_up(self) -> None:
+        """Switch automatic top-ups off and remove the saved card.
+
+        Raises:
+            RapidataError: If the organization is not on a prepaid plan, or
+                the caller is not one of its owners or admins.
+        """
+        with tracer.start_as_current_span("RapidataBillingManager.disable_auto_top_up"):
+            auto_top_up_api = self._openapi_service.payment.auto_top_up_api
+            auto_top_up_api.payment_auto_topup_delete()

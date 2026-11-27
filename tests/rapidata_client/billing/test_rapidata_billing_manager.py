@@ -98,3 +98,40 @@ def test_api_errors_propagate():
 
     with pytest.raises(RapidataError):
         manager.get_current_billing_period()
+
+
+def test_auto_top_up_methods_map_to_the_auto_top_up_routes():
+    from rapidata.api_client.models.get_auto_top_up_endpoint_output import (
+        GetAutoTopUpEndpointOutput,
+    )
+
+    manager = _manager()
+    auto_top_up_api = manager._openapi_service.payment.auto_top_up_api
+    auto_top_up_api.payment_auto_topup_get.return_value = (
+        GetAutoTopUpEndpointOutput.from_dict(
+            {
+                "enabled": False,
+                "threshold": 50,
+                "amount": 200.5,
+                "cardBrand": "visa",
+                "cardLast4": "4242",
+                "failedAt": "2026-08-01T00:00:00Z",
+            }
+        )
+    )
+    auto_top_up_api.payment_auto_topup_put.return_value = MagicMock(
+        checkout_url="https://checkout.example/session"
+    )
+
+    settings = manager.get_auto_top_up()
+    assert (settings.enabled, settings.threshold, settings.amount) == (False, 50, 200.5)
+    assert (settings.card_brand, settings.card_last4) == ("visa", "4242")
+    assert settings.failed_at == START
+
+    checkout_url = manager.configure_auto_top_up(threshold=50, amount=200.5)
+    assert checkout_url == "https://checkout.example/session"
+    sent = auto_top_up_api.payment_auto_topup_put.call_args.args[0]
+    assert sent.to_dict() == {"threshold": 50, "amount": 200.5}
+
+    manager.disable_auto_top_up()
+    auto_top_up_api.payment_auto_topup_delete.assert_called_once_with()

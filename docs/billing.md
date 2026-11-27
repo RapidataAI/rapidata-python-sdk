@@ -53,3 +53,39 @@ print(f"Total owed: ${owed}")
 ```
 
 The figure is in US dollars, rounded to the cent, and is already net of any vouchers and discounts. It does **not** include the current, still-accruing period — nothing is due until a period ends and settles. Like the current period, this is settled per **organization**.
+
+## Automatic Top-Ups
+
+On a prepaid plan, automatic top-ups keep jobs running when the balance runs low: whenever it falls below a threshold, a saved card is charged a fixed amount. Only owners and admins of the organization can read or change these settings.
+
+```py
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+checkout_url = client.billing.configure_auto_top_up(threshold=50, amount=200) # (1)!
+if checkout_url is not None:
+    print(f"Save a card to start automatic top-ups: {checkout_url}") # (2)!
+
+settings = client.billing.get_auto_top_up()
+print(settings.enabled, settings.threshold, settings.amount)
+```
+
+1. Amounts are in US dollars. `amount` must be at least 20, greater than `threshold`, and have at most two decimals.
+2. With no card saved yet, the settings only take effect once someone opens this hosted checkout page and saves a card. With a card already saved, `configure_auto_top_up()` returns `None` and the settings apply at once.
+
+| Field | Description |
+|---|---|
+| `enabled` | Whether the saved card is charged automatically when the balance runs low. |
+| `threshold` | The balance below which the card is charged, or `None` when never configured. |
+| `amount` | What each top-up adds to the balance, or `None` when never configured. |
+| `card_brand` / `card_last4` | The saved card, or `None` when no card is saved. |
+| `failed_at` | When a declined charge paused automatic top-ups, or `None`. |
+
+A declined charge pauses automatic top-ups: `enabled` turns `False` and `failed_at` is set, while the card stays saved. Call `configure_auto_top_up()` again to resume.
+
+To switch automatic top-ups off and remove the saved card:
+
+```py
+client.billing.disable_auto_top_up()
+```

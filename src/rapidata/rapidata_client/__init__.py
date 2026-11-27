@@ -27,7 +27,7 @@ from .flow import (
     RapidataRankingFlow,
     RapidataClassifyFlow,
 )
-from .billing import BillingPeriod, RapidataBillingManager
+from .billing import AutoTopUp, BillingPeriod, RapidataBillingManager
 from .asset import RapidataAssetManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box
 from .results import RapidataResults
