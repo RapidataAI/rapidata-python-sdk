@@ -117,6 +117,7 @@ Datapoint-based results (all but Comparison and Ranking) carry `context`, `media
 | `confidencePerCategory` | Confidence level per category (with `confidence_threshold`) |
 | `adaptiveStoppingState` | Adaptive stopping only (the compare default): the `verdict`, `winners` (`"0"`/`"1"`), per-option `outcomes` (`weight`, `lower`, `upper`), `responseCount` and the parameters used. Absent on non-adaptive datapoints. Prefer it over `winner` on adaptive results — see `python -m rapidata skill comparison` |
 | `userScore` | 0-1 value indicating individual labeler reliability |
+| `userDetails.userId` | Pseudonymous labeler id (`rtr_…`), the same in all your jobs: group by it to follow one labeler. Reveals nothing else. Missing from results computed before it was added |
 
 A labeler's `demographics` may be empty when no demographic data was collected for them.
 
