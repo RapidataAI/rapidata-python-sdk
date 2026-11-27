@@ -54,6 +54,7 @@ Every entry carries a `detailedResults` list with one item per response. Each it
 
 | Field | Meaning |
 | --- | --- |
+| `userId` | Pseudonymous id of the labeler (`rtr_…`): the same in all your jobs, so you can follow one labeler across them. It reveals nothing else about them. Missing from results computed before it was added |
 | `country` | Labeler's country code |
 | `language` | Language the labeler saw the task in |
 | `userScores` | The labeler's reliability per dimension; `global` is the one to use by default. See [below](#understanding-the-user-scores) |
@@ -74,7 +75,7 @@ Every entry carries a `detailedResults` list with one item per response. Each it
       "summedUserScores": { "Cat": 9.5, "Dog": 4.2 },
       "summedUserScoresRatios": { "Cat": 0.6934, "Dog": 0.3066 },
       "detailedResults": [
-        { "selectedCategory": "Cat", "userDetails": { "country": "US", "language": "en", "userScores": { "global": 0.75 }, "demographics": {} } }
+        { "selectedCategory": "Cat", "userDetails": { "userId": "rtr_3f9c0b2e7a51d4c86e02", "country": "US", "language": "en", "userScores": { "global": 0.75 }, "demographics": {} } }
       ]
     }
   ],
@@ -115,7 +116,7 @@ Every entry carries a `detailedResults` list with one item per response. Each it
       "summedUserScoresRatios": { "midjourney-5.2_37_3.jpg": 0.0, "flux-1-pro_37_0.jpg": 1.0 },
       "adaptiveStoppingState": { "verdict": "Decided", "winners": ["1"], "responseCount": 7, "...": "..." },
       "detailedResults": [
-        { "votedFor": "flux-1-pro_37_0.jpg", "userDetails": { "country": "EG", "language": "ar", "userScores": { "global": 0.845 }, "demographics": { "age": "18-29" } } }
+        { "votedFor": "flux-1-pro_37_0.jpg", "userDetails": { "userId": "rtr_a07d5e19c4b3f2806d71", "country": "EG", "language": "ar", "userScores": { "global": 0.845 }, "demographics": { "age": "18-29" } } }
       ]
     }
   ],
@@ -171,7 +172,7 @@ A ranking job returns one `results` entry **per ranking** (per inner list of `da
           "summedUserScores": { "https://example.com/rabbit_2.webp": 0.0, "https://example.com/rabbit_3.webp": 0.7306 },
           "summedUserScoresRatios": { "https://example.com/rabbit_2.webp": 0.0, "https://example.com/rabbit_3.webp": 1.0 },
           "detailedResults": [
-            { "votedFor": "https://example.com/rabbit_3.webp", "userDetails": { "country": "DE", "language": "de", "userScores": { "global": 0.7306 }, "demographics": {} } }
+            { "votedFor": "https://example.com/rabbit_3.webp", "userDetails": { "userId": "rtr_5c2e8a90d17b4f63e1a8", "country": "DE", "language": "de", "userScores": { "global": 0.7306 }, "demographics": {} } }
           ]
         }
       ]
@@ -203,7 +204,7 @@ There is no top-level `summary` for ranking jobs. If two datapoints in one ranki
       "notApplicableRatio": 0.0,
       "aggregatedResults": [ { "x": 68.1007, "y": 32.4029 }, { "x": 23.3924, "y": 31.883 } ],
       "detailedResults": [
-        { "locations": [ { "x": 68.1007, "y": 32.4029 }, { "x": 23.3924, "y": 31.883 } ], "userDetails": { "country": "ES", "language": "es", "userScores": { "global": 0.6709 }, "demographics": {} } }
+        { "locations": [ { "x": 68.1007, "y": 32.4029 }, { "x": 23.3924, "y": 31.883 } ], "userDetails": { "userId": "rtr_e41b7c06a95d2f38c0b4", "country": "ES", "language": "es", "userScores": { "global": 0.6709 }, "demographics": {} } }
       ]
     }
   ]
@@ -233,7 +234,7 @@ There is no top-level `summary` for ranking jobs. If two datapoints in one ranki
         { "size": 12, "points": [ { "x": 83.8539, "y": 79.4461 }, { "x": 64.4864, "y": 81.5653 }, { "x": 64.5551, "y": 80.0596 } ] }
       ],
       "detailedResults": [
-        { "lines": [ { "size": 12, "points": [ { "x": 83.8539, "y": 79.4461 }, "..." ] } ], "userDetails": { "country": "US", "language": "en", "userScores": { "global": 0.71 }, "demographics": {} } }
+        { "lines": [ { "size": 12, "points": [ { "x": 83.8539, "y": 79.4461 }, "..." ] } ], "userDetails": { "userId": "rtr_8d63f1a2b0c97e54d3f6", "country": "US", "language": "en", "userScores": { "global": 0.71 }, "demographics": {} } }
       ]
     }
   ]
@@ -265,7 +266,7 @@ There is no top-level `summary` for ranking jobs. If two datapoints in one ranki
         { "word": "on", "wordIndex": 2, "selectedAmount": 0 }
       ],
       "detailedResults": [
-        { "selectedWords": [ { "word": "cars", "wordIndex": 1 } ], "userDetails": { "country": "BR", "language": "pt", "userScores": { "global": 0.7115 }, "demographics": {} } }
+        { "selectedWords": [ { "word": "cars", "wordIndex": 1 } ], "userDetails": { "userId": "rtr_1b9e4d7c63a0f8e25b19", "country": "BR", "language": "pt", "userScores": { "global": 0.7115 }, "demographics": {} } }
       ]
     }
   ]
@@ -292,7 +293,7 @@ There is no top-level `summary` for ranking jobs. If two datapoints in one ranki
       "assetUrl": "https://assets.rapidata.ai/<uuid>.png",
       "aggregatedResults": [ "How do I bake bread?", "What is the tallest mountain?" ],
       "detailedResults": [
-        { "answerText": "How do I bake bread?", "userDetails": { "country": "US", "language": "en", "userScores": { "global": 0.81 }, "demographics": {} } }
+        { "answerText": "How do I bake bread?", "userDetails": { "userId": "rtr_c6f02a8e5d14b97a3e60", "country": "US", "language": "en", "userScores": { "global": 0.81 }, "demographics": {} } }
       ]
     }
   ]
