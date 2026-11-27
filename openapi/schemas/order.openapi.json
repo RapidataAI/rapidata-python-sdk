@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Order API",
     "description": "The API for the Rapidata Order service",
-    "version": "2026.11.26.1400-79c56d4d"
+    "version": "2026.11.27.1552-1c45faf4"
   },
   "servers": [
     {
@@ -7879,27 +7879,6 @@
           },
           "datasetId": {
             "type": "string"
-          },
-          "asset": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IAsset"
-              }
-            ],
-            "deprecated": true
-          },
-          "context": {
-            "type": "string",
-            "nullable": true,
-            "deprecated": true
-          },
-          "contextAsset": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IAsset"
-              }
-            ],
-            "deprecated": true
           },
           "segments": {
             "type": "array",

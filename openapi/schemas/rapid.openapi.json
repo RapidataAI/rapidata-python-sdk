@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Rapid API",
     "description": "The API for the Rapidata Rapid service",
-    "version": "2026.11.26.1400-79c56d4d"
+    "version": "2026.11.27.1552-1c45faf4"
   },
   "servers": [
     {
@@ -60,11 +60,6 @@
           {
             "OpenIdConnect": [
               "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -988,11 +983,6 @@
             "OpenIdConnect": [
               "platform:admin"
             ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
           }
         ]
       },
@@ -1033,11 +1023,6 @@
           {
             "OpenIdConnect": [
               "platform:viewer"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -1085,11 +1070,6 @@
           {
             "OpenIdConnect": [
               "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -1146,11 +1126,6 @@
           {
             "OpenIdConnect": [
               "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -1309,11 +1284,6 @@
             "OpenIdConnect": [
               "platform:admin"
             ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
           }
         ]
       }
@@ -1403,11 +1373,6 @@
           {
             "OpenIdConnect": [
               "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -1509,11 +1474,6 @@
           {
             "OpenIdConnect": [
               "platform:viewer"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -1903,11 +1863,6 @@
           {
             "OpenIdConnect": [
               "platform:viewer"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]

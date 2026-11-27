@@ -20,6 +20,7 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.i_asset import IAsset
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.api_client.models.i_validation_truth import IValidationTruth
+from rapidata.api_client.models.rapid_flag import RapidFlag
 from rapidata.api_client.models.rapid_state import RapidState
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -42,7 +43,8 @@ class GetValidationRapidsEndpointOutput(LazyValidatedModel):
     explanation: Optional[StrictStr] = Field(default=None, description="The explanation shown when users answer incorrectly.")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability of a random correct answer.", alias="randomCorrectProbability")
     state: RapidState = Field(description="The state of the rapid.")
-    __properties: ClassVar[List[str]] = ["id", "type", "asset", "truth", "payload", "context", "contextAsset", "correctValidationCount", "invalidValidationCount", "explanation", "randomCorrectProbability", "state"]
+    flag: Optional[RapidFlag] = Field(default=None, description="Why the rapid was flagged, with live answer counts per group; staff only.")
+    __properties: ClassVar[List[str]] = ["id", "type", "asset", "truth", "payload", "context", "contextAsset", "correctValidationCount", "invalidValidationCount", "explanation", "randomCorrectProbability", "state", "flag"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -91,6 +93,9 @@ class GetValidationRapidsEndpointOutput(LazyValidatedModel):
         # override the default output from pydantic by calling `to_dict()` of context_asset
         if self.context_asset:
             _dict['contextAsset'] = self.context_asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of flag
+        if self.flag:
+            _dict['flag'] = self.flag.to_dict()
         # set to None if context (nullable) is None
         # and model_fields_set contains the field
         if self.context is None and "context" in self.model_fields_set:
@@ -129,7 +134,8 @@ class GetValidationRapidsEndpointOutput(LazyValidatedModel):
             "invalidValidationCount": obj.get("invalidValidationCount"),
             "explanation": obj.get("explanation"),
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
-            "state": obj.get("state")
+            "state": obj.get("state"),
+            "flag": RapidFlag.from_dict(obj["flag"]) if obj.get("flag") is not None else None
         }
         try:
             _obj = cls.model_validate(_data)

@@ -597,7 +597,7 @@ class DatapointsApi:
     ) -> CreateDatapointEndpointOutput:
         """Creates a new datapoint in the specified dataset.
 
-        Send either segments or the legacy fields, which fill the default segments.  Returns 400 when the content does not fit the dataset's schema.
+        Returns 400 when the content does not fit the dataset's schema.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
@@ -671,7 +671,7 @@ class DatapointsApi:
     ) -> ApiResponse[CreateDatapointEndpointOutput]:
         """Creates a new datapoint in the specified dataset.
 
-        Send either segments or the legacy fields, which fill the default segments.  Returns 400 when the content does not fit the dataset's schema.
+        Returns 400 when the content does not fit the dataset's schema.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
@@ -745,7 +745,7 @@ class DatapointsApi:
     ) -> RESTResponseType:
         """Creates a new datapoint in the specified dataset.
 
-        Send either segments or the legacy fields, which fill the default segments.  Returns 400 when the content does not fit the dataset's schema.
+        Returns 400 when the content does not fit the dataset's schema.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
