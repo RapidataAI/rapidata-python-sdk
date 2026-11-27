@@ -30,8 +30,8 @@ class UpdateValidationSetEndpointInput(LazyValidatedModel):
     dimensions: Optional[List[StrictStr]] = None
     should_alert: Optional[StrictBool] = Field(default=None, description="Whether users should be alerted if they answer incorrectly.", alias="shouldAlert")
     is_public: Optional[StrictBool] = Field(default=None, description="Whether the validation set should be public.", alias="isPublic")
-    is_flag_overruled: Optional[StrictBool] = Field(default=None, description="Whether flags on validation rapids should be overruled.", alias="isFlagOverruled")
-    __properties: ClassVar[List[str]] = ["name", "dimensions", "shouldAlert", "isPublic", "isFlagOverruled"]
+    remove_when_flagged: Optional[StrictBool] = Field(default=None, description="Whether a flagged rapid of the set is also removed from serving.", alias="removeWhenFlagged")
+    __properties: ClassVar[List[str]] = ["name", "dimensions", "shouldAlert", "isPublic", "removeWhenFlagged"]
 
     # model_config is inherited from LazyValidatedModel
 
@@ -84,7 +84,7 @@ class UpdateValidationSetEndpointInput(LazyValidatedModel):
             "dimensions": obj.get("dimensions"),
             "shouldAlert": obj.get("shouldAlert"),
             "isPublic": obj.get("isPublic"),
-            "isFlagOverruled": obj.get("isFlagOverruled")
+            "removeWhenFlagged": obj.get("removeWhenFlagged")
         }
         try:
             _obj = cls.model_validate(_data)

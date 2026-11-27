@@ -11,7 +11,6 @@ from rapidata.api_client.api.billing_account_api import BillingAccountApi
 from rapidata.api_client.api.cache_api import CacheApi
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.capabilities_api import CapabilitiesApi
-from rapidata.api_client.api.click_house_api import ClickHouseApi
 from rapidata.api_client.api.client_api import ClientApi
 from rapidata.api_client.api.context_shortening_api import ContextShorteningApi
 from rapidata.api_client.api.customer_api import CustomerApi
@@ -21,7 +20,6 @@ from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.dataset_group_api import DatasetGroupApi
 from rapidata.api_client.api.examples_api import ExamplesApi
 from rapidata.api_client.api.experiment_api import ExperimentApi
-from rapidata.api_client.api.external_apps_api import ExternalAppsApi
 from rapidata.api_client.api.external_audience_api import ExternalAudienceApi
 from rapidata.api_client.api.external_service_prices_api import ExternalServicePricesApi
 from rapidata.api_client.api.faucet_api import FaucetApi

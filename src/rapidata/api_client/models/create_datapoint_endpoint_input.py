@@ -27,7 +27,7 @@ class CreateDatapointEndpointInput(LazyValidatedModel):
     """
     The body request for creating a new datapoint.
     """ # noqa: E501
-    segments: Optional[List[DatasetSegmentInput]] = None
+    segments: List[DatasetSegmentInput]
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index represents the order of the datapoint in the dataset.", alias="sortIndex")
     group: Optional[StrictStr] = Field(default=None, description="The group a datapoint belongs to.")
     private_metadata: Optional[Dict[str, StrictStr]] = Field(default=None, description="Private metadata for internal tracking. Not displayed to users.", alias="privateMetadata")
@@ -75,11 +75,6 @@ class CreateDatapointEndpointInput(LazyValidatedModel):
                 if _item_segments:
                     _items.append(_item_segments.to_dict())
             _dict['segments'] = _items
-        # set to None if segments (nullable) is None
-        # and model_fields_set contains the field
-        if self.segments is None and "segments" in self.model_fields_set:
-            _dict['segments'] = None
-
         # set to None if sort_index (nullable) is None
         # and model_fields_set contains the field
         if self.sort_index is None and "sort_index" in self.model_fields_set:

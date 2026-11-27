@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Asset API",
     "description": "The API for the Rapidata Asset service",
-    "version": "2026.11.26.1400-79c56d4d"
+    "version": "2026.11.27.1552-1c45faf4"
   },
   "servers": [
     {
@@ -104,20 +104,12 @@
       "x-displayName": "Capabilities"
     },
     {
-      "name": "ClickHouse",
-      "x-displayName": "ClickHouse"
-    },
-    {
       "name": "Client",
       "x-displayName": "Client"
     },
     {
       "name": "Customer",
       "x-displayName": "Customer"
-    },
-    {
-      "name": "ExternalApps",
-      "x-displayName": "ExternalApps"
     },
     {
       "name": "Iam",
@@ -6208,7 +6200,7 @@
           "Datapoints"
         ],
         "summary": "Creates a new datapoint in the specified dataset.",
-        "description": "Send either segments or the legacy fields, which fill the default segments.\n Returns 400 when the content does not fit the dataset's schema.",
+        "description": "Returns 400 when the content does not fit the dataset's schema.",
         "parameters": [
           {
             "name": "datasetId",
@@ -6894,7 +6886,7 @@
           "DatasetGroup"
         ],
         "summary": "Creates a new dataset group.",
-        "description": "Send either segments or the legacy fields, which fill the default segments.\n Returns 400 when the content does not fit the dataset's schema.",
+        "description": "Returns 400 when the content does not fit the dataset's schema.",
         "parameters": [
           {
             "name": "datasetId",
@@ -8788,213 +8780,6 @@
         ]
       }
     },
-    "/authorization/relations/clickhouse": {
-      "get": {
-        "tags": [
-          "ClickHouse"
-        ],
-        "summary": "Lists every grantable ClickHouse database with its members and agent ceiling.",
-        "description": "Databases with no grants are included, with no members and a None ceiling.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetClickHouseAccessEndpoint_Output"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:viewer"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "ClickHouse"
-        ],
-        "summary": "Sets a customer's access to a ClickHouse database to exactly the given relation.",
-        "description": "Replaces the customer's other relation on the same database. Idempotent. 400 when the database is not grantable.",
-        "requestBody": {
-          "description": "The customer, the database and the relation to grant.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GrantClickHouseRelationEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "ClickHouse"
-        ],
-        "summary": "Revokes a relation on a ClickHouse database from a customer.",
-        "description": "Idempotent: revoking a relation that was never granted is a no-op. 400 when the database is not grantable.",
-        "requestBody": {
-          "description": "The customer, the database and the relation to revoke.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RevokeClickHouseRelationEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      }
-    },
-    "/authorization/relations/clickhouse/agent": {
-      "put": {
-        "tags": [
-          "ClickHouse"
-        ],
-        "summary": "Sets the agent ceiling on a ClickHouse database; an agent gets the lesser of this and its owner's access.",
-        "description": "None denies agents the database. Idempotent. 400 when the database is not grantable.",
-        "requestBody": {
-          "description": "The database and the ceiling to set.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetClickHouseAgentCeilingEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      }
-    },
     "/client": {
       "post": {
         "tags": [
@@ -9046,11 +8831,6 @@
             "OpenIdConnect": [
               "client:write"
             ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
           }
         ]
       }
@@ -9097,11 +8877,6 @@
           {
             "OpenIdConnect": [
               "client:write"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -9887,192 +9662,6 @@
           {
             "OpenIdConnect": [
               "organization:write"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      }
-    },
-    "/authorization/relations/external-app": {
-      "get": {
-        "tags": [
-          "ExternalApps"
-        ],
-        "summary": "Lists the customers holding relations on one app, one cursor page at a time.",
-        "description": "app is required: each app is a separate object in the graph, so there is no combined\n listing. Returns every relation unless relation narrows it. Follow nextCursor to page.",
-        "parameters": [
-          {
-            "name": "app",
-            "in": "query",
-            "description": "The app whose members to list.",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ExternalAppId"
-            }
-          },
-          {
-            "name": "relation",
-            "in": "query",
-            "description": "Optional relation to filter by.",
-            "schema": {
-              "$ref": "#/components/schemas/AuthorizationRelations_ExternalApp"
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "description": "The opaque cursor from the previous page; omit for the first page.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "description": "The number of items per page.",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetExternalAppRelationMembersEndpoint_CursorPagedResultOfOutput"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:viewer"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "ExternalApps"
-        ],
-        "summary": "Grants an external app relation to a customer.",
-        "description": "Idempotent: re-granting an existing relation is a no-op. The app must be one of the known\n values — an unrecognised app is rejected rather than written, since a grant against an object\n nothing reads would look like access was granted while conferring nothing.",
-        "requestBody": {
-          "description": "The customer, the app, and the relation to grant.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GrantExternalAppRelationEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "ExternalApps"
-        ],
-        "summary": "Revokes an external app relation from a customer.",
-        "description": "Idempotent: revoking a relation that was never granted is a no-op.",
-        "requestBody": {
-          "description": "The customer, the app, and the relation to revoke.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RevokeExternalAppRelationEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "OpenIdConnect": [
-              "platform:admin"
             ]
           },
           {
@@ -12096,11 +11685,6 @@
             "OpenIdConnect": [
               "platform:viewer"
             ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
           }
         ]
       },
@@ -12147,11 +11731,6 @@
             "OpenIdConnect": [
               "platform:admin"
             ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
           }
         ]
       },
@@ -12197,11 +11776,6 @@
           {
             "OpenIdConnect": [
               "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -38163,11 +37737,6 @@
             "OpenIdConnect": [
               "platform:admin"
             ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
           }
         ]
       }
@@ -39097,11 +38666,6 @@
             "OpenIdConnect": [
               "platform:admin"
             ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
           }
         ]
       },
@@ -39142,11 +38706,6 @@
           {
             "OpenIdConnect": [
               "platform:viewer"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -39194,11 +38753,6 @@
           {
             "OpenIdConnect": [
               "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -39256,11 +38810,6 @@
             "OpenIdConnect": [
               "platform:admin"
             ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
-            ]
           }
         ]
       }
@@ -39309,11 +38858,6 @@
           {
             "OpenIdConnect": [
               "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -39404,11 +38948,6 @@
           {
             "OpenIdConnect": [
               "platform:admin"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -39517,11 +39056,6 @@
           {
             "OpenIdConnect": [
               "platform:viewer"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -39918,11 +39452,6 @@
           {
             "OpenIdConnect": [
               "platform:viewer"
-            ]
-          },
-          {
-            "OpenIdConnect": [
-              "api"
             ]
           }
         ]
@@ -42356,7 +41885,9 @@
                   "correct_validation_count",
                   "-correct_validation_count",
                   "invalid_validation_count",
-                  "-invalid_validation_count"
+                  "-invalid_validation_count",
+                  "flag",
+                  "-flag"
                 ],
                 "type": "string"
               }
@@ -50248,6 +49779,9 @@
         }
       },
       "CreateDatapointEndpoint_Input": {
+        "required": [
+          "segments"
+        ],
         "type": "object",
         "properties": {
           "segments": {
@@ -50256,11 +49790,10 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/DatasetSegmentInput"
-                },
-                "nullable": true
+                }
               }
             ],
-            "description": "The datapoint's values, keyed by the dataset's schema. Replaces the legacy fields below."
+            "description": "The datapoint's values, keyed by the dataset's schema."
           },
           "sortIndex": {
             "type": "integer",
@@ -50359,7 +49892,8 @@
       },
       "CreateDatasetGroupEndpoint_Input": {
         "required": [
-          "group"
+          "group",
+          "segments"
         ],
         "type": "object",
         "properties": {
@@ -50373,11 +49907,10 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/DatasetSegmentInput"
-                },
-                "nullable": true
+                }
               }
             ],
-            "description": "The group's values, keyed by the dataset's schema. Replaces the legacy fields below."
+            "description": "The group's values, keyed by the dataset's schema."
           }
         }
       },
@@ -52462,29 +51995,6 @@
           }
         }
       },
-      "AuthorizationRelations_ClickHouseAgentCeiling": {
-        "enum": [
-          "None",
-          "Reader",
-          "Writer"
-        ],
-        "description": "The most an `agent` may do on a `clickhouse_database`, whoever it acts for.\nClickHouseAgentCeiling.None means no agent tuple exists on the database."
-      },
-      "AuthorizationRelations_ClickHouseDatabase": {
-        "enum": [
-          "Reader",
-          "Writer"
-        ],
-        "description": "Relations a customer holds on a `clickhouse_database`, one object per ClickHouse\ndatabase name. `writer` folds into `reader`."
-      },
-      "AuthorizationRelations_ExternalApp": {
-        "enum": [
-          "Admin",
-          "User",
-          "Viewer"
-        ],
-        "description": "Relations on an `external_app` object — one object per third-party app that federates\non the OIDC `groups` claim. The apps themselves are `ExternalAppId`. The ladder is hierarchical: `admin` folds into `user`, and `user` into `viewer`.\nGrants are direct and, like `Bidder`, are never folded in from platform staff —\nholding platform admin must not confer administration of a separate system."
-      },
       "AuthorizationRelations_Platform": {
         "enum": [
           "Admin",
@@ -52496,8 +52006,7 @@
       "AuthorizationScope": {
         "enum": [
           "Platform",
-          "Bidder",
-          "ExternalApp"
+          "Bidder"
         ]
       },
       "Capability": {
@@ -52815,15 +52324,6 @@
         },
         "description": "The request body for dynamic client registration."
       },
-      "ExternalAppId": {
-        "enum": [
-          "ArgoCd",
-          "Grafana",
-          "Headscale",
-          "Poseidon"
-        ],
-        "description": "                The third-party applications that federate on our OIDC `groups` claim and can therefore\n                be administered through a grant here. Each maps to an `external_app` object in the\n                authorization graph.\n                A closed enum rather than a free-form id on purpose: an arbitrary string would let a typo\nwrite a grant against an object nothing consumes, which looks like access was granted but\nsilently is not. Adding an app is a value here plus a tuple — no model change.This is the app itself; the relation vocabulary defined on these objects is\nAuthorizationRelations.ExternalApp. The Id suffix here keeps the two\ndistinguishable: a file with using static AuthorizationRelations imports that\nnested enum, and identical short names would make every bare mention ambiguous."
-      },
       "GetCapabilityGranteesEndpoint_CursorPagedResultOfOutput": {
         "required": [
           "items"
@@ -52860,124 +52360,6 @@
             "description": "The human-readable name of the organization."
           },
           "timestamp": {
-            "type": "string",
-            "description": "When the grant was written.",
-            "format": "date-time"
-          }
-        }
-      },
-      "GetClickHouseAccessEndpoint_Member": {
-        "required": [
-          "customer",
-          "email",
-          "relation"
-        ],
-        "type": "object",
-        "properties": {
-          "customer": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string"
-          },
-          "relation": {
-            "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseDatabase"
-          }
-        }
-      },
-      "GetClickHouseAccessEndpoint_Output": {
-        "required": [
-          "database",
-          "members",
-          "agentCeiling"
-        ],
-        "type": "object",
-        "properties": {
-          "database": {
-            "type": "string",
-            "description": "The ClickHouse database name."
-          },
-          "members": {
-            "allOf": [
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/GetClickHouseAccessEndpoint_Member"
-                }
-              }
-            ],
-            "description": "The customers holding a relation on the database."
-          },
-          "agentCeiling": {
-            "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseAgentCeiling"
-          }
-        }
-      },
-      "GetExternalAppRelationMembersEndpoint_CursorPagedResultOfOutput": {
-        "required": [
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GetExternalAppRelationMembersEndpoint_Output"
-            }
-          },
-          "nextCursor": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "description": "A page of results identified by an opaque cursor rather than an offset. Used where the\nunderlying store pages by continuation token and a total count is unavailable or expensive.\nstring? CursorPagedResult&lt;T&gt;.NextCursor is null on the last page."
-      },
-      "GetExternalAppRelationMembersEndpoint_Output": {
-        "required": [
-          "customer",
-          "email",
-          "organizationName",
-          "organizationId",
-          "scope",
-          "app",
-          "relation",
-          "grantedAt"
-        ],
-        "type": "object",
-        "properties": {
-          "customer": {
-            "type": "string",
-            "description": "The customer holding the relation.",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string",
-            "description": "The email address of the customer."
-          },
-          "organizationName": {
-            "type": "string",
-            "description": "The name of the customer's active organization."
-          },
-          "organizationId": {
-            "type": "string",
-            "description": "The identifier of the customer's active organization."
-          },
-          "scope": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/AuthorizationScope"
-              }
-            ],
-            "description": "The object the relation is on."
-          },
-          "app": {
-            "$ref": "#/components/schemas/ExternalAppId"
-          },
-          "relation": {
-            "$ref": "#/components/schemas/AuthorizationRelations_ExternalApp"
-          },
-          "grantedAt": {
             "type": "string",
             "description": "When the grant was written.",
             "format": "date-time"
@@ -53181,49 +52563,6 @@
             "type": "string",
             "description": "The email of the signed-in user, if available.",
             "nullable": true
-          }
-        }
-      },
-      "GrantClickHouseRelationEndpoint_Input": {
-        "required": [
-          "customer",
-          "database",
-          "relation"
-        ],
-        "type": "object",
-        "properties": {
-          "customer": {
-            "type": "string",
-            "description": "The customer to grant the relation to.",
-            "format": "uuid"
-          },
-          "database": {
-            "type": "string",
-            "description": "The ClickHouse database name."
-          },
-          "relation": {
-            "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseDatabase"
-          }
-        }
-      },
-      "GrantExternalAppRelationEndpoint_Input": {
-        "required": [
-          "customer",
-          "app",
-          "relation"
-        ],
-        "type": "object",
-        "properties": {
-          "customer": {
-            "type": "string",
-            "description": "The customer to grant the relation to.",
-            "format": "uuid"
-          },
-          "app": {
-            "$ref": "#/components/schemas/ExternalAppId"
-          },
-          "relation": {
-            "$ref": "#/components/schemas/AuthorizationRelations_ExternalApp"
           }
         }
       },
@@ -53900,49 +53239,6 @@
           }
         }
       },
-      "RevokeClickHouseRelationEndpoint_Input": {
-        "required": [
-          "customer",
-          "database",
-          "relation"
-        ],
-        "type": "object",
-        "properties": {
-          "customer": {
-            "type": "string",
-            "description": "The customer to revoke the relation from.",
-            "format": "uuid"
-          },
-          "database": {
-            "type": "string",
-            "description": "The ClickHouse database name."
-          },
-          "relation": {
-            "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseDatabase"
-          }
-        }
-      },
-      "RevokeExternalAppRelationEndpoint_Input": {
-        "required": [
-          "customer",
-          "app",
-          "relation"
-        ],
-        "type": "object",
-        "properties": {
-          "customer": {
-            "type": "string",
-            "description": "The customer to revoke the relation from.",
-            "format": "uuid"
-          },
-          "app": {
-            "$ref": "#/components/schemas/ExternalAppId"
-          },
-          "relation": {
-            "$ref": "#/components/schemas/AuthorizationRelations_ExternalApp"
-          }
-        }
-      },
       "RevokePlatformRelationEndpoint_Input": {
         "required": [
           "customer",
@@ -53976,22 +53272,6 @@
               }
             ],
             "description": "The fields of the survey."
-          }
-        }
-      },
-      "SetClickHouseAgentCeilingEndpoint_Input": {
-        "required": [
-          "database",
-          "ceiling"
-        ],
-        "type": "object",
-        "properties": {
-          "database": {
-            "type": "string",
-            "description": "The ClickHouse database name."
-          },
-          "ceiling": {
-            "$ref": "#/components/schemas/AuthorizationRelations_ClickHouseAgentCeiling"
           }
         }
       },
@@ -75844,6 +75124,14 @@
               }
             ],
             "description": "The state of the rapid."
+          },
+          "flag": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidFlag"
+              }
+            ],
+            "description": "Why the rapid was flagged, with live answer counts per group; staff only."
           }
         }
       },
@@ -76064,6 +75352,68 @@
           }
         }
       },
+      "RapidFlag": {
+        "required": [
+          "reason",
+          "flaggedAt",
+          "dismissed",
+          "groups"
+        ],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "$ref": "#/components/schemas/RapidFlagReason"
+          },
+          "flaggedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dismissed": {
+            "type": "boolean"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidFlag_Group"
+            }
+          }
+        }
+      },
+      "RapidFlag_Group": {
+        "required": [
+          "correct",
+          "incorrect",
+          "isLow"
+        ],
+        "type": "object",
+        "properties": {
+          "language": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "correct": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "incorrect": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isLow": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RapidFlagReason": {
+        "enum": [
+          "LowAccuracy",
+          "Reports"
+        ]
+      },
       "RapidModality": {
         "type": "array",
         "items": {
@@ -76128,9 +75478,9 @@
             "type": "boolean",
             "description": "Whether the validation set should be public."
           },
-          "isFlagOverruled": {
+          "removeWhenFlagged": {
             "type": "boolean",
-            "description": "Whether flags on validation rapids should be overruled."
+            "description": "Whether a flagged rapid of the set is also removed from serving."
           }
         }
       },
@@ -76207,10 +75557,8 @@
       "tags": [
         "Rapidata.Identity.API",
         "Capabilities",
-        "ClickHouse",
         "Client",
         "Customer",
-        "ExternalApps",
         "Iam",
         "Identity",
         "Newsletter",

@@ -16,7 +16,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.dataset_segment_input import DatasetSegmentInput
 from pydantic import ValidationError
 from rapidata.api_client.lazy_model import LazyValidatedModel
@@ -28,7 +28,7 @@ class CreateDatasetGroupEndpointInput(LazyValidatedModel):
     CreateDatasetGroupEndpointInput
     """ # noqa: E501
     group: StrictStr = Field(description="The name of the group.")
-    segments: Optional[List[DatasetSegmentInput]] = None
+    segments: List[DatasetSegmentInput]
     __properties: ClassVar[List[str]] = ["group", "segments"]
 
     # model_config is inherited from LazyValidatedModel
@@ -73,11 +73,6 @@ class CreateDatasetGroupEndpointInput(LazyValidatedModel):
                 if _item_segments:
                     _items.append(_item_segments.to_dict())
             _dict['segments'] = _items
-        # set to None if segments (nullable) is None
-        # and model_fields_set contains the field
-        if self.segments is None and "segments" in self.model_fields_set:
-            _dict['segments'] = None
-
         return _dict
 
     @classmethod

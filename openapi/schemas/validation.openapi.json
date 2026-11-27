@@ -3,7 +3,7 @@
   "info": {
     "title": "Rapidata Validation API",
     "description": "The API for the Rapidata Validation service",
-    "version": "2026.11.26.1400-79c56d4d"
+    "version": "2026.11.27.1552-1c45faf4"
   },
   "servers": [
     {
@@ -599,7 +599,9 @@
                   "correct_validation_count",
                   "-correct_validation_count",
                   "invalid_validation_count",
-                  "-invalid_validation_count"
+                  "-invalid_validation_count",
+                  "flag",
+                  "-flag"
                 ],
                 "type": "string"
               }
@@ -2001,6 +2003,14 @@
               }
             ],
             "description": "The state of the rapid."
+          },
+          "flag": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RapidFlag"
+              }
+            ],
+            "description": "Why the rapid was flagged, with live answer counts per group; staff only."
           }
         }
       },
@@ -3545,6 +3555,68 @@
           }
         }
       },
+      "RapidFlag": {
+        "required": [
+          "reason",
+          "flaggedAt",
+          "dismissed",
+          "groups"
+        ],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "$ref": "#/components/schemas/RapidFlagReason"
+          },
+          "flaggedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dismissed": {
+            "type": "boolean"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidFlag_Group"
+            }
+          }
+        }
+      },
+      "RapidFlag_Group": {
+        "required": [
+          "correct",
+          "incorrect",
+          "isLow"
+        ],
+        "type": "object",
+        "properties": {
+          "language": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "correct": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "incorrect": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isLow": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RapidFlagReason": {
+        "enum": [
+          "LowAccuracy",
+          "Reports"
+        ]
+      },
       "RapidModality": {
         "type": "array",
         "items": {
@@ -3696,9 +3768,14 @@
             "type": "boolean",
             "description": "Whether the validation set should be public."
           },
+          "removeWhenFlagged": {
+            "type": "boolean",
+            "description": "Whether a flagged rapid of the set is also removed from serving."
+          },
           "isFlagOverruled": {
             "type": "boolean",
-            "description": "Whether flags on validation rapids should be overruled."
+            "description": "The inverse of removeWhenFlagged, which wins when both are sent.",
+            "deprecated": true
           }
         }
       },

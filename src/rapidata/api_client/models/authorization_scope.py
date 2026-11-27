@@ -26,7 +26,6 @@ class AuthorizationScope(str, Enum):
     """
     PLATFORM = 'Platform'
     BIDDER = 'Bidder'
-    EXTERNALAPP = 'ExternalApp'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
